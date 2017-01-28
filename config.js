@@ -3,6 +3,8 @@ module.exports = {
     // http://conqueringthecommandline.com/book/ack_ag
     'ack',
     'ag',
+    // Update and install github
+    'git',
     // cmake is required to compile vim bundle YouCompleteMe
     'cmake',
     // Install GNU core utilities (those that come with OS X are outdated)
@@ -43,13 +45,19 @@ module.exports = {
     'vim --with-override-system-vi',
     'watch',
     // Install wget with IRI support
-    'wget --enable-iri'
+    'wget --enable-iri',
+    // Watch & Manage System Resources
+    'htop-osx',
+    // Command line file manager
+    'midnight-commander',
+    // R statistical software
+    'r'
   ],
   cask: [
     //'adium',
     //'amazon-cloud-drive',
-    //'atom',
-    'box-sync',
+    'atom',
+    //'box-sync',
     //'comicbooklover',
     //'diffmerge',
     //'dropbox',
@@ -59,15 +67,25 @@ module.exports = {
     'iterm2',
     'little-snitch',
     'micro-snitch',
+    'BetterTouchTool',
+    'jdownloader',
+    'flux',
+    'mactex',
+    'google-chrome',
+    'google-drive',
+    'spotify',
+    'bettertouchtool',
+    'rstudio',
     //'macvim',
     'sizeup',
     //'sketchup',
-    'slack',
+    //'slack',
     'the-unarchiver',
     //'torbrowser',
     //'transmission',
-    //'vlc',
-    'xquartz'
+    'vlc',
+    'xquartz',
+
   ],
   gem: [
     'git-up'
