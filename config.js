@@ -84,7 +84,7 @@ module.exports = {
     //'torbrowser',
     //'transmission',
     'vlc',
-    'xquartz',
+    'xquartz'
 
   ],
   gem: [
