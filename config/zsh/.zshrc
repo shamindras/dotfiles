@@ -54,3 +54,26 @@ autoload -U add-zsh-hook
 add-zsh-hook precmd run_post_zshrc
 
 # endregion --------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# region: conf.d
+# ------------------------------------------------------------------------------
+
+function run_confd {
+  # Which conf.d directory to use? Use glob_subst to support '~'.
+  : ${__zsh_config_dir:=${ZDOTDIR:-${XDG_CONFIG_HOME:-$HOME/.config}/zsh}}
+  local confd
+  zstyle -s ':zephyr:plugin:confd' directory 'confd' || confd=$__zsh_config_dir/conf.d
+  confd=${~confd}
+
+  # Source all scripts in conf.d.
+  local zrcfile
+  for zrcfile in $confd/*.{z,}sh(N); do
+    # ignore files that begin with ~
+    [[ "${zrcfile:t}" == '~'* ]] && continue
+    source "$zrcfile"
+  done
+}
+post_zshrc_hook+=(run_confd)
+
+# endregion --------------------------------------------------------------------
