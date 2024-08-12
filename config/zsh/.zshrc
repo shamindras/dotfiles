@@ -1,8 +1,7 @@
 #!/bin/zsh
-# Define Zsh environment variables.
-# source: https://github.com/mattmc3/zshrc1/blob/main/.zshrc
 
-# Even with `$ZDOTDIR` set ~/.zshenv needs to remain.
+# Define ZDOTDIR variable
+# source: https://github.com/mattmc3/zshrc1/blob/main/.zshrc
 # But, you can symlink it to this file
 # ln -s ~/.config/zsh/.zshenv ~/.zshenv
 export ZDOTDIR=${ZDOTDIR:-~/.config/zsh}
