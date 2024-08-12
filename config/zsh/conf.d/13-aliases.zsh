@@ -60,6 +60,4 @@ alias -s {zip,ZIP,war,WAR}="unzip -l"
 alias -s gz="tar -tf"
 alias -s {tgz,TGZ}="tar -tf"
 
-
-
 # endregion --------------------------------------------------------------------
