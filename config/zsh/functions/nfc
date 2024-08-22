@@ -1,0 +1,12 @@
+#!/bin/zsh
+##? nfc  - fetch system settings using neofetch and copy to clipboard
+##?
+##? usage:
+##?   nfc
+# TODO: add more options, e.g. `R`/`python` versions etc.
+# TODO: consider a --details option to wrap output in summary/details html tags
+nfc() {
+    neofetch --stdout --color_blocks off | sed '/^[[:space:]]*$/d' | pbcopy
+}
+
+# vim: ft=zsh
