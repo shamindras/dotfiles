@@ -6,7 +6,7 @@
 
 # Quickly go up any number of directories.
 # source: https://github.com/shamindras/dotfiles/blob/99c3c130053b2a0cc08ff1875798e7db1e07d269/config/zsh/conf.d/05-directory.zsh#L33C1-L45C4 
-up (){
+up() {
     local parents="${1:-1}"
     if [[ ! "$parents" -gt 0 ]]; then
         echo >&2 "usage: up [<num>]"
