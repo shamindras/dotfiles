@@ -35,6 +35,16 @@
   [[ ! -r $__zsh_config_dir/.zstyles ]] || source $__zsh_config_dir/.zstyles
 }
 
+# z1_confd: Source Zsh config files in a conf.d directory.
+function z1_confd {
+  local confd zfile
+  zstyle -s ':z1:configs' dir 'confd' || confd=$__zsh_config_dir/conf.d
+  for zfile in $confd/*.zsh(N); do
+    [[ ${zfile:t} != '~'* ]] || continue
+    source $zfile
+  done
+}
+
 # z1_colorize: Add color to your terminal.
 function z1_colorize {
   # Built-in zsh colors
@@ -81,16 +91,6 @@ function z1_colorize {
     alias ls="${aliases[ls]:-ls} -G"
     export LSCOLORS=${LSCOLORS:-exfxcxdxbxGxDxabagacad}
   fi
-}
-
-# z1_confd: Source Zsh config files in a conf.d directory.
-function z1_confd {
-  local confd zfile
-  zstyle -s ':z1:configs' dir 'confd' || confd=$__zsh_config_dir/conf.d
-  for zfile in $confd/*.zsh(N); do
-    [[ ${zfile:t} != '~'* ]] || continue
-    source $zfile
-  done
 }
 
 # z1_completions: Setup Zsh completion system.
@@ -620,7 +620,7 @@ function plugin-compile {
 
 # Run z1.
 () {
-  z1_funcdir
+  # z1_funcdir
   z1_colorize
   z1_directory
   z1_editor
