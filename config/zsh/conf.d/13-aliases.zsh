@@ -4,15 +4,16 @@
 # region: aliases
 # ------------------------------------------------------------------------------
 
+alias cd ='z' # always ues zoxide for `cd` and `\cd` for original version.
 alias -- -='z -' # note we need -- since command begins with -
 alias b='bat --style=grid,numbers'
 alias bat='bat --style=grid,numbers'
-alias ..='z ..'
-alias ...='z ../..'
-alias ....='z ../../..'
-alias .....='z ../../../..'
-alias ......='z ../../../../..'
-alias .......='z ../../../../../..'
+# alias ..='z ..'
+# alias ...='z ../..'
+# alias ....='z ../../..'
+# alias .....='z ../../../..'
+# alias ......='z ../../../../..'
+# alias .......='z ../../../../../..'
 alias cp='cp -r'
 alias cpi='cp -iv'
 alias df='df -kH'
