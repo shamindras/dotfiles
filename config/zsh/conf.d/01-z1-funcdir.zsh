@@ -1,10 +1,9 @@
 #!/bin/zsh
 
 # ------------------------------------------------------------------------------
-# region: Helper functions
+# region: z1_funcdir: Setup the autoload directory for Zsh functions
 # ------------------------------------------------------------------------------
 
-# z1_funcdir: Setup the autoload directory for Zsh functions.
 function z1_funcdir {
   emulate -L zsh; setopt local_options $__z1_opts
   local fndir zfuncdir
