@@ -8,7 +8,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -282,3 +283,5 @@ rsconnect/
 # End of https://www.toptal.com/developers/gitignore/api/macos,R,Python,VisualStudioCode
 n
 .vscode/settings.json
+
+!config/zsh/lib/unplugged.zsh

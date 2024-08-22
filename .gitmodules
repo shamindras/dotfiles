@@ -2,3 +2,6 @@
 	path = submods/dotbot
 	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
+[submodule "submods/zshrc1"]
+	path = submods/zshrc1
+	url = git@github.com:mattmc3/zshrc1.git
