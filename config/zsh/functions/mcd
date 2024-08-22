@@ -1,0 +1,6 @@
+#!/bin/zsh
+# create a new directory, and cd into it using zoxide
+# source: https://stackoverflow.com/a/74904174/4687531
+mcd (){
+    mkdir -p -- "$1" && z "$1"
+}
