@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # ------------------------------------------------------------------------------
-# region: Add a nice prompt for Z1 users
+# region: Setup built-in Zsh prompt system
 # ------------------------------------------------------------------------------
 
 # function prompt_z1_setup {
@@ -143,6 +143,31 @@
 #   }
 
 #   prompt_z1_setup "$@"
+# }
+
+# z1_prompt: 
+# function z1_prompt {
+#   # Set prompt options.
+#   setopt prompt_subst  # Expand parameters in prompt variables
+
+#   # Initialize built-in prompt system.
+#   autoload -Uz promptinit && promptinit
+
+#   # Since we define prompt functions here and not in autoload function files in $fpath,
+#   # we need to stick the theme's name into `$prompt_themes' ourselves, since promptinit
+#   # does not pick them up otherwise.
+#   prompt_themes+=( z1 )
+#   # Also, keep the array sorted...
+#   prompt_themes=( "${(@on)prompt_themes}" )
+
+#   # Set prompt.
+#   local -a prompt_argv
+#   zstyle -a ':z1:prompt' theme 'prompt_argv'
+#   if [[ $TERM == (dumb|linux|*bsd*) ]]; then
+#     prompt 'off'
+#   elif (( $#prompt_argv > 0 )); then
+#     prompt "$prompt_argv[@]"
+#   fi
 # }
 
 # endregion --------------------------------------------------------------------
