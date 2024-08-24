@@ -57,7 +57,6 @@ function z1_confd {
   z1_utility
   z1_plugins
   z1_completions
-  # z1_prompt
 }
 
 # vim: ft=zsh 
