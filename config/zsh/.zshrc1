@@ -52,11 +52,11 @@ function z1_confd {
   z1_funcdir
   z1_colorize
   z1_directory
-  # z1_editor
-  # z1_history
-  # z1_utility
-  # z1_plugins
-  # z1_completions
+  z1_editor
+  z1_history
+  z1_utility
+  z1_plugins
+  z1_completions
   # z1_prompt
 }
 
