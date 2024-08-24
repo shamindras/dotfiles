@@ -1,84 +1,150 @@
 #!/bin/zsh
 
 # ------------------------------------------------------------------------------
-# region: prompt
+# region: Add a nice prompt for Z1 users
 # ------------------------------------------------------------------------------
 
-# Prompt options
-setopt prompt_subst       # Expand parameters in prompt variables.
-setopt transient_rprompt  # Remove right prompt artifacts from prior commands.
+# function prompt_z1_setup {
+#   # Remove right prompt from prior commands
+#   setopt transient_rprompt
 
-# Set 2 space indent for each new level in a multi-line script. This can then be
-# overridden by a prompt or plugin, but is a better default than Zsh's.
-PS2='${${${(%):-%_}//[^ ]}// /  }    '
+#   function prompt_pwd {
+#     setopt local_options extended_glob
 
-# Wrap powerlevel10k prompt to support themes directory
-function prompt_p10k_setup {
-  if [[ -n "$1" ]]; then
-    local -a configs=($__zsh_config_dir/themes/$1.p10k.zsh(N))
-    (( $#configs )) && source $configs[1]
-  fi
-  prompt_powerlevel10k_setup
-}
+#     local cur_pwd="${PWD/#$HOME/~}"
+#     local MATCH result
 
-# Make starship work with built-in prompt system.
-function prompt_starship_setup {
-  # When loaded through the prompt command, these prompt_* options will be enabled
-  prompt_opts=(cr percent sp subst)
+#     if [[ "$cur_pwd" == (#m)[/~] ]]; then
+#       result="$MATCH"
+#     elif zstyle -m ':z1:prompt' pwd-length 'full'; then
+#       result=${PWD}
+#     elif zstyle -m ':z1:prompt' pwd-length 'long'; then
+#       result=${cur_pwd}
+#     else
+#       result="${${${${(@j:/:M)${(@s:/:)cur_pwd}##.#?}:h}%/}//\%/%%}/${${cur_pwd:t}//\%/%%}"
+#     fi
 
-  # Set the starship config based on the argument if provided.
-  if [[ -n "$1" ]]; then
-    local -a configs=(
-      "$__zsh_config_dir/themes/${1}.toml"(N)
-      "${XDG_CONFIG_HOME:-$HOME/.config}/starship/${1}.toml"(N)
-    )
-    (( $#configs )) && export STARSHIP_CONFIG=$configs[1]
-  fi
+#     print -r -- "$result"
+#   }
 
-  # Initialize starship.
-  if zstyle -t ':zephyr:plugin:prompt' 'use-cache'; then
-    cached-eval 'starship-init-zsh' starship init zsh
-  else
-    source <(starship init zsh)
-  fi
-}
+#   function +vi-git_status {
+#     # Check for untracked files or updated submodules since vcs_info does not.
+#     if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+#       hook_com[unstaged]='%F{red}•%f'
+#     fi
 
-# Wrap promptinit.
-function promptinit {
-  # Initialize real built-in prompt system.
-  unfunction promptinit
-  autoload -Uz promptinit && promptinit
+#     ### git: Show ⇡N/⇣N when your local branch is ahead-of or behind remote HEAD.
+#     # Make sure you have added misc to your 'formats':  %m
+#     local ahead behind
+#     local -a gitstatus
 
-  # Hook P10k into Zsh's prompt system.
-  (( $+functions[prompt_powerlevel10k_setup] )) \
-    && prompt_themes+=( p10k ) \
-    || unfunction prompt_p10k_setup
+#     # Exit early in case the worktree is on a detached HEAD
+#     git rev-parse ${hook_com[branch]}@{upstream} >/dev/null 2>&1 || return 0
 
-  # Hook starship into Zsh's prompt system.
-  (( $+commands[starship] )) \
-    && prompt_themes+=( starship ) \
-    || unfunction prompt_starship_setup
+#     local -a ahead_and_behind=(
+#       $(git rev-list --left-right --count HEAD...${hook_com[branch]}@{upstream} 2>/dev/null)
+#     )
 
-  # Keep prompt array sorted.
-  prompt_themes=( "${(@on)prompt_themes}" )
+#     ahead=${ahead_and_behind[1]}
+#     behind=${ahead_and_behind[2]}
 
-  # We can run promptinit early, and if we did we no longer need a post_zshrc hook.
-  post_zshrc_hook=(${post_zshrc_hook:#run_promptinit})
-}
+#     (( $ahead )) && gitstatus+=( "⇡${ahead}" )
+#     (( $behind )) && gitstatus+=( "⇣${behind}" )
 
-function run_promptinit {
-  # Initialize the built-in prompt system.
-  autoload -Uz promptinit && promptinit
+#     hook_com[misc]+=${(j:/:)gitstatus}
+#   }
 
-  # Set the prompt if specified.
-  local -a prompt_argv
-  zstyle -a ':zephyr:plugin:prompt' theme 'prompt_argv'
-  if [[ $TERM == (dumb|linux|*bsd*) ]]; then
-    prompt 'off'
-  elif (( $#prompt_argv > 0 )); then
-    prompt "$prompt_argv[@]"
-  fi
-}
-post_zshrc_hook+=(run_promptinit)
+#   function prompt_z1_precmd {
+#     setopt local_options
+#     unsetopt xtrace ksh_arrays
+#     _prompt_z1_pwd=$(prompt_pwd)
+#     vcs_info
+#   }
+
+#   function prompt_z1_setup {
+#     setopt local_options
+#     unsetopt xtrace ksh_arrays
+#     prompt_opts=(cr percent sp subst)
+
+#     # Load required functions.
+#     autoload -Uz add-zsh-hook
+#     autoload -Uz vcs_info
+
+#     # Add hook for calling vcs_info before each command.
+#     add-zsh-hook precmd prompt_z1_precmd
+
+#     # Define default prompt colors.
+#     typeset -gA _prompt_z1_colors=(
+#       black   "000"
+#       red     "001"
+#       green   "002"
+#       yellow  "003"
+#       blue    "004"
+#       magenta "005"
+#       cyan    "006"
+#       white   "007"
+#     )
+
+#     # Use extended color pallete if available.
+#     if [[ $TERM = *256color* || $TERM = *rxvt* ]]; then
+#       zstyle -s ':z1:prompt:colors' black   '_prompt_z1_colors[black]'   || _prompt_z1_colors[black]="000"
+#       zstyle -s ':z1:prompt:colors' red     '_prompt_z1_colors[red]'     || _prompt_z1_colors[red]="160"
+#       zstyle -s ':z1:prompt:colors' green   '_prompt_z1_colors[green]'   || _prompt_z1_colors[green]="076"
+#       zstyle -s ':z1:prompt:colors' yellow  '_prompt_z1_colors[yellow]'  || _prompt_z1_colors[yellow]="178"
+#       zstyle -s ':z1:prompt:colors' blue    '_prompt_z1_colors[blue]'    || _prompt_z1_colors[blue]="039"
+#       zstyle -s ':z1:prompt:colors' magenta '_prompt_z1_colors[magenta]' || _prompt_z1_colors[magenta]="168"
+#       zstyle -s ':z1:prompt:colors' cyan    '_prompt_z1_colors[cyan]'    || _prompt_z1_colors[cyan]="037"
+#       zstyle -s ':z1:prompt:colors' white   '_prompt_z1_colors[white]'   || _prompt_z1_colors[white]="255"
+#     fi
+
+#     # Define default prompt symbols.
+#     typeset -gA _prompt_z1_chars=(
+#       success "%%"
+#       error   "%%"
+#       vicmd   "V"
+#       stash   "="
+#       dirty   "*"
+#       ahead   "+"
+#       behind  "-"
+#     )
+
+#     # Use unicode chars if available.
+#     if ! zstyle -t ':z1:prompt:unicode' disable; then
+#       zstyle -s ':z1:prompt:character' success '_prompt_z1_chars[success]' || _prompt_z1_chars[success]="❱"
+#       zstyle -s ':z1:prompt:character' error   '_prompt_z1_chars[error]'   || _prompt_z1_chars[error]="❱"
+#       zstyle -s ':z1:prompt:character' vicmd   '_prompt_z1_chars[vicmd]'   || _prompt_z1_chars[vicmd]="❰"
+#       zstyle -s ':z1:prompt:character' stash   '_prompt_z1_chars[stash]'   || _prompt_z1_chars[stash]="☰"
+#       zstyle -s ':z1:prompt:character' dirty   '_prompt_z1_chars[dirty]'   || _prompt_z1_chars[dirty]="•"  # "✱"
+#       zstyle -s ':z1:prompt:character' ahead   '_prompt_z1_chars[ahead]'   || _prompt_z1_chars[ahead]="⇡"
+#       zstyle -s ':z1:prompt:character' behind  '_prompt_z1_chars[behind]'  || _prompt_z1_chars[behind]="⇣"
+#     fi
+
+#     # Set vcs_info parameters.
+#     zstyle ':vcs_info:*' enable git
+#     zstyle ':vcs_info:*' check-for-changes true
+#     zstyle ':vcs_info:*' stagedstr "%F{${_prompt_z1_colors[green]}}${_prompt_z1_chars[dirty]}%f"
+#     zstyle ':vcs_info:*' unstagedstr "%F{${_prompt_z1_colors[yellow]}}${_prompt_z1_chars[dirty]}%f"
+#     zstyle ':vcs_info:*' formats '%b%c%u%m'
+#     zstyle ':vcs_info:*' actionformats "%b%c%u%m|%F{cyan}%a%f"
+#     zstyle ':vcs_info:git*+set-message:*' hooks git_status
+
+#     # Define prompts.
+#     PROMPT='%F{${_prompt_z1_colors[blue]}}$_prompt_z1_pwd%f %F{${_prompt_z1_colors[green]}}$_prompt_z1_chars[success]%f '
+#     RPROMPT='${vcs_info_msg_0_}'
+#   }
+
+#   function prompt_z1_preview {
+#     local +h PROMPT=''
+#     local +h RPROMPT=''
+#     local +h SPROMPT=''
+
+#     editor-info 2> /dev/null
+#     prompt_preview_theme 'z1'
+#   }
+
+#   prompt_z1_setup "$@"
+# }
 
 # endregion --------------------------------------------------------------------
+
+# vim: ft=zsh 
