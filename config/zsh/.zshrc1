@@ -12,11 +12,10 @@
   export __zsh_config_dir=${ZDOTDIR:-${XDG_CONFIG_HOME:-$HOME/.config}/zsh}
   export __zsh_user_data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/zsh
   export __zsh_cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}/zsh
-  export __zsh_state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/zsh
 
   # Ensure Zsh directories exist.
   local zdir
-  for zdir in __zsh_{config,user_data,cache,state}_dir; do
+  for zdir in __zsh_{config,user_data,cache}_dir; do
     [[ -d "${(P)zdir}" ]] || mkdir -p ${(P)zdir}
   done
 
