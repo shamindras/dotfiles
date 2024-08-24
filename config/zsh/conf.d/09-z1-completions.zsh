@@ -29,18 +29,6 @@ function z1_completions {
   (( $+functions[compinit] )) || run_compinit
 }
 
-# z1_editor: Setup editor and keybinds.
-function z1_editor {
-  # Allow mapping Ctrl+S and Ctrl+Q shortcuts
-  [[ -r ${TTY:-} && -w ${TTY:-} && $+commands[stty] == 1 ]] && stty -ixon <$TTY >$TTY
-
-  # No PS2
-  builtin zle -N z1_editor_no_ps2
-  bindkey '^J' z1_editor_no_ps2
-  bindkey '^M' z1_editor_no_ps2
-  bindkey -e
-}
-
 # endregion --------------------------------------------------------------------
 
 # vim: ft=zsh 

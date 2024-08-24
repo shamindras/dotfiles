@@ -409,33 +409,6 @@ function prompt_z1_setup {
   prompt_z1_setup "$@"
 }
 
-function z1_editor_no_ps2 {
-  emulate -L zsh
-  local -r func=no-ps2-test
-
-  if (( ${+functions[$func]} )); then
-    unfunction -- $func
-  fi
-
-  if functions[$func]=$PREBUFFER$BUFFER 2>/dev/null &&
-    (( ${+functions[$func]} )); then
-    unfunction -- $func
-    if functions[$func]=$PREBUFFER$BUFFER$'\ndo\ndone' 2>/dev/null &&
-      (( ${+functions[$func]} )) ; then
-      unfunction -- $func
-    else
-      local w
-      zstyle -s 'z1:editor:no-ps2:' accept-line w || w=accept-line
-      if [[ -n $w ]]; then
-        builtin zle -- $w
-      fi
-      return
-    fi
-  fi
-
-  LBUFFER+=$'\n'
-}
-
 # plugin-clone: Use git to clone Zsh plugins in parallel.
 function plugin-clone {
   emulate -L zsh; setopt local_options $__z1_opts
@@ -524,7 +497,7 @@ function plugin-compile {
   # z1_funcdir
   # z1_colorize
   # z1_directory
-  z1_editor
+  # z1_editor
   z1_history
   z1_utility
   z1_plugins
