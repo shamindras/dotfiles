@@ -5,10 +5,11 @@
 # ------------------------------------------------------------------------------
 
 # Set common variables if they have not already been set.
+# TODO change `vim` to `nvim`
 export EDITOR=${EDITOR:-vim}
 export VISUAL=${VISUAL:-vim}
 export PAGER=${PAGER:-less}
-[[ "$OSTYPE" == darwin* ]] && export BROWSER=${BROWSER:-open}
+export BROWSER=${BROWSER:-firefox}
 export LANG=${LANG:-en_US.UTF-8}
 
 # Set the Less input preprocessor.
