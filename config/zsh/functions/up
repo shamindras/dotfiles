@@ -1,0 +1,22 @@
+#!/bin/zsh
+##? up - go up any number of directories
+##?
+##? usage:
+##?   up [<num>]
+
+# Quickly go up any number of directories.
+# source: https://github.com/shamindras/dotfiles/blob/99c3c130053b2a0cc08ff1875798e7db1e07d269/config/zsh/conf.d/05-directory.zsh#L33C1-L45C4 
+up() {
+    local parents="${1:-1}"
+    if [[ ! "$parents" -gt 0 ]]; then
+        echo >&2 "usage: up [<num>]"
+        return 1
+    fi
+    local dotdots=".."
+    while (( --parents )); do
+        dotdots+="/.."
+    done
+    cd "$dotdots"
+}
+
+# vim: ft=zsh

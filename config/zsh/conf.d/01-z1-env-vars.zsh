@@ -4,6 +4,52 @@
 # region: Environment and envvars
 # ------------------------------------------------------------------------------
 
+# Set common variables if they have not already been set.
+# TODO change `vim` to `nvim`
+export EDITOR=${EDITOR:-vim}
+export VISUAL=${VISUAL:-vim}
+export PAGER=${PAGER:-less}
+export BROWSER=${BROWSER:-firefox}
+export LANG=${LANG:-en_US.UTF-8}
+
+# Set the Less input preprocessor.
+# Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
+if [[ -z "$LESSOPEN" ]] && (( $#commands[(i)lesspipe(|.sh)] )); then
+  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
+fi
+export LESS="${LESS:--g -i -M -R -S -w -z-4}"
+
+# Reduce key delay
+export KEYTIMEOUT=${KEYTIMEOUT:-1}
+
+# Make Apple Terminal behave.
+if [[ "$OSTYPE" == darwin* ]]; then
+  export SHELL_SESSIONS_DISABLE=${SHELL_SESSIONS_DISABLE:-1}
+fi
+
+# Ensure path arrays do not contain duplicates.
+typeset -gU cdpath fpath mailpath path
+
+# Add /usr/local/bin to path.
+path=(/usr/local/{,s}bin(N) $path)
+
+# Set the list of directories that Zsh searches for programs.
+typeset -gaU prepath
+if [[ "${#prepath}" -eq 0 ]]; then
+  zstyle -s ':zephyr:plugin:environment' 'prepath' 'prepath' \
+  || prepath=(
+      $HOME/{,s}bin(N)
+      $HOME/.local/{,s}bin(N)
+    )
+fi
+
+# If path gets prepended and is now out of order, do `path=($prepath $path)`.
+path=($prepath $path)
+
+#
+#endregion
+#region homebrew
+
 () {
   # Where is brew?
   # Setup homebrew if it exists on the system.
