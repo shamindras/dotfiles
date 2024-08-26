@@ -4,6 +4,7 @@
 
 # ------------------------------------------------------------------------------
 # region: Basic XDG variable setup
+# source: https://github.com/mattmc3/zdotdir/blob/main/.zshenv
 # ------------------------------------------------------------------------------
 
 # This has already been set in `.zshenv`, but redefine here just in case.
