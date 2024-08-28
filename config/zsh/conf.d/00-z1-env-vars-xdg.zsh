@@ -31,7 +31,7 @@ export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
 # export LESSHISTFILE="-" # Disable less history.
 export LESSKEY="${LESSKEY:-$XDG_CONFIG_HOME/less/lesskey}"
 export LESSHISTFILE="${LESSHISTFILE:-$XDG_CACHE_HOME/less/history}"
-[[ -f $LESSHISTFILE ]] || { mkdir -p $LESSHISTFILE:h && touch $LESSHISTFILE }
+# [[ -f $LESSHISTFILE ]] || { mkdir -p $LESSHISTFILE:h && touch $LESSHISTFILE }
 
 # Python
 # export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/pip.conf"

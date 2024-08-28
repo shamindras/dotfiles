@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# clear the "Last login" message for new tabs in terminal --------
+# source: https://stackoverflow.com/a/69915614/4687531
+printf '\33c\e[3J'
+
 # Based on the .zshrc1 config
 # source: https://github.com/mattmc3/zshrc1
 
@@ -10,7 +14,7 @@
 
 # This has already been set in `.zshenv`, but redefine here just in case.
 # Since `$ZDOTDIR` is a reserved `zsh` keyword, we don't need to `export` it.
-ZDOTDIR=${ZDOTDIR:-$HOME/.config/zsh}
+# ZDOTDIR=${ZDOTDIR:-$HOME/.config/zsh}
 
 # XDG path specifications
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
@@ -92,7 +96,7 @@ function z1_confd {
 
   # conf.d functions
   z1_funcdir
-  # z1_colorize
+  z1_colorize
   z1_directory
   z1_editor
   z1_history
@@ -101,6 +105,8 @@ function z1_confd {
   z1_completions
   z1_brew_app_starship
   z1_brew_app_zoxide
+  z1_suffix_aliases
+  z1_aliases
 }
 
 # vim: ft=zsh 
