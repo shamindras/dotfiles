@@ -43,10 +43,10 @@ export PYLINTHOME="${PYLINTHOME:-$XDG_CACHE_HOME/pylint.d}"
 export PYTHONSTARTUP="${PYTHONSTARTUP:-$XDG_CONFIG_HOME/python/pythonrc}"
 # export MPLCONFIGDIR="${MPLCONFIGDIR:-$XDG_DATA_HOME/matplotlib}"
 export MYPY_CACHE_DIR="${MYPY_CACHE_DIR:-$XDG_CACHE_HOME/mypy_cache}"
-export PYGMENTIZE_STYLE='paraiso-dark'
-export PYTHONDONTWRITEBYTECODE=false # TODO: toggle if reviewing bytecode
-export PIPENV_IGNORE_VIRTUALENVS=-1 # always install to pyenv virtualenv
-export ZSH_PYENV_LAZY_VIRTUALENV=1 # used by `../plugins/python/zsh-pyenv-lazy-load.zsh`
+# export PYGMENTIZE_STYLE='paraiso-dark'
+# export PYTHONDONTWRITEBYTECODE=false # TODO: toggle if reviewing bytecode
+# export PIPENV_IGNORE_VIRTUALENVS=-1 # always install to pyenv virtualenv
+# export ZSH_PYENV_LAZY_VIRTUALENV=1 # used by `../plugins/python/zsh-pyenv-lazy-load.zsh`
 
 # R
 # export R_USER="${R_USER:-$XDG_CONFIG_HOME/R}"
@@ -61,7 +61,6 @@ export ZSH_PYENV_LAZY_VIRTUALENV=1 # used by `../plugins/python/zsh-pyenv-lazy-l
 # export OMP_NUM_THREADS=16
 
 # starship
-# export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/starship/starship.toml}"
 export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/starship/starship.toml}"
 # export STARSHIP_CACHE="${STARSHIP_CACHE:-$XDG_CACHE_HOME/starship/cache}"
 
