@@ -1,4 +1,5 @@
 #!/bin/zsh
+
 # Based on the .zshrc1 config
 # source: https://github.com/mattmc3/zshrc1
 
@@ -91,7 +92,7 @@ function z1_confd {
 
   # conf.d functions
   z1_funcdir
-  z1_colorize
+  # z1_colorize
   z1_directory
   z1_editor
   z1_history
