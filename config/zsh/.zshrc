@@ -99,6 +99,8 @@ function z1_confd {
   z1_utility
   z1_plugins
   z1_completions
+  z1_brew_app_starship
+  z1_brew_app_zoxide
 }
 
 # vim: ft=zsh 
