@@ -103,7 +103,7 @@ alias gpg="${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\""
 
 # readline
 export INPUTRC="${INPUTRC:-$XDG_CONFIG_HOME/readline/inputrc}"
-[[ -f $INPUTRC ]] || { mkdir -p $INPUTRC:h && touch $INPUTRC }
+# [[ -f $INPUTRC ]] || { mkdir -p $INPUTRC:h && touch $INPUTRC }
 
 # ruby bundler
 export BUNDLE_USER_CONFIG="${BUNDLE_USER_CONFIG:-$XDG_CONFIG_HOME/bundle}"
@@ -120,7 +120,7 @@ export RUSTUP_HOME="${RUSTUP_HOME:-$XDG_DATA_HOME/rustup}"
 
 # screen
 export SCREENRC="${SCREENRC:-$XDG_CONFIG_HOME/screen/screenrc}"
-[[ -f $SCREENRC ]] || { mkdir -p $SCREENRC:h && touch $SCREENRC }
+# [[ -f $SCREENRC ]] || { mkdir -p $SCREENRC:h && touch $SCREENRC }
 
 # tmux
 # export TMUX_PLUGIN_MANAGER_PATH="${XDG_DATA_HOME}/tmux/plugins"
@@ -129,8 +129,8 @@ export SCREENRC="${SCREENRC:-$XDG_CONFIG_HOME/screen/screenrc}"
 # alias tmux='tmux -f "$TMUX_CONFIG"'
 
 # wget
-# export WGETRC="${WGETRC:-$XDG_CONFIG_HOME/wget/wgetrc}"
-[[ -f $WGETRC ]] || { mkdir -p $WGETRC:h && touch $WGETRC }
+export WGETRC="${WGETRC:-$XDG_CONFIG_HOME/wget/wgetrc}"
+# [[ -f $WGETRC ]] || { mkdir -p $WGETRC:h && touch $WGETRC }
 alias wget="${aliases[wget]:-wget} --hsts-file=\"\$XDG_CACHE_HOME/wget/wget-hsts\""
 
 ## Respect XDG directories
