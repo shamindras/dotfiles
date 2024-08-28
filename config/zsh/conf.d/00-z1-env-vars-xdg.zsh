@@ -62,6 +62,7 @@ export ZSH_PYENV_LAZY_VIRTUALENV=1 # used by `../plugins/python/zsh-pyenv-lazy-l
 
 # starship
 # export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/starship/starship.toml}"
+export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/starship/starship.toml}"
 # export STARSHIP_CACHE="${STARSHIP_CACHE:-$XDG_CACHE_HOME/starship/cache}"
 
 # Tealdeer
