@@ -30,7 +30,6 @@ if [[ "$OSTYPE" == darwin* ]]; then
   export SHELL_SESSIONS_DISABLE=${SHELL_SESSIONS_DISABLE:-1}
 fi
 
-
 # Homebrew
 if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   if [[ "${commands[brew]}" == "/opt/homebrew/bin/brew" ]]; then
@@ -67,9 +66,11 @@ path=(
   $HOMEBREW_PREFIX/opt/curl/bin(N)
   $HOMEBREW_PREFIX/opt/go/libexec/bin(N)
   $HOMEBREW_PREFIX/opt/ruby/bin(N)
+  # FIX check whether the ruby gems `3.1.0` needs to be hardcoded
   $HOMEBREW_PREFIX/lib/ruby/gems/3.1.0/bin(N)
   $HOME/.gem/ruby/*/bin(N)
   $HOMEBREW_PREFIX/share/npm/bin(N)
+  $HOMEBREW_PREFIX/anaconda3/bin(N)
 
   # pyenv
   $PYENV_ROOT/bin(N)
