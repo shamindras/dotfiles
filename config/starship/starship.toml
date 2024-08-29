@@ -1,0 +1,72 @@
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+format = """
+$directory\
+$git_branch\
+$line_break\
+$character
+"""
+
+[directory]
+style = 'blue bold'
+format = '[$path ]($style)'
+truncation_length = 3
+truncation_symbol = '…/'
+truncate_to_repo = false
+
+[line_break]
+disabled = false
+
+[character]
+success_symbol = "[](white)"
+error_symbol = "[](red)"
+vicmd_symbol = "[](green)"
+
+[aws]
+disabled = true
+
+[cmd_duration]
+disabled = true
+
+[rlang]
+disabled = true
+
+[hostname]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[git_branch]
+style = 'fg:green'
+symbol = ' '
+format = '[on](white) [$symbol$branch ]($style)'
+
+[git_commit]
+disabled = true
+
+[git_metrics]
+disabled = true
+
+[git_state]
+disabled = true
+
+[git_status]
+disabled = true
+
+[lua]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[package]
+disabled = true
+
+[rust] 
+disabled = true
+
+[username]
+disabled = true
+
