@@ -79,11 +79,10 @@ export _ZO_MAXAGE=100
 
 # gpg
 export GNUPGHOME="${GNUPGHOME:-$XDG_DATA_HOME/gnupg}"
-alias gpg="${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\""
 
 # Node
 # source: https://blog.mitsunee.com/post/n-xdg-setup
-# export NVM_DIR="${NVM_DIR:-$XDG_DATA_HOME/nvm}"
+export NVM_DIR="${NVM_DIR:-$XDG_DATA_HOME/nvm}"
 # export N_PREFIX="${N_PREFIX:-$XDG_DATA_HOME/node}"
 # export N_CACHE_PREFIX="${N_CACHE_PREFIX:-$XDG_CACHE_HOME}"
 # export N_PRESERVE_NPM=1
@@ -125,7 +124,6 @@ export SCREENRC="${SCREENRC:-$XDG_CONFIG_HOME/screen/screenrc}"
 
 # wget
 export WGETRC="${WGETRC:-$XDG_CONFIG_HOME/wget/wgetrc}"
-alias wget="${aliases[wget]:-wget} --hsts-file=\"\$XDG_CACHE_HOME/wget/wget-hsts\""
 
 ## Respect XDG directories
 # export CURL_HOME="${XDG_CONFIG_HOME}/curl"

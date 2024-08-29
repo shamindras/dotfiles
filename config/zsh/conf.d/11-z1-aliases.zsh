@@ -33,9 +33,11 @@ function z1_aliases {
     alias t2="tree --level=2"
     alias tl2="t2 --long"
 
-    # subversion alias 
-    # source: running `xdg-ninja` in `$HOME` gave this suggestion
+    # source: running `xdg-ninja` in `$HOME` gave these suggestion
+    # subversion 
     alias svn="svn --config-dir $XDG_CONFIG_HOME/subversion"
+    alias gpg="${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\""
+    alias wget="${aliases[wget]:-wget} --hsts-file=\"\$XDG_CACHE_HOME/wget/wget-hsts\""
 
     # Additional clean/wash aliases --
     # Source: https://github.com/ameensol/shell/blob/master/.zshenv#L29-L30
