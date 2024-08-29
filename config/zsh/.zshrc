@@ -1,3 +1,5 @@
+# Uncomment the following for profiling, must be at the top of `zshrc`
+# zmodload zsh/zprof
 #!/bin/zsh
 
 # clear the "Last login" message for new tabs in terminal --------
@@ -99,11 +101,16 @@ function z1_confd {
   z1_utility
   z1_plugins
   z1_completions
-  z1_brew_app_starship
+  # z1_brew_app_starship
   z1_brew_app_zoxide
   z1_brew_app_fzf
   z1_aliases
   z1_suffix_aliases
+  prompt_z1_setup 
+  z1_prompt
 }
+
+# Uncomment the following for profiling, must be at the bottom of `zshrc`
+# zprof
 
 # vim: ft=zsh 
