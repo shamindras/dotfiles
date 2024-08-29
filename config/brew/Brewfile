@@ -225,8 +225,6 @@ cask "djview"
 cask "dozer"
 # Client for the Dropbox cloud storage service
 cask "dropbox"
-# YAMAMOTO Mitsuharu's Mac port of GNU Emacs
-cask "emacs-mac"
 # Web browser
 cask "firefox"
 # Screen colour temperature controller
@@ -254,8 +252,6 @@ cask "google-chrome"
 cask "google-drive"
 # Vector graphics editor
 cask "inkscape"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # Download manager
 cask "jdownloader"
 # Programming language for technical computing
@@ -266,8 +262,6 @@ cask "kitty"
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications
 cask "mactex"
-# Meet, chat, call, and collaborate in just one place
-cask "microsoft-teams"
 # VPN client for secure internet access and private browsing
 cask "nordvpn"
 # Simple application that will prevent iTunes or Apple Music from launching
