@@ -1,0 +1,40 @@
+[user]
+	name = Shamindra Shrotriya
+	email = shamindra.shrotriya@gmail.com
+[github]
+    user = shamindras
+[interactive]
+    diffFilter = delta --color-only --features=interactive
+[color]
+    ui = true
+[core]
+    editor = nvim
+    excludesfile = /Users/shamindras/.gitignore
+    pager = delta
+[web]
+	browser = google-chrome
+[diff]
+	colorMoved = default
+[merge]
+	conflictstyle = diff3
+	tool = vimdiff
+[mergetool]
+	path = nvim
+[delta]
+    navigate = true    
+    light = false      
+    side-by-side = true  
+    line-numbers = true   
+    features = decorations	 
+[delta "interactive"]
+    keep-plus-minus-markers = true
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax
+[url "git@github.com:"]
+	insteadOf = https://github.com/
