@@ -12,10 +12,6 @@ printf '\33c\e[3J'
 # source: https://github.com/mattmc3/zdotdir/blob/main/.zshenv
 # ------------------------------------------------------------------------------
 
-# This has already been set in `.zshenv`, but redefine here just in case.
-# Since `$ZDOTDIR` is a reserved `zsh` keyword, we don't need to `export` it.
-# ZDOTDIR=${ZDOTDIR:-$HOME/.config/zsh}
-
 # XDG path specifications
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
