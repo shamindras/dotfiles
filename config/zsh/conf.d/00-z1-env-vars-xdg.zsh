@@ -31,7 +31,6 @@ export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
 # export LESSHISTFILE="-" # Disable less history.
 export LESSKEY="${LESSKEY:-$XDG_CONFIG_HOME/less/lesskey}"
 export LESSHISTFILE="${LESSHISTFILE:-$XDG_CACHE_HOME/less/history}"
-# [[ -f $LESSHISTFILE ]] || { mkdir -p $LESSHISTFILE:h && touch $LESSHISTFILE }
 
 # Python
 # export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/pip.conf"
@@ -101,7 +100,6 @@ alias gpg="${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\""
 
 # readline
 export INPUTRC="${INPUTRC:-$XDG_CONFIG_HOME/readline/inputrc}"
-# [[ -f $INPUTRC ]] || { mkdir -p $INPUTRC:h && touch $INPUTRC }
 
 # ruby bundler
 export BUNDLE_USER_CONFIG="${BUNDLE_USER_CONFIG:-$XDG_CONFIG_HOME/bundle}"
@@ -118,7 +116,6 @@ export RUSTUP_HOME="${RUSTUP_HOME:-$XDG_DATA_HOME/rustup}"
 
 # screen
 export SCREENRC="${SCREENRC:-$XDG_CONFIG_HOME/screen/screenrc}"
-# [[ -f $SCREENRC ]] || { mkdir -p $SCREENRC:h && touch $SCREENRC }
 
 # tmux
 # export TMUX_PLUGIN_MANAGER_PATH="${XDG_DATA_HOME}/tmux/plugins"
@@ -128,7 +125,6 @@ export SCREENRC="${SCREENRC:-$XDG_CONFIG_HOME/screen/screenrc}"
 
 # wget
 export WGETRC="${WGETRC:-$XDG_CONFIG_HOME/wget/wgetrc}"
-# [[ -f $WGETRC ]] || { mkdir -p $WGETRC:h && touch $WGETRC }
 alias wget="${aliases[wget]:-wget} --hsts-file=\"\$XDG_CACHE_HOME/wget/wget-hsts\""
 
 ## Respect XDG directories
