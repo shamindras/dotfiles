@@ -20,7 +20,7 @@ function z1_brew_app_zoxide {
 # source: https://github.com/junegunn/fzf?tab=readme-ov-file#setting-up-shell-integration
 function z1_brew_app_fzf {
     # Set up fzf key bindings and fuzzy completion
-    source <(fzf --zsh)
+    eval "$(fzf --zsh)"
     # FZF options
     export FZF_DEFAULT_COMMAND='fd -HI -L --exclude .git --color=always'
     export FZF_DEFAULT_OPTS='
