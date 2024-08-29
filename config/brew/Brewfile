@@ -1,0 +1,359 @@
+tap "bloznelis/tap"
+tap "github/gh"
+tap "homebrew/bundle"
+tap "homebrew/cask-fonts"
+tap "homebrew/services"
+tap "koekeishiya/formulae"
+tap "railwaycat/emacsmacport"
+# Color management engine supporting ICC profiles
+brew "little-cms2"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
+# New file format for still image compression
+brew "jpeg-xl"
+# Codec library for encoding and decoding AV1 video streams
+brew "aom"
+# Next generation open source RPC library and framework
+brew "grpc"
+# Framework for scalable cross-language services development
+brew "thrift"
+# Columnar in-memory analytics layer designed to accelerate big data
+brew "apache-arrow"
+# Spell checker with better logic than ispell
+brew "aspell"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Core application library for C
+brew "glib"
+# Defines a standard way of committing rules and communicating it
+brew "commitizen"
+# GNU multiple precision arithmetic library
+brew "gmp"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# International domain name library (IDNA2008, Punycode and TR46)
+brew "libidn2"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+# Good-lookin' diffs with diff-highlight and more
+brew "diff-so-fancy"
+# Load/unload environment variables based on $PWD
+brew "direnv"
+# Disk Usage/Free Utility - a better 'df' alternative
+brew "duf"
+# More intuitive version of du in rust
+brew "dust"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
+# GNU Transport Layer Security (TLS) Library
+brew "gnutls"
+# OpenType text shaping engine
+brew "harfbuzz"
+# Image processing and image analysis library
+brew "leptonica"
+# Subtitle renderer for the ASS/SSA subtitle format
+brew "libass"
+# Secure Reliable Transport
+brew "srt"
+# OCR (Optical Character Recognition) engine
+brew "tesseract"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
+# ODBC 3 connectivity for UNIX
+brew "unixodbc"
+# Libraries to talk to Microsoft SQL Server and Sybase databases
+brew "freetds"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# Geometry Engine
+brew "geos"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
+# File format designed to store large amounts of data
+brew "hdf5"
+# Network authentication protocol
+brew "krb5"
+# Cartographic Projections Library
+brew "proj"
+# Library and tools for dealing with GeoTIFF
+brew "libgeotiff"
+# Database of common MIME types
+brew "shared-mime-info"
+# ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
+brew "libheif"
+# Postgres C API library
+brew "libpq"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.9"
+# Adds spatial SQL capabilities to SQLite
+brew "libspatialite"
+# Libraries and data formats for array-oriented scientific data
+brew "netcdf"
+# Optimized BLAS library
+brew "openblas"
+# Package for scientific computing with Python
+brew "numpy"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Geospatial Data Abstraction Library
+brew "gdal"
+# GitHub command-line tool
+brew "gh"
+# Interpreter for PostScript and PDF
+brew "ghostscript"
+# Distributed revision control system
+brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Generate introspection data for GObject libraries
+brew "gobject-introspection"
+# Improved top (interactive process viewer)
+brew "htop"
+# User-friendly cURL replacement (command-line HTTP client)
+brew "httpie"
+# Spell checker and morphological analyzer
+brew "hunspell"
+# Command-line benchmarking tool
+brew "hyperfine"
+# Tool Command Language
+brew "tcl-tk"
+# Library for reading RAW files from digital photo cameras
+brew "libraw"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# Simple terminal UI for git commands
+brew "lazygit"
+# MNG/JNG reference library
+brew "libmng"
+# Powerful, lightweight programming language
+brew "lua"
+# Package manager for the Lua programming language
+brew "luarocks"
+# NCurses Disk Usage
+brew "ncdu"
+# Fast, highly customisable system info script
+brew "neofetch"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Platform built on V8 to build network applications
+brew "node"
+# Open source suite of directory software
+brew "openldap"
+# OpenBSD freely-licensed SSH connectivity tools
+brew "openssh"
+# Swiss-army knife of markup format conversion
+brew "pandoc"
+# Pandoc filter for numbering and cross-referencing
+brew "pandoc-crossref"
+# Highly capable, feature-rich programming language
+brew "perl"
+# General-purpose scripting language
+brew "php", restart_service: true
+# Pinentry for GPG on Mac
+brew "pinentry-mac"
+# Python dependency management tool
+brew "pipenv"
+# Execute binaries from Python packages in isolated environments
+brew "pipx"
+# Cross-platform application and UI framework
+brew "qt@5"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler-qt5"
+# Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
+brew "prettier"
+# Linter for prose
+brew "proselint"
+# Python version management
+brew "pyenv"
+# Software environment for statistical computing
+brew "r", link: false
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Safe, concurrent, practical language
+brew "rust"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Bash syntax highlighter that encourages/fixes variables quoting
+brew "shellharden"
+# Autoformat shell script source code
+brew "shfmt"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Opinionated Lua code formatter
+brew "stylua"
+# Version control system designed to be a better CVS
+brew "subversion"
+# Feature-rich console based todo list manager
+brew "task"
+# Very fast implementation of tldr in Rust
+brew "tealdeer"
+# Terminal multiplexer
+brew "tmux"
+# Internet file retriever
+brew "wget"
+# Check your $HOME for unwanted files and directories
+brew "xdg-ninja"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# UNIX shell (command interpreter)
+brew "zsh"
+# Simple hotkey-daemon for macOS.
+brew "koekeishiya/formulae/skhd"
+# A tiling window manager for macOS based on binary space partitioning.
+brew "koekeishiya/formulae/yabai"
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
+# GPU-accelerated terminal emulator
+cask "alacritty"
+# Application launcher and productivity software
+cask "alfred"
+# Distribution of the Python and R programming languages for scientific computing
+cask "anaconda"
+# Screen saver based on animations presented during Apple Special Event Brooklyn
+cask "brooklyn"
+# DjVu viewer and browser plugin
+cask "djview"
+# Tool to hide status bar icons
+cask "dozer"
+# Client for the Dropbox cloud storage service
+cask "dropbox"
+# YAMAMOTO Mitsuharu's Mac port of GNU Emacs
+cask "emacs-mac"
+# Web browser
+cask "firefox"
+# Screen colour temperature controller
+cask "flux"
+cask "font-cascadia-code"
+cask "font-courier-prime"
+cask "font-fira-code"
+cask "font-hack"
+cask "font-hack-nerd-font"
+cask "font-hasklig"
+cask "font-inconsolata"
+cask "font-input"
+cask "font-iosevka"
+cask "font-iosevka-slab"
+cask "font-jetbrains-mono"
+cask "font-lilex"
+cask "font-meslo-lg-nerd-font"
+cask "font-poppins"
+cask "font-roboto-mono"
+cask "font-source-code-pro"
+cask "google-backup-and-sync"
+# Web browser
+cask "google-chrome"
+# Client for the Google Drive storage service
+cask "google-drive"
+# Vector graphics editor
+cask "inkscape"
+# Terminal emulator as alternative to Apple's Terminal app
+cask "iterm2"
+# Download manager
+cask "jdownloader"
+# Programming language for technical computing
+cask "julia"
+# GPU-based terminal emulator
+cask "kitty"
+# Free cross-platform office suite, fresh version
+cask "libreoffice"
+# Full TeX Live distribution with GUI applications
+cask "mactex"
+# Meet, chat, call, and collaborate in just one place
+cask "microsoft-teams"
+# VPN client for secure internet access and private browsing
+cask "nordvpn"
+# Simple application that will prevent iTunes or Apple Music from launching
+cask "notunes"
+# JDK from Oracle
+cask "oracle-jdk"
+# Scientific and technical publishing system built on Pandoc
+cask "quarto"
+# Environment for statistical computing and graphics
+cask "r"
+# Data science software focusing on R and Python
+cask "rstudio"
+# Tool to reverse the direction of scrolling
+cask "scroll-reverser"
+# Screenshot measurement and annotation tool
+cask "shottr"
+# Instant messaging application focusing on security
+cask "signal"
+# PDF reader and note-taking application
+cask "skim"
+# Video chat, voice call and instant messaging application
+cask "skype"
+# Team communication and collaboration software
+cask "slack"
+# App launcher/switcher
+cask "spacelauncher"
+# Music streaming service
+cask "spotify"
+# Open-source code editor
+cask "visual-studio-code"
+# Multimedia player
+cask "vlc"
+# Open-source version of the X.Org X Window System
+cask "xquartz"
+# Video communication and virtual meeting platform
+cask "zoom"
+# Collect, organise, cite, and share research sources
+cask "zotero"
+vscode "aaron-bond.better-comments"
+vscode "alefragnani.project-manager"
+vscode "bodil.file-browser"
+vscode "christian-kohler.path-intellisense"
+vscode "davidanson.vscode-markdownlint"
+vscode "draivin.hscopes"
+vscode "eamodio.gitlens"
+vscode "enkia.tokyo-night"
+vscode "esbenp.prettier-vscode"
+vscode "formulahendry.code-runner"
+vscode "github.github-vscode-theme"
+vscode "jacobdufault.fuzzy-search"
+vscode "james-yu.latex-workshop"
+vscode "janisdd.vscode-edit-csv"
+vscode "johnpapa.vscode-peacock"
+vscode "kaiwood.center-editor-window"
+vscode "keifererikson.nightfox"
+vscode "kevinrose.vsc-python-indent"
+vscode "mechatroner.rainbow-csv"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "ms-vscode.makefile-tools"
+vscode "mushan.vscode-paste-image"
+vscode "naumovs.color-highlight"
+vscode "njpwerner.autodocstring"
+vscode "notzaki.pandocciter"
+vscode "pkief.material-icon-theme"
+vscode "quarto.quarto"
+vscode "reditorsupport.r"
+vscode "ritwickdey.liveserver"
+vscode "rpinski.shebang-snippets"
+vscode "sdras.night-owl"
+vscode "sirtori.indenticator"
+vscode "sleistner.vscode-fileutils"
+vscode "stkb.rewrap"
+vscode "streetsidesoftware.code-spell-checker"
+vscode "timonwong.shellcheck"
+vscode "usernamehw.errorlens"
+vscode "valentjn.vscode-ltex"
+vscode "vscodevim.vim"
+vscode "vspacecode.vspacecode"
+vscode "vspacecode.whichkey"
+vscode "yzhang.markdown-all-in-one"
+vscode "zainchen.json"
