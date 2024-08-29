@@ -9,6 +9,15 @@ use
 - A [modern Unix](https://github.com/ibraheemdev/modern-unix) workflow.
 - The [`XDG`](https://wiki.archlinux.org/title/XDG_user_directories) directory specification.
 
+## Installation
+
+In order to install these dotfiles, run the following commands:
+
+```bash
+git clone --recurse-submodules --remote-submodules git@github.com:shamindras/dotfiles.git
+# TODO add details  on Makefile
+```
+
 ## Inspiration
 
 These dotfiles have been mainly inspired by the following people. I thank them
