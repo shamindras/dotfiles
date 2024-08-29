@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Uncomment the following for profiling, must be at the top of `zshrc`
-zmodload zsh/zprof
+# zmodload zsh/zprof
 
 # clear the "Last login" message for new tabs in terminal --------
 # source: https://stackoverflow.com/a/69915614/4687531
@@ -112,6 +112,6 @@ function z1_confd {
 }
 
 # Uncomment the following for profiling, must be at the bottom of `zshrc`
-zprof
+# zprof
 
 # vim: ft=zsh 
