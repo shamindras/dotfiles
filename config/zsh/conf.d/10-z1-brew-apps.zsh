@@ -34,9 +34,12 @@ function z1_brew_app_fzf {
     --color info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54
     '
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_CTRL_T_OPTS="--preview '(bat --theme ansi-dark --color always {} 2> /dev/null || exa --tree --color=always {}) 2> /dev/null | head -200'"
+    export FZF_CTRL_T_OPTS="--preview '(bat --theme ansi-dark --color always {} 2> /dev/null || eza --tree --color=always {}) 2> /dev/null | head -200'"
     export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
-    export FZF_ALT_C_OPTS="--preview 'exa --tree --color=always {} | head -200'"
+    export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+    # The following is needed on OSX to enable Alt+C
+    # source: https://github.com/junegunn/fzf/issues/164#issuecomment-581837757
+    bindkey "ç" fzf-cd-widget
 }
 
 # endregion --------------------------------------------------------------------

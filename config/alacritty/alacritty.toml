@@ -14,6 +14,9 @@ bindings = [
   # { key = "Key8", mods = "Command", chars = "\x028" } #                ... 8
   # { key = "Key9", mods = "Command", chars = "\x029" } #                ... 9
   # { key = "Comma", mods = "Command", chars = "\x02," } # rename the current tmux window
+  # bind `Alt+C` for fzf using Alacritty
+  # source: https://github.com/junegunn/fzf/issues/164#issuecomment-2128864411
+  { key = "C", mods = "Alt", chars = "\u001bc" },
   # { key = "E", mods = "Command", chars = "\x02\"" } # split tmux window vertically
   # { key = "E", mods = "Command|Shift", chars = "\x02%" } # split tmux window horizontally
   # { key = "F", mods = "Command|Shift", chars = "\x02[/" } # start tmux search mode
