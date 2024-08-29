@@ -67,7 +67,7 @@ export STARSHIP_CACHE="${STARSHIP_CACHE:-$XDG_CACHE_HOME/starship/cache}"
 # Tealdeer
 # This must be hardcoded, and must be an absolute path.
 # source: https://dbrgn.github.io/tealdeer/config.html#override-config-directory
-export TEALDEER_CONFIG_DIR=~/.config/tealdeer/config.toml
+export TEALDEER_CONFIG_DIR=~/.config/tealdeer
 
 # Terminfo
 export TERMINFO="${TERMINFO:-$XDG_DATA_HOME}"/terminfo
