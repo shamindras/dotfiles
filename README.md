@@ -9,6 +9,13 @@ use
 - A [modern Unix](https://github.com/ibraheemdev/modern-unix) workflow.
 - The [`XDG`](https://wiki.archlinux.org/title/XDG_user_directories) directory specification.
 
+## Table of contents
+
+- [Personal dotfiles](#personal-dotfiles)
+  - [Table of contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Inspiration](#inspiration)
+
 ## Installation
 
 In order to install these dotfiles, run the following commands:
