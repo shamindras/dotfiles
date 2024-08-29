@@ -20,3 +20,4 @@ for openly sharing their work.
   and accompanying [YouTube videos](https://www.youtube.com/watch?v=U-omALWIBos&ab_channel=JoseanMartinez).
 - [Mathias Bynen's dotfiles](https://github.com/mathiasbynens/dotfiles)
   and in particular [his macOS dotfiles](https://github.com/mathiasbynens/dotfiles/blob/master/.macOS).
+- [Dylan McDowell's zsh config](https://github.com/dylanjm/teton/blob/2eb03539fe2c9489ed6b5ade4ee4ee44d8c6f421/config/shells/zsh/zshenv.zsh)
