@@ -8,18 +8,18 @@
 [color]
     ui = true
 [core]
-    editor = nvim
+    editor = vim
     excludesfile = /Users/shamindras/.gitignore
     pager = delta
 [web]
-	browser = google-chrome
+	browser = firefox
 [diff]
 	colorMoved = default
 [merge]
 	conflictstyle = diff3
 	tool = vimdiff
 [mergetool]
-	path = nvim
+	path = vim
 [delta]
     navigate = true    
     light = false      
