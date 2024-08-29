@@ -1,4 +1,11 @@
-# Personal dotfiles
+# Table of contents
+
+- [Table of contents](#table-of-contents)
+  - [Personal dotfiles](#personal-dotfiles)
+  - [Installation](#installation)
+  - [Inspiration](#inspiration)
+  
+## Personal dotfiles
 
 **Warning:** _these dotfiles are currently a work in progress (not yet complete).
 Feel free to take Inspiration from them, but best not to use them as is._
@@ -8,13 +15,6 @@ use
 
 - A [modern Unix](https://github.com/ibraheemdev/modern-unix) workflow.
 - The [`XDG`](https://wiki.archlinux.org/title/XDG_user_directories) directory specification.
-
-## Table of contents
-
-- [Personal dotfiles](#personal-dotfiles)
-  - [Table of contents](#table-of-contents)
-  - [Installation](#installation)
-  - [Inspiration](#inspiration)
 
 ## Installation
 
