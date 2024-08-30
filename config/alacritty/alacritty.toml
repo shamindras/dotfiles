@@ -1,5 +1,45 @@
 live_config_reload = true
 
+# TODO: fix this import
+# import = ["~/.config/alacritty/catppuccin/catppuccin-mocha.yml"]
+
+[shell]
+program = "/usr/local/bin/zsh"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 18
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font"
+style = "Bold Italic"
+
+[selection]
+save_to_clipboard = true
+
+[window]
+decorations = "buttonless"
+dynamic_padding = false
+opacity = 1
+
+[window.padding]
+x = 3
+y = 3
+
 # TODO: fix the TOML key codes using 
 # source: https://github.com/alacritty/alacritty/issues/6592#issuecomment-1597996991 
 [keyboard]
@@ -46,40 +86,3 @@ bindings = [
   # { key = "W", mods = "Command", chars = "\x02x" } # kill the current pane
   # { key = "Z", mods = "Command", chars = "\x02z" } # toggle zoom state of the current tmux pane
 ]
-
-[env]
-TERM = "xterm-256color"
-
-[font]
-size = 18
-
-[font.normal]
-family = "JetBrainsMono Nerd Font"
-style = "Regular"
-
-[font.bold]
-family = "JetBrainsMono Nerd Font"
-style = "Bold"
-
-[font.italic]
-family = "JetBrainsMono Nerd Font"
-style = "Italic"
-
-[font.bold_italic]
-family = "JetBrainsMono Nerd Font"
-style = "Bold Italic"
-
-[selection]
-save_to_clipboard = true
-
-[window]
-decorations = "buttonless"
-dynamic_padding = false
-opacity = 1
-
-[window.padding]
-x = 3
-y = 3
-
-# TODO: fix this import
-# import = ["~/.config/alacritty/catppuccin/catppuccin-mocha.yml"]
