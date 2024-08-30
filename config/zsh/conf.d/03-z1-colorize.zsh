@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/env/bin zsh
 
 # ------------------------------------------------------------------------------
 # region: z1_colorize: Add color to your terminal

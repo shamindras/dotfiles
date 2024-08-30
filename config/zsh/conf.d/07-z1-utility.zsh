@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/env/bin zsh
 
 # ------------------------------------------------------------------------------
 # region: Set Zsh utilities and options

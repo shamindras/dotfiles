@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/env/bin zsh
 
 # ------------------------------------------------------------------------------
 # region: Set options, variables, and aliases for Zsh history

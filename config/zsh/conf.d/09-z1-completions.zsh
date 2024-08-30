@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/env/bin zsh
 
 # ------------------------------------------------------------------------------
 # region: z1_completions: Setup Zsh completion system
