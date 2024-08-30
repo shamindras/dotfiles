@@ -1,4 +1,4 @@
-#!/usr/env/bin zsh
+#!/bin/zsh
 
 # ------------------------------------------------------------------------------
 # region: Configure various brew apps

@@ -1,4 +1,4 @@
-#!/usr/env/bin zsh
+#!/bin/zsh
 
 # ------------------------------------------------------------------------------
 # region: z1_funcdir: Setup the autoload directory for Zsh functions

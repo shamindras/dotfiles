@@ -1,4 +1,4 @@
-#!/usr/env/bin zsh
+#!/bin/zsh
 
 # ------------------------------------------------------------------------------
 # region: Setup editor and keybinds
