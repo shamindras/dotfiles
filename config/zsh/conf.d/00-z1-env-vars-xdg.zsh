@@ -31,7 +31,6 @@ export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
 # export LESSHISTFILE="-" # Disable less history.
 export LESSKEY="${LESSKEY:-$XDG_CONFIG_HOME/less/lesskey}"
 export LESSHISTFILE="${LESSHISTFILE:-$XDG_CACHE_HOME/less/history}"
-# [[ -f $LESSHISTFILE ]] || { mkdir -p $LESSHISTFILE:h && touch $LESSHISTFILE }
 
 # Python
 # export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/pip.conf"
@@ -65,11 +64,9 @@ export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/starship/starship.to
 export STARSHIP_CACHE="${STARSHIP_CACHE:-$XDG_CACHE_HOME/starship/cache}"
 
 # Tealdeer
-# TEALDEER_CACHE_DIR is deprecated, use cache_dir inside the tealdeer config
-# instead.
-# see: https://dbrgn.github.io/tealdeer/config_directories.html
-# export TEALDEER_CONFIG_DIR="${TEALDEER_CONFIG_DIR:-$XDG_CONFIG_HOME/tealdeer}"
-# export TEALDEER_CACHE_DIR="${TEALDEER_CACHE_DIR:-$XDG_CACHE_HOME/tealdeer}"
+# This must be hardcoded, and must be an absolute path.
+# source: https://dbrgn.github.io/tealdeer/config.html#override-config-directory
+export TEALDEER_CONFIG_DIR=~/.config/tealdeer
 
 # Terminfo
 export TERMINFO="${TERMINFO:-$XDG_DATA_HOME}"/terminfo
@@ -82,11 +79,10 @@ export _ZO_MAXAGE=100
 
 # gpg
 export GNUPGHOME="${GNUPGHOME:-$XDG_DATA_HOME/gnupg}"
-alias gpg="${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\""
 
 # Node
 # source: https://blog.mitsunee.com/post/n-xdg-setup
-# export NVM_DIR="${NVM_DIR:-$XDG_DATA_HOME/nvm}"
+export NVM_DIR="${NVM_DIR:-$XDG_DATA_HOME/nvm}"
 # export N_PREFIX="${N_PREFIX:-$XDG_DATA_HOME/node}"
 # export N_CACHE_PREFIX="${N_CACHE_PREFIX:-$XDG_CACHE_HOME}"
 # export N_PRESERVE_NPM=1
@@ -103,7 +99,6 @@ alias gpg="${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\""
 
 # readline
 export INPUTRC="${INPUTRC:-$XDG_CONFIG_HOME/readline/inputrc}"
-# [[ -f $INPUTRC ]] || { mkdir -p $INPUTRC:h && touch $INPUTRC }
 
 # ruby bundler
 export BUNDLE_USER_CONFIG="${BUNDLE_USER_CONFIG:-$XDG_CONFIG_HOME/bundle}"
@@ -120,7 +115,6 @@ export RUSTUP_HOME="${RUSTUP_HOME:-$XDG_DATA_HOME/rustup}"
 
 # screen
 export SCREENRC="${SCREENRC:-$XDG_CONFIG_HOME/screen/screenrc}"
-# [[ -f $SCREENRC ]] || { mkdir -p $SCREENRC:h && touch $SCREENRC }
 
 # tmux
 # export TMUX_PLUGIN_MANAGER_PATH="${XDG_DATA_HOME}/tmux/plugins"
@@ -130,8 +124,6 @@ export SCREENRC="${SCREENRC:-$XDG_CONFIG_HOME/screen/screenrc}"
 
 # wget
 export WGETRC="${WGETRC:-$XDG_CONFIG_HOME/wget/wgetrc}"
-# [[ -f $WGETRC ]] || { mkdir -p $WGETRC:h && touch $WGETRC }
-alias wget="${aliases[wget]:-wget} --hsts-file=\"\$XDG_CACHE_HOME/wget/wget-hsts\""
 
 ## Respect XDG directories
 # export CURL_HOME="${XDG_CONFIG_HOME}/curl"

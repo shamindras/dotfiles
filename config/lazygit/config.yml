@@ -39,7 +39,8 @@ customCommands:
     loadingText: "opening commitizen commit tool"
     subprocess: true
 
+# TODO switch from `vim` to `nvim`
 os:
-  editCommand: "nvim"
+  editCommand: "vim"
   editCommandTemplate: "{{editor}} +{{line}} -- {{filename}}"
   openCommand: "open {{filename}}"

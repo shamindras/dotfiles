@@ -1,4 +1,11 @@
-# Personal dotfiles
+# Table of contents
+
+- [Table of contents](#table-of-contents)
+  - [Personal dotfiles](#personal-dotfiles)
+  - [Installation](#installation)
+  - [Inspiration](#inspiration)
+  
+## Personal dotfiles
 
 **Warning:** _these dotfiles are currently a work in progress (not yet complete).
 Feel free to take Inspiration from them, but best not to use them as is._
@@ -8,6 +15,15 @@ use
 
 - A [modern Unix](https://github.com/ibraheemdev/modern-unix) workflow.
 - The [`XDG`](https://wiki.archlinux.org/title/XDG_user_directories) directory specification.
+
+## Installation
+
+In order to install these dotfiles, run the following commands:
+
+```bash
+git clone --recurse-submodules --remote-submodules git@github.com:shamindras/dotfiles.git
+# TODO add details  on Makefile
+```
 
 ## Inspiration
 
@@ -20,3 +36,4 @@ for openly sharing their work.
   and accompanying [YouTube videos](https://www.youtube.com/watch?v=U-omALWIBos&ab_channel=JoseanMartinez).
 - [Mathias Bynen's dotfiles](https://github.com/mathiasbynens/dotfiles)
   and in particular [his macOS dotfiles](https://github.com/mathiasbynens/dotfiles/blob/master/.macOS).
+- [Dylan McDowell's zsh config](https://github.com/dylanjm/teton/blob/2eb03539fe2c9489ed6b5ade4ee4ee44d8c6f421/config/shells/zsh/zshenv.zsh)

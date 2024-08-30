@@ -1,4 +1,6 @@
-#!/bin/zsh
+#!/usr/env/bin zsh
+# Uncomment the following for profiling, must be at the top of `zshrc`
+# zmodload zsh/zprof
 
 # clear the "Last login" message for new tabs in terminal --------
 # source: https://stackoverflow.com/a/69915614/4687531
@@ -11,10 +13,6 @@ printf '\33c\e[3J'
 # region: Basic XDG variable setup
 # source: https://github.com/mattmc3/zdotdir/blob/main/.zshenv
 # ------------------------------------------------------------------------------
-
-# This has already been set in `.zshenv`, but redefine here just in case.
-# Since `$ZDOTDIR` is a reserved `zsh` keyword, we don't need to `export` it.
-# ZDOTDIR=${ZDOTDIR:-$HOME/.config/zsh}
 
 # XDG path specifications
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
@@ -96,17 +94,25 @@ function z1_confd {
 
   # conf.d functions
   z1_funcdir
-  z1_colorize
+  # z1_colorize
   z1_directory
-  z1_editor
+  # z1_editor
+  z1_vi_style_keybindings
   z1_history
   z1_utility
   z1_plugins
   z1_completions
-  z1_brew_app_starship
+  # z1_brew_app_starship
   z1_brew_app_zoxide
+  z1_brew_app_fzf
   z1_aliases
   z1_suffix_aliases
+  # prompt_z1_setup 
+  # z1_prompt
+  z1_simple_prompt
 }
+
+# Uncomment the following for profiling, must be at the bottom of `zshrc`
+# zprof
 
 # vim: ft=zsh 
