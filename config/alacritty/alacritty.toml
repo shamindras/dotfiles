@@ -29,9 +29,7 @@ bindings = [
   # lazygit: `lazygit;clear;<CR>`
   { key = "G", mods = "Command|Shift", chars = "lazygit;clear;\n" },
   # nvim: `nvim .;clear;`
-  { key = "N", mods = "Command|Shift", chars = "nvim .;clear;\n" },
-  # vifm: `vifm .;clear;<CR>`
-  { key = "V", mods = "Command|Shift", chars = "vifm .;clear;\n" },
+  # { key = "N", mods = "Command|Shift", chars = "nvim .;clear;\n" },
   # { key = "LBracket", mods = "Command"|Shift, chars = "\x02p" } # switch to next tmux window
   # { key = "O", mods = "Command", chars = "\x02u" }
   # { key = "P", mods = "Command", chars = " =GoToFile\n" } # files
@@ -47,17 +45,29 @@ bindings = [
   # { key = "T", mods = "Command", chars = "\x02c" } # create a new tmux window
   # { key = "W", mods = "Command", chars = "\x02x" } # kill the current pane
   # { key = "Z", mods = "Command", chars = "\x02z" } # toggle zoom state of the current tmux pane
-
 ]
 
 [env]
 TERM = "xterm-256color"
 
 [font]
-size = 18 
+size = 18
 
 [font.normal]
-family = "MesloLGL Nerd Font Mono"
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font"
+style = "Bold Italic"
 
 [selection]
 save_to_clipboard = true
