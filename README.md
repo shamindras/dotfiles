@@ -1,6 +1,6 @@
-# Table of contents
+# Dotfiles (macOS)
 
-- [Table of contents](#table-of-contents)
+- [Dotfiles (macOS)](#dotfiles-macos)
   - [Personal dotfiles](#personal-dotfiles)
   - [Installation](#installation)
   - [Inspiration](#inspiration)
