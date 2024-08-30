@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/env/bin zsh
 # Uncomment the following for profiling, must be at the top of `zshrc`
 # zmodload zsh/zprof
 
@@ -96,7 +96,8 @@ function z1_confd {
   z1_funcdir
   # z1_colorize
   z1_directory
-  z1_editor
+  # z1_editor
+  z1_vi_style_keybindings
   z1_history
   z1_utility
   z1_plugins
