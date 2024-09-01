@@ -1,4 +1,4 @@
-#!/usr/env/bin zsh
+#!/bin/zsh
 
 # The `.zshenv` file will be symlinked into `~/.zshenv`
 # This will ensure that the `$ZDOTDIR` variable is correctly loaded.
