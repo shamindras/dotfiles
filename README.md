@@ -31,6 +31,7 @@ These dotfiles have been mainly inspired by the following people. I thank them
 for openly sharing their work.
 
 - [Alicia Sykes' dotfiles](https://github.com/Lissy93/dotfiles).
+- [Mattmc3's zshrc1 config](https://github.com/mattmc3/zshrc1/tree/main).
 - [Josh Medeski's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86).
 - [Josean Martinez's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86)
   and accompanying [YouTube videos](https://www.youtube.com/watch?v=U-omALWIBos&ab_channel=JoseanMartinez).
