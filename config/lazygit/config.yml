@@ -1,9 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
 gui:
-  # If true, capture mouse events.
-  # When mouse events are captured, it's a little harder to select text: e.g. requiring you to hold the option key when on macOS.
-  mouseEvents: true # stuff relating to the UI
-
   nerdFontsVersion: "3"
   # If true (default), file icons are shown in the file views. Only relevant if NerdFontsVersion is not empty.
   # showFileIcons: true
@@ -11,7 +7,7 @@ gui:
   # use the mocha catpuccin theme
   # see: https://github.com/catppuccin/lazygit#usage
   theme:
-    lightTheme: false
+    # lightTheme: false
     activeBorderColor:
       - "#a6e3a1" # Green
       - bold
@@ -35,6 +31,10 @@ gui:
   authorColors: # in case you're not happy with the randomly assigned colour
     "shamindras": "#9db5bf"
     "SS": "#9db5bf"
+  # If true, capture mouse events.
+  # When mouse events are captured, it's a little harder to select text: e.g. requiring you to hold the option key when on macOS.
+  mouseEvents: true # stuff relating to the UI
+
 # use delta for git diffs
 git:
   paging:
