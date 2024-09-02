@@ -3,6 +3,8 @@
 	email = shamindra.shrotriya@gmail.com
 [github]
     user = shamindras
+[init]
+    defaultBranch = main
 [interactive]
     diffFilter = delta --color-only --features=interactive
 [color]
