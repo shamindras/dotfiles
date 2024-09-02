@@ -1,4 +1,5 @@
-#!/usr/env/bin zsh
+#!/bin/zsh
+
 # Uncomment the following for profiling, must be at the top of `zshrc`
 # zmodload zsh/zprof
 

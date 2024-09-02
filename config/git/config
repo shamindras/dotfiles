@@ -9,7 +9,7 @@
     ui = true
 [core]
     editor = vim
-    excludesfile = /Users/shamindras/.gitignore
+    excludesfile = /Users/shamindras/.config/git/ignore
     pager = delta
 [web]
 	browser = firefox
