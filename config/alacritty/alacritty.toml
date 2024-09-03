@@ -1,7 +1,7 @@
 live_config_reload = true
 
 # TODO: fix this import
-# import = ["~/.config/alacritty/catppuccin/catppuccin-mocha.yml"]
+import = ["~/.config/alacritty/themes/tokyonight_night.toml"]
 
 [shell]
 program = "/bin/zsh"
