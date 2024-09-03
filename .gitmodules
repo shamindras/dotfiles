@@ -5,3 +5,9 @@
 [submodule "submods/zshrc1"]
 	path = submods/zshrc1
 	url = git@github.com:mattmc3/zshrc1.git
+[submodule "submods/themes/tokyonight.nvim"]
+	path = submods/themes/tokyonight.nvim
+	url = git@github.com:folke/tokyonight.nvim.git
+[submodule "submods/themes/catppuccin/bat"]
+	path = submods/themes/catppuccin/bat
+	url = git@github.com:catppuccin/bat.git

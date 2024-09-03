@@ -3,13 +3,13 @@
 	email = shamindra.shrotriya@gmail.com
 [github]
     user = shamindras
-[interactive]
-    diffFilter = delta --color-only --features=interactive
+[init]
+    defaultBranch = main
 [color]
     ui = true
 [core]
     editor = vim
-    excludesfile = /Users/shamindras/.config/git/ignore
+    excludesfile = ~/.config/git/ignore
     pager = delta
 [web]
 	browser = firefox
@@ -20,6 +20,8 @@
 	tool = vimdiff
 [mergetool]
 	path = vim
+[interactive]
+    diffFilter = delta --color-only --features=interactive
 [delta]
     navigate = true    
     light = false      

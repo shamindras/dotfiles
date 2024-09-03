@@ -17,8 +17,8 @@ gui:
       - "#89b4fa" # Blue
     selectedLineBgColor:
       - "#313244" # Surface0
-    selectedRangeBgColor:
-      - "#313244" # Surface0
+    # selectedRangeBgColor:
+    #   - "#313244" # Surface0
     cherryPickedCommitBgColor:
       - "#94e2d5" # Teal
     cherryPickedCommitFgColor:
@@ -57,3 +57,6 @@ os:
   editCommand: "vim"
   editCommandTemplate: "{{editor}} +{{line}} -- {{filename}}"
   openCommand: "open {{filename}}"
+
+disableStartupPopups: true
+quitOnTopLevelReturn: true
