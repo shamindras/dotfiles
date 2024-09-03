@@ -4,6 +4,9 @@
 # Show line numbers, Git modifications and file header (but no grid)
 --style="grid,numbers"
 
+# Add mouse scrolling support in less (does not work with older versions of "less")
+--pager="less -FRS"
+
 # Use italic text on the terminal (not supported on all terminals)
 --italic-text=always
 
