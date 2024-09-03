@@ -8,3 +8,6 @@
 [submodule "submods/themes/tokyonight.nvim"]
 	path = submods/themes/tokyonight.nvim
 	url = git@github.com:folke/tokyonight.nvim.git
+[submodule "submods/themes/catppuccin/bat"]
+	path = submods/themes/catppuccin/bat
+	url = git@github.com:catppuccin/bat.git
