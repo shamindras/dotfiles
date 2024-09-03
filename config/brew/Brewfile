@@ -222,8 +222,6 @@ cask "dozer"
 cask "dropbox"
 # Web browser
 cask "firefox"
-# Screen colour temperature controller
-cask "flux"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspace-nerd-font"
