@@ -1,0 +1,20 @@
+#!/bin/zsh
+##? brew_rebuild  - rebuild cache for various brew packages
+##?
+##? usage:
+##?   brew_rebuild
+
+# create gitignore file for single/multiple languages
+# use as follows: gi macos,R,Python,VisualStudioCode >> .gitignore
+# source: https://docs.gitignore.io/install/command-line#linux-zsh
+brew_rebuild() { 
+	printf ">>> updating bat cache...\n"
+	bat cache --build
+	printf ">>> bat cache updated...\n"
+	printf "\n"
+	printf ">>> updating tldr cache...\n"
+	tldr --update
+	printf ">>> tldr cache updated...\n"
+}
+
+# vim: ft=zsh
