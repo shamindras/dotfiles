@@ -10,7 +10,7 @@
 
 # bat
 # source: https://github.com/sharkdp/bat/tree/ac734db4213ef4b82c0513e39726627936ebe3f0#configuration-file
-# export BAT_CONFIG_PATH="${BAT_CONFIG_PATH:-$XDG_CONFIG_HOME/bat/config}"
+export BAT_CONFIG_PATH="${BAT_CONFIG_PATH:-$XDG_CONFIG_HOME/bat/config}"
 # export BAT_PAGER="less -RF"
 
 # Cache
