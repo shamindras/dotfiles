@@ -121,8 +121,6 @@ brew "httpie"
 brew "hunspell"
 # Command-line benchmarking tool
 brew "hyperfine"
-# Tool Command Language
-brew "tcl-tk"
 # Library for reading RAW files from digital photo cameras
 brew "libraw"
 # Tools and libraries to manipulate images in many formats
@@ -137,6 +135,8 @@ brew "lua"
 brew "luarocks"
 # NCurses Disk Usage
 brew "ncdu"
+# Tool Command Language
+brew "tcl-tk"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -175,6 +175,8 @@ brew "pyenv"
 brew "r", link: false
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Wrapper around ripgrep that adds multiple rich file types
+brew "ripgrep-all"
 # Safe, concurrent, practical language
 brew "rust"
 # Static analysis and lint tool, for (ba)sh scripts
@@ -203,8 +205,6 @@ brew "xdg-ninja"
 brew "yq"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# UNIX shell (command interpreter)
-brew "zsh"
 # Simple hotkey-daemon for macOS.
 brew "koekeishiya/formulae/skhd"
 # A tiling window manager for macOS based on binary space partitioning.
@@ -240,6 +240,7 @@ cask "font-input"
 cask "font-iosevka"
 cask "font-iosevka-slab"
 cask "font-jetbrains-mono"
+cask "font-jetbrains-mono-nerd-font"
 cask "font-lilex"
 cask "font-meslo-lg-nerd-font"
 cask "font-poppins"
@@ -335,6 +336,7 @@ vscode "njpwerner.autodocstring"
 vscode "notzaki.pandocciter"
 vscode "pkief.material-icon-theme"
 vscode "quarto.quarto"
+vscode "redhat.vscode-yaml"
 vscode "reditorsupport.r"
 vscode "ritwickdey.liveserver"
 vscode "rpinski.shebang-snippets"
@@ -343,6 +345,7 @@ vscode "sirtori.indenticator"
 vscode "sleistner.vscode-fileutils"
 vscode "stkb.rewrap"
 vscode "streetsidesoftware.code-spell-checker"
+vscode "tamasfe.even-better-toml"
 vscode "timonwong.shellcheck"
 vscode "usernamehw.errorlens"
 vscode "valentjn.vscode-ltex"
