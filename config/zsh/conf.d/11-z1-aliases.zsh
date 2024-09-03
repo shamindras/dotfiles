@@ -42,6 +42,10 @@ function z1_aliases {
     alias tl2="t2 --long"
     alias t3="tree --level=3"
     alias tl3="t3 --long"
+    
+    # directory aliases
+    alias reps="z ~/DROPBOX/REPOS/"
+    alias dots="z ~/DROPBOX/REPOS/dotfiles"
 
     # source: running `xdg-ninja` in `$HOME` gave these suggestion
     # subversion 
