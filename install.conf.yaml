@@ -1,0 +1,58 @@
+# set dotbot defaults
+- defaults:
+    link:
+      create: true
+      relink: true
+
+# Install homebrew
+- shell:
+    - command: [./scripts/install-homebrew.sh, Installing homebrew]
+      stdin: true
+      stdout: true
+      stderr: true
+
+# run brew update, upgrade, clean up
+- shell:
+    - command:
+        [
+          brew update && brew upgrade && brew cleanup,
+          Running brew update/upgrade/cleanup,
+        ]
+      stdin: true
+      stdout: true
+      stderr: true
+
+# Install brew packages
+- brewfile:
+    - config/brew/Brewfile
+
+# Create XDG directories
+- create:
+    - "${XDG_CONFIG_HOME}"
+    - "${XDG_CACHE_HOME}"
+    - "${XDG_DATA_HOME}"
+    - "${XDG_STATE_HOME}"
+    - "${XDG_RUNTIME_DIR}"
+    - "${XDG_PROJECTS_DIR}"
+
+# remove existing symlinks
+- clean:
+    ~/:
+      force: true
+    ~/.config:
+      force: true
+
+# Symlink locations for files / directories
+- link:
+    ${HOME}/.zshenv: { path: config/zsh/.zshenv, force: true }
+    ${XDG_CONFIG_HOME}/alacritty: config/alacritty
+    ${XDG_CONFIG_HOME}/bat: config/bat
+    ${XDG_CONFIG_HOME}/git: config/git
+    ${XDG_CONFIG_HOME}/glow: config/glow
+    ${XDG_CONFIG_HOME}/lazygit: config/lazygit
+    ${XDG_CONFIG_HOME}/neofetch: config/neofetch
+    ${XDG_CONFIG_HOME}/skhd: config/skhd
+    ${XDG_CONFIG_HOME}/starship: config/starship
+    ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
+    ${XDG_CONFIG_HOME}/yabai: config/yabai
+    ${XDG_CONFIG_HOME}/zsh: config/zsh

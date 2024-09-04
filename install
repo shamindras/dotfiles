@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+# ------------------------------------------------------------------------------
+# Global variables
+# ------------------------------------------------------------------------------
+CONFIG="install.conf.yaml"
+DOTBOT_DIR="submods/dotbot"
+DOTBOT_PLUGIN_DIR="submods/dotbot-plugins"
+
+DOTBOT_BIN="bin/dotbot"
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ------------------------------------------------------------------------------
+# Update dotobot 
+# ------------------------------------------------------------------------------
+cd "${BASEDIR}"
+git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
+git submodule update --init --recursive "${DOTBOT_DIR}"
+
+# ------------------------------------------------------------------------------
+# Define XDG path specifications
+# ------------------------------------------------------------------------------
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}
+export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
+
+# ------------------------------------------------------------------------------
+# Run dotbot
+# ------------------------------------------------------------------------------
+
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
+  --plugin-dir "${DOTBOT_PLUGIN_DIR}/dotbot-brew" \
+  -c "${CONFIG}" "${@}"
