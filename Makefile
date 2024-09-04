@@ -1,4 +1,4 @@
-.PHONY: brewfile update_submods
+.PHONY: brewfile update_submods dotbot_install
 
 brewfile:
 	@printf ">>> Creating brewfile...\n"
@@ -9,3 +9,8 @@ update_submods:
 	@printf ">>> Update all submods...\n"
 	git submodule update --recursive --remote
 	@printf ">>> Updated all submods\n"
+
+dotbot_install:
+	@printf ">>> Starting dotfiles installation using dotbot...\n"
+	@./install
+	@printf ">>> Completed dotfiles installation using dotbot...\n"
