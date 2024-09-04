@@ -285,3 +285,4 @@ n
 .vscode/settings.json
 
 !config/zsh/lib/unplugged.zsh
+config/brew/Brewfile.lock.json

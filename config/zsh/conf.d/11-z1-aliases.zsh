@@ -34,7 +34,7 @@ function z1_aliases {
     alias paths='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
     alias rmi='rm -i'
     alias rmf='rm -rf'
-    alias sc="source $HOME/.config/zsh/.zshrc" # source ~/.zshrc
+    alias sc="source $XDG_CONFIG_HOME/zsh/.zshrc" # source ~/.zshrc
     alias tree="eza --tree --all --group-directories-first -I '.git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache'"
     alias t1="tree --level=1"
     alias tl1="t1 --long"
@@ -43,6 +43,11 @@ function z1_aliases {
     alias t3="tree --level=3"
     alias tl3="t3 --long"
     
+    # rip - ri-improved
+    # NOTE we have set the GRAVEYARD env variable for the Trash directory
+    # This will `rm` to the $GRAVEYARD dir.
+    alias rmt="rip"
+
     # directory aliases
     alias reps="z ~/DROPBOX/REPOS/"
     alias dots="z ~/DROPBOX/REPOS/dotfiles"

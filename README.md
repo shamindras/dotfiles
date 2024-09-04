@@ -1,11 +1,13 @@
 # Dotfiles (macOS)
 
 - [Dotfiles (macOS)](#dotfiles-macos)
-  - [Personal dotfiles](#personal-dotfiles)
+  - [Personal dotfiles - philosophy](#personal-dotfiles---philosophy)
   - [Installation](#installation)
+    - [Clone the repo and update and sync submodules](#clone-the-repo-and-update-and-sync-submodules)
+    - [Run installation using `dotbot`](#run-installation-using-dotbot)
   - [Inspiration](#inspiration)
   
-## Personal dotfiles
+## Personal dotfiles - philosophy
 
 **Warning:** _these dotfiles are currently a work in progress (not yet complete).
 Feel free to take Inspiration from them, but best not to use them as is._
@@ -18,12 +20,27 @@ use
 
 ## Installation
 
+### Clone the repo and update and sync submodules
+
 In order to install these dotfiles, run the following commands:
 
 ```bash
 git clone --recurse-submodules --remote-submodules git@github.com:shamindras/dotfiles.git
-# TODO add details  on Makefile
 ```
+
+### Run installation using `dotbot`
+
+Now the installation script can be executed using
+[`dotbot`](https://github.com/anishathalye/dotbot) as follows:
+
+```bash
+make dotbot_install
+```
+
+**NOTE:** The above `make` command is just a wrapper for `./install`, if you
+prefer to run it directly.
+
+TODO Add details on what is installed.
 
 ## Inspiration
 
