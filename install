@@ -5,7 +5,7 @@ set -Eeuo pipefail
 # ------------------------------------------------------------------------------
 # Global variables
 # ------------------------------------------------------------------------------
-CONFIG="install.conf.yaml"
+DOTBOT_CONFIG_FILE="install.conf.yaml"
 DOTBOT_DIR="submods/dotbot"
 DOTBOT_PLUGIN_DIR="submods/dotbot-plugins"
 
@@ -35,4 +35,4 @@ export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
   --plugin-dir "${DOTBOT_PLUGIN_DIR}/dotbot-brew" \
-  -c "${CONFIG}" "${@}"
+  -c "${DOTBOT_CONFIG_FILE}" "${@}"
