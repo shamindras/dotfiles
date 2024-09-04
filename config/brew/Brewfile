@@ -1,4 +1,5 @@
 tap "homebrew/bundle"
+tap "homebrew/services"
 tap "koekeishiya/formulae"
 # Color management engine supporting ICC profiles
 brew "little-cms2"
@@ -149,7 +150,7 @@ brew "pandoc-crossref"
 # Highly capable, feature-rich programming language
 brew "perl"
 # General-purpose scripting language
-brew "php"
+brew "php", restart_service: true
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
 # Python dependency management tool
@@ -172,6 +173,8 @@ brew "r", link: false
 brew "ripgrep"
 # Wrapper around ripgrep that adds multiple rich file types
 brew "ripgrep-all"
+# Command-line deletion tool focused on safety, ergonomics, and performance
+brew "rm-improved"
 # Safe, concurrent, practical language
 brew "rust"
 # Static analysis and lint tool, for (ba)sh scripts
