@@ -19,6 +19,7 @@ function z1_aliases {
     alias bat='bat --style=grid,numbers'
     alias brewup="brew update && brew upgrade && brew cleanup"
     alias brewinfo="brew leaves | xargs brew desc --eval-all"
+    alias c="clear"
     alias cd="z"
     alias cp='cp -r'
     alias cpi='cp -iv'
