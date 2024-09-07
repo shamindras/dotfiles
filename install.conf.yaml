@@ -56,3 +56,17 @@
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/yabai: config/yabai
     ${XDG_CONFIG_HOME}/zsh: config/zsh
+
+# Update bat themes cache
+- shell:
+    - command: [bat cache --build, Build bat cache]
+      stdin: true
+      stdout: true
+      stderr: true
+
+# Update tldr cache
+- shell:
+    - command: [tldr --update, Update tldr]
+      stdin: true
+      stdout: true
+      stderr: true
