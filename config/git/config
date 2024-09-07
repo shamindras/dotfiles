@@ -27,7 +27,7 @@
     # source: https://dandavison.github.io/delta/custom-themes.html
     path = ~/.config/delta/themes.gitconfig
 [delta]
-    features = tokyonight-night # delta theme
+    features = catppuccin-mocha # delta theme
     # features = decorations # delta theme
     navigate = true    
     light = false      
@@ -60,4 +60,4 @@
   lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all
 
   # Delete local branches that no longer exist on the remote
-  gone = !git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D
+  gone = !git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D/toky
