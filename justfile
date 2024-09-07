@@ -1,4 +1,4 @@
-_default:
+default:
   @just --list
 
 update_brewfile:
