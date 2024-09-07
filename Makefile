@@ -1,14 +1,4 @@
-.PHONY: brewfile update_submods dotbot_install
-
-brewfile:
-	@printf ">>> Creating brewfile...\n"
-	@brew bundle dump --describe --force --file=./config/brew/Brewfile
-	@printf ">>> Brewfile created at ./config/brew/Brewfile\n"
-
-update_submods:
-	@printf ">>> Update all submods...\n"
-	git submodule update --recursive --remote
-	@printf ">>> Updated all submods\n"
+.PHONY: dotbot_install
 
 dotbot_install:
 	@printf ">>> Starting dotfiles installation using dotbot...\n"
