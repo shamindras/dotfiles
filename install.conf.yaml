@@ -43,6 +43,7 @@
     ${HOME}/.zshenv: { path: config/zsh/.zshenv, force: true }
     ${XDG_CONFIG_HOME}/alacritty: config/alacritty
     ${XDG_CONFIG_HOME}/bat: config/bat
+    ${XDG_CONFIG_HOME}/.curlrc: config/curl/curlrc
     ${XDG_CONFIG_HOME}/delta: config/delta
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
