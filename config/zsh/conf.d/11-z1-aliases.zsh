@@ -59,6 +59,7 @@ function z1_aliases {
     alias rmt="rip"
 
     # directory aliases
+    alias down="z ~/Downloads"
     alias reps="z ~/DROPBOX/REPOS/"
     alias dots="z ~/DROPBOX/REPOS/dotfiles"
 
