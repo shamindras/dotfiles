@@ -22,12 +22,17 @@
 	path = vim
 [interactive]
     diffFilter = delta --color-only --features=interactive
+[include]
+    # delta themes
+    # source: https://dandavison.github.io/delta/custom-themes.html
+    path = ~/.config/delta/themes.gitconfig
 [delta]
+    features = tokyonight-night # delta theme
+    # features = decorations # delta theme
     navigate = true    
     light = false      
     side-by-side = true  
     line-numbers = true   
-    features = decorations	 
 [delta "interactive"]
     keep-plus-minus-markers = true
 [delta "decorations"]
@@ -40,3 +45,19 @@
     hunk-header-style = file line-number syntax
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[alias]
+  # source: https://github.com/dlvhdr/dotfiles/blob/main/.config/git/config
+  # General
+  aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
+  clean-branches = !git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
+  branches = branch --sort=-authordate
+  stashes = stash list
+  remotes = remote -v
+  main = master
+  
+  # Preferred git log view
+  lg = log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)%n' --all --stat
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all
+
+  # Delete local branches that no longer exist on the remote
+  gone = !git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D

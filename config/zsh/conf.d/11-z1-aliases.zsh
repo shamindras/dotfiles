@@ -34,7 +34,7 @@ function z1_aliases {
     alias paths='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
     alias rmi='rm -i'
     alias rmf='rm -rf'
-    alias sc="source $XDG_CONFIG_HOME/zsh/.zshrc" # source ~/.zshrc
+    alias sc="source ${XDG_CONFIG_HOME}/zsh/.zshrc" # source ~/.zshrc
     alias tree="eza --tree --all --group-directories-first -I '.git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache'"
     alias t1="tree --level=1"
     alias tl1="t1 --long"
@@ -43,6 +43,15 @@ function z1_aliases {
     alias t3="tree --level=3"
     alias tl3="t3 --long"
     
+    # git
+    # source: https://github.com/dlvhdr/dotfiles/blob/main/.config/zsh/aliases.zsh
+    alias g="git"
+    alias gaa="git add --all"
+    alias gcb="git checkout -b"
+    alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)%n' --all --stat"
+    alias glg2="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all"
+    alias gst="git status -v"
+
     # rip - ri-improved
     # NOTE we have set the GRAVEYARD env variable for the Trash directory
     # This will `rm` to the $GRAVEYARD dir.

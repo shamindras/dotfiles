@@ -23,7 +23,7 @@ fi
 export LESS="${LESS:--g -i -M -R -S -w -z-4}"
 
 # Reduce key delay
-export KEYTIMEOUT=${KEYTIMEOUT:-1}
+export KEYTIMEOUT=1
 
 # Make Apple Terminal behave.
 if [[ "$OSTYPE" == darwin* ]]; then
