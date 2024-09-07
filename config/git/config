@@ -22,12 +22,17 @@
 	path = vim
 [interactive]
     diffFilter = delta --color-only --features=interactive
+[include]
+    # delta themes
+    # source: https://dandavison.github.io/delta/custom-themes.html
+    path = ~/.config/delta/themes.gitconfig
 [delta]
+    features = tokyonight-night # delta theme
+    # features = decorations # delta theme
     navigate = true    
     light = false      
     side-by-side = true  
     line-numbers = true   
-    features = decorations	 
 [delta "interactive"]
     keep-plus-minus-markers = true
 [delta "decorations"]
