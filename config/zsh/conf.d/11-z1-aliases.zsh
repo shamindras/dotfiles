@@ -19,6 +19,7 @@ function z1_aliases {
     alias bat='bat --style=grid,numbers'
     alias brewup="brew update && brew upgrade && brew cleanup"
     alias brewinfo="brew leaves | xargs brew desc --eval-all"
+    alias c="clear"
     alias cd="z"
     alias cp='cp -r'
     alias cpi='cp -iv'
@@ -47,6 +48,7 @@ function z1_aliases {
     # source: https://github.com/dlvhdr/dotfiles/blob/main/.config/zsh/aliases.zsh
     alias g="git"
     alias gaa="git add --all"
+    alias ggn="git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D"
     alias gcb="git checkout -b"
     alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)%n' --all --stat"
     alias glg2="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all"

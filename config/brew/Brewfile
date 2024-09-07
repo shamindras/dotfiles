@@ -121,6 +121,8 @@ brew "hyperfine"
 brew "libraw"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# Handy way to save and run project-specific commands
+brew "just"
 # Simple terminal UI for git commands
 brew "lazygit"
 # MNG/JNG reference library
@@ -326,6 +328,7 @@ vscode "ritwickdey.liveserver"
 vscode "rpinski.shebang-snippets"
 vscode "sdras.night-owl"
 vscode "sirtori.indenticator"
+vscode "skellock.just"
 vscode "sleistner.vscode-fileutils"
 vscode "stkb.rewrap"
 vscode "streetsidesoftware.code-spell-checker"
