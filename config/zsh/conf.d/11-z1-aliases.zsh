@@ -48,7 +48,6 @@ function z1_aliases {
     # source: https://github.com/dlvhdr/dotfiles/blob/main/.config/zsh/aliases.zsh
     alias g="git"
     alias gaa="git add --all"
-    alias ggn="git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D"
     alias gcb="git checkout -b"
     alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)%n' --all --stat"
     alias glg2="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all"
@@ -60,8 +59,10 @@ function z1_aliases {
     alias rmt="rip"
 
     # directory aliases
-    alias reps="z ~/DROPBOX/REPOS/"
+    alias conf="z $XDG_CONFIG_HOME"
     alias dots="z ~/DROPBOX/REPOS/dotfiles"
+    alias down="z ~/Downloads"
+    alias reps="z ~/DROPBOX/REPOS"
 
     # source: running `xdg-ninja` in `$HOME` gave these suggestion
     # subversion 
