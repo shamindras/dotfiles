@@ -37,10 +37,8 @@ Now the installation script can be executed using
 make dotbot_install
 ```
 
-**NOTE:** The above `make` command is just a wrapper for `./install`, if you
-prefer to run it directly.
-
-TODO Add details on what is installed.
+**NOTE:** The above `make dotbot_install` command is just a wrapper for
+`./install`, if you prefer to run this command directly from your terminal.
 
 ## Inspiration
 
@@ -52,6 +50,8 @@ for openly sharing their work.
 - [Josh Medeski's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86).
 - [Josean Martinez's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86)
   and accompanying [YouTube videos](https://www.youtube.com/watch?v=U-omALWIBos&ab_channel=JoseanMartinez).
-- [Mathias Bynen's dotfiles](https://github.com/mathiasbynens/dotfiles)
-  and in particular [his macOS dotfiles](https://github.com/mathiasbynens/dotfiles/blob/master/.macOS).
+- [Mathias Bynen's dotfiles](https://github.com/mathiasbynens/dotfiles/blob/master/.macos)
+  and in particular [his macOS dotfiles](https://mths.be/macos).
+- [Kevin Suttle](http://kevinsuttle.com/) and his [macOS-Defaults project](https://github.com/kevinSuttle/macOS-Defaults),
+  which aims to provide better documentation for [`~/.macos`](https://mths.be/macos). This is inspired by Mathias Bynen's `.macos` settings.
 - [Dylan McDowell's zsh config](https://github.com/dylanjm/teton/blob/2eb03539fe2c9489ed6b5ade4ee4ee44d8c6f421/config/shells/zsh/zshenv.zsh)
