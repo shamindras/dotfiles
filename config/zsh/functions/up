@@ -1,11 +1,12 @@
 #!/bin/zsh
-##? up - go up any number of directories
+
+##? up - quickly go up any number of directories
 ##?
 ##? usage:
 ##?   up [<num>]
 
-# Quickly go up any number of directories.
-# source: https://github.com/shamindras/dotfiles/blob/99c3c130053b2a0cc08ff1875798e7db1e07d269/config/zsh/conf.d/05-directory.zsh#L33C1-L45C4 
+# Adapted from mattmc3's `zephyr` zsh config
+# source: https://github.com/mattmc3/zshrc1/blob/ca6cbeb2c3e58f193f952f88f50b5b6836ebe240/.zephyr1#L343-L355
 up() {
     local parents="${1:-1}"
     if [[ ! "$parents" -gt 0 ]]; then
