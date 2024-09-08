@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+##? trm  - Move a file or directory to macOS Trash directory.
+##?
+##? usage:
+##?   trm [file|dir]
+
+# Adapted from `tcn` bash alias.
+# source: https://opensource.com/article/19/7/bash-aliases
+trm (){
+    mv -f "$1" ${HOME}/.Trash 
+}
+
+# vim: ft=zsh
