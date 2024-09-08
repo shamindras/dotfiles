@@ -52,6 +52,8 @@ function z1_aliases {
     alias gcb="git checkout -b"
     alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)%n' --all --stat"
     alias glg2="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all"
+    alias gsc="git switch -c"
+    alias gsmp="git switch main && git pull origin main"
     alias gst="git status -v"
 
     # rip - ri-improved
