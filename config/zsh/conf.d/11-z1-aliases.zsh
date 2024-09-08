@@ -5,36 +5,37 @@
 # ------------------------------------------------------------------------------
 
 function z1_aliases {
-    alias -- -='z -' # note we need -- since command begins with -
+    alias -- -="z -" # note we need -- since command begins with -
     alias ~="z ~"                              # ~:            Go Home
     alias ..='z ..'
     alias ...='z ../..'
     alias ....='z ../../..'
-    alias .2='z ../../'                     # Go back 3 directory levels
-    alias .3='z ../../../'                     # Go back 3 directory levels
-    alias .4='z ../../../../'                  # Go back 4 directory levels
-    alias .5='z ../../../../../'               # Go back 5 directory levels
-    alias .6='z ../../../../../../'            # Go back 6 directory levels
-    alias b='bat --style=grid,numbers'
-    alias bat='bat --style=grid,numbers'
+    alias .2="z ../../"                     # Go back 3 directory levels
+    alias .3="z ../../../"                     # Go back 3 directory levels
+    alias .4="z ../../../../"                  # Go back 4 directory levels
+    alias .5="z ../../../../../"               # Go back 5 directory levels
+    alias .6="z ../../../../../../"            # Go back 6 directory levels
+    alias b="bat --style=grid,numbers"
+    alias bat="bat --style=grid,numbers"
     alias brewup="brew update && brew upgrade && brew cleanup"
     alias brewinfo="brew leaves | xargs brew desc --eval-all"
     alias c="clear"
     alias cd="z"
-    alias cp='cp -r'
-    alias cpi='cp -iv'
-    alias df='df -kH'
-    alias dus='du -sckx * | sort -nr'
-    alias ls='eza --color=always --group-directories-first --icons'
-    alias l='eza -l --color=always --group-directories-first --icons'
-    alias ll='eza -la --color=always --group-directories-first --icons'
-    alias lh='eza -lah --color=always --group-directories-first --icons'
-    alias lg='lazygit;clear;'
-    alias less='less -R'
-    alias md='mkdir -pv'
-    alias paths='echo -e ${PATH//:/\\n}'       # Echo all executable Paths
-    alias rmi='rm -i'
-    alias rmf='rm -rf'
+    alias cp="cp -r"
+    alias cpi="cp -iv"
+    alias df="df -kH"
+    alias dus="du -sckx * | sort -nr"
+    alias ls="eza --color=always --group-directories-first --icons"
+    alias l="eza -l --color=always --group-directories-first --icons"
+    alias ll="eza -la --color=always --group-directories-first --icons"
+    alias lh="eza -lah --color=always --group-directories-first --icons"
+    alias lg="lazygit;clear;"
+    alias less="less -R"
+    alias md="mkdir -pv"
+    alias paths="echo -e ${PATH//:/\\n}"       # Echo all executable Paths
+    alias rcp="rsync -ah --info=progress2"
+    alias rmi="rm -i"
+    alias rmf="rm -rf"
     alias sc="source ${XDG_CONFIG_HOME}/zsh/.zshrc" # source ~/.zshrc
     alias top="btop;clear;"
     alias tree="eza --tree --all --group-directories-first -I '.git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache'"
