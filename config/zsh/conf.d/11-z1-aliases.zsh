@@ -36,7 +36,7 @@ function z1_aliases {
     alias rmi='rm -i'
     alias rmf='rm -rf'
     alias sc="source ${XDG_CONFIG_HOME}/zsh/.zshrc" # source ~/.zshrc
-    alias top="btop"
+    alias top="btop;clear;"
     alias tree="eza --tree --all --group-directories-first -I '.git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache'"
     alias t1="tree --level=1"
     alias tl1="t1 --long"
