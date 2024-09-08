@@ -59,9 +59,10 @@ function z1_aliases {
     alias rmt="rip"
 
     # directory aliases
-    alias down="z ~/Downloads"
-    alias reps="z ~/DROPBOX/REPOS/"
+    alias conf="z $XDG_CONFIG_HOME"
     alias dots="z ~/DROPBOX/REPOS/dotfiles"
+    alias down="z ~/Downloads"
+    alias reps="z ~/DROPBOX/REPOS"
 
     # source: running `xdg-ninja` in `$HOME` gave these suggestion
     # subversion 
