@@ -6,6 +6,8 @@
   aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
   clean-branches = !git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
   branches = branch --sort=-authordate
+  last = log -1 HEAD
+  unstage = reset HEAD --
   stashes = stash list
   remotes = remote -v
   main = master
