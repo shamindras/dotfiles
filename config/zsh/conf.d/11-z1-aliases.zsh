@@ -58,11 +58,6 @@ function z1_aliases {
     alias gsmp="git switch main && git pull origin main"
     alias gst="git status -v"
 
-    # rip - ri-improved
-    # NOTE we have set the GRAVEYARD env variable for the Trash directory
-    # This will `rm` to the $GRAVEYARD dir.
-    alias rmt="rip"
-
     # directory aliases
     alias conf="z $XDG_CONFIG_HOME"
     alias dots="z ~/DROPBOX/REPOS/dotfiles"

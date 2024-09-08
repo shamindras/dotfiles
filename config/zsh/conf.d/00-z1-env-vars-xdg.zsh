@@ -59,10 +59,6 @@ export MYPY_CACHE_DIR="${MYPY_CACHE_DIR:-$XDG_CACHE_HOME/mypy_cache}"
 # export MKL_NUM_THREADS=16
 # export OMP_NUM_THREADS=16
 
-# rip - rm-improved
-# source: https://github.com/nivekuil/rip?tab=readme-ov-file#-notes
-export GRAVEYARD="${GRAVEYARD:-$XDG_DATA_HOME/Trash}"
-
 # starship
 export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/starship/starship.toml}"
 export STARSHIP_CACHE="${STARSHIP_CACHE:-$XDG_CACHE_HOME/starship/cache}"
