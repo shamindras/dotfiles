@@ -94,7 +94,7 @@ function z1_aliases {
 # Application open suffix alias --
 # Source:
 # https://github.com/sdaschner/dotfiles/blob/91f9578b6cf926efb06bb3b1ebbd1ccd0715e06d/.aliases#L327-L336
-# Note: For macOS we use `open -gj` to open the application in the background
+# For macOS we use `open -gj` to open the application in the background
 function z1_suffix_aliases {
     alias -s {pdf,PDF}='open -gja Skim.app'
     alias -s {jpg,JPG,png,PNG}='open -gja Preview.app'
@@ -112,7 +112,6 @@ function z1_suffix_aliases {
 function z1_global_aliases {
     # Use bat to display help pages in color
     # https://github.com/sharkdp/bat#highlighting---help-messages
-    alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
     alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 
     alias -g H='| head'
