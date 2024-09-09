@@ -13,6 +13,11 @@
 export BAT_CONFIG_PATH="${BAT_CONFIG_PATH:-$XDG_CONFIG_HOME/bat/config}"
 # export BAT_PAGER="less -RF"
 
+# bat-extras
+# Use `delta` as the default pager for `batdiff`
+# source: https://github.com/eth-p/bat-extras/blob/master/doc/batdiff.md#environment
+BATDIFF_USE_DELTA=true
+
 # Cache
 export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
 

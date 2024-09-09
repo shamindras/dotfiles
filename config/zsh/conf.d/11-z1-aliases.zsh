@@ -6,7 +6,7 @@
 
 function z1_aliases {
     alias -- -='z -' # note we need -- since command begins with -
-    alias ~='z ~'                              # ~:            Go Home
+    alias ~='z ~'                              # Go Home
     alias ..='z ..'
     alias ...='z ../..'
     alias ....='z ../../..'
@@ -47,6 +47,16 @@ function z1_aliases {
     alias t3='tree --level=3'
     alias tl3='t3 --long'
     
+    # bat-extras
+    # source: https://github.com/eth-p/bat-extras/tree/master
+    alias bdf='batdiff'
+    alias bmn='batman'
+    alias brg='batgrep'
+    alias brga='batgrep --rga'
+    alias bpe='batpipe'
+    alias bwh='batwatch'
+    alias bpy='prettybat'
+
     # git
     # source: https://github.com/dlvhdr/dotfiles/blob/main/.config/zsh/aliases.zsh
     alias g='git'
