@@ -68,7 +68,7 @@ function z1_aliases {
     alias gst='git status -v'
 
     # directory aliases
-    alias conf='z ${XDG_CONFIG_HOME}'
+    alias conf="z ${XDG_CONFIG_HOME}"
     alias dots='z ~/DROPBOX/REPOS/dotfiles'
     alias down='z ~/Downloads'
     alias reps='z ~/DROPBOX/REPOS'
