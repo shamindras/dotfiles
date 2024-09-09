@@ -10,7 +10,7 @@ function z1_aliases {
     alias ..='z ..'
     alias ...='z ../..'
     alias ....='z ../../..'
-    alias .2='z ../../'                        # Go up 3 dirs
+    alias .2='z ../../'                        # Go up 2 dirs
     alias .3='z ../../../'                     # Go up 3 dirs
     alias .4='z ../../../../'                  # Go up 4 dirs
     alias .5='z ../../../../../'               # Go up 5 dirs
