@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+##? rmt  - Move a file or directory to macOS Trash directory.
+##?
+##? usage:
+##?   rmt [file|dir]
+
+# Adapted from `tcn` bash alias.
+# source: https://opensource.com/article/19/7/bash-aliases
+rmt (){
+    mv -f "$1" ${HOME}/.Trash 
+}
+
+# vim: ft=zsh

@@ -19,6 +19,10 @@ brew "apache-arrow"
 brew "aspell"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Bash scripts that integrate bat with various command-line tools
+brew "bat-extras"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
 # Core application library for C
 brew "glib"
 # Defines a standard way of committing rules and communicating it
@@ -175,8 +179,8 @@ brew "r", link: false
 brew "ripgrep"
 # Wrapper around ripgrep that adds multiple rich file types
 brew "ripgrep-all"
-# Command-line deletion tool focused on safety, ergonomics, and performance
-brew "rm-improved"
+# Utility that provides fast incremental file transfer
+brew "rsync"
 # Safe, concurrent, practical language
 brew "rust"
 # Static analysis and lint tool, for (ba)sh scripts
@@ -318,6 +322,7 @@ vscode "ms-toolsai.vscode-jupyter-slideshow"
 vscode "ms-vscode.makefile-tools"
 vscode "mushan.vscode-paste-image"
 vscode "naumovs.color-highlight"
+vscode "nefrob.vscode-just-syntax"
 vscode "njpwerner.autodocstring"
 vscode "notzaki.pandocciter"
 vscode "pkief.material-icon-theme"

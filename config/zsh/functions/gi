@@ -1,4 +1,5 @@
 #!/bin/zsh
+
 ##? gi  - create gitignore file for single/multiple languages
 ##?
 ##? usage:

@@ -13,6 +13,11 @@
 export BAT_CONFIG_PATH="${BAT_CONFIG_PATH:-$XDG_CONFIG_HOME/bat/config}"
 # export BAT_PAGER="less -RF"
 
+# bat-extras
+# Use `delta` as the default pager for `batdiff`
+# source: https://github.com/eth-p/bat-extras/blob/master/doc/batdiff.md#environment
+BATDIFF_USE_DELTA=true
+
 # Cache
 export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
 
@@ -58,10 +63,6 @@ export MYPY_CACHE_DIR="${MYPY_CACHE_DIR:-$XDG_CACHE_HOME/mypy_cache}"
 # export R_STARTUP_DEBUG=TRUE
 # export MKL_NUM_THREADS=16
 # export OMP_NUM_THREADS=16
-
-# rip - rm-improved
-# source: https://github.com/nivekuil/rip?tab=readme-ov-file#-notes
-export GRAVEYARD="${GRAVEYARD:-$XDG_DATA_HOME/Trash}"
 
 # starship
 export STARSHIP_CONFIG="${STARSHIP_CONFIG:-$XDG_CONFIG_HOME/starship/starship.toml}"

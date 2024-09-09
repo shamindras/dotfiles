@@ -1,9 +1,13 @@
+# Git config --global
+# source: https://github.com/dlvhdr/dotfiles/blob/main/.config/git/config
+
 [alias]
-  # source: https://github.com/dlvhdr/dotfiles/blob/main/.config/git/config
   # General
   aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
   clean-branches = !git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
   branches = branch --sort=-authordate
+  last = log -1 HEAD
+  unstage = reset HEAD --
   stashes = stash list
   remotes = remote -v
   main = master
@@ -14,15 +18,18 @@
 
   # Delete local branches that no longer exist on the remote
   gone = !git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D
+ 
 [color]
   ui = true
+
 [core]
   editor = vim
   excludesfile = ~/.config/git/ignore
   pager = delta
+
 [delta]
   features = catppuccin-mocha # delta theme
-;   features = tokyonight-night # delta theme
+  # features = tokyonight-night # delta theme
   # features = decorations # delta theme
   navigate = true    
   light = false      
@@ -38,38 +45,54 @@
   hunk-header-file-style = red
   hunk-header-line-number-style = "#067a00"
   hunk-header-style = file line-number syntax
+
 [diff]
   colorMoved = default
+
+[fetch]
+	prune = true
+
 [github]
   user = shamindras
+
 [help]
-  ; Autocorrect mistyped commands.
+  # Autocorrect mistyped commands.
   autocorrect = 1
+
 [init]
   defaultBranch = main
+
 [include]
   # delta themes
   # source: https://dandavison.github.io/delta/custom-themes.html
   path = ~/.config/delta/themes.gitconfig
+
 [interactive]
   diffFilter = delta --color-only --features=interactive
+
 [merge]
   conflictstyle = diff3
   tool = vimdiff
+
 [mergetool]
   path = vim
+
 [push]
   default = current
   autoSetupRemote = true
+
 [rebase]
   updateRefs = true
+
 [rerere]
-  ; Remember my merges
   enabled = true
+
 [user]
   name = Shamindra Shrotriya
   email = shamindra.shrotriya@gmail.com
+
 [url "git@github.com:"]
   insteadOf = https://github.com/
+
 [web]
   browser = firefox
