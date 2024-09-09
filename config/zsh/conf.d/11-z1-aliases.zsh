@@ -27,9 +27,7 @@ function z1_aliases {
     alias df='df -kH'
     alias dus='du -sckx * | sort -nr'
     alias ls='eza --color=always --group-directories-first --icons'
-    alias l='eza -l --color=always --group-directories-first --icons'
-    alias ll='eza -la --color=always --group-directories-first --icons'
-    alias lh='eza -lah --color=always --group-directories-first --icons'
+    alias l='ls -la'
     alias lg='lazygit;clear;'
     alias less='less -R'
     alias md='mkdir -pv'
@@ -51,10 +49,10 @@ function z1_aliases {
     # source: https://github.com/eth-p/bat-extras/tree/master
     alias bdf='batdiff'
     alias bmn='batman'
-    alias brg='batgrep'
-    alias brga='batgrep --rga'
+    alias brg='batgrep --smart-case --no-separator --color --context=1'
+    alias brga='brg --rga' # batgrep with ripgrep-all
     alias bpe='batpipe'
-    alias bwh='batwatch'
+    alias bwt='batwatch'
     alias bpy='prettybat'
 
     # git
