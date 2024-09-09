@@ -141,6 +141,10 @@
     {
       "passKeys": "/,a,b,d,e,f,g,i,j,k,l,m,r,v,x,X,gt,gs",
       "pattern": "https?://mail.google.com/*"
+    },
+    {
+      "passKeys": "/,f,m",
+      "pattern": "https?://iview.abc.net.au/*"
     }
   ]
 }
