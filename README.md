@@ -47,6 +47,7 @@ for openly sharing their work.
 
 <details>
 <summary>Dotfile Sources</summary>
+<br>
 
 - [Alicia Sykes' dotfiles](https://github.com/Lissy93/dotfiles).
 - [Mattmc3's zshrc1 config](https://github.com/mattmc3/zshrc1/tree/main).
