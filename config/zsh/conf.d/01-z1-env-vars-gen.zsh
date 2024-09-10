@@ -53,10 +53,17 @@ typeset -gU path
 
 # TODO: add pyenv, conda, and python path below
 path=(
+  # Rust CLI Utils
+  $CARGO_HOME/bin(N)
+
+  # Pyenv CLI utils
+  $PYENV_ROOT/bin(N)
+  $PYENV_ROOT/shims
+
   # core
   $HOME/{,s}bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
-  /usr/local/{,s}bin(N)
+  $HOMEBREW_PREFIX/{,s}bin(N)
 
   # emacs
   # $HOME/.emacs.d/bin(N)
@@ -66,14 +73,8 @@ path=(
   $HOMEBREW_PREFIX/opt/curl/bin(N)
   $HOMEBREW_PREFIX/opt/go/libexec/bin(N)
   $HOMEBREW_PREFIX/opt/ruby/bin(N)
-  # FIX check whether the ruby gems `3.1.0` needs to be hardcoded
-  $HOMEBREW_PREFIX/lib/ruby/gems/3.1.0/bin(N)
-  $HOME/.gem/ruby/*/bin(N)
   $HOMEBREW_PREFIX/share/npm/bin(N)
   $HOMEBREW_PREFIX/anaconda3/bin(N)
-
-  # pyenv
-  $PYENV_ROOT/bin(N)
 
   $path
 )
