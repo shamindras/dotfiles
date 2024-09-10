@@ -108,6 +108,7 @@ function z1_confd {
   z1_brew_app_fzf
   z1_aliases
   z1_suffix_aliases
+  z1_global_aliases
   # prompt_z1_setup 
   # z1_prompt
   z1_simple_prompt

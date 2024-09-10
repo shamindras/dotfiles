@@ -83,7 +83,7 @@ function z1_vi_style_keybindings {
   bindkey '^?' backward-delete-char
   bindkey '^[[3~' delete-char
 
-  # Some emacs keybindings won't hurt nobody
+  # Some emacs keybindings
   bindkey '^A' beginning-of-line
   bindkey '^E' end-of-line
 }

@@ -10,7 +10,7 @@ function z1_aliases {
     alias ..='z ..'
     alias ...='z ../..'
     alias ....='z ../../..'
-    alias .2='z ../../'                        # Go up 3 dirs
+    alias .2='z ../../'                        # Go up 2 dirs
     alias .3='z ../../../'                     # Go up 3 dirs
     alias .4='z ../../../../'                  # Go up 4 dirs
     alias .5='z ../../../../../'               # Go up 5 dirs
@@ -20,7 +20,7 @@ function z1_aliases {
     alias brewup='brew update && brew upgrade && brew cleanup'
     alias brewinfo='brew leaves | xargs brew desc --eval-all'
     alias c='clear'
-    alias cat='bat'
+    alias cat='bat --paging=never'
     alias cd='z'
     alias cp='cp -r'
     alias cpi='cp -iv'
@@ -44,7 +44,8 @@ function z1_aliases {
     alias tl2='t2 --long'
     alias t3='tree --level=3'
     alias tl3='t3 --long'
-    
+    alias tzsh="hyperfine --warmup=5 '/usr/bin/time zsh -i -c exit'"
+
     # bat-extras
     # source: https://github.com/eth-p/bat-extras/tree/master
     alias bdf='batdiff'
@@ -68,7 +69,7 @@ function z1_aliases {
     alias gst='git status -v'
 
     # directory aliases
-    alias conf='z ${XDG_CONFIG_HOME}'
+    alias conf="z ${XDG_CONFIG_HOME}"
     alias dots='z ~/DROPBOX/REPOS/dotfiles'
     alias down='z ~/Downloads'
     alias reps='z ~/DROPBOX/REPOS'
@@ -77,7 +78,7 @@ function z1_aliases {
     # subversion 
     alias svn="svn --config-dir ${XDG_CONFIG_HOME}/subversion"
     alias gpg='${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\"'
-    alias wget='${aliases[wget]:-wget} --hsts-file=\"\$XDG_CACHE_HOME/wget/wget-hsts\"'
+    alias wget='wget --hsts-file=\"$XDG_DATA_HOME/wget-hsts\"'
 
     # Additional clean/wash aliases --
     # Source: https://github.com/ameensol/shell/blob/master/.zshenv#L29-L30
@@ -93,16 +94,33 @@ function z1_aliases {
 # Application open suffix alias --
 # Source:
 # https://github.com/sdaschner/dotfiles/blob/91f9578b6cf926efb06bb3b1ebbd1ccd0715e06d/.aliases#L327-L336
-# Note: For macOS we use `open -gj` to open the application in the background
+# For macOS we use `open -gj` to open the application in the background
 function z1_suffix_aliases {
     alias -s {pdf,PDF}='open -gja Skim.app'
     alias -s {jpg,JPG,png,PNG}='open -gja Preview.app'
     alias -s {ods,ODS,odt,ODT,odp,ODP,doc,DOC,docx,DOCX,xls,XLS,xlsx,XLSX,xlsm,XLSM,ppt,PPT,pptx,PPTX,csv,CSV}='open -gja LibreOffice.app'
-    alias -s {html,HTML}='open -gja Google\ Chrome.app' # TODO use `firefox` instead of `Chrome`
+    alias -s {html,HTML}='open -gja /Applications/Firefox.app'
     alias -s {mp4,MP4,mov,MOV,mkv,MKV}='open -gja VLC.app'
     alias -s {zip,ZIP,war,WAR}='unzip -l'
     alias -s gz="tar -tf"
     alias -s {tgz,TGZ}="tar -tf"
 }
 
+# Global zsh git aliases.
+# Can be used in the middle, not just at the start of the commands.
+# Source: https://justingarrison.com/blog/2023-06-05-zsh-global-aliases/
+function z1_global_aliases {
+    # Use bat to display help pages in color
+    # https://github.com/sharkdp/bat#highlighting---help-messages
+    alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+
+    alias -g H='| head'
+    # TODO fix this bat alias coloring
+    alias -g L='| bat --pager="less -FRS" --color=always'
+    alias -g G='| batgrep --smart-case --no-separator --color --context=1'
+    alias -g W='| wc -l'
+    alias -g J='| jq .'
+    alias -g T="| tr -d '\n' "
+    alias -g C="| pbcopy"
+}
 # endregion --------------------------------------------------------------------

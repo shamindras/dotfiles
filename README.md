@@ -45,6 +45,10 @@ make dotbot_install
 These dotfiles have been mainly inspired by the following people. I thank them
 for openly sharing their work.
 
+<details>
+<summary>Dotfile Sources</summary>
+<br>
+
 - [Alicia Sykes' dotfiles](https://github.com/Lissy93/dotfiles).
 - [Mattmc3's zshrc1 config](https://github.com/mattmc3/zshrc1/tree/main).
 - [Josh Medeski's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86).
@@ -55,3 +59,5 @@ for openly sharing their work.
 - [Kevin Suttle](http://kevinsuttle.com/) and his [macOS-Defaults project](https://github.com/kevinSuttle/macOS-Defaults),
   which aims to provide better documentation for [`~/.macos`](https://mths.be/macos). This is inspired by Mathias Bynen's `.macos` settings.
 - [Dylan McDowell's zsh config](https://github.com/dylanjm/teton/blob/2eb03539fe2c9489ed6b5ade4ee4ee44d8c6f421/config/shells/zsh/zshenv.zsh)
+
+</details>
