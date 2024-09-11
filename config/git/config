@@ -26,6 +26,7 @@
   editor = vim
   excludesfile = ~/.config/git/ignore
   pager = delta
+	attributesfile = ~/.config/git/attributes
 
 [delta]
   features = catppuccin-mocha # delta theme
@@ -90,9 +91,20 @@
 [user]
   name = Shamindra Shrotriya
   email = shamindra.shrotriya@gmail.com
+	signingkey = /Users/shamindras/.ssh/id_ed25519.pub
 
 [url "git@github.com:"]
   insteadOf = https://github.com/
 
 [web]
   browser = firefox
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = /Users/shamindras/.ssh/allowed_signers
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[format]
+	signoff = true
