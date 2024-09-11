@@ -51,6 +51,7 @@
     ${XDG_CONFIG_HOME}/lazygit: config/lazygit
     ${XDG_CONFIG_HOME}/neofetch: config/neofetch
     ${XDG_CONFIG_HOME}/skhd: config/skhd
+    ${HOME}/.ssh: config/ssh/config
     ${XDG_CONFIG_HOME}/starship: config/starship
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/wget: config/wget
