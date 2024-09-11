@@ -26,6 +26,7 @@
   editor = vim
   excludesfile = ~/.config/git/ignore
   pager = delta
+	attributesfile = ~/.config/git/attributes
 
 [delta]
   features = catppuccin-mocha # delta theme
