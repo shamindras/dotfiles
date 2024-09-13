@@ -69,3 +69,8 @@
 - shell:
     - command: tldr --update
       description: Update tldr
+
+# Install gh-dash extension
+- shell:
+    - command: gh extension install dlvhdr/gh-dash
+      description: install gh-dash extension
