@@ -27,6 +27,7 @@ function z1_aliases {
     alias df='df -kH'
     alias dus='du -sckx * | sort -nr'
     # alias firefox='open -gja /Applications/Firefox.app'
+    alias ghd='gh dash;clear;'
     alias ls='eza --color=always --group-directories-first --icons'
     alias l='ls -la'
     alias lg='lazygit;clear;'
