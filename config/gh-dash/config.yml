@@ -1,8 +1,11 @@
 # yaml-language-server: $schema=https://dlvhdr.github.io/gh-dash/configuration/gh-dash/schema.json
-qprSections:
-  - title: My Pull Requests
+
+# Adapted from: https://github.com/dlvhdr/dotfiles/blob/main/.config/gh-dash/config.yml
+# and: https://github.com/joshmedeski/dotfiles/blob/main/.config/gh-dash/config.yml
+prSections:
+  - title: My PRs
     filters: is:open author:@me
-  - title: Needs My Review
+  - title: My Review
     filters: is:open review-requested:@me
   - title: Involved
     filters: is:open involves:@me -author:@me
@@ -16,39 +19,19 @@ issuesSections:
   - title: Commented
     filters: is:open commenter:@me
 defaults:
-  preview:
-    open: true
-    width: 50
-  prsLimit: 20
-  issuesLimit: 20
-  view: prs
+  view: repo
   layout:
     prs:
-      updatedAt:
-        width: 7
-      repo:
-        width: 15
-      author:
-        width: 15
-      assignees:
-        width: 20
-        hidden: true
-      base:
-        width: 15
-        hidden: true
-      lines:
-        width: 16
-    issues:
-      updatedAt:
-        width: 7
-      repo:
-        width: 15
-      creator:
+      repoName:
+        grow: true,
         width: 10
-      assignees:
-        width: 20
-        hidden: true
-  refetchIntervalMinutes: 30
+        hidden: false
+
+  preview:
+    open: true
+    width: 70
+  prsLimit: 20
+  issuesLimit: 20
 
 pager:
   diff: delta

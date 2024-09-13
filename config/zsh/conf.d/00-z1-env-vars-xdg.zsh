@@ -91,7 +91,7 @@ export GH_CONFIG_DIR="${GH_CONFIG_DIR:-$XDG_CONFIG_HOME/gh}"
 
 # gh-dash
 # source: https://dlvhdr.github.io/gh-dash/configuration/
-export GH_DASH_CONFIG="${GH_CONFIG_DIR:-$XDG_CONFIG_HOME/gh-dash/config.yml}"
+export GH_DASH_CONFIG="${GH_DASH_CONFIG:-$XDG_CONFIG_HOME/gh-dash/config.yml}"
 
 # Node
 # source: https://blog.mitsunee.com/post/n-xdg-setup
