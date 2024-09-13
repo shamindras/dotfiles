@@ -50,6 +50,10 @@ gui:
     "shamindras": "#9db5bf"
     "SS": "#9db5bf"
 
+# If true, display a confirmation when subprocess terminates. This allows you to
+# view the output of the subprocess before returning to Lazygit.
+promptToReturnFromSubprocess: true
+
 # use delta for git diffs
 git:
   paging:
