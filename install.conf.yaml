@@ -46,6 +46,7 @@
     ${XDG_CONFIG_HOME}/btop: config/btop
     ${XDG_CONFIG_HOME}/.curlrc: config/curl/curlrc
     ${XDG_CONFIG_HOME}/delta: config/delta
+    ${XDG_CONFIG_HOME}/gh: config/gh
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
     ${XDG_CONFIG_HOME}/lazygit: config/lazygit

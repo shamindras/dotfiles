@@ -85,6 +85,10 @@ export _ZO_MAXAGE=100
 # gpg
 export GNUPGHOME="${GNUPGHOME:-$XDG_DATA_HOME/gnupg}"
 
+# gh
+# source: https://cli.github.com/manual/gh_help_environment 
+export GH_CONFIG_DIR="${GH_CONFIG_DIR:-$XDG_CONFIG_HOME/gh}"
+
 # Node
 # source: https://blog.mitsunee.com/post/n-xdg-setup
 export NVM_DIR="${NVM_DIR:-$XDG_DATA_HOME/nvm}"
