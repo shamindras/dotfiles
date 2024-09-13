@@ -173,6 +173,10 @@ sudo systemsetup -settimezone "Europe/Brussels" > /dev/null
 # Stop iTunes from responding to the keyboard media keys
 #launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
 
+# Switch trackpad scrolling direction to `natural`
+# source: https://setapp.com/how-to/change-scroll-direction-on-mac
+defaults write -g com.apple.swipescrolldirection -boolean YES
+
 ###############################################################################
 # Energy saving                                                               #
 ###############################################################################
