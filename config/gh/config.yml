@@ -1,0 +1,48 @@
+# What protocol to use when performing git operations. Supported values: ssh,
+# https
+git_protocol: ssh
+# What editor gh should run when creating issues, pull requests, etc. If blank,
+# will refer to environment.
+editor:
+# When to interactively prompt. This is a global config that cannot be
+# overridden by hostname. Supported values: enabled, disabled
+prompt: enabled
+# A pager program to send command output to, e.g. "less". Set the value to "cat"
+# to disable the pager.
+pager: bat
+# Aliases allow you to create nicknames for gh commands
+aliases:
+  clone: repo clone
+  co: pr checkout
+  diff: pr diff
+  merge: pr merge
+  close: issue close
+  add: issue create --title
+  todo: issue create -a @me --title
+  mine: issue list -a @me
+  e: issue edit
+  label: issue edit --add-label
+  claim: issue edit --add-assignee @me
+  vpr: pr view --web
+  rmlabel: issue edit --remove-label
+  bugs: issue list --label=bugs
+  homework: issue list --assignee @me
+  ilm: issue list --mention @me
+  # view current repo GitHub page
+  # source: https://github.com/cli/cli/discussions/2618#discussioncomment-207289
+  browser: repo view -w
+  il: issue list
+  zen: api zen
+  # Clone repo into a specific directory
+  # source: https://github.com/cli/cli/discussions/2618#discussioncomment-205837
+  # usage:gh clp playground
+  # => gh repo clone shamindras/playground ~/DROPBOX/REPOS/shamindras/playground
+  # FIXME we want to ideally clone this to ~/DROPBOX/REPOS/playground
+  clp: '!gh repo view "$1" | awk "/^name:/{print \$2}" | xargs -I% gh repo clone "%" ~/DROPBOX/REPOS/%'
+# The path to a unix socket through which send HTTP connections. If blank, HTTP
+# traffic will be handled by net/http.DefaultTransport.
+http_unix_socket:
+# What web browser gh should use when opening URLs. If blank, will refer to
+# environment.
+browser: firefox
+version: "1"

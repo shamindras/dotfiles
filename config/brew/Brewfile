@@ -31,8 +31,6 @@ brew "commitizen"
 brew "gmp"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
-# International domain name library (IDNA2008, Punycode and TR46)
-brew "libidn2"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
 # Good-lookin' diffs with diff-highlight and more
@@ -47,6 +45,8 @@ brew "dust"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# International domain name library (IDNA2008, Punycode and TR46)
+brew "libidn2"
 # Validating, recursive, caching DNS resolver
 brew "unbound"
 # GNU Transport Layer Security (TLS) Library
@@ -113,6 +113,8 @@ brew "git"
 brew "git-delta"
 # Generate introspection data for GObject libraries
 brew "gobject-introspection"
+# Tool for glamorous shell scripts
+brew "gum"
 # Improved top (interactive process viewer)
 brew "htop"
 # User-friendly cURL replacement (command-line HTTP client)

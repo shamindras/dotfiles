@@ -65,6 +65,10 @@ path=(
   /opt/{homebrew,local}/{,s}bin(N)
   $HOMEBREW_PREFIX/{,s}bin(N)
 
+  # firefox
+  # Adapted from: https://stackoverflow.com/a/62203162/4687531
+  /Applications/Firefox.app/Contents/MacOS
+
   # emacs
   # $HOME/.emacs.d/bin(N)
   # $HOME/.config/emacs/bin(N)
