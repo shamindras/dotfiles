@@ -1,5 +1,5 @@
-@default:
-  @just --choose
+_default:
+	@just --choose
 
 update_brewfile:
 	@printf ">>> Creating brewfile...\n"
