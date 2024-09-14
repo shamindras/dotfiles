@@ -7,25 +7,37 @@ gui:
   sidePanelWidth: 0.3333 # number from 0 to 1
   expandFocusedSidePanel: false
   mainPanelSplitMode: "flexible" # one of 'horizontal' | 'flexible' | 'vertical'
-  language: "auto" # one of 'auto' | 'en' | 'zh' | 'pl' | 'nl'
+  language: "en" # one of 'auto' | 'en' | 'zh' | 'pl' | 'nl'
+  # tokyonight_night theme
+  # source: https://github.com/folke/tokyonight.nvim/blob/main/extras/lazygit/tokyonight_night.yml
   theme:
     activeBorderColor:
-      - green
-      - bold
+      - "#ff9e64"
+      - "bold"
     inactiveBorderColor:
-      - black
+      - "#27a1b9" # "#494949"
+    searchingActiveBorderColor:
+      - "#ff9e64"
+      - "bold"
     optionsTextColor:
-      - blue
+      - "#7aa2f7"
     selectedLineBgColor:
-      - blue
-    cherryPickedCommitBgColor:
-      - blue
+      - "#283457"
     cherryPickedCommitFgColor:
-      - cyan
+      - "#7aa2f7"
+    cherryPickedCommitBgColor:
+      - "#bb9af7"
+    markedBaseCommitFgColor:
+      - "#7aa2f7"
+    markedBaseCommitBgColor:
+      - "#e0af68"
     unstagedChangesColor:
-      - white
-  # If true (default), file icons are shown in the file views. Only relevant if NerdFontsVersion is not empty.
-  showFileIcons: true
+      - "#db4b4b"
+    defaultFgColor:
+      - "#c0caf5"
+  # If true (default), file icons are shown in the file views. Only relevant if
+  # NerdFontsVersion is not empty.
+  # showFileIcons: true
   # Window border style.
   # One of 'rounded' (default) | 'single' | 'double' | 'hidden'
   border: "single"
@@ -34,19 +46,22 @@ gui:
   skipStashWarning: true
   # If true, show the '5 of 20' footer at the bottom of list views
   showListFooter: true
-  # If true, display the files in the file views as a tree. If false, display the files as a flat list.
-  # This can be toggled from within Lazygit with the '~' key, but that will not change the default.
+  # If true, display the files in the file views as a tree. If false, display
+  # the files as a flat list. This can be toggled from within Lazygit with the
+  # '~' key, but that will not change the default.
   showFileTree: true
   # If true, show a random tip in the command log when Lazygit starts
   showRandomTip: false
   # If true, show the command log
   showCommandLog: false
-  # If true, show the bottom line that contains keybinding info and useful buttons. If false, this line will be hidden except to display a loader for an in-progress action.
+  # If true, show the bottom line that contains keybinding info and useful
+  # buttons. If false, this line will be hidden except to display a loader for
+  # an in-progress action.
   showBottomLine: true
   # If true, show jump-to-window keybindings in window titles.
   showPanelJumps: true
   commandLogSize: 8
-  authorColors: # in case you're not happy with the randomly assigned colour
+  authorColors: # in case you're not happy with the randomly assigned color
     "Shamindra Shrotriya": "blue"
     # use for other authors
     "*": "red"
