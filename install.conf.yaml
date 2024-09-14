@@ -40,7 +40,7 @@
 
 # Symlink locations for files / directories
 - link:
-    ${HOME}/.zshenv: { path: config/zsh/.zshenv, force: true }
+    ${HOME}/.zshenv: config/zsh/.zshenv
     ${XDG_CONFIG_HOME}/alacritty: config/alacritty
     ${XDG_CONFIG_HOME}/bat: config/bat
     ${XDG_CONFIG_HOME}/btop: config/btop
@@ -75,3 +75,7 @@
 - shell:
     - command: gh extension install dlvhdr/gh-dash
       description: install gh-dash extension
+# # macOS default settings
+# - shell:
+#     - command: ./scripts/macos
+#       description: Set macOS default settings
