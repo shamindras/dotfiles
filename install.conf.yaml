@@ -43,6 +43,7 @@
     ${HOME}/.zshenv: config/zsh/.zshenv
     ${XDG_CONFIG_HOME}/alacritty: config/alacritty
     ${XDG_CONFIG_HOME}/bat: config/bat
+    ${XDG_CONFIG_HOME}/bin: config/bin
     ${XDG_CONFIG_HOME}/btop: config/btop
     ${XDG_CONFIG_HOME}/.curlrc: config/curl/curlrc
     ${XDG_CONFIG_HOME}/delta: config/delta
@@ -77,6 +78,11 @@
 - shell:
     - command: gh extension install dlvhdr/gh-dash
       description: install gh-dash extension
+
+# Upgrade gh-dash extension
+- shell:
+    - command: gh extension upgrade --all
+      description: upgrade gh extensions
 # # macOS default settings
 # - shell:
 #     - command: ./scripts/macos
