@@ -121,6 +121,11 @@ customCommands:
     context: "files"
     loadingText: "opening commitizen commit tool"
     subprocess: true
+  - key: "z"
+    command: "~/.config/bin/gc"
+    context: "files"
+    loadingText: "Commitizen prompt"
+    subprocess: true
 
 # TODO switch from `vim` to `nvim`
 os:

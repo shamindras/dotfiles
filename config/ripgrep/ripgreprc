@@ -1,0 +1,22 @@
+# ripgrep config
+# source: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
+# Additional material: https://codapi.org/try/ripgrep/
+
+# Don't let ripgrep vomit really long lines to my terminal, and show a preview.
+--max-columns=150
+--max-columns-preview
+
+# Search hidden files / directories (e.g. dotfiles) by default
+--hidden
+
+# Using glob patterns to include/exclude files or folders
+# Exclude patterns
+--glob=!.git/*
+--glob=!submods/*
+
+# Set the colors.
+--colors=line:none
+--colors=line:style:bold
+
+# Because who cares about case!?
+--smart-case

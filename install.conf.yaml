@@ -40,18 +40,21 @@
 
 # Symlink locations for files / directories
 - link:
-    ${HOME}/.zshenv: { path: config/zsh/.zshenv, force: true }
+    ${HOME}/.zshenv: config/zsh/.zshenv
     ${XDG_CONFIG_HOME}/alacritty: config/alacritty
     ${XDG_CONFIG_HOME}/bat: config/bat
+    ${XDG_CONFIG_HOME}/bin: config/bin
     ${XDG_CONFIG_HOME}/btop: config/btop
     ${XDG_CONFIG_HOME}/.curlrc: config/curl/curlrc
     ${XDG_CONFIG_HOME}/delta: config/delta
+    ${XDG_CONFIG_HOME}/fastfetch: config/fastfetch
     ${XDG_CONFIG_HOME}/gh: config/gh
     ${XDG_CONFIG_HOME}/gh-dash: config/gh-dash
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
     ${XDG_CONFIG_HOME}/lazygit: config/lazygit
     ${XDG_CONFIG_HOME}/neofetch: config/neofetch
+    ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/skhd: config/skhd
     ${XDG_CONFIG_HOME}/ssh: config/ssh
     ${HOME}/.ssh/config: ${XDG_CONFIG_HOME}/ssh/config
@@ -75,3 +78,12 @@
 - shell:
     - command: gh extension install dlvhdr/gh-dash
       description: install gh-dash extension
+
+# Upgrade gh-dash extension
+- shell:
+    - command: gh extension upgrade --all
+      description: upgrade gh extensions
+# # macOS default settings
+# - shell:
+#     - command: ./scripts/macos
+#       description: Set macOS default settings
