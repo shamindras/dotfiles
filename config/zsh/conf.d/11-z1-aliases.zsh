@@ -28,6 +28,7 @@ function z1_aliases {
     alias dus='du -sckx * | sort -nr'
     # alias firefox='open -gja /Applications/Firefox.app'
     alias ghd='gh dash;clear;'
+    alias ghup='gh extension upgrade --all'
     alias ls='eza --color=always --group-directories-first --icons'
     alias l='ls -la'
     alias lg='lazygit;clear;'
@@ -53,7 +54,7 @@ function z1_aliases {
     # source: https://github.com/eth-p/bat-extras/tree/master
     alias bdf='batdiff'
     alias bmn='batman'
-    alias brg='batgrep --smart-case --no-separator --color --context=1'
+    alias brg='batgrep --smart-case --no-snip --no-separator --color --context=1'
     alias brga='brg --rga' # batgrep with ripgrep-all
     alias bpe='batpipe'
     alias bwt='batwatch'
