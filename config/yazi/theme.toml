@@ -3,6 +3,8 @@
 # A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
 "$schema" = "https://yazi-rs.github.io/schemas/theme.json"
 
+# source: https://github.com/mingo99/yazi.config/blob/main/keymap.toml
+
 [manager]
 # Can combine with tmTheme (sublime colorshceme file) for preview code highlight
 # Highlighting
