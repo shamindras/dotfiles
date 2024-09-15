@@ -8,7 +8,9 @@
 # TODO: add more options, e.g. `R`/`python` versions etc.
 # TODO: consider a --details option to wrap output in summary/details html tags
 ffc() {
-    fastfetch | tee >(pbcopy)
+    # We need to reverse the file to remove the first 2 rows (of unused color output)
+    # then we reverse back to output in the correct (original) order.
+    tac <(fastfetch --logo none) | sed "1,2d" | tac | sed '/^[[:space:]]*$/d' | tee >(pbcopy)
 }
 
 # vim: ft=zsh
