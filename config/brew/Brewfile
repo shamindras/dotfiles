@@ -43,6 +43,8 @@ brew "duf"
 brew "dust"
 # Modern, maintained replacement for ls
 brew "eza"
+# Like neofetch, but much faster because written mostly in C
+brew "fastfetch"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
 # International domain name library (IDNA2008, Punycode and TR46)
@@ -234,6 +236,7 @@ cask "dropbox"
 # Web browser
 cask "firefox"
 cask "font-hack-nerd-font"
+cask "font-hasklug-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspace-nerd-font"
 cask "google-backup-and-sync"
