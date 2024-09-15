@@ -68,6 +68,7 @@ bindings = [
   # lazygit: `lazygit;clear;<CR>`
   { key = "G", mods = "Command", chars = "lazygit;clear;\n" },
   { key = "G", mods = "Command|Shift", chars = "gh dash;clear;\n" },
+  { key = "Y", mods = "Command", chars = "yazi;clear;\n" },
   # nvim: `nvim .;clear;`
   # { key = "N", mods = "Command|Shift", chars = "nvim .;clear;\n" },
   # { key = "LBracket", mods = "Command"|Shift, chars = "\x02p" } # switch to next tmux window
