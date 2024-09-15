@@ -66,7 +66,8 @@ bindings = [
   # { key = "L", mods = "Command", chars = "\x02L" } # switch to the last tmux session
   # { key = "LBracket", mods = "Command", chars = "\x0F" } # navigate back (ctrl+o)
   # lazygit: `lazygit;clear;<CR>`
-  { key = "G", mods = "Command|Shift", chars = "lazygit;clear;\n" },
+  { key = "G", mods = "Command", chars = "lazygit;clear;\n" },
+  { key = "G", mods = "Command|Shift", chars = "gh dash;clear;\n" },
   # nvim: `nvim .;clear;`
   # { key = "N", mods = "Command|Shift", chars = "nvim .;clear;\n" },
   # { key = "LBracket", mods = "Command"|Shift, chars = "\x02p" } # switch to next tmux window
