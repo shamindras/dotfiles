@@ -1,0 +1,11 @@
+[[rule]]
+include = [".taplo.toml", "taplo.toml", "**/alacritty.toml"]
+exclude = ["config/yazi/themes/**", "config/alacritty/themes/**"]
+
+[rule.formatting]
+align_entries = true
+align_comments = true
+array_trailing_comma = true
+trailing_newline = true
+column_width = 100
+inline_table_expand = false
