@@ -86,4 +86,10 @@ function z1_brew_app_fzf_lazy {
     fi
 }
 
+# Atuin
+# source: https://docs.atuin.sh/guide/installation/#installing-the-shell-plugin
+function z1_brew_app_atuin {
+    eval "$(atuin init zsh)"
+}
+
 # endregion --------------------------------------------------------------------

@@ -103,16 +103,21 @@ function z1_confd {
   z1_utility
   z1_plugins
   z1_completions
+
+  # Homebrew apps
+  # TODO: lazy load brew apps, to speed up zsh startup time
   # z1_brew_app_starship
   z1_brew_app_zoxide
-
-  # fzf - lazy or non-lazy
   z1_brew_app_fzf
   # z1_brew_app_fzf_lazy
+  # z1_brew_app_atuin
 
+  # Aliases
   z1_aliases
   z1_suffix_aliases
   z1_global_aliases
+
+  # Command Prompt
   # prompt_z1_setup 
   # z1_prompt
   z1_simple_prompt
