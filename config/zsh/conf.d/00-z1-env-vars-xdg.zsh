@@ -96,13 +96,13 @@ export GH_DASH_CONFIG="${GH_DASH_CONFIG:-$XDG_CONFIG_HOME/gh-dash/config.yml}"
 # Node
 # source: https://blog.mitsunee.com/post/n-xdg-setup
 export NVM_DIR="${NVM_DIR:-$XDG_DATA_HOME/nvm}"
-# export N_PREFIX="${N_PREFIX:-$XDG_DATA_HOME/node}"
-# export N_CACHE_PREFIX="${N_CACHE_PREFIX:-$XDG_CACHE_HOME}"
-# export N_PRESERVE_NPM=1
-# export N_PRESERVE_COREPACK=1
-# export NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG:-$XDG_CONFIG_HOME/npm/npmrc}"
-# export COREPACK_HOME="${COREPACK_HOME:-$XDG_DATA_HOME/corepack}"
-# export NODE_REPL_HISTORY="${NODE_REPL_HISTORY:-$XDG_STATE_HOME/node_repl/history}"
+export N_PREFIX="${N_PREFIX:-$XDG_DATA_HOME/node}"
+export N_CACHE_PREFIX="${N_CACHE_PREFIX:-$XDG_CACHE_HOME}"
+export N_PRESERVE_NPM=1
+export N_PRESERVE_COREPACK=1
+export NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG:-$XDG_CONFIG_HOME/npm/npmrc}"
+export COREPACK_HOME="${COREPACK_HOME:-$XDG_CACHE_HOME/node/corepack}"
+export NODE_REPL_HISTORY="${NODE_REPL_HISTORY:-$XDG_STATE_HOME/node_repl/history}"
 
 # postgres
 # export PSQLRC="${PSQLRC:-$XDG_CONFIG_HOME/pg/psqlrc}"
