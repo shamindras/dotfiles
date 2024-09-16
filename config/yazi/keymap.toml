@@ -220,11 +220,15 @@ keymap = [
   ], run = "cd ~", desc = "Go to the home directory" },
   { on = [
     "g",
+    "d",
+  ], run = "cd ~/DROPBOX/REPOS/dotfiles", desc = "Go to the dotfiles directory" },
+  { on = [
+    "g",
     "c",
   ], run = "cd ~/.config", desc = "Go to the config directory" },
   { on = [
     "g",
-    "d",
+    "l",
   ], run = "cd ~/Downloads", desc = "Go to the downloads directory" },
   { on = [
     "g",
