@@ -1,0 +1,13 @@
+# Atuin config
+# source: https://docs.atuin.sh/configuration/config/
+
+auto_sync = false
+inline_height = 16
+dialect = "us"
+search_mode = "fuzzy"
+show_help = true
+show_preview = true
+style = "compact"
+invert = true
+scroll_context_lines = 3
+update_check = false

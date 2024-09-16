@@ -17,6 +17,8 @@ brew "thrift"
 brew "apache-arrow"
 # Spell checker with better logic than ispell
 brew "aspell"
+# Improved shell history for zsh, bash, fish and nushell
+brew "atuin"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Bash scripts that integrate bat with various command-line tools
