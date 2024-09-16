@@ -105,7 +105,11 @@ function z1_confd {
   z1_completions
   # z1_brew_app_starship
   z1_brew_app_zoxide
+
+  # fzf - lazy or non-lazy
   z1_brew_app_fzf
+  # z1_brew_app_fzf_lazy
+
   z1_aliases
   z1_suffix_aliases
   z1_global_aliases
