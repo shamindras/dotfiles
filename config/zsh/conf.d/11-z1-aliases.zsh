@@ -85,14 +85,14 @@ function z1_aliases {
     alias wget='wget --hsts-file=\"$XDG_DATA_HOME/wget-hsts\"'
 
     # Additional clean/wash aliases --
-    # Source: https://github.com/ameensol/shell/blob/master/.zshenv#L29-L30
+    # Source: https://github.com/sharkdp/fd/discussions/1615
+    # Adapted from: https://github.com/ameensol/shell/blob/master/.zshenv#L29-L30
+    
     # clean up current directory
-    # TODO use `fd` instead of `find` to speed this up
-    alias clean="find . -maxdepth 1 -name '*.DS_Store' -o -name '*~' -o -name '.*~' -o -name '*.swo' -o -name '*.swp' -o -name '.*.swo' | xargs rm"
+    alias clean="fd '\.(DS_Store|swo|swp)$|~$' -d1 -u -X rm"
 
     # clean up current directory AND all subdirectories
-    # TODO use `fd` instead of `find` to speed this up
-    alias wash="find . -name '*.DS_Store' -o -name '*~' -o -name '.*~' -o -name '*.swo' -o -name '*.swp' -o -name '.*.swo' | xargs rm"
+    alias wash="fd '\.(DS_Store|swo|swp)$|~$' -u -X rm"
 }
 
 # Application open suffix alias --
