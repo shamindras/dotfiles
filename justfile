@@ -10,3 +10,10 @@ update_submods:
 	@printf ">>> Update all submods...\n"
 	git submodule update --recursive --remote
 	@printf ">>> Updated all submods\n"
+
+clean:
+	@printf ">>> Clean up directory...\n"
+	@rm -rf ./config/zsh/.zsh_sessions
+	@fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
+	@printf ">>> Cleaned up directory\n"
+

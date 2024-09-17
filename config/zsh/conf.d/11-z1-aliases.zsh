@@ -89,10 +89,10 @@ function z1_aliases {
     # Adapted from: https://github.com/ameensol/shell/blob/master/.zshenv#L29-L30
     
     # clean up current directory
-    alias clean="fd '\.(DS_Store|swo|swp)$|~$' -d1 -u -X rm"
+    alias clean="fd '\.(DS_Store|swo|swp)$|~$' -d1 -tf -u -X rm"
 
     # clean up current directory AND all subdirectories
-    alias wash="fd '\.(DS_Store|swo|swp)$|~$' -u -X rm"
+    alias wash="fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm"
 }
 
 # Application open suffix alias --
