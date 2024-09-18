@@ -89,10 +89,13 @@ function z1_confd {
 # region: Run z1
 # ------------------------------------------------------------------------------
 
+# source all conf.d files first, so that the `z1_` funcs below are loaded
 () {
-  # source all conf.d files first, so that the `z1_` funcs below are loaded
   z1_confd 
+}
 
+# load all the conf.d functions
+() {
   # conf.d functions
   z1_funcdir
   # z1_colorize
@@ -109,7 +112,6 @@ function z1_confd {
   # z1_brew_app_starship
   z1_brew_app_zoxide
   z1_brew_app_fzf
-  # z1_brew_app_fzf_lazy
   # z1_brew_app_atuin
 
   # Aliases
@@ -118,8 +120,6 @@ function z1_confd {
   z1_global_aliases
 
   # Command Prompt
-  # prompt_z1_setup 
-  # z1_prompt
   z1_simple_prompt
 }
 
