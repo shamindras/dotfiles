@@ -40,6 +40,7 @@
 
 # Symlink locations for files / directories
 - link:
+    # XDG_CONFIG_HOME configs
     ${HOME}/.zshenv: config/zsh/.zshenv
     ${XDG_CONFIG_HOME}/alacritty: config/alacritty
     ${XDG_CONFIG_HOME}/atuin: config/atuin
@@ -57,6 +58,7 @@
     ${XDG_CONFIG_HOME}/neofetch: config/neofetch
     ${XDG_CONFIG_HOME}/npm: config/npm
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
+    ${XDG_CONFIG_HOME}/rstudio: config/rstudio
     ${XDG_CONFIG_HOME}/skhd: config/skhd
     ${XDG_CONFIG_HOME}/ssh: config/ssh
     ${HOME}/.ssh/config: ${XDG_CONFIG_HOME}/ssh/config
@@ -66,6 +68,8 @@
     ${XDG_CONFIG_HOME}/yabai: config/yabai
     ${XDG_CONFIG_HOME}/yazi: config/yazi
     ${XDG_CONFIG_HOME}/zsh: config/zsh
+
+    # Application support configs
     ${HOME}/Library/Application Support/espanso: config/espanso
 
 # Update bat themes cache
