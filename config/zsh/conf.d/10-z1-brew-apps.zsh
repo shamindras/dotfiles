@@ -42,50 +42,6 @@ function z1_brew_app_fzf {
     bindkey "ç" fzf-cd-widget
 }
 
-# TODO lazy load fzf. This doesn't work yet, since you need to manually trigger `fzf` first
-# source: https://frederic-hemberger.de/notes/speeding-up-initial-zsh-startup-with-lazy-loading/
-
-# Check if 'fzf' is a command in $PATH
-function z1_brew_app_fzf_lazy {
-    if [ $commands[fzf] ]; then
-
-    # Placeholder 'fzf' shell function:
-    # Will only be executed on the first call to 'fzf'
-    fzf() {
-
-        # Remove this function, subsequent calls will execute 'fzf' directly
-        unfunction "$0"
-
-        # Load auto-completion
-        eval "$(fzf --zsh)"
-
-        # Execute 'fzf' binary
-        $0 "$@"
-
-        # FZF options
-        export FZF_DEFAULT_COMMAND='fd -HI -L --exclude .git --color=always'
-        export FZF_DEFAULT_OPTS='
-        --ansi
-        --info inline
-        --height 40%
-        --reverse
-        --border
-        --multi
-        --color fg:#ebdbb2,bg:#282828,hl:#fabd2f,fg+:#ebdbb2,bg+:#3c3836,hl+:#fabd2f
-        --color info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54
-        '
-        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-        export FZF_CTRL_T_OPTS="--preview '(bat --theme ansi-dark --color always {} 2> /dev/null || eza --tree --color=always {}) 2> /dev/null | head -200'"
-        export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
-        export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
-        # The following is needed on OSX to enable Alt+C
-        # source: https://github.com/junegunn/fzf/issues/164#issuecomment-581837757
-        bindkey "ç" fzf-cd-widget
-
-    }
-    fi
-}
-
 # Atuin
 # source: https://docs.atuin.sh/guide/installation/#installing-the-shell-plugin
 function z1_brew_app_atuin {
