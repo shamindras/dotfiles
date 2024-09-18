@@ -26,6 +26,7 @@ function z1_aliases {
     alias cpi='cp -iv'
     alias df='df -kH'
     alias dus='du -sckx * | sort -nr'
+    alias er='espanso restart'
     # alias firefox='open -gja /Applications/Firefox.app'
     alias ghd='gh dash;clear;'
     alias ghup='gh extension upgrade --all'
