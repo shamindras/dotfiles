@@ -10,7 +10,7 @@
 
 # Install homebrew
 - shell:
-    - command: ./scripts/install-homebrew.sh
+    - command: ./scripts/install-homebrew
       description: Installing homebrew
 
 # run brew update, upgrade, clean up
@@ -66,6 +66,7 @@
     ${XDG_CONFIG_HOME}/yabai: config/yabai
     ${XDG_CONFIG_HOME}/yazi: config/yazi
     ${XDG_CONFIG_HOME}/zsh: config/zsh
+    ${HOME}/Library/Application Support/espanso: config/espanso
 
 # Update bat themes cache
 - shell:
@@ -86,7 +87,14 @@
 - shell:
     - command: gh extension upgrade --all
       description: upgrade gh extensions
+
 # # macOS default settings
 # - shell:
 #     - command: ./scripts/macos
 #       description: Set macOS default settings
+
+# Load espanso extension
+# TODO: note down instructions to set up espanso security settings
+- shell:
+    - command: espanso service register
+      description: register espanso app
