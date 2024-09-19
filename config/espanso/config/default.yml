@@ -5,7 +5,7 @@
 
 toggle_key: OFF
 undo_backspace: true
-# auto_restart: true
+auto_restart: true
 search_shortcut: ALT+SHIFT+SPACE
 search_trigger: ":search"
 # show_icon: true
