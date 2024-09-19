@@ -1,14 +1,22 @@
 name: emails
-parent: default
+parent: base
 
 matches:
   # [em]ail [p]ersonal
   - trigger: ";emp"
-    replace: "shamindra.shrotriya@gmail.com"
+    replace: "{{MyEmail}}"
+  # [em]ail [w]ork
+  - trigger: ";emw"
+    replace: "{{MyEmail}}"
     # [em]ail with +suffix
   - trigger: ";ems"
     replace: "shamindra.shrotriya+$|$@gmail.com"
-
-  # Inserts a markdown code block
-  - trigger: :md-code
-    replace: "```\n$|$\n```"
+    # email [sig]nature with "Best"
+  - trigger: ";sigb"
+    replace: "Best,\n{{MyFirstName}}"
+    # email [sig]nature with "Kind regards"
+  - trigger: ";sigk"
+    replace: "Kind regards,\n{{MyFirstName}}"
+    # email [sig]nature with "Thanks"
+  - trigger: ";sigt"
+    replace: "Thanks,\n{{MyFirstName}}"
