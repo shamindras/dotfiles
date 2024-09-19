@@ -237,6 +237,8 @@ cask "djview"
 cask "dozer"
 # Client for the Dropbox cloud storage service
 cask "dropbox"
+# Cross-platform Text Expander written in Rust
+cask "espanso"
 # Web browser
 cask "firefox"
 cask "font-hack-nerd-font"

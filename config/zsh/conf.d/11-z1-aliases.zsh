@@ -26,6 +26,7 @@ function z1_aliases {
     alias cpi='cp -iv'
     alias df='df -kH'
     alias dus='du -sckx * | sort -nr'
+    alias er='espanso restart'
     # alias firefox='open -gja /Applications/Firefox.app'
     alias ghd='gh dash;clear;'
     alias ghup='gh extension upgrade --all'
@@ -65,8 +66,8 @@ function z1_aliases {
     alias g='git'
     alias gaa='git add --all'
     alias gcb='git checkout -b'
-    alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)%n' --all --stat"
-    alias glg2="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all"
+    alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)' --all"
+    alias glg2="git log --graph --abbrev-commit --decorate --format=format:'%C(yellow)%h%C(reset) %C(white)%s%C(reset) %C(dim white)-%C(reset) %ar %C(dim white)<%an>%C(reset)%C(auto)%d%C(reset)%n' --all --stat"
     alias gsc='git switch -c'
     alias gsm='git switch main'
     alias gsmp='git switch main && git pull origin main'

@@ -89,39 +89,32 @@ function z1_confd {
 # region: Run z1
 # ------------------------------------------------------------------------------
 
-() {
-  # source all conf.d files first, so that the `z1_` funcs below are loaded
-  z1_confd 
+# source all conf.d files first, so that the `z1_` funcs below are loaded
+z1_confd 
 
-  # conf.d functions
-  z1_funcdir
-  # z1_colorize
-  z1_directory
-  # z1_editor
-  z1_vi_style_keybindings
-  z1_history
-  z1_utility
-  z1_plugins
-  z1_completions
+# load all the conf.d functions ----
+# conf.d functions
+z1_funcdir
+z1_directory
+z1_vi_style_keybindings
+z1_history
+z1_utility
+z1_plugins
+z1_completions
 
-  # Homebrew apps
-  # TODO: lazy load brew apps, to speed up zsh startup time
-  # z1_brew_app_starship
-  z1_brew_app_zoxide
-  z1_brew_app_fzf
-  # z1_brew_app_fzf_lazy
-  # z1_brew_app_atuin
+# Homebrew apps ----
+# z1_brew_app_starship
+z1_brew_app_zoxide
+z1_brew_app_fzf
+# z1_brew_app_atuin
 
-  # Aliases
-  z1_aliases
-  z1_suffix_aliases
-  z1_global_aliases
+# Aliases ----
+z1_aliases
+z1_suffix_aliases
+z1_global_aliases
 
-  # Command Prompt
-  # prompt_z1_setup 
-  # z1_prompt
-  z1_simple_prompt
-}
+# Command Prompt ----
+z1_simple_prompt
 
 # Uncomment the following for profiling, must be at the bottom of `zshrc`
 # zprof
