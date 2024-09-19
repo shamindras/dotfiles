@@ -6,8 +6,8 @@
 toggle_key: OFF
 undo_backspace: true
 # auto_restart: true
-# search_shortcut: ALT+SHIFT+SPACE
-# search_trigger: ":search"
+search_shortcut: ALT+SHIFT+SPACE
+search_trigger: ":search"
 # show_icon: true
 # show_notifications: false
 # preserve_clipboard: true

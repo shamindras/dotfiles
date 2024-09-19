@@ -1,17 +1,3 @@
-global_vars:
-  - name: MyName
-    type: echo
-    params:
-      echo: "Shamindra Shrotriya"
-  - name: MyEmail
-    type: echo
-    params:
-      echo: "shamindra.shrotriya@gmail.com"
-  - name: MyNameAndEmail
-    type: echo
-    params:
-      echo: "Shamindra Shrotriya <shamindra.shrotriya@gmail.com>"
-
 # espanso match file
 
 # For a complete introduction, visit the official docs at: https://espanso.org/docs/

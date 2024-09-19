@@ -1,0 +1,14 @@
+name: emails
+parent: default
+
+matches:
+  # [em]ail [p]ersonal
+  - trigger: ";emp"
+    replace: "shamindra.shrotriya@gmail.com"
+    # [em]ail with +suffix
+  - trigger: ";ems"
+    replace: "shamindra.shrotriya+$|$@gmail.com"
+
+  # Inserts a markdown code block
+  - trigger: :md-code
+    replace: "```\n$|$\n```"
