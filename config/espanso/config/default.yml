@@ -8,10 +8,11 @@ undo_backspace: true
 auto_restart: true
 search_shortcut: ALT+SHIFT+SPACE
 search_trigger: ":search"
-# show_icon: true
-# show_notifications: false
-# preserve_clipboard: true
-
+# very important, `backend` makes injections work on macOS
+backend: clipboard
+show_icon: true
+show_notifications: false
+preserve_clipboard: true
 ###############################################################################################
 
 # You can use this file to define the global configuration options for espanso.
@@ -35,8 +36,8 @@ search_trigger: ":search"
 # Espanso supports multiple ways of injecting text into applications. Each of
 # them has its quirks, therefore you may want to change it if you are having problems.
 # By default, espanso uses the "Auto" backend which should work well in most cases,
-# but you may want to try the "Clipboard" or "Inject" backend in case of issues.
-# backend: Clipboard
+# but you may want to try the "clipboard" or "inject" backend in case of issues.
+# backend: clipboard
 
 # --- Auto-restart
 
