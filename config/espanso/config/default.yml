@@ -7,9 +7,8 @@ toggle_key: OFF
 undo_backspace: true
 auto_restart: true
 search_shortcut: ALT+SHIFT+SPACE
-search_trigger: ":search"
-# very important, `backend` makes injections work on macOS
-backend: clipboard
+search_trigger: ";search"
+backend: clipboard # important, `backend` makes injections work on macOS
 show_icon: true
 show_notifications: false
 preserve_clipboard: true
