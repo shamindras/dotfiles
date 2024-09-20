@@ -1,0 +1,45 @@
+# Shortcuts for formatting text posts in markdown, bbcode, and HTML
+# source: https://github.com/Lissy93/espanso-config/blob/master/md-formatting.yml
+name: md-text-formatting
+parent: base
+
+matches:
+
+# Inserts a markdown code block
+- trigger: ";md-code"
+  replace: "```$|$```"
+  
+# Inserts markdown collapsable section
+- trigger: ";md-collapse"
+  replace: "\n<details>\n\t<summary>$|$</summary>\n\t<p></p>\n</details>"
+    
+# Outputs markdown link
+- trigger: ";md-l"
+  replace: "[$|$]()"
+    
+# Outputs markdown link, with clipboard contents as the URL
+- trigger: ";md-cl"
+  replace: "[$|$]({{clipboard}})"
+  vars:
+  - name: "clipboard"
+    type: "clipboard"
+
+# Auto close brackets, quotes and formatting modifiers, and put cursor in center
+- trigger: ':(('
+  replace: '($|$)'
+- trigger: ':[['
+  replace: '[$|$]'
+- trigger: ':{{'
+  replace: '{$|$}'
+- trigger: ':<<'
+  replace: '<$|$>'
+- trigger: ':``'
+  replace: '`$|$`'
+- trigger: ":\''"
+  replace: "\'$|$\'"
+- trigger: ':""'
+  replace: '"$|$"'
+- trigger: ':__'
+  replace: '_$|$_'
+- trigger: ':**'
+  replace: '*$|$*'
