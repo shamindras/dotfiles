@@ -64,6 +64,7 @@
     ${HOME}/.ssh/config: ${XDG_CONFIG_HOME}/ssh/config
     ${XDG_CONFIG_HOME}/starship: config/starship
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
+    ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
     ${XDG_CONFIG_HOME}/yabai: config/yabai
     ${XDG_CONFIG_HOME}/yazi: config/yazi
