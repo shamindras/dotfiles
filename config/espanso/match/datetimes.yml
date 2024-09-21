@@ -1,0 +1,37 @@
+name: datetimes
+parent: base
+
+matches:
+  # date
+  - trigger: ";ymd"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y%m%d"
+
+  # date
+  - trigger: ";mdy"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%m/%d/%y"
+
+  - trigger: ";dt"
+    replace: "{{mydatetime}}"
+    vars:
+      - name: mydatetime
+        type: date
+        params:
+          format: "%Y%m%d-%H:%M:%S"
+
+  - trigger: ";hms"
+    replace: "{{mytime}}"
+    vars:
+      - name: mytime
+        type: date
+        params:
+          format: "%H:%M:%S"
