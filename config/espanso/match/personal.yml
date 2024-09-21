@@ -1,0 +1,31 @@
+name: personal
+parent: base
+
+matches:
+  # [n]a[m]e [f]irst
+  - trigger: ";nmf"
+    replace: "{{MyFirstName}}"
+
+  # [n]a[m]e [l]irst
+  - trigger: ";nml"
+    replace: "{{MyLastName}}"
+
+  # [n]a[m]e [a]ll
+  - trigger: ";nma"
+    replace: "{{MyName}}"
+
+  # [j]ob [t]itle [c]urrent
+  - trigger: ";jtc"
+    replace: "AI Solution Architect"
+
+  # [j]ob [t]itle [d]ata science
+  - trigger: ";jtd"
+    replace: "Principal Data Scientist"
+
+  # [j]ob [c]ompany
+  - trigger: ";jc"
+    replace: "Walmart"
+
+  # [j]ob [p]urpose
+  - trigger: ";jp"
+    replace: "I strive to collaboratively solve large-scale data science problems using a principled statistical workflow"
