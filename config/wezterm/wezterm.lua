@@ -6,21 +6,25 @@ local act = wezterm.action
 local config = wezterm.config_builder()
 
 local set_environment_variables = {
-  PATH = wezterm.home_dir
-    .. '/.cargo/bin:'
-    .. '/usr/local/bin:'
+  PATH = 
+  -- wezterm.home_dir ..
+  -- '/.local/share/cargo/bin:' ..
+  '/usr/local/bin:'
     .. os.getenv 'PATH',
 }
 
-config.font = wezterm.font 'JetBrainsMono Nerd Font'
-config.font_size = 14
+config.set_environment_variables = set_environment_variables
+
+config.font =
+  wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
+config.font_size = 20
 
 config.color_scheme = 'tokyonight_night'
 config.enable_tab_bar = true
 
 config.window_decorations = 'RESIZE'
 config.window_background_opacity = 0.95
-config.macos_window_background_blur = 10
+config.macos_window_background_blur = 4
 
 config.default_prog = { '/bin/zsh', '-l' }
 config.launch_menu = {
@@ -58,12 +62,13 @@ config.keys = {
       domain = 'CurrentPaneDomain',
     },
   },
+  -- start a new tab
   {
     key = 't',
     mods = 'CMD',
     action = act.SpawnTab 'CurrentPaneDomain',
   },
-  -- CMD-g starts `lazygit` in a new tab
+  -- start `lazygit` in a new tab
   {
     key = 'g',
     mods = 'CMD',
