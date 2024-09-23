@@ -43,6 +43,7 @@
     # XDG_CONFIG_HOME configs
     ${HOME}/.zshenv: config/zsh/.zshenv
     ${XDG_CONFIG_HOME}/alacritty: config/alacritty
+    ${XDG_CONFIG_HOME}/aerospace: config/aerospace
     ${XDG_CONFIG_HOME}/atuin: config/atuin
     ${XDG_CONFIG_HOME}/bat: config/bat
     ${XDG_CONFIG_HOME}/bin: config/bin
@@ -59,14 +60,14 @@
     ${XDG_CONFIG_HOME}/npm: config/npm
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/rstudio: config/rstudio
-    ${XDG_CONFIG_HOME}/skhd: config/skhd
+    # ${XDG_CONFIG_HOME}/skhd: config/skhd
     ${XDG_CONFIG_HOME}/ssh: config/ssh
     ${HOME}/.ssh/config: ${XDG_CONFIG_HOME}/ssh/config
     ${XDG_CONFIG_HOME}/starship: config/starship
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
-    ${XDG_CONFIG_HOME}/yabai: config/yabai
+    # ${XDG_CONFIG_HOME}/yabai: config/yabai
     ${XDG_CONFIG_HOME}/yazi: config/yazi
     ${XDG_CONFIG_HOME}/zsh: config/zsh
 
