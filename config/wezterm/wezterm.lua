@@ -116,7 +116,7 @@ config.keys = {
     action = wezterm.action.ShowLauncher
   },
 
-  -- Vertical pipe (|) -> horizontal split
+  -- Vertical pipe (|) -> vertical split
   {
     key = '\\',
     mods = 'CMD|SHIFT',
@@ -124,7 +124,7 @@ config.keys = {
       domain = 'CurrentPaneDomain'
     },
   },
-  -- Underscore (_) -> vertical split
+  -- Underscore (_) -> horizontal split
   {
     key = '-',
     mods = 'CMD|SHIFT',
