@@ -1,6 +1,16 @@
 [[rule]]
-include = [".taplo.toml", "taplo.toml", "**/alacritty.toml"]
-exclude = ["config/yazi/themes/**", "config/alacritty/themes/**"]
+include = [
+    ".taplo.toml",
+    "taplo.toml",
+    ".stylua.toml",
+    "stylua.toml",
+    "**/alacritty.toml",
+    "**/config.toml",
+    "**/starship.toml",
+    "**/yazi.toml",
+    "**/theme.toml",
+]
+exclude = ["config/yazi/themes/**", "config/alacritty/themes/**", "submods/**"]
 
 [rule.formatting]
 align_entries = true
