@@ -126,9 +126,11 @@ alt-8 = 'workspace 4'
 alt-9 = 'workspace 9'
 alt-b = 'workspace B'
 alt-e = 'workspace E'
+alt-g = 'workspace G'
 alt-m = 'workspace M'
 alt-n = 'workspace N'
 alt-p = 'workspace P'
+alt-s = 'workspace S'
 alt-t = 'workspace T'
 alt-v = 'workspace V'
 
@@ -144,9 +146,11 @@ alt-shift-8 = 'move-node-to-workspace 4'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-b = 'move-node-to-workspace B'
 alt-shift-e = 'move-node-to-workspace E'
+alt-shift-g = 'move-node-to-workspace G'
 alt-shift-m = 'move-node-to-workspace M'
 alt-shift-n = 'move-node-to-workspace N'
 alt-shift-p = 'move-node-to-workspace P'
+alt-shift-s = 'move-node-to-workspace S'
 alt-shift-t = 'move-node-to-workspace T'
 alt-shift-v = 'move-node-to-workspace V'
 
@@ -194,35 +198,45 @@ alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
 
-# [T]erminal
+# [1]password
 [[on-window-detected]]
-if.app-id = 'com.github.wez.wezterm'
-run = "move-node-to-workspace T"
+if.app-id = "com.1password.1password"
+run = "move-node-to-workspace 1"
 
 # [B]rowser - chrome
 [[on-window-detected]]
-if.app-id = 'com.google.Chrome'
+if.app-id = "com.google.Chrome"
 run = "move-node-to-workspace B"
 
 # [B]rowser - firefox
 [[on-window-detected]]
-if.app-id = 'org.mozilla.firefox'
+if.app-id = "org.mozilla.firefox"
 run = "move-node-to-workspace B"
-
-# [V]scode
-[[on-window-detected]]
-if.app-id = 'com.microsoft.VSCode'
-run = "move-node-to-workspace V"
 
 # [E]xplorer - finder
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
 run = "move-node-to-workspace E"
 
-# [1]password
+# Si[G]nal
 [[on-window-detected]]
-if.app-id = "com.1password.1password"
-run = "move-node-to-workspace 1"
+if.app-id = "org.whispersystems.signal-desktop"
+run = "move-node-to-workspace G"
+
+# [S]potify
+[[on-window-detected]]
+if.app-id = "com.spotify.client"
+run = "move-node-to-workspace S"
+
+# [T]erminal
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm'
+run = "move-node-to-workspace T"
+
+# [V]scode
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = "move-node-to-workspace V"
 
 # Floating windows - disable tiling for specific apps ----
 
