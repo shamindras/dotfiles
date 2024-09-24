@@ -74,6 +74,8 @@
 
     # Application support configs
     ${HOME}/Library/Application Support/espanso: config/espanso
+    ${HOME}/Library/Application Support/Code/User/keybindings.json: config/vscode/keybindings.json
+    ${HOME}/Library/Application Support/Code/User/settings.json: config/vscode/settings.json
 
 # Update bat themes cache
 - shell:
