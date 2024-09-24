@@ -60,13 +60,11 @@
     ${XDG_CONFIG_HOME}/npm: config/npm
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/rstudio: config/rstudio
-    # ${XDG_CONFIG_HOME}/skhd: config/skhd
     # ${XDG_CONFIG_HOME}/sketchybar: config/sketchybar
     ${XDG_CONFIG_HOME}/starship: config/starship
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
-    # ${XDG_CONFIG_HOME}/yabai: config/yabai
     ${XDG_CONFIG_HOME}/yazi: config/yazi
     ${XDG_CONFIG_HOME}/zsh: config/zsh
 
