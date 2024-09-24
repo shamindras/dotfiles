@@ -221,7 +221,7 @@ run = "move-node-to-workspace E"
 
 # Floating windows - disable tiling for specific apps ----
 
-# System Settings
+# system settings
 [[on-window-detected]]
 if.app-id = "com.apple.systempreferences"
 run = "layout floating"
@@ -229,4 +229,9 @@ run = "layout floating"
 # shottr
 [[on-window-detected]]
 if.app-id = "cc.ffitch.shottr"
+run = "layout floating"
+
+# photo booth
+[[on-window-detected]]
+if.app-id = "com.apple.PhotoBooth"
 run = "layout floating"
