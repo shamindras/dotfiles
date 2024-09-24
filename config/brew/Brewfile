@@ -286,8 +286,6 @@ cask "skim"
 cask "skype"
 # Team communication and collaboration software
 cask "slack"
-# App launcher/switcher
-cask "spacelauncher"
 # Music streaming service
 cask "spotify"
 # Open-source code editor
