@@ -99,7 +99,6 @@ git:
     # displays the whole git graph by default in the commits panel (equivalent to passing the `--all` argument to `git log`)
     showWholeGraph: true
 
-# use conventional commits via commitizen
 refresher:
   refreshInterval: 10 # file/submodule refresh interval in seconds
   fetchInterval: 60 # re-fetch interval in seconds
@@ -113,14 +112,17 @@ disableStartupPopups: false
 notARepository: "prompt" # one of: 'prompt' | 'create' | 'skip'
 promptToReturnFromSubprocess: false # display confirmation when subprocess terminates
 
-# source: https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium#committing-via-commitizen-cz-c
 customCommands:
+  # use conventional commits via commitizen
+  # source: https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium#committing-via-commitizen-cz-c
   - key: "C"
     command: "git cz c"
     description: "commit with commitizen"
     context: "files"
     loadingText: "opening commitizen commit tool"
     subprocess: true
+  # use conventional commits using custome `gum` script
+  # source: https://github.com/joshmedeski/dotfiles/blob/main/.config/bin/gc
   - key: "z"
     command: "~/.config/bin/gc"
     context: "files"
