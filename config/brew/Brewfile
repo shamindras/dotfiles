@@ -1,5 +1,4 @@
 tap "espanso/espanso"
-tap "felixkratz/formulae"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "nikitabobko/tap"
@@ -219,8 +218,6 @@ brew "yazi"
 brew "yq"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Custom macOS statusbar with shell plugin, interaction and graph support
-brew "felixkratz/formulae/sketchybar"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # AeroSpace is an i3-like tiling window manager for macOS
@@ -247,6 +244,7 @@ cask "font-hack-nerd-font"
 cask "font-hasklug-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspace-nerd-font"
+cask "font-sf-pro"
 cask "google-backup-and-sync"
 # Web browser
 cask "google-chrome"
