@@ -133,12 +133,6 @@ customCommands:
     context: "localBranches"
     description: "Prune local branches no longer on its remote; (G)one."
     loadingText: "Pruning gone..."
-  # - key: "G"
-  #   command: "git switch main && git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D"
-  #   description: "Clean up local branches which are deleted on remote"
-  #   context: "localBranches"
-  #   loadingText: "cleaning up local branches"
-  #   subprocess: true
 
 # TODO switch from `vim` to `nvim`
 os:
