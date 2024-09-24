@@ -94,6 +94,7 @@
     - command: gh extension upgrade --all
       description: upgrade gh extensions
 
+# TODO: make this the last item in this script
 # # macOS default settings
 # - shell:
 #     - command: ./scripts/macos
