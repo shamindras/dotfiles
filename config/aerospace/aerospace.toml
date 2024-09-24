@@ -219,6 +219,11 @@ run = "move-node-to-workspace V"
 if.app-id = 'com.apple.finder'
 run = "move-node-to-workspace E"
 
+# [1]password
+[[on-window-detected]]
+if.app-id = "com.1password.1password"
+run = "move-node-to-workspace 1"
+
 # Floating windows - disable tiling for specific apps ----
 
 # system settings
