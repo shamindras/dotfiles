@@ -1,0 +1,264 @@
+{
+    "workbench.sideBar.location": "right",
+    "peacock.affectSideBarBorder": true,
+    "workbench.activityBar.location": "hidden",
+    "terminal.external.osxExec": "Alacritty.app",
+    "editor.fontLigatures": true,
+    "editor.inlineSuggest.enabled": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.olean": true
+    },
+    "editor.fontSize": 14,
+    "editor.cursorBlinking": "solid",
+    "editor.cursorSmoothCaretAnimation": "on",
+    // Source: https://dev.to/ansonh/10-vs-code-vim-tricks-to-boost-your-productivity-1b0n#5-lsp-keybindings
+    "vim.normalModeKeyBindings": [
+        {
+            "before": [
+                "g",
+                "p",
+                "d"
+            ],
+            "commands": [
+                "editor.action.peekDefinition"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "h"
+            ],
+            "commands": [
+                "editor.action.showDefinitionPreviewHover"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "i"
+            ],
+            "commands": [
+                "editor.action.goToImplementation"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "p",
+                "i"
+            ],
+            "commands": [
+                "editor.action.peekImplementation"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "q"
+            ],
+            "commands": [
+                "editor.action.quickFix"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "r"
+            ],
+            "commands": [
+                "editor.action.referenceSearch.trigger"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "t"
+            ],
+            "commands": [
+                "editor.action.goToTypeDefinition"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "p",
+                "t"
+            ],
+            "commands": [
+                "editor.action.peekTypeDefinition"
+            ]
+        },
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<space>"
+            ],
+            "commands": [
+                "vspacecode.space"
+            ]
+        },
+        {
+            "before": [
+                ","
+            ],
+            "commands": [
+                "vspacecode.space",
+                {
+                    "command": "whichkey.triggerKey",
+                    "args": "m"
+                }
+            ]
+        },
+        {
+            "before": [
+                "H"
+            ],
+            "after": [
+                "^"
+            ],
+            "silent": true
+        },
+        {
+            "before": [
+                "j",
+            ],
+            "after": [
+                "g",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "k",
+            ],
+            "after": [
+                "g",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "L"
+            ],
+            "after": [
+                "$"
+            ],
+            "silent": true
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "<space>"
+            ],
+            "commands": [
+                "vspacecode.space"
+            ]
+        },
+        {
+            "before": [
+                ","
+            ],
+            "commands": [
+                "vspacecode.space",
+                {
+                    "command": "whichkey.triggerKey",
+                    "args": "m"
+                }
+            ]
+        },
+        {
+            "before": [
+                ">"
+            ],
+            "commands": [
+                "editor.action.indentLines"
+            ]
+        },
+        {
+            "before": [
+                "<"
+            ],
+            "commands": [
+                "editor.action.outdentLines"
+            ]
+        },
+    ],
+    "editor.cursorSurroundingLines": 8,
+    "vim.highlightedyank.enable": true,
+    "vim.highlightedyank.color": "#a9dc7660",
+    "vim.highlightedyank.duration": 600,
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.hlsearch": false,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "editor.formatOnSave": true,
+    "editor.minimap.autohide": true,
+    "editor.minimap.enabled": false,
+    "workbench.colorTheme": "Tokyo Night",
+    "editor.lineNumbers": "relative",
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#f1c1ee1b",
+        "editor.lineHighlightBackground": "#f1c1ee1b",
+    },
+    "cSpell.userWords": [
+        "autohide",
+        "easymotion",
+        "highlightedyank",
+        "hlsearch",
+        "incsearch",
+        "magit",
+        "olean",
+        "outdent",
+        "vspacecode",
+        "whichkey",
+        "yzhang"
+    ],
+    "explorer.confirmDelete": false,
+    "search.smartCase": true,
+    "vim.sneakUseIgnorecaseAndSmartcase": true,
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.profiles.osx": {
+        "zsh": {
+            "path": "/bin/zsh",
+            // "path": "/usr/local/bin/zsh",
+            "env": {
+                "ZDOTDIR": "/Users/shamindras/.config/zsh",
+            }
+        }
+    },
+    "editor.fontFamily": "'JetBrainsMono NF','Courier New','monospace'",
+    "[lua]": {
+        "editor.defaultFormatter": "sumneko.lua"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "redhat.telemetry.enabled": false,
+    "editor.rulers": [
+        80
+    ],
+    "transparent-win.transparency": 0.6,
+    "search.useGlobalIgnoreFiles": true,
+    "search.exclude": {
+        "**/submods": true
+    },
+    "explorer.confirmDragAndDrop": false,
+}
