@@ -14,3 +14,6 @@
 [submodule "submods/dotbot-plugins/dotbot-brew"]
 	path = submods/dotbot-plugins/dotbot-brew
 	url = git@github.com:d12frosted/dotbot-brew.git
+[submodule "submods/dotfiles_examples/josean-dev/dev-environment-files"]
+	path = submods/dotfiles_examples/josean-dev/dev-environment-files
+	url = git@github.com:josean-dev/dev-environment-files.git
