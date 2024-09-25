@@ -203,6 +203,11 @@ alt-shift-l = ['join-with right', 'mode main']
 if.app-id = "com.1password.1password"
 run = "move-node-to-workspace 1"
 
+# NordVPN
+[[on-window-detected]]
+if.app-id = "com.nordvpn.macos"
+run = "move-node-to-workspace 2"
+
 # [B]rowser - chrome
 [[on-window-detected]]
 if.app-id = "com.google.Chrome"
