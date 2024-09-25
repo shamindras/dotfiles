@@ -1,0 +1,139 @@
+{
+    "cSpell.words": [
+        "alacritty",
+        "articlelist",
+        "atuin",
+        "btop",
+        "Bynen's",
+        "Cattppuccin",
+        "chooseemail",
+        "commitizen",
+        "connrefused",
+        "curlrc",
+        "datetimes",
+        "dlvhdr",
+        "dotbot",
+        "Dotfile",
+        "dotfiles",
+        "ersonal",
+        "espanso",
+        "fastfetch",
+        "feedlist",
+        "hoice",
+        "irst",
+        "itle",
+        "Josean",
+        "lazygit",
+        "listfocus",
+        "listnormal",
+        "localip",
+        "mattmc",
+        "Medeski's",
+        "mydate",
+        "mydatetime",
+        "mytime",
+        "neofetch",
+        "newsboat",
+        "nofollow",
+        "nvim",
+        "ompany",
+        "onlytime",
+        "pagedown",
+        "pageup",
+        "poweradapter",
+        "prepopulate",
+        "ripgrep",
+        "rstudio",
+        "Shamindra",
+        "shamindras",
+        "Shrotriya",
+        "sigb",
+        "sigk",
+        "sigt",
+        "sketchybar",
+        "skhd",
+        "Suttle",
+        "tealdeer",
+        "terminalfont",
+        "timestamping",
+        "tldr",
+        "tokyonight",
+        "unreadarticlecount",
+        "unstaged",
+        "urpose",
+        "urrent",
+        "wezterm",
+        "wmtheme",
+        "yabai",
+        "yazi",
+        "ymdt"
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#828fb7",
+        "activityBar.background": "#828fb7",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#e8d7db",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#828fb7",
+        "statusBar.background": "#6272a4",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#828fb7",
+        "statusBarItem.remoteBackground": "#6272a4",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#6272a4",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#6272a499",
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "tab.activeBorder": "#828fb7",
+        "sideBar.border": "#828fb7"
+    },
+    "peacock.color": "#6272a4",
+    "makefile.configureOnOpen": false,
+    // peacock Dracula themed colors
+    // source: https://github.com/shmink/dracula-peacock-extension/blob/master/colours.json
+    "peacock.favoriteColors": [
+        {
+            "name": "Dark",
+            "value": "#44475a"
+        },
+        {
+            "name": "Light",
+            "value": "#f8f8f2"
+        },
+        {
+            "name": "Purple",
+            "value": "#6272a4"
+        },
+        {
+            "name": "Cyan",
+            "value": "#8be9fd"
+        },
+        {
+            "name": "Green",
+            "value": "#50fa7b"
+        },
+        {
+            "name": "Orange",
+            "value": "#ffb86c"
+        },
+        {
+            "name": "Pink",
+            "value": "#ff79c6"
+        },
+        {
+            "name": "Purple",
+            "value": "#bd93f9"
+        },
+        {
+            "name": "Red",
+            "value": "#ff5555"
+        },
+        {
+            "name": "Yellow",
+            "value": "#f1fa8c"
+        },
+    ],
+    "peacock.affectTabActiveBorder": true
+}
