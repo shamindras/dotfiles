@@ -17,3 +17,6 @@
 [submodule "submods/dotfiles_examples/josean-dev/dev-environment-files"]
 	path = submods/dotfiles_examples/josean-dev/dev-environment-files
 	url = git@github.com:josean-dev/dev-environment-files.git
+[submodule "submods/themes/catppuccin/newsboat"]
+	path = submods/themes/catppuccin/newsboat
+	url = git@github.com:catppuccin/newsboat.git
