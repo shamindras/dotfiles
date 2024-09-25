@@ -36,6 +36,7 @@ function z1_aliases {
     alias less='less -R'
     alias md='mkdir -p'
     alias man='batman'
+    alias nb='newsboat;clear;'
     alias paths='echo -e ${PATH//:/\\n}'       # Echo all executable Paths
     alias rcp='rsync -ah --info=progress2'
     alias rmi='rm -i'
