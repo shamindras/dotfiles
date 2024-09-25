@@ -15,6 +15,8 @@ function z1_aliases {
     alias .4='z ../../../../'                  # Go up 4 dirs
     alias .5='z ../../../../../'               # Go up 5 dirs
     alias .6='z ../../../../../../'            # Go up 6 dirs
+    alias asl='aerospace list-apps'
+    alias asr='aerospace reload-config;clear;'
     alias b='bat --style=grid,numbers'
     alias bat='bat --style=grid,numbers'
     alias brewup='brew update && brew upgrade && brew cleanup'
@@ -27,7 +29,6 @@ function z1_aliases {
     alias df='df -kH'
     alias dus='du -sckx * | sort -nr'
     alias er='espanso restart'
-    # alias firefox='open -gja /Applications/Firefox.app'
     alias ghd='gh dash;clear;'
     alias ghup='gh extension upgrade --all'
     alias ls='eza --color=always --group-directories-first --icons'

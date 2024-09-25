@@ -2,4 +2,7 @@
 "query:Unread Articles (1 month old):unread = \"yes\" and tags !# \"pouet\" and tags !# \"page2rss\" and tags !# \"xiv\" and age between 0:31"
 
 # programming feeds
+https://jvns.ca/atom.xml programming
+
+# mathematics
 https://www.quantamagazine.org/feed/ science math
