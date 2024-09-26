@@ -150,6 +150,8 @@ brew "tcl-tk"
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# RSS/Atom feed reader for text terminals
+brew "newsboat"
 # Platform built on V8 to build network applications
 brew "node"
 # Open source suite of directory software
