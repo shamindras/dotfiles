@@ -208,6 +208,11 @@ run = "move-node-to-workspace 1"
 if.app-id = "com.nordvpn.macos"
 run = "move-node-to-workspace 2"
 
+# Messages
+[[on-window-detected]]
+if.app-id = "com.apple.MobileSMS"
+run = "move-node-to-workspace 3"
+
 # [B]rowser - chrome
 [[on-window-detected]]
 if.app-id = "com.google.Chrome"
