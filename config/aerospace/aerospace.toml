@@ -12,7 +12,11 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = []
+# after-startup-command = []
+
+# janky borders
+# https://github.com/FelixKratz/JankyBorders#bootstrap-with-aerospace
+after-startup-command = ['exec-and-forget borders']
 
 # Run Sketchybar together with AeroSpace ----
 # source: https://nikitabobko.github.io/AeroSpace/goodness#show-aerospace-workspaces-in-sketchybar
@@ -66,12 +70,12 @@ on-focus-changed = "move-mouse window-lazy-center"
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 3
-inner.vertical = 3
-outer.left = 3
-outer.bottom = 3
-outer.top = 3
-outer.right = 3
+inner.horizontal = 7
+inner.vertical = 7
+outer.left = 7
+outer.bottom = 7
+outer.top = 7
+outer.right = 7
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes

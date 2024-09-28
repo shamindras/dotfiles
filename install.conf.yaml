@@ -46,6 +46,7 @@
     ${XDG_CONFIG_HOME}/aerospace: config/aerospace
     ${XDG_CONFIG_HOME}/atuin: config/atuin
     ${XDG_CONFIG_HOME}/bat: config/bat
+    ${XDG_CONFIG_HOME}/borders: config/borders
     ${XDG_CONFIG_HOME}/bin: config/bin
     ${XDG_CONFIG_HOME}/btop: config/btop
     ${XDG_CONFIG_HOME}/.curlrc: config/curl/curlrc
@@ -61,7 +62,6 @@
     ${XDG_CONFIG_HOME}/npm: config/npm
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/rstudio: config/rstudio
-    # ${XDG_CONFIG_HOME}/sketchybar: config/sketchybar
     ${XDG_CONFIG_HOME}/starship: config/starship
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
