@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Config for janky borders
+# source: https://github.com/FelixKratz/JankyBorders?tab=readme-ov-file#using-a-configuration-file-optional
+
 options=(
 	style=round
 	width=6.0
