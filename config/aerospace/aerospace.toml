@@ -228,13 +228,23 @@ run = "move-node-to-workspace B"
 
 # [E]xplorer - finder
 [[on-window-detected]]
-if.app-id = 'com.apple.finder'
+if.app-id = "com.apple.finder"
 run = "move-node-to-workspace E"
 
 # Si[G]nal
 [[on-window-detected]]
 if.app-id = "org.whispersystems.signal-desktop"
 run = "move-node-to-workspace G"
+
+# [P]df - Skim
+[[on-window-detected]]
+if.app-id = "net.sourceforge.skim-app.skim"
+run = "move-node-to-workspace P"
+
+# [P]df - Preview
+[[on-window-detected]]
+if.app-id = "com.apple.Preview"
+run = "move-node-to-workspace P"
 
 # [S]potify
 [[on-window-detected]]
@@ -243,12 +253,12 @@ run = "move-node-to-workspace S"
 
 # [T]erminal
 [[on-window-detected]]
-if.app-id = 'com.github.wez.wezterm'
+if.app-id = "com.github.wez.wezterm"
 run = "move-node-to-workspace T"
 
 # [V]scode
 [[on-window-detected]]
-if.app-id = 'com.microsoft.VSCode'
+if.app-id = "com.microsoft.VSCode"
 run = "move-node-to-workspace V"
 
 # Floating windows - disable tiling for specific apps ----
