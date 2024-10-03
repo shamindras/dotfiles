@@ -13,9 +13,11 @@ printf '\33c\e[3J'
 # ------------------------------------------------------------------------------
 # region: Basic XDG variable setup
 # source: https://github.com/mattmc3/zdotdir/blob/main/.zshenv
+# Adapted from: https://gist.github.com/roalcantara/107ba66dfa3b9d023ac9329e639bc58c
 # ------------------------------------------------------------------------------
 
 # XDG path specifications
+export XDG_BIN_HOME=${XDG_BIN_HOME:-$HOME/.local/bin}
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
 export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
@@ -29,7 +31,7 @@ export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
   for zdir in $@; do
     [[ -d "${(P)zdir}" ]] || mkdir -p -- "${(P)zdir}"
   done
-} XDG_{CONFIG,CACHE,DATA,STATE}_HOME XDG_{RUNTIME,PROJECTS}_DIR
+} XDG_{BIN,CONFIG,CACHE,DATA,STATE}_HOME XDG_{RUNTIME,PROJECTS}_DIR
 
 # endregion --------------------------------------------------------------------
 
