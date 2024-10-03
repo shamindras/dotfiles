@@ -42,6 +42,7 @@ function z1_aliases {
     alias rcp='rsync -ah --info=progress2'
     alias rmi='rm -i'
     alias rmf='rm -rf'
+    alias rq='R -q --no-save'
     alias sc="source ${XDG_CONFIG_HOME}/zsh/.zshrc" # source ~/.zshrc
     alias top='btop;clear;'
     alias tree='eza --tree --all --group-directories-first -I ".git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache"'
