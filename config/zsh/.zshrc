@@ -13,7 +13,7 @@ printf '\33c\e[3J'
 # ------------------------------------------------------------------------------
 # region: Basic XDG variable setup
 # source: https://github.com/mattmc3/zdotdir/blob/main/.zshenv
-# Adapted from: https://gist.github.com/roalcantara/107ba66dfa3b9d023ac9329e639bc58c
+# Adapted from: https://gist.github.com/roalcantara/107ba66dfa3b9d023ac9329e639bc58c#correlations
 # ------------------------------------------------------------------------------
 
 # XDG path specifications
