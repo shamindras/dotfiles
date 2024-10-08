@@ -211,15 +211,30 @@ run = "move-node-to-workspace 1"
 if.app-id = "com.nordvpn.macos"
 run = "move-node-to-workspace 2"
 
-# Messages
+# VLC player
 [[on-window-detected]]
-if.app-id = "com.apple.MobileSMS"
+if.app-id = "org.videolan.vlc"
 run = "move-node-to-workspace 3"
+
+# Facetime
+[[on-window-detected]]
+if.app-id = "com.apple.FaceTime"
+run = "move-node-to-workspace 4"
 
 # Messages
 [[on-window-detected]]
+if.app-id = "com.apple.MobileSMS"
+run = "move-node-to-workspace 5"
+
+# jDownloader
+[[on-window-detected]]
+if.app-id = "org.jdownloader.launcher"
+run = "move-node-to-workspace 6"
+
+# Apple TV
+[[on-window-detected]]
 if.app-id = "com.apple.TV"
-run = "move-node-to-workspace 4"
+run = "move-node-to-workspace 7"
 
 # [B]rowser - chrome
 [[on-window-detected]]
