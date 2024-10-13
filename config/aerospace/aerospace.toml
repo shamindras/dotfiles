@@ -132,6 +132,7 @@ alt-e = 'workspace E'
 alt-g = 'workspace G'
 alt-m = 'workspace M'
 alt-n = 'workspace N'
+alt-o = 'workspace O'
 alt-p = 'workspace P'
 alt-s = 'workspace S'
 alt-t = 'workspace T'
@@ -152,6 +153,7 @@ alt-shift-e = 'move-node-to-workspace E'
 alt-shift-g = 'move-node-to-workspace G'
 alt-shift-m = 'move-node-to-workspace M'
 alt-shift-n = 'move-node-to-workspace N'
+alt-shift-o = 'move-node-to-workspace O'
 alt-shift-p = 'move-node-to-workspace P'
 alt-shift-s = 'move-node-to-workspace S'
 alt-shift-t = 'move-node-to-workspace T'
@@ -255,6 +257,11 @@ run = "move-node-to-workspace E"
 [[on-window-detected]]
 if.app-id = "org.whispersystems.signal-desktop"
 run = "move-node-to-workspace G"
+
+# RStudi[o]
+[[on-window-detected]]
+if.app-id = "com.rstudio.desktop"
+run = "move-node-to-workspace O"
 
 # [P]df - Skim
 [[on-window-detected]]
