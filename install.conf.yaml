@@ -39,6 +39,11 @@
     ~/.config:
       force: true
 
+# rust + cargo
+# - shell:
+#     - command: curl https://sh.rustup.rs -sSf | sh
+#       description: install rust and cargo
+
 # Symlink locations for files / directories
 - link:
     # XDG_CONFIG_HOME configs
@@ -110,3 +115,9 @@
 - shell:
     - command: espanso service register
       description: register espanso app
+
+# Load ttyper
+# TODO: note down instructions to set up espanso security settings
+- shell:
+    - command: cargo install ttyper
+      description: install ttyper
