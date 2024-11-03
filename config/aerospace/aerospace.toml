@@ -128,6 +128,7 @@ alt-7 = 'workspace 7'
 alt-8 = 'workspace 4'
 alt-9 = 'workspace 9'
 alt-b = 'workspace B'
+alt-d = 'workspace D'
 alt-e = 'workspace E'
 alt-g = 'workspace G'
 alt-m = 'workspace M'
@@ -149,6 +150,7 @@ alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 4'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-b = 'move-node-to-workspace B'
+alt-shift-d = 'move-node-to-workspace D'
 alt-shift-e = 'move-node-to-workspace E'
 alt-shift-g = 'move-node-to-workspace G'
 alt-shift-m = 'move-node-to-workspace M'
@@ -247,6 +249,11 @@ run = "move-node-to-workspace B"
 [[on-window-detected]]
 if.app-id = "org.mozilla.firefox"
 run = "move-node-to-workspace B"
+
+# [D]jview
+[[on-window-detected]]
+if.app-id = "org.djvu.DjView"
+run = "move-node-to-workspace D"
 
 # [E]xplorer - finder
 [[on-window-detected]]

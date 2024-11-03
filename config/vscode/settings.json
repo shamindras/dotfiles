@@ -261,4 +261,5 @@
         "**/submods": true
     },
     "explorer.confirmDragAndDrop": false,
+    "workbench.startupEditor": "none",
 }
