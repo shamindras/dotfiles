@@ -2,8 +2,9 @@
 "query:Unread Articles (1 month old):unread = \"yes\" and tags !# \"pouet\" and tags !# \"page2rss\" and tags !# \"xiv\" and age between 0:31"
 
 # programming feeds
-https://jvns.ca/atom.xml programming
+https://jvns.ca/atom.xml programming "~Julia Evans"
 
 # mathematics
-https://www.quantamagazine.org/feed/ science math
-https://mathvoices.ams.org/featurecolumn/feed science math
+https://www.quantamagazine.org/feed/ science math "~Quanta Magazine"
+https://mathvoices.ams.org/featurecolumn/feed science math "~AMS Feature Column"
+https://gregorygundersen.com/feed.xml math "~Greg Gunderson"
