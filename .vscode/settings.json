@@ -136,5 +136,6 @@
             "value": "#f1fa8c"
         },
     ],
-    "peacock.affectTabActiveBorder": true
+    "peacock.affectTabActiveBorder": true,
+    "r.lsp.promptToInstall": false
 }
