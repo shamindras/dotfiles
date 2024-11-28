@@ -57,6 +57,8 @@ brew "libidn2"
 brew "unbound"
 # GNU Transport Layer Security (TLS) Library
 brew "gnutls"
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@76"
 # OpenType text shaping engine
 brew "harfbuzz"
 # Image processing and image analysis library
@@ -211,6 +213,8 @@ brew "task"
 brew "tealdeer"
 # Terminal multiplexer
 brew "tmux"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Internet file retriever
 brew "wget"
 # Check your $HOME for unwanted files and directories
@@ -273,6 +277,8 @@ cask "nordvpn"
 cask "notunes"
 # JDK from Oracle
 cask "oracle-jdk"
+# Data science IDE
+cask "positron"
 # Scientific and technical publishing system built on Pandoc
 cask "quarto"
 # Environment for statistical computing and graphics
