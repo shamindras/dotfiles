@@ -137,5 +137,7 @@
         },
     ],
     "peacock.affectTabActiveBorder": true,
-    "r.lsp.promptToInstall": false
+    "r.lsp.promptToInstall": false,
+    "editor.fontSize": 16,
+    "editor.tabSize": 2
 }
