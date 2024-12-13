@@ -8,3 +8,6 @@ https://jvns.ca/atom.xml programming "~Julia Evans"
 https://www.quantamagazine.org/feed/ science math "~Quanta Magazine"
 https://mathvoices.ams.org/featurecolumn/feed science math "~AMS Feature Column"
 https://gregorygundersen.com/feed.xml math "~Greg Gunderson"
+
+# data science
+https://blog.djnavarro.net/index.xml science math programming data_science "~Danielle Navarro"
