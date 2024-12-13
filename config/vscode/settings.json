@@ -203,7 +203,7 @@
     "editor.formatOnSave": true,
     "editor.minimap.autohide": true,
     "editor.minimap.enabled": false,
-    "workbench.colorTheme": "Carbonfox",
+    "workbench.colorTheme": "Eldritch",
     "editor.lineNumbers": "relative",
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#f1c1ee1b",
