@@ -227,6 +227,11 @@ run = "move-node-to-workspace 4"
 
 # Messages
 [[on-window-detected]]
+if.app-id = "com.apple.iBooksX"
+run = "move-node-to-workspace 5"
+
+# Messages
+[[on-window-detected]]
 if.app-id = "com.apple.MobileSMS"
 run = "move-node-to-workspace 5"
 
