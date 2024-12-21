@@ -135,6 +135,8 @@ brew "hyperfine"
 brew "libraw"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
 # Handy way to save and run project-specific commands
 brew "just"
 # Simple terminal UI for git commands
@@ -195,6 +197,8 @@ brew "ripgrep-all"
 brew "rsync"
 # Safe, concurrent, practical language
 brew "rust"
+# 7-Zip is a file archiver with a high compression ratio
+brew "sevenzip"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Bash syntax highlighter that encourages/fixes variables quoting
@@ -254,6 +258,7 @@ cask "font-hasklug-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspace-nerd-font"
 cask "font-sf-pro"
+cask "font-symbols-only-nerd-font"
 cask "google-backup-and-sync"
 # Web browser
 cask "google-chrome"
@@ -265,8 +270,6 @@ cask "inkscape"
 cask "jdownloader"
 # Programming language for technical computing
 cask "julia"
-# GPU-based terminal emulator
-cask "kitty"
 # Free cross-platform office suite, fresh version
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications
@@ -318,6 +321,7 @@ vscode "christian-kohler.path-intellisense"
 vscode "davidanson.vscode-markdownlint"
 vscode "draivin.hscopes"
 vscode "eamodio.gitlens"
+vscode "eldritch.eldritch"
 vscode "enkia.tokyo-night"
 vscode "esbenp.prettier-vscode"
 vscode "formulahendry.code-runner"
