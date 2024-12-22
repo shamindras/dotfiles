@@ -36,7 +36,7 @@ end
 
 config.color_scheme = depending_on_appearance {
   light = 'Catppuccin Mocha',
-  dark = 'tokyonight_night',
+  dark = 'Catppuccin Mocha',
 }
 config.enable_tab_bar = true
 

@@ -32,3 +32,6 @@
 [submodule "submods/yazi/themes/monokai-vibrant.yazi"]
 	path = submods/yazi/themes/monokai-vibrant.yazi
 	url = git@github.com:sanjinso/monokai-vibrant.yazi.git
+[submodule "submods/yazi/themes/tokyo-night.yazi"]
+	path = submods/yazi/themes/tokyo-night.yazi
+	url = git@github.com:BennyOe/tokyo-night.yazi.git
