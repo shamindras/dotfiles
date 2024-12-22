@@ -20,3 +20,15 @@
 [submodule "submods/themes/catppuccin/newsboat"]
 	path = submods/themes/catppuccin/newsboat
 	url = git@github.com:catppuccin/newsboat.git
+[submodule "submods/yazi/themes/flavors"]
+	path = submods/yazi/themes/flavors
+	url = git@github.com:yazi-rs/flavors.git
+[submodule "submods/yazi/themes/moonfly.yazi"]
+	path = submods/yazi/themes/moonfly.yazi
+	url = git@github.com:tkapias/moonfly.yazi.git
+[submodule "submods/yazi/themes/nightfly.yazi"]
+	path = submods/yazi/themes/nightfly.yazi
+	url = git@github.com:tkapias/nightfly.yazi.git
+[submodule "submods/yazi/themes/monokai-vibrant.yazi"]
+	path = submods/yazi/themes/monokai-vibrant.yazi
+	url = git@github.com:sanjinso/monokai-vibrant.yazi.git
