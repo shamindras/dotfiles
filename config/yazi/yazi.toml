@@ -5,7 +5,7 @@
 # source: https://github.com/mingo99/yazi.config/blob/main/yazi.toml
 
 [manager]
-ratio          = [2, 4, 3]
+ratio          = [2, 3, 3]
 sort_by        = "alphabetical"
 sort_sensitive = true
 sort_reverse   = false
