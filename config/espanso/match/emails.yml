@@ -20,3 +20,12 @@ matches:
     # email [sig]nature with "Thanks"
   - trigger: ";sigt"
     replace: "Thanks,\n{{MyFirstName}}"
+    # [mob]ile - 1
+  - trigger: ";mob1"
+    replace: "4159373701"
+    # [mob]ile - 2
+  - trigger: ";mob2"
+    replace: "(415) 937 3701"
+    # [mob]ile - 3
+  - trigger: ";mob3"
+    replace: "+1 (415) 937 3701"
