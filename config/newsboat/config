@@ -52,7 +52,8 @@ bind-key x pb-delete
 # source: https://github.com/catppuccin/newsboat?tab=readme-ov-file#usage
 
 # include ~/.config/newsboat/themes/latte
-include ~/.config/newsboat/themes/dark
+# include ~/.config/newsboat/themes/dark
+include ~/.config/newsboat/themes/dracula
 
 # -- bookmarks -----------------------------------------------------------------
 

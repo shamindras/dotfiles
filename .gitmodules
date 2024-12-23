@@ -35,3 +35,6 @@
 [submodule "submods/yazi/themes/tokyo-night.yazi"]
 	path = submods/yazi/themes/tokyo-night.yazi
 	url = git@github.com:BennyOe/tokyo-night.yazi.git
+[submodule "submods/newsboat/dracula/newsboat"]
+	path = submods/newsboat/dracula/newsboat
+	url = git@github.com:dracula/newsboat.git
