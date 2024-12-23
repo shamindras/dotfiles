@@ -16,7 +16,7 @@ matches:
 
   # [j]ob [t]itle [c]urrent
   - trigger: ";jtc"
-    replace: "AI Solution Architect"
+    replace: "Principal AI Solution Architect"
 
   # [j]ob [t]itle [d]ata science
   - trigger: ";jtd"
