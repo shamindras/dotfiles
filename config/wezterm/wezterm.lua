@@ -35,8 +35,12 @@ local function depending_on_appearance(arg)
 end
 
 config.color_scheme = depending_on_appearance {
-  light = 'Catppuccin Mocha',
-  dark = 'Catppuccin Mocha',
+  -- light = 'Catppuccin Mocha',
+  -- dark = 'Catppuccin Mocha',
+  -- light = 'tokyonight_night',
+  -- dark = 'tokyonight_storm',
+  light = 'Night Owlish Light',
+  dark = 'Night Owl (Gogh)',
 }
 config.enable_tab_bar = true
 
