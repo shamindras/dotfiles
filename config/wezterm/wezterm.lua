@@ -1,7 +1,7 @@
 -- Adapted from: https://github.com/alexpls/dotfiles/blob/master/wezterm/.config/wezterm/wezterm.lua
 -- and: https://github.com/diego-vicente/dotfiles/blob/master/wezterm/wezterm.lua
 
-require("utils.tab_title")
+require 'utils.tab_title'
 
 -- Pull in the wezterm API
 local wezterm = require 'wezterm'
@@ -11,17 +11,13 @@ local act = wezterm.action
 local config = wezterm.config_builder()
 
 local set_environment_variables = {
-  PATH =
-  -- wezterm.home_dir ..
-  -- '/.local/share/cargo/bin:' ..
-      '/usr/local/bin:'
-      .. os.getenv 'PATH',
+  PATH = '/usr/local/bin:' .. os.getenv 'PATH',
 }
 
 config.set_environment_variables = set_environment_variables
 
 config.font =
-    wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
+  wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
 config.font_size = 20
 
 ---Return the suitable argument depending on the appearance
@@ -86,7 +82,7 @@ config.mouse_bindings = {
 --- @param direction string the direction to move the pane
 local function bind_movement(key, direction)
   local function basename(str)
-    local name = string.gsub(str, "(.*/)(.*)", "%2")
+    local name = string.gsub(str, '(.*/)(.*)', '%2')
     return name
   end
 
@@ -99,10 +95,7 @@ local function bind_movement(key, direction)
         pane
       )
     else
-      win:perform_action(
-        wezterm.action.ActivatePaneDirection(direction),
-        pane
-      )
+      win:perform_action(wezterm.action.ActivatePaneDirection(direction), pane)
     end
   end
 end
@@ -113,13 +106,13 @@ config.keys = {
   {
     key = 'p',
     mods = 'CMD',
-    action = wezterm.action.ShowTabNavigator
+    action = wezterm.action.ShowTabNavigator,
   },
   -- Show launcher menu
   {
     key = 'P',
     mods = 'CMD|SHIFT',
-    action = wezterm.action.ShowLauncher
+    action = wezterm.action.ShowLauncher,
   },
 
   -- Vertical pipe (|) -> vertical split
@@ -127,7 +120,7 @@ config.keys = {
     key = '\\',
     mods = 'CMD|SHIFT',
     action = wezterm.action.SplitHorizontal {
-      domain = 'CurrentPaneDomain'
+      domain = 'CurrentPaneDomain',
     },
   },
   -- Underscore (_) -> horizontal split
@@ -135,7 +128,7 @@ config.keys = {
     key = '-',
     mods = 'CMD|SHIFT',
     action = wezterm.action.SplitVertical {
-      domain = 'CurrentPaneDomain'
+      domain = 'CurrentPaneDomain',
     },
   },
 
@@ -145,94 +138,85 @@ config.keys = {
     mods = 'CMD|SHIFT',
     action = wezterm.action.PromptInputLine {
       description = 'Enter new name for tab',
-      action = wezterm.action_callback(
-        function(window, _, line)
-          if line then
-            window:active_tab():set_title(line)
-          end
+      action = wezterm.action_callback(function(window, _, line)
+        if line then
+          window:active_tab():set_title(line)
         end
-      ),
+      end),
     },
   },
 
-  -- Move to a pane (prompt to which one)
-  -- {
-  --   mods = "CMD",
-  --   key = "m",
-  --   action = wezterm.action.PaneSelect
-  -- },
-
   -- Use CMD + [h|j|k|l] to move between panes
   {
-    key = "h",
-    mods = "CMD",
-    action = wezterm.action_callback(bind_movement('h', 'Left'))
+    key = 'h',
+    mods = 'CMD',
+    action = wezterm.action_callback(bind_movement('h', 'Left')),
   },
 
   {
-    key = "j",
-    mods = "CMD",
-    action = wezterm.action_callback(bind_movement('j', 'Down'))
+    key = 'j',
+    mods = 'CMD',
+    action = wezterm.action_callback(bind_movement('j', 'Down')),
   },
 
   {
-    key = "k",
-    mods = "CMD",
-    action = wezterm.action_callback(bind_movement('k', 'Up'))
+    key = 'k',
+    mods = 'CMD',
+    action = wezterm.action_callback(bind_movement('k', 'Up')),
   },
 
   {
-    key = "l",
-    mods = "CMD",
-    action = wezterm.action_callback(bind_movement('l', 'Right'))
+    key = 'l',
+    mods = 'CMD',
+    action = wezterm.action_callback(bind_movement('l', 'Right')),
   },
 
   -- Move to another pane (next or previous)
   {
-    key = "[",
-    mods = "CMD",
-    action = wezterm.action.ActivatePaneDirection('Prev')
+    key = '[',
+    mods = 'CMD',
+    action = wezterm.action.ActivatePaneDirection 'Prev',
   },
 
   {
-    key = "]",
-    mods = "CMD",
-    action = wezterm.action.ActivatePaneDirection('Next')
+    key = ']',
+    mods = 'CMD',
+    action = wezterm.action.ActivatePaneDirection 'Next',
   },
 
   -- Move to another tab (next or previous)
   {
-    key = "{",
-    mods = "CMD|SHIFT",
-    action = wezterm.action.ActivateTabRelative(-1)
+    key = '{',
+    mods = 'CMD|SHIFT',
+    action = wezterm.action.ActivateTabRelative(-1),
   },
 
   {
-    key = "}",
-    mods = "CMD|SHIFT",
-    action = wezterm.action.ActivateTabRelative(1)
+    key = '}',
+    mods = 'CMD|SHIFT',
+    action = wezterm.action.ActivateTabRelative(1),
   },
 
   -- Use CMD+Shift+S t swap the active pane and another one
   {
-    key = "s",
-    mods = "CMD|SHIFT",
+    key = 's',
+    mods = 'CMD|SHIFT',
     action = wezterm.action {
-      PaneSelect = { mode = "SwapWithActiveKeepFocus" }
-    }
+      PaneSelect = { mode = 'SwapWithActiveKeepFocus' },
+    },
   },
 
   -- Use CMD+w to close the pane, CMD+SHIFT+w to close the tab
   {
-    key = "w",
-    mods = "CMD",
-    action = wezterm.action.CloseCurrentPane { confirm = false }
+    key = 'w',
+    mods = 'CMD',
+    action = wezterm.action.CloseCurrentPane { confirm = false },
   },
 
   {
-    key = "w",
-    mods = "CMD|SHIFT",
-    action = wezterm.action.CloseCurrentTab { confirm = true }
+    key = 'w',
+    mods = 'CMD|SHIFT',
+    action = wezterm.action.CloseCurrentTab { confirm = true },
   },
 
   -- Use CMD+z to enter zoom state
@@ -254,6 +238,9 @@ config.keys = {
     key = 'g',
     mods = 'CMD',
     action = act.SpawnCommandInNewTab {
+      -- FIXME: ensure lazygit uses a custom config file.
+      -- Currently has PATH issues.
+      -- args = { 'lazygit --use-config-file ~/.config/lazygit/config.yml' },
       args = { 'lazygit' },
     },
   },
