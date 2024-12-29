@@ -1,6 +1,8 @@
 -- Adapted from: https://github.com/alexpls/dotfiles/blob/master/wezterm/.config/wezterm/wezterm.lua
 -- and: https://github.com/diego-vicente/dotfiles/blob/master/wezterm/wezterm.lua
 
+require("utils.tab_title")
+
 -- Pull in the wezterm API
 local wezterm = require 'wezterm'
 local act = wezterm.action
@@ -154,11 +156,11 @@ config.keys = {
   },
 
   -- Move to a pane (prompt to which one)
-  {
-    mods = "CMD",
-    key = "m",
-    action = wezterm.action.PaneSelect
-  },
+  -- {
+  --   mods = "CMD",
+  --   key = "m",
+  --   action = wezterm.action.PaneSelect
+  -- },
 
   -- Use CMD + [h|j|k|l] to move between panes
   {
@@ -235,7 +237,7 @@ config.keys = {
 
   -- Use CMD+z to enter zoom state
   {
-    key = 'z',
+    key = 'm',
     mods = 'CMD',
     action = wezterm.action.TogglePaneZoomState,
   },
