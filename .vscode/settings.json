@@ -107,6 +107,9 @@
     },
     "peacock.color": "#6272a4",
     "makefile.configureOnOpen": false,
+    "[lua]": {
+        "editor.defaultFormatter": "JohnnyMorganz.stylua"
+    },
     // peacock Dracula themed colors
     // source: https://github.com/shmink/dracula-peacock-extension/blob/master/colours.json
     "peacock.favoriteColors": [
@@ -154,5 +157,6 @@
     "peacock.affectTabActiveBorder": true,
     "r.lsp.promptToInstall": false,
     "editor.fontSize": 16,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "stylua.targetReleaseVersion": "latest"
 }
