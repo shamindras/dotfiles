@@ -149,8 +149,8 @@ config.keys = {
   -- Clears the scrollback and viewport, and then sends CTRL-L to ask the
   -- shell to redraw its prompt
   {
-    key = 'K',
-    mods = 'CTRL|SHIFT',
+    key = 'k',
+    mods = 'CMD',
     action = act.Multiple {
       act.ClearScrollback 'ScrollbackAndViewport',
       act.SendKey { key = 'L', mods = 'CTRL' },
