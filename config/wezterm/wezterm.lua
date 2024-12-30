@@ -146,28 +146,39 @@ config.keys = {
     },
   },
 
-  -- Use CMD + [h|j|k|l] to move between panes
+  -- Clears the scrollback and viewport, and then sends CTRL-L to ask the
+  -- shell to redraw its prompt
+  {
+    key = 'K',
+    mods = 'CTRL|SHIFT',
+    action = act.Multiple {
+      act.ClearScrollback 'ScrollbackAndViewport',
+      act.SendKey { key = 'L', mods = 'CTRL' },
+    },
+  },
+
+  -- Use CTRL + [h|j|k|l] to move between panes
   {
     key = 'h',
-    mods = 'CMD',
+    mods = 'CTRL',
     action = wezterm.action_callback(bind_movement('h', 'Left')),
   },
 
   {
     key = 'j',
-    mods = 'CMD',
+    mods = 'CTRL',
     action = wezterm.action_callback(bind_movement('j', 'Down')),
   },
 
   {
     key = 'k',
-    mods = 'CMD',
+    mods = 'CTRL',
     action = wezterm.action_callback(bind_movement('k', 'Up')),
   },
 
   {
     key = 'l',
-    mods = 'CMD',
+    mods = 'CTRL',
     action = wezterm.action_callback(bind_movement('l', 'Right')),
   },
 
