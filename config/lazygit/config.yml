@@ -113,15 +113,6 @@ notARepository: "prompt" # one of: 'prompt' | 'create' | 'skip'
 promptToReturnFromSubprocess: false # display confirmation when subprocess terminates
 
 customCommands:
-  # Commit by skipping pre-commit hooks
-  - key: "W"
-    prompts:
-      - type: "input"
-        title: "Commit"
-        initialValue: ""
-    command: git commit -m "{{index .PromptResponses 0}}" --no-verify
-    context: "global"
-    subprocess: true
   # use conventional commits via commitizen
   # source: https://github.com/jesseduffield/lazygit/wiki/Custom-Commands-Compendium#committing-via-commitizen-cz-c
   - key: "C"
