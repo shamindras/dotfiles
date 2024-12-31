@@ -294,6 +294,8 @@ cask "scroll-reverser"
 cask "shottr"
 # Instant messaging application focusing on security
 cask "signal"
+# PDF viewer designed for reading research papers and technical books
+cask "sioyek"
 # PDF reader and note-taking application
 cask "skim"
 # Video chat, voice call and instant messaging application
