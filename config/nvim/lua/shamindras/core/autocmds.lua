@@ -3,7 +3,33 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("DisableAutoComment", { clear = true }),
 	pattern = { "*" },
 	callback = function()
+    -- let comments respect textwidth
+		vim.opt.formatoptions:prepend({ "c" })
+
+    -- auto-remove comments if possible
+		vim.opt.formatoptions:prepend({ "j" })
+
+    -- indent past the formatlistpat, not underneath it.
+		vim.opt.formatoptions:prepend({ "n" })
+
+    -- allow formatting comments with `gq`
+		vim.opt.formatoptions:prepend({ "q" })
+    
+    -- continue comments when pressing enter in insert mode
+		vim.opt.formatoptions:prepend({ "r" })
+
+    -- auto-wrap text using textwidth
+		vim.opt.formatoptions:prepend({ "t" })
+
+    -- do not continue comments with `O` or `o`
 		vim.opt.formatoptions:remove({ "o" })
+
+    -- no need to use autoformat, use linters
+		vim.opt.formatoptions:remove({ "a" })
+
+    -- TODO: add more details for this option
+		vim.opt.formatoptions:remove({ "2" })
+
 	end,
 })
 
