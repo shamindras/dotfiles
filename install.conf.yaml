@@ -66,6 +66,7 @@
     ${XDG_CONFIG_HOME}/neofetch: config/neofetch
     ${XDG_CONFIG_HOME}/newsboat: config/newsboat
     ${XDG_CONFIG_HOME}/npm: config/npm
+    ${XDG_CONFIG_HOME}/nvim: config/nvim
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/rstudio: config/rstudio
     ${XDG_CONFIG_HOME}/starship: config/starship
