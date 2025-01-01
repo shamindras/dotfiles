@@ -102,12 +102,8 @@ end
 
 -- keybindings
 
--- TODO: check this!
-config.disable_default_key_bindings = true
-
--- Use ALT as a compose key on left ALT press
--- Make left Option key behave as Alt
-config.send_composed_key_when_left_alt_is_pressed = false
+-- TODO: check if we will disable default keybindings
+-- config.disable_default_key_bindings = true
 
 config.keys = {
   {
@@ -157,7 +153,7 @@ config.keys = {
   -- shell to redraw its prompt
   {
     key = 'k',
-    mods = 'CMD|SHIFT',
+    mods = 'CMD',
     action = act.Multiple {
       act.ClearScrollback 'ScrollbackAndViewport',
       act.SendKey { key = 'L', mods = 'CTRL' },
@@ -237,7 +233,7 @@ config.keys = {
     action = wezterm.action.CloseCurrentTab { confirm = true },
   },
 
-  -- Use CMD+z to enter zoom state
+  -- Use CMD+m to enter zoom state
   {
     key = 'm',
     mods = 'CMD',
