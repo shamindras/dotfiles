@@ -101,8 +101,15 @@ local function bind_movement(key, direction)
 end
 
 -- keybindings
+
+-- TODO: check this!
+config.disable_default_key_bindings = true
+
+-- Use ALT as a compose key on left ALT press
+-- Make left Option key behave as Alt
+config.send_composed_key_when_left_alt_is_pressed = false
+
 config.keys = {
-  -- Show tab navigator
   {
     key = 'p',
     mods = 'CMD',
@@ -150,7 +157,7 @@ config.keys = {
   -- shell to redraw its prompt
   {
     key = 'k',
-    mods = 'CMD',
+    mods = 'CMD|SHIFT',
     action = act.Multiple {
       act.ClearScrollback 'ScrollbackAndViewport',
       act.SendKey { key = 'L', mods = 'CTRL' },
