@@ -41,8 +41,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- source: https://github.com/joshmedeski/dotfiles/blob/d337bef32b58c46c857d19448b2949f9c11d6a1f/.config/nvim/lua/config/autocmds.lua
 -- yazi config
+-- source: https://github.com/joshmedeski/dotfiles/blob/d337bef32b58c46c857d19448b2949f9c11d6a1f/.config/nvim/lua/config/autocmds.lua
 vim.api.nvim_create_autocmd("BufWritePost", {
 	pattern = { "yazi.toml" },
 	command = "execute 'silent !yazi --clear-cache'",
@@ -76,7 +76,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 	group = go_last_location_buffer_group,
 })
 
--- {{{ Close some filetypes with <q>.
+-- {{{ close some filetypes with <q>.
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("close_with_q", { clear = true }),
@@ -103,6 +103,28 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.bo[event.buf].buflisted = false
 		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
 	end,
+})
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ cursor line
+
+-- show cursor line only in active window
+vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
+  callback = function()
+    if vim.w.auto_cursorline then
+      vim.wo.cursorline = true
+      vim.w.auto_cursorline = nil
+    end
+  end,
+})
+vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
+  callback = function()
+    if vim.wo.cursorline then
+      vim.w.auto_cursorline = true
+      vim.wo.cursorline = false
+    end
+  end,
 })
 
 -- ------------------------------------------------------------------------- }}}
