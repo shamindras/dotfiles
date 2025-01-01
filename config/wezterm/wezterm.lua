@@ -101,10 +101,6 @@ local function bind_movement(key, direction)
 end
 
 -- keybindings
-
--- TODO: check if we will disable default keybindings
--- config.disable_default_key_bindings = true
-
 config.keys = {
   {
     key = 'p',
