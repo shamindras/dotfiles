@@ -5,10 +5,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-require "shamindras.core.options"
-require "shamindras.core.autocmds"
+require "shamindras.core.options" -- general options
+require "shamindras.core.autocmds" -- autocommands
+require "shamindras.core.keymaps" -- custom keymaps
+require "shamindras.core.lazy" -- lazy package manager
 
-vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
-vim.keymap.set("n", "<space>x", "<cmd>.lua<CR>")
-vim.keymap.set("v", "<space>x", "<cmd>lua<CR>")
 
