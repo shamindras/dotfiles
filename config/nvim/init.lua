@@ -10,4 +10,4 @@ require "shamindras.core.autocmds" -- autocommands
 require "shamindras.core.keymaps" -- custom keymaps
 require "shamindras.core.lazy" -- lazy package manager
 
-
+-- vim: ts=2 sts=2 sw=2 et
