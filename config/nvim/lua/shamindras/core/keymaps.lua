@@ -63,8 +63,9 @@ keymap("v", ">", ">gv^")
 keymap("v", "<", "<gv^")
 
 -- commenting
-keymap("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
-keymap("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
+-- TODO: replace with `mini.comment()`
+-- keymap("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
+-- keymap("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
 
 -- move Lines
 -- TODO: get the `A` key mapped to left option key in macOS on wezterm
