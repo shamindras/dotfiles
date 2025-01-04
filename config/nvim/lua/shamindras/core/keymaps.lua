@@ -5,10 +5,10 @@
 
 -- keymap helper, which sets default options for silent and noremap to true
 local function keymap(mode, lhs, rhs, opts)
-	opts = opts or {}
-	opts.silent = opts.silent ~= false
-	opts.noremap = opts.noremap ~= false
-	vim.keymap.set(mode, lhs, rhs, opts)
+  opts = opts or {}
+  opts.silent = opts.silent ~= false
+  opts.noremap = opts.noremap ~= false
+  vim.keymap.set(mode, lhs, rhs, opts)
 end
 
 -- ------------------------------------------------------------------------- }}}
@@ -16,56 +16,56 @@ end
 -- {{{ buffers
 
 -- save file
-keymap({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>", { desc = "Save File" })
+keymap(
+  { 'i', 'x', 'n', 's' },
+  '<C-s>',
+  "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>",
+  { desc = 'Save File' }
+)
 
 -- TODO: integrate these once snacks.nvim is installed
 -- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua#L40-L46
 -- TODO: replace the `[b` and `]b` using `mini.move()`
 -- keymap("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 -- keymap("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
-keymap("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-keymap("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-keymap("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
+keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
+keymap('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
+-- keymap("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ lua interactive e[x]ecution
 
 keymap(
-	"n",
-	"<leader>bx",
-	"<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>",
-	{ desc = "write and [b]uffer e[x]ecute" }
+  'n',
+  '<leader>bx',
+  "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>",
+  { desc = 'write and [b]uffer e[x]ecute' }
 )
-keymap("n", "<leader>x", "<cmd>.lua<CR>")
-keymap("v", "<leader>x", "<cmd>.lua<CR>")
+keymap('n', '<leader>x', '<cmd>.lua<CR>')
+keymap('v', '<leader>x', '<cmd>.lua<CR>')
 
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ macros
 
 -- quickly executing macros with the q register
-keymap("n", "Q", "@q")
-keymap("v", "Q", "<cmd>norm @q<cr>")
+keymap('n', 'Q', '@q')
+keymap('v', 'Q', '<cmd>norm @q<cr>')
 
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ editing text
 
 -- delete/change single character without copying into register
-keymap("n", "x", '"_x')
-keymap("n", "X", '"_X')
-keymap("n", "c", '"_c')
-keymap("n", "C", '"_C')
+keymap('n', 'x', '"_x')
+keymap('n', 'X', '"_X')
+keymap('n', 'c', '"_c')
+keymap('n', 'C', '"_C')
 
 -- don't leave visual mode after indenting
-keymap("v", ">", ">gv^")
-keymap("v", "<", "<gv^")
-
--- commenting
--- TODO: replace with `mini.comment()`
--- keymap("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
--- keymap("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
+keymap('v', '>', '>gv^')
+keymap('v', '<', '<gv^')
 
 -- move Lines
 -- TODO: get the `A` key mapped to left option key in macOS on wezterm
@@ -82,30 +82,100 @@ keymap("v", "<", "<gv^")
 -- {{{ navigation
 
 -- better up/down
-keymap({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true })
-keymap({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true })
-keymap({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true })
-keymap({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true })
+keymap(
+  { 'n', 'x' },
+  'j',
+  "v:count == 0 ? 'gj' : 'j'",
+  { desc = 'Down', expr = true }
+)
+keymap(
+  { 'n', 'x' },
+  '<Down>',
+  "v:count == 0 ? 'gj' : 'j'",
+  { desc = 'Down', expr = true }
+)
+keymap(
+  { 'n', 'x' },
+  'k',
+  "v:count == 0 ? 'gk' : 'k'",
+  { desc = 'Up', expr = true }
+)
+keymap(
+  { 'n', 'x' },
+  '<Up>',
+  "v:count == 0 ? 'gk' : 'k'",
+  { desc = 'Up', expr = true }
+)
 
 -- Map H and L to ^ and $, respectively
 -- source: https://github.com/famiu/dot-nvim/blob/d7922d6ce9d9483cd68c67abb883e8ab91a17e4f/lua/keybinds.lua#L4-L6
 -- TODO: check if the `H` and `L` can be used as operators, e.g. `dH` deletes to beginning of line.
--- keymap('n', 'H', '^')
--- keymap('n', 'L', '$')
+keymap('n', 'H', '^')
+keymap('n', 'L', '$')
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-keymap("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
-keymap("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-keymap("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
-keymap("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev Search Result" })
-keymap("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
-keymap("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result" })
+keymap(
+  'n',
+  'n',
+  "'Nn'[v:searchforward].'zv'",
+  { expr = true, desc = 'Next Search Result' }
+)
+keymap(
+  'x',
+  'n',
+  "'Nn'[v:searchforward]",
+  { expr = true, desc = 'Next Search Result' }
+)
+keymap(
+  'o',
+  'n',
+  "'Nn'[v:searchforward]",
+  { expr = true, desc = 'Next Search Result' }
+)
+keymap(
+  'n',
+  'N',
+  "'nN'[v:searchforward].'zv'",
+  { expr = true, desc = 'Prev Search Result' }
+)
+keymap(
+  'x',
+  'N',
+  "'nN'[v:searchforward]",
+  { expr = true, desc = 'Prev Search Result' }
+)
+keymap(
+  'o',
+  'N',
+  "'nN'[v:searchforward]",
+  { expr = true, desc = 'Prev Search Result' }
+)
 
 -- Move to window using the <ctrl> hjkl keys
-keymap("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true, noremap = false })
-keymap("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true, noremap = false })
-keymap("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true, noremap = false })
-keymap("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true, noremap = false })
+keymap(
+  'n',
+  '<C-h>',
+  '<C-w>h',
+  { desc = 'Go to Left Window', remap = true, noremap = false }
+)
+keymap(
+  'n',
+  '<C-j>',
+  '<C-w>j',
+  { desc = 'Go to Lower Window', remap = true, noremap = false }
+)
+keymap(
+  'n',
+  '<C-k>',
+  '<C-w>k',
+  { desc = 'Go to Upper Window', remap = true, noremap = false }
+)
+keymap(
+  'n',
+  '<C-l>',
+  '<C-w>l',
+  { desc = 'Go to Right Window', remap = true, noremap = false }
+)
 
 -- ------------------------------------------------------------------------- }}}
 
