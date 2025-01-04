@@ -42,6 +42,9 @@ require('lazy').setup({
 
   -- comment
   require 'shamindras.plugins.comment',
+
+  -- smart-splits
+  require 'shamindras.plugins.smart-splits',
 }, {
   defaults = { lazy = false },
   install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },
