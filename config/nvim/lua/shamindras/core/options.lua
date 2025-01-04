@@ -24,14 +24,15 @@ o.relativenumber = true -- show relative line numbers
 
 -- appearance
 o.cursorline = true -- show which line your cursor is on
-o.fillchars = 'eob: ' -- don't show `~` outside of buffer 
-o.termguicolors = true -- enable terminal gui colors
+o.fillchars = 'eob: ' -- don't show `~` outside of buffer
 o.ruler = false -- don't show cursor position in the command line
+o.termguicolors = true -- enable terminal gui colors
 o.showmode = false -- don't show the mode, since it is already in the status line
 o.signcolumn = 'yes' -- always show signcolumn (otherwise it will shift text)
+opt.laststatus = 3 -- Use global statusline
 
 -- search
-o.ignorecase = true -- Case-insensitive searching 
+o.ignorecase = true -- Case-insensitive searching
 o.smartcase = true -- unless \C or one or more capital letters in the search term
 o.hlsearch = false
 o.incsearch = true
@@ -46,10 +47,10 @@ o.splitright = true -- split vertical window to the right
 o.splitbelow = true -- split horizontal window to the bottom
 
 -- backup
-o.backup      = false -- don't store backup while overwriting the file
+o.backup = false -- don't store backup while overwriting the file
 o.writebackup = false -- don't store backup while overwriting the file
 o.swapfile = false -- don't create swapfile
-o.undodir = os.getenv("HOME") .. "/.local/state/nvim/undo"
+o.undodir = os.getenv 'HOME' .. '/.local/state/nvim/undo'
 o.undofile = true
 
 -- misc
@@ -67,8 +68,8 @@ end)
 
 -- ------------------------------------------------------------------------- }}}
 
-opt.shortmess:append('I') -- disable vim startup message
-opt.iskeyword:append('-') -- consider string-string as whole word
+opt.shortmess:append 'I' -- disable vim startup message
+opt.iskeyword:append '-' -- consider string-string as whole word
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  TODO: check why `o. does not work here. Currently requires `opt..
@@ -76,4 +77,3 @@ opt.list = true -- show some helper symbols
 opt.listchars = { tab = '> ', trail = '-', nbsp = '+' } -- define which helper symbols to show
 
 g.have_nerd_font = true
-

@@ -14,6 +14,10 @@ return {
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
+
+      -- set white line for window separator, useful in global status line.
+      -- need to apply this here, after tokyonight colorscheme has been applied.
+      vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = 'white' })
     end,
   },
 }
