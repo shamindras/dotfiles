@@ -21,8 +21,8 @@ keymap({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<
 -- TODO: integrate these once snacks.nvim is installed
 -- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua#L40-L46
 -- TODO: replace the `[b` and `]b` using `mini.move()`
-keymap("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-keymap("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+-- keymap("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+-- keymap("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 keymap("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 keymap("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 keymap("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
@@ -69,12 +69,12 @@ keymap("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Com
 -- move Lines
 -- TODO: get the `A` key mapped to left option key in macOS on wezterm
 --       currently we use `CMD+Option` on macOS keyboard.
-keymap("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
-keymap("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
-keymap("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-keymap("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-keymap("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
-keymap("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
+-- keymap("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
+-- keymap("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
+-- keymap("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+-- keymap("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+-- keymap("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
+-- keymap("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
 
 -- ------------------------------------------------------------------------- }}}
 
@@ -89,8 +89,8 @@ keymap({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = 
 -- Map H and L to ^ and $, respectively
 -- source: https://github.com/famiu/dot-nvim/blob/d7922d6ce9d9483cd68c67abb883e8ab91a17e4f/lua/keybinds.lua#L4-L6
 -- TODO: check if the `H` and `L` can be used as operators, e.g. `dH` deletes to beginning of line.
-keymap('n', 'H', '^')
-keymap('n', 'L', '$')
+-- keymap('n', 'H', '^')
+-- keymap('n', 'L', '$')
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 keymap("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
