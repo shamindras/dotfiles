@@ -24,7 +24,6 @@ o.relativenumber = true -- show relative line numbers
 
 -- appearance
 o.cursorline = true -- show which line your cursor is on
-o.fillchars = 'eob: ' -- don't show `~` outside of buffer
 o.ruler = false -- don't show cursor position in the command line
 o.termguicolors = true -- enable terminal gui colors
 o.showmode = false -- don't show the mode, since it is already in the status line
@@ -75,5 +74,8 @@ opt.iskeyword:append '-' -- consider string-string as whole word
 --  TODO: check why `o. does not work here. Currently requires `opt..
 opt.list = true -- show some helper symbols
 opt.listchars = { tab = '> ', trail = '-', nbsp = '+' } -- define which helper symbols to show
+opt.fillchars = { foldclose = ' ', fold = ' ', eob = ' ' }
+opt.foldlevel = 99
+opt.foldmethod = 'marker'
 
 g.have_nerd_font = true
