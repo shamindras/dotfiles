@@ -122,11 +122,11 @@ local function toggle_window_maximize()
 end
 
 -- window management
-keymap('n', '<leader>we', '<C-w>=')               -- make split windows equal width & height
-keymap('n', '<leader>wh', '<C-w>s')               -- split window horizontally
+keymap('n', '<leader>we', '<C-w>=') -- make split windows equal width & height
+keymap('n', '<leader>wh', '<C-w>s') -- split window horizontally
 keymap('n', '<leader>wm', toggle_window_maximize) -- toggle maximize active window
-keymap('n', '<leader>wv', '<C-w>v')               -- split window vertically
-keymap('n', '<leader>wx', '<cmd>close<CR>')       -- close current split window
+keymap('n', '<leader>wv', '<C-w>v') -- split window vertically
+keymap('n', '<leader>wx', '<cmd>close<CR>') -- close current split window
 
 -- ------------------------------------------------------------------------- }}}
 
@@ -158,5 +158,21 @@ keymap('v', '<leader>d', '"_d')
 -- NOTE: does not support `.` repeat
 keymap('n', 'gO', "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>")
 keymap('n', 'go', "<Cmd>call append(line('.'),     repeat([''], v:count1))<CR>")
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Folding commands.
+
+-- Author: Karl Yngve Lervåg
+--    See: https://github.com/lervag/dotnvim
+
+-- Close all fold except the current one.
+keymap('n', 'zv', 'zMzvzz', { desc = 'Close all folds except current' })
+
+-- Close current fold when open. Always open next fold.
+keymap('n', 'zj', 'zcjzOzz', { desc = 'Close fold & open next one' })
+
+-- Close current fold when open. Always open previous fold.
+keymap('n', 'zk', 'zckzOzz', { desc = 'Close fold & open previous one' })
 
 -- ------------------------------------------------------------------------- }}}
