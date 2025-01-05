@@ -3,7 +3,7 @@ return {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    event = "BufReadPost",
+    event = 'BufReadPost',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       -- Add languages to be installed here that you want installed for treesitter
@@ -65,4 +65,3 @@ return {
 }
 
 -- vim: ts=2 sts=2 sw=2 et
-
