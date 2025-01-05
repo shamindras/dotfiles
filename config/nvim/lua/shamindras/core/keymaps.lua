@@ -25,9 +25,6 @@ keymap(
 
 -- TODO: integrate these once snacks.nvim is installed
 -- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua#L40-L46
--- TODO: replace the `[b` and `]b` using `mini.move()`
--- keymap("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
--- keymap("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
 keymap('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
 -- keymap("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
@@ -67,6 +64,9 @@ keymap('n', 'C', '"_C')
 keymap('v', '>', '>gv^')
 keymap('v', '<', '<gv^')
 
+-- change in word
+keymap('n', '<C-c>', 'ciw')
+
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ navigation
@@ -93,7 +93,7 @@ keymap('o', 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Prev Search Res
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ windows
+-- {{{ windows and splits
 
 ---Toggle the maximization state of the current window.
 ---Maximizes the window if it's not maximized, restores the previous layout if it is.
@@ -122,15 +122,16 @@ local function toggle_window_maximize()
 end
 
 -- window management
-keymap('n', '<leader>we', '<C-w>=') -- make split windows equal width & height
-keymap('n', '<leader>wh', '<C-w>s') -- split window horizontally
+keymap('n', '<leader>we', '<C-w>=')               -- make split windows equal width & height
+keymap('n', '<leader>wh', '<C-w>s')               -- split window horizontally
 keymap('n', '<leader>wm', toggle_window_maximize) -- toggle maximize active window
-keymap('n', '<leader>wv', '<C-w>v') -- split window vertically
-keymap('n', '<leader>wx', '<cmd>close<CR>') -- close current split window
+keymap('n', '<leader>wv', '<C-w>v')               -- split window vertically
+keymap('n', '<leader>wx', '<cmd>close<CR>')       -- close current split window
 
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ yanking and selecting
+
 -- keymap('n', 'Y', 'yg$') -- yank up to the end of visual line
 -- keymap('n', '<leader>yl', 'yg$') -- yank up to the end of visual line
 -- keymap('n', '<leader>yh', 'yg^') -- yank up to the beginning of visual line
@@ -148,5 +149,14 @@ keymap('n', '<leader>Y', '"+Y')
 
 keymap('n', '<leader>d', '"_d')
 keymap('v', '<leader>d', '"_d')
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ insert missing lines above/below
+
+-- source: https://github.com/echasnovski/mini.nvim/blob/main/lua/mini/basics.lua#L576-L577
+-- NOTE: does not support `.` repeat
+keymap('n', 'gO', "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>")
+keymap('n', 'go', "<Cmd>call append(line('.'),     repeat([''], v:count1))<CR>")
 
 -- ------------------------------------------------------------------------- }}}
