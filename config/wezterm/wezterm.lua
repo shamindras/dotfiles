@@ -100,6 +100,9 @@ local function bind_movement(key, direction)
   end
 end
 
+-- smart-splits integration
+-- source: https://dev.to/lovelindhoni/make-wezterm-mimic-tmux-5893
+-- TODO: modularize this code
 -- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
 local function is_vim(pane)
   -- this is set by the plugin, and unset on ExitPre in Neovim
@@ -172,17 +175,19 @@ config.keys = {
     action = wezterm.action.ShowLauncher,
   },
 
-  -- Vertical pipe (|) -> vertical split
+  -- [v]ertical split wezterm window
   {
-    key = '\\',
+    -- key = 'v',
+    key = '\\', -- Vertical pipe (|) -> vertical split
     mods = 'CMD|SHIFT',
     action = wezterm.action.SplitHorizontal {
       domain = 'CurrentPaneDomain',
     },
   },
-  -- Underscore (_) -> horizontal split
+  -- [h]orizontal split wezterm window
   {
-    key = '-',
+    -- key = 'h',
+    key = '-', -- Underscore (_) -> horizontal split
     mods = 'CMD|SHIFT',
     action = wezterm.action.SplitVertical {
       domain = 'CurrentPaneDomain',
