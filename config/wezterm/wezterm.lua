@@ -162,11 +162,17 @@ config.keys = {
   -- split_nav('resize', 'j'),
   -- split_nav('resize', 'k'),
   -- split_nav('resize', 'l'),
-
   {
     key = 'p',
     mods = 'CMD',
     action = wezterm.action.ShowTabNavigator,
+  },
+  {
+    key = 'g',
+    mods = 'CMD',
+    action = act.SpawnCommandInNewTab {
+      args = { 'lazygit' },
+    },
   },
   -- Show launcher menu
   {
@@ -304,18 +310,6 @@ config.keys = {
     key = 't',
     mods = 'CMD',
     action = act.SpawnTab 'CurrentPaneDomain',
-  },
-
-  -- start `lazygit` in a new tab
-  {
-    key = 'g',
-    mods = 'CMD',
-    action = act.SpawnCommandInNewTab {
-      -- FIXME: ensure lazygit uses a custom config file.
-      -- Currently has PATH issues.
-      -- args = { 'lazygit --use-config-file ~/.config/lazygit/config.yml' },
-      args = { 'lazygit' },
-    },
   },
 }
 
