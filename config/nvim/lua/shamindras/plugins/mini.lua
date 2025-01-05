@@ -8,7 +8,25 @@ return {
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      local ai = require 'mini.ai'
+      local extras = require 'mini.extra'
+      ai.setup {
+        n_lines = 500,
+        custom_textobjects = {
+          -- TODO: check why `vaf` and `vao` are not working.
+          f = ai.gen_spec.treesitter { a = '@function.outer', i = '@function.inner' },
+          o = ai.gen_spec.treesitter {
+            a = { '@block.outer', '@loop.outer', '@conditional.outer' },
+            i = { '@block.inner', '@loop.inner', '@conditional.inner' },
+          },
+          B = extras.gen_ai_spec.buffer(),
+          D = extras.gen_ai_spec.diagnostic(),
+          I = extras.gen_ai_spec.indent(),
+          L = extras.gen_ai_spec.line(),
+          N = extras.gen_ai_spec.number(),
+        },
+      }
+      -- require('mini.ai').setup { n_lines = 500 }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
@@ -17,13 +35,21 @@ return {
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
+      -- Insert matching pairs of `({[`
       require('mini.pairs').setup()
+
       require('mini.bracketed').setup()
 
-      require('mini.move').setup()
+      require('mini.move').setup {
+        mappings = {
+          left = 'H',
+          right = 'L',
+          down = 'J',
+          up = 'K',
+        },
+      }
 
       -- require('mini.animate').setup()
-
       -- require('mini.indentscope').setup()
 
       -- Simple and easy statusline.
