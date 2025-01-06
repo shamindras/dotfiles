@@ -17,7 +17,7 @@ local set_environment_variables = {
 config.set_environment_variables = set_environment_variables
 
 config.font =
-  wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
+    wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
 config.font_size = 20
 
 ---Return the suitable argument depending on the appearance
@@ -37,7 +37,8 @@ config.color_scheme = depending_on_appearance {
   -- dark = 'Catppuccin Mocha',
   -- light = 'tokyonight_night',
   -- dark = 'tokyonight_storm',
-  light = 'Night Owlish Light',
+  -- light = 'Night Owlish Light',
+  light = 'Night Owl (Gogh)',
   dark = 'Night Owl (Gogh)',
 }
 config.enable_tab_bar = true
