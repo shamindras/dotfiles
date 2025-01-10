@@ -62,6 +62,7 @@ path=(
 
   # core
   $HOME/{,s}bin(N)
+  $HOME/.local/{,s}bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
   $HOMEBREW_PREFIX/{,s}bin(N)
 
