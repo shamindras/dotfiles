@@ -170,13 +170,9 @@ brew "pandoc-crossref"
 # Highly capable, feature-rich programming language
 brew "perl"
 # General-purpose scripting language
-brew "php", restart_service: true
+brew "php", restart_service: :changed
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
-# Python dependency management tool
-brew "pipenv"
-# Execute binaries from Python packages in isolated environments
-brew "pipx"
 # Cross-platform application and UI framework
 brew "qt@5"
 # PDF rendering library (based on the xpdf-3.0 code base)
@@ -185,10 +181,6 @@ brew "poppler-qt5"
 brew "prettier"
 # Linter for prose
 brew "proselint"
-# Python version management
-brew "pyenv"
-# Software environment for statistical computing
-brew "r", link: false
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Wrapper around ripgrep that adds multiple rich file types
@@ -241,8 +233,6 @@ cask "alacritty"
 cask "alfred"
 # Distribution of the Python and R programming languages for scientific computing
 cask "anaconda"
-# Screen saver based on animations presented during Apple Special Event Brooklyn
-cask "brooklyn"
 # DjVu viewer and browser plugin
 cask "djview"
 # Tool to hide status bar icons
@@ -286,6 +276,8 @@ cask "positron"
 cask "quarto"
 # Environment for statistical computing and graphics
 cask "r"
+# Hardware-accelerated GPU terminal emulator
+cask "rio"
 # Data science software focusing on R and Python
 cask "rstudio"
 # Tool to reverse the direction of scrolling
