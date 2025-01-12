@@ -179,6 +179,8 @@ brew "qt@5"
 brew "poppler-qt5"
 # Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
 brew "prettier"
+# Prettier daemon
+brew "prettierd"
 # Linter for prose
 brew "proselint"
 # Search tool like grep and The Silver Searcher
