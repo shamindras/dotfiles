@@ -86,8 +86,9 @@
     ${HOME}/Library/Application Support/Code/User/settings.json: config/vscode/settings.json
 
 # Update bat themes cache
+# NOTE: here we prefix with `command` to use the original `bat` command, without any alias.
 - shell:
-    - command: bat cache --build
+    - command: command bat cache --build
       description: Build bat cache
 
 # Update tldr cache
