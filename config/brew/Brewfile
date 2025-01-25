@@ -95,8 +95,6 @@ brew "shared-mime-info"
 brew "libheif"
 # Postgres C API library
 brew "libpq"
-# Cryptography and SSL/TLS Toolkit
-brew "openssl@1.1"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
 # Adds spatial SQL capabilities to SQLite
@@ -163,6 +161,8 @@ brew "node"
 brew "openldap"
 # OpenBSD freely-licensed SSH connectivity tools
 brew "openssh"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@3.0"
 # Swiss-army knife of markup format conversion
 brew "pandoc"
 # Pandoc filter for numbering and cross-referencing
