@@ -189,8 +189,6 @@ brew "ripgrep"
 brew "ripgrep-all"
 # Utility that provides fast incremental file transfer
 brew "rsync"
-# Safe, concurrent, practical language
-brew "rust"
 # 7-Zip is a file archiver with a high compression ratio
 brew "sevenzip"
 # Static analysis and lint tool, for (ba)sh scripts
@@ -237,8 +235,6 @@ cask "alfred"
 cask "anaconda"
 # DjVu viewer and browser plugin
 cask "djview"
-# Tool to hide status bar icons
-cask "dozer"
 # Client for the Dropbox cloud storage service
 cask "dropbox"
 # Cross-platform Text Expander written in Rust
@@ -251,7 +247,6 @@ cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspace-nerd-font"
 cask "font-sf-pro"
 cask "font-symbols-only-nerd-font"
-cask "google-backup-and-sync"
 # Web browser
 cask "google-chrome"
 # Client for the Google Drive storage service
@@ -260,6 +255,8 @@ cask "google-drive"
 cask "inkscape"
 # Download manager
 cask "jdownloader"
+# Menu bar manager
+cask "jordanbaird-ice"
 # Programming language for technical computing
 cask "julia"
 # Free cross-platform office suite, fresh version
@@ -278,8 +275,6 @@ cask "positron"
 cask "quarto"
 # Environment for statistical computing and graphics
 cask "r"
-# Hardware-accelerated GPU terminal emulator
-cask "rio"
 # Data science software focusing on R and Python
 cask "rstudio"
 # Tool to reverse the direction of scrolling
@@ -288,8 +283,6 @@ cask "scroll-reverser"
 cask "shottr"
 # Instant messaging application focusing on security
 cask "signal"
-# PDF viewer designed for reading research papers and technical books
-cask "sioyek"
 # PDF reader and note-taking application
 cask "skim"
 # Video chat, voice call and instant messaging application
@@ -306,8 +299,6 @@ cask "vlc"
 cask "wezterm"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
-# Video communication and virtual meeting platform
-cask "zoom"
 # Collect, organise, cite, and share research sources
 cask "zotero"
 vscode "aaron-bond.better-comments"
