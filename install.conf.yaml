@@ -8,20 +8,6 @@
       stdout: true
       stderr: true
 
-# Install homebrew
-- shell:
-    - command: ./scripts/install-homebrew
-      description: Installing homebrew
-
-# run brew update, upgrade, clean up
-- shell:
-    - command: brew update && brew upgrade && brew cleanup
-      description: Running brew update/upgrade/cleanup
-
-# Install brew packages
-- brewfile:
-    - config/brew/Brewfile
-
 # Create XDG directories
 - create:
     - "${XDG_BIN_HOME}"
@@ -38,11 +24,6 @@
       force: true
     ~/.config:
       force: true
-
-# rust + cargo
-# - shell:
-#     - command: curl https://sh.rustup.rs -sSf | sh
-#       description: install rust and cargo
 
 # Symlink locations for files / directories
 - link:
@@ -85,6 +66,25 @@
     ${HOME}/Library/Application Support/Code/User/keybindings.json: config/vscode/keybindings.json
     ${HOME}/Library/Application Support/Code/User/settings.json: config/vscode/settings.json
 
+# Install homebrew
+- shell:
+    - command: ./scripts/install-homebrew
+      description: Installing homebrew
+
+# run brew update, upgrade, clean up
+- shell:
+    - command: brew update && brew upgrade && brew cleanup
+      description: Running brew update/upgrade/cleanup
+
+# Install brew packages
+- brewfile:
+    - config/brew/Brewfile
+
+# rust + cargo
+- shell:
+    - command: curl https://sh.rustup.rs -sSf | sh
+      description: install rust and cargo
+
 # Update bat themes cache
 # NOTE: here we prefix with `command` to use the original `bat` command, without any alias.
 - shell:
@@ -106,12 +106,6 @@
     - command: gh extension upgrade --all
       description: upgrade gh extensions
 
-# TODO: make this the last item in this script
-# # macOS default settings
-# - shell:
-#     - command: ./scripts/macos
-#       description: Set macOS default settings
-
 # Load espanso extension
 # TODO: note down instructions to set up espanso security settings
 - shell:
@@ -123,3 +117,8 @@
 - shell:
     - command: cargo install ttyper
       description: install ttyper
+# TODO: make this the last item in this script
+# # macOS default settings
+# - shell:
+#     - command: ./scripts/macos
+#       description: Set macOS default settings
