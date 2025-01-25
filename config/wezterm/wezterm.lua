@@ -17,7 +17,7 @@ local set_environment_variables = {
 config.set_environment_variables = set_environment_variables
 
 config.font =
-    wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
+  wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
 config.font_size = 20
 
 ---Return the suitable argument depending on the appearance
@@ -33,11 +33,8 @@ local function depending_on_appearance(arg)
 end
 
 config.color_scheme = depending_on_appearance {
-  -- light = 'Catppuccin Mocha',
-  -- dark = 'Catppuccin Mocha',
   -- light = 'tokyonight_night',
-  -- dark = 'tokyonight_storm',
-  -- light = 'Night Owlish Light',
+  -- dark = 'tokyonight_night',
   light = 'Night Owl (Gogh)',
   dark = 'Night Owl (Gogh)',
 }
