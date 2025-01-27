@@ -37,7 +37,7 @@ gui:
       - "#c0caf5"
   # If true (default), file icons are shown in the file views. Only relevant if
   # NerdFontsVersion is not empty.
-  # showFileIcons: true
+  showFileIcons: true
   # Window border style.
   # One of 'rounded' (default) | 'single' | 'double' | 'hidden'
   border: "single"
@@ -147,6 +147,6 @@ customCommands:
 
 # TODO switch from `vim` to `nvim`
 os:
-  editCommand: "vim"
+  editCommand: "nvim"
   editCommandTemplate: "{{editor}} +{{line}} -- {{filename}}"
   openCommand: "open {{filename}}"
