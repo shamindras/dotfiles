@@ -138,6 +138,7 @@ alt-p = 'workspace P'
 alt-s = 'workspace S'
 alt-t = 'workspace T'
 alt-v = 'workspace V'
+alt-z = 'workspace Z'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'
@@ -160,6 +161,8 @@ alt-shift-p = 'move-node-to-workspace P'
 alt-shift-s = 'move-node-to-workspace S'
 alt-shift-t = 'move-node-to-workspace T'
 alt-shift-v = 'move-node-to-workspace V'
+alt-shift-w = 'move-node-to-workspace W'
+alt-shift-z = 'move-node-to-workspace Z'
 
 # alt-f = 'fullscreen'
 alt-f = 'fullscreen'
@@ -205,6 +208,7 @@ alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
 
+# Auto move apps - personal -------------------------------
 # [1]password
 [[on-window-detected]]
 if.app-id = "com.1password.1password"
@@ -299,6 +303,32 @@ run = "move-node-to-workspace T"
 [[on-window-detected]]
 if.app-id = "com.microsoft.VSCode"
 run = "move-node-to-workspace V"
+
+# [Z]en browser
+[[on-window-detected]]
+if.app-id = "app.zen-browser.zen"
+run = "move-node-to-workspace Z"
+
+# Auto move apps - personal -------------------------------
+# microsoft [W]ord
+[[on-window-detected]]
+if.app-id = "com.microsoft.Word "
+run = "move-node-to-workspace W"
+
+# microsoft Teams
+[[on-window-detected]]
+if.app-id = "com.microsoft.teams2"
+run = "move-node-to-workspace 2"
+
+# microsoft Outlook
+[[on-window-detected]]
+if.app-id = "com.microsoft.Outlook "
+run = "move-node-to-workspace 1"
+
+# Cisco AnyConnect GUI
+[[on-window-detected]]
+if.app-id = "com.cisco.anyconnect.gui"
+run = "move-node-to-workspace 6"
 
 # Floating windows - disable tiling for specific apps ----
 
