@@ -17,6 +17,7 @@ function z1_aliases {
     alias .6='z ../../../../../../'            # Go up 6 dirs
     alias asl='aerospace list-apps'
     alias asr='aerospace reload-config;clear;'
+    alias asf='(killall AeroSpace || true) && open -a AeroSpace;clear;' # [a]eroSpace [f]orced [r]estart
     alias b='bat --style=grid,numbers'
     alias bat='bat --style=grid,numbers'
     alias brewup='brew update && brew upgrade && brew cleanup'

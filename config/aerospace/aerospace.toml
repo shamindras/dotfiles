@@ -131,6 +131,7 @@ alt-b = 'workspace B'
 alt-d = 'workspace D'
 alt-e = 'workspace E'
 alt-g = 'workspace G'
+alt-i = 'workspace I'
 alt-m = 'workspace M'
 alt-n = 'workspace N'
 alt-o = 'workspace O'
@@ -154,6 +155,7 @@ alt-shift-b = 'move-node-to-workspace B'
 alt-shift-d = 'move-node-to-workspace D'
 alt-shift-e = 'move-node-to-workspace E'
 alt-shift-g = 'move-node-to-workspace G'
+alt-shift-i = 'move-node-to-workspace I'
 alt-shift-m = 'move-node-to-workspace M'
 alt-shift-n = 'move-node-to-workspace N'
 alt-shift-o = 'move-node-to-workspace O'
@@ -274,6 +276,11 @@ run = "move-node-to-workspace E"
 [[on-window-detected]]
 if.app-id = "org.whispersystems.signal-desktop"
 run = "move-node-to-workspace G"
+
+# Si[G]nal
+[[on-window-detected]]
+if.app-id = "com.apple.TextEdit"
+run = "move-node-to-workspace I"
 
 # RStudi[o]
 [[on-window-detected]]
