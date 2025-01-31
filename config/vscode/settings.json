@@ -262,4 +262,5 @@
     },
     "explorer.confirmDragAndDrop": false,
     "workbench.startupEditor": "none",
+    "chat.commandCenter.enabled": false,
 }
