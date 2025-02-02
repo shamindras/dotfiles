@@ -3,12 +3,51 @@
 ##? nfc  - fetch system settings using neofetch, output and copy to clipboard
 ##?
 ##? usage:
-##?   nfc
+##?   nfc [--details] [--help]
+##?
+##? options:
+##?   --details  Wrap clipboard output in GitHub-flavored markdown details/summary tags
+##?   --help     Show this help message
 
-# TODO: add more options, e.g. `R`/`python` versions etc.
-# TODO: consider a --details option to wrap output in summary/details html tags
 nfc() {
-    neofetch --stdout --color_blocks off | sed '/^[[:space:]]*$/d' | tee >(pbcopy)
+    local wrap_details=false
+    local output=""
+    local clipboard_output=""
+
+    # Show help if --help flag
+    if [[ "$1" == "--help" ]]; then
+        grep "^##?" "${(%):-%x}" | cut -c 5-
+        return 0
+    fi
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --details)
+                wrap_details=true
+                shift
+                ;;
+            --help)
+                # Already handled above
+                shift
+                ;;
+            *)
+                echo "Unknown option: $1"
+                return 1
+                ;;
+        esac
+    done
+
+    # Capture the neofetch output
+    output=$(neofetch --stdout --color_blocks off | sed '/^[[:space:]]*$/d')
+    
+    # Prepare clipboard content
+    if $wrap_details; then
+        clipboard_output="<details>\n<summary>System Details</summary>\n\n\`\`\`\n${output}\n\`\`\`\n\n</details>\n"
+        echo "$output" | tee >(echo "$clipboard_output" | pbcopy)
+    else
+        echo "$output" | tee >(pbcopy)
+    fi
 }
 
 # vim: ft=zsh
