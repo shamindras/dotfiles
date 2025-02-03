@@ -327,7 +327,7 @@ run = "move-node-to-workspace V"
 # [Z]en browser
 [[on-window-detected]]
 if.app-id = "app.zen-browser.zen"
-run = "move-node-to-workspace Z"
+run = "move-node-to-workspace B"
 
 # Auto move apps - personal -------------------------------
 
