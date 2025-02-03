@@ -158,6 +158,7 @@ alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-a = 'move-node-to-workspace A'
 alt-shift-b = 'move-node-to-workspace B'
+alt-shift-c = 'move-node-to-workspace C'
 alt-shift-d = 'move-node-to-workspace D'
 alt-shift-e = 'move-node-to-workspace E'
 alt-shift-g = 'move-node-to-workspace G'
@@ -268,6 +269,11 @@ run = "move-node-to-workspace B"
 [[on-window-detected]]
 if.app-id = "org.mozilla.firefox"
 run = "move-node-to-workspace B"
+
+# [C]alendar
+[[on-window-detected]]
+if.app-id = "com.apple.iCal"
+run = "move-node-to-workspace C"
 
 # [D]jview
 [[on-window-detected]]
