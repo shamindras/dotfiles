@@ -159,6 +159,8 @@ brew "openldap"
 brew "openssh"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3.0"
+# 7-Zip (high compression file archiver) implementation
+brew "p7zip"
 # Swiss-army knife of markup format conversion
 brew "pandoc"
 # Pandoc filter for numbering and cross-referencing
@@ -231,8 +233,6 @@ cask "aerospace"
 cask "alacritty"
 # Application launcher and productivity software
 cask "alfred"
-# Distribution of the Python and R programming languages for scientific computing
-cask "anaconda"
 # DjVu viewer and browser plugin
 cask "djview"
 # Client for the Dropbox cloud storage service
