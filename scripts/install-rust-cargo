@@ -11,7 +11,7 @@ install_rustup() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     # Source the environment for the current session
     source "$HOME/.cargo/env"
-    echo "? Rust and Cargo have been installed successfully!"
+    echo "[SUCCESS] Rust and Cargo have been installed successfully!"
 }
 
 # Function to update rust
@@ -19,22 +19,22 @@ update_rust() {
     echo "Checking for Rust updates..."
     rustup update 2>&1 > /dev/null
     if [ $? -eq 0 ]; then
-        echo "? Rust is now up to date!"
+        echo "[SUCCESS] Rust is now up to date!"
     else
-        echo "? Error updating Rust. Please check your internet connection and try again."
+        echo "[ERROR] Error updating Rust. Please check your internet connection and try again."
         exit 1
     fi
 }
 
 # Main script execution
-echo "?? Checking Rust installation status..."
+echo "[INFO] Checking Rust installation status..."
 
 # Check if rustc and cargo are installed
 if ! command_exists rustc || ! command_exists cargo; then
-    echo "?? Rust and/or Cargo not found."
+    echo "[WARNING] Rust and/or Cargo not found."
     install_rustup
 else
-    echo "? Rust and Cargo are already installed."
+    echo "[INFO] Rust and Cargo are already installed."
     update_rust
 fi
 
@@ -42,13 +42,11 @@ fi
 if command_exists rustc && command_exists cargo; then
     RUST_VERSION=$(rustc --version)
     CARGO_VERSION=$(cargo --version)
-    echo "? Current versions:"
+    echo "[INFO] Current versions:"
     echo "   $RUST_VERSION"
     echo "   $CARGO_VERSION"
-    echo "?? Setup complete! Your Rust environment is ready to use."
+    echo "[SUCCESS] Setup complete! Your Rust environment is ready to use."
 else
-    echo "? Something went wrong with the installation."
+    echo "[ERROR] Something went wrong with the installation."
     exit 1
 fi
-
-# vim: ft=bash
