@@ -68,7 +68,7 @@
 
 # Install homebrew
 - shell:
-    - command: ./scripts/install-homebrew
+    - command: ./scripts/setup-upgrade-homebrew
       description: Installing homebrew
 
 # run brew update, upgrade, clean up
@@ -82,7 +82,7 @@
 
 # rust + cargo
 - shell:
-    - command: ./scripts/install-rust-cargo
+    - command: ./scripts/setup-upgrade-rust-cargo
       description: install rust and cargo, or upgrade both
 
 # Update bat themes cache
@@ -113,10 +113,10 @@
 
 # Load ttyper
 - shell:
-    - command: ./scripts/install-upgrade-ttyper
+    - command: ./scripts/setup-upgrade-ttyper
       description: install ttyper, or upgrade to the latest version
 
 # macOS default settings
 - shell:
-    - command: ./scripts/macos
+    - command: ./scripts/setup-macos
       description: Set macOS default settings
