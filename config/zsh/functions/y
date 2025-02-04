@@ -8,11 +8,14 @@
 
 y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp";clear # clear screen after quitting yazi
+	yazi "$@" --cwd-file="$tmp";
 	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
 		builtin cd -- "$cwd"
 	fi
 	rm -f -- "$tmp"
+
+  # clear screen after quitting yazi
+  clear 
 }
 
 # vim: ft=zsh
