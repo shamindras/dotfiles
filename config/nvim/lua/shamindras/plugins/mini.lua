@@ -1,45 +1,35 @@
 return {
-  { -- Collection of various small independent plugins/modules
-    'echasnovski/mini.nvim',
+
+  -- Text editing plugins
+  {
+    'echasnovski/mini.ai',
+    version = '*',
+    event = 'VeryLazy', -- Load after startup
     config = function()
-      -- Better Around/Inside textobjects
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-      --  - ci'  - [C]hange [I]nside [']quote
-      local ai = require 'mini.ai'
-      local extras = require 'mini.extra'
-      ai.setup {
-        n_lines = 500,
-        custom_textobjects = {
-          -- TODO: check why `vaf` and `vao` are not working.
-          f = ai.gen_spec.treesitter { a = '@function.outer', i = '@function.inner' },
-          o = ai.gen_spec.treesitter {
-            a = { '@block.outer', '@loop.outer', '@conditional.outer' },
-            i = { '@block.inner', '@loop.inner', '@conditional.inner' },
-          },
-          B = extras.gen_ai_spec.buffer(),
-          D = extras.gen_ai_spec.diagnostic(),
-          I = extras.gen_ai_spec.indent(),
-          L = extras.gen_ai_spec.line(),
-          N = extras.gen_ai_spec.number(),
-        },
-      }
-      -- require('mini.ai').setup { n_lines = 500 }
-
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
+      require('mini.ai').setup()
+    end,
+  },
+  {
+    'echasnovski/mini.operators',
+    version = '*',
+    event = 'VeryLazy', -- Load after startup
+    config = function()
+      require('mini.operators').setup()
+    end,
+  },
+  {
+    'echasnovski/mini.surround',
+    version = '*',
+    event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
+    config = function()
       require('mini.surround').setup()
-
-      -- Insert matching pairs of `({[`
-      require('mini.pairs').setup()
-
-      require('mini.bracketed').setup()
-
+    end,
+  },
+  {
+    'echasnovski/mini.move',
+    version = '*',
+    event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
+    config = function()
       require('mini.move').setup {
         mappings = {
           left = 'H',
@@ -48,27 +38,34 @@ return {
           up = 'K',
         },
       }
+    end,
+  },
+  {
+    'echasnovski/mini.pairs',
+    version = '*',
+    event = 'InsertEnter', -- Load when entering insert mode
+    config = function()
+      require('mini.pairs').setup()
+    end,
+  },
+  -- General workflow plugins
 
-      -- require('mini.animate').setup()
-      -- require('mini.indentscope').setup()
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
+  -- Appearance plugins
+  {
+    'echasnovski/mini.statusline',
+    version = '*',
+    event = 'VimEnter', -- Load when Vim starts
+    config = function()
+      -- Simple and easy statusline
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
       statusline.setup { use_icons = vim.g.have_nerd_font }
 
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
+      -- Configure cursor location section to show LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         return '%2l:%-2v'
       end
-
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
 }
