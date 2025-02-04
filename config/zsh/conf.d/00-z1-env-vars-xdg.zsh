@@ -38,8 +38,6 @@ export LESSKEY="${LESSKEY:-$XDG_CONFIG_HOME/less/lesskey}"
 export LESSHISTFILE="${LESSHISTFILE:-$XDG_CACHE_HOME/less/history}"
 
 # Python
-# export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/pip.conf"
-# export PIP_LOG_FILE="${XDG_DATA_HOME}/pip/log"
 export PYENV_ROOT="${PYENV_ROOT:-$XDG_DATA_HOME/pyenv}"
 # export IPYTHONDIR="${IPYTHONDIR:-$XDG_CONFIG_HOME/ipython}"
 export PYTHONIOENCODING='UTF-8';
@@ -47,10 +45,6 @@ export PYTHONIOENCODING='UTF-8';
 # export PYTHONSTARTUP="${PYTHONSTARTUP:-$XDG_CONFIG_HOME/python/pythonrc}"
 # export MPLCONFIGDIR="${MPLCONFIGDIR:-$XDG_DATA_HOME/matplotlib}"
 export MYPY_CACHE_DIR="${MYPY_CACHE_DIR:-$XDG_CACHE_HOME/mypy_cache}"
-# export PYGMENTIZE_STYLE='paraiso-dark'
-# export PYTHONDONTWRITEBYTECODE=false # TODO: toggle if reviewing bytecode
-# export PIPENV_IGNORE_VIRTUALENVS=-1 # always install to pyenv virtualenv
-# export ZSH_PYENV_LAZY_VIRTUALENV=1 # used by `../plugins/python/zsh-pyenv-lazy-load.zsh`
 
 # R
 # export R_USER="${R_USER:-$XDG_CONFIG_HOME/R}"
