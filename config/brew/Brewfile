@@ -95,8 +95,6 @@ brew "shared-mime-info"
 brew "libheif"
 # Postgres C API library
 brew "libpq"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.9"
 # Adds spatial SQL capabilities to SQLite
 brew "libspatialite"
 # Libraries and data formats for array-oriented scientific data
@@ -147,8 +145,6 @@ brew "lua"
 brew "luarocks"
 # NCurses Disk Usage
 brew "ncdu"
-# Tool Command Language
-brew "tcl-tk"
 # Fast, highly customisable system info script
 brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -183,6 +179,8 @@ brew "prettier"
 brew "prettierd"
 # Linter for prose
 brew "proselint"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.9"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Wrapper around ripgrep that adds multiple rich file types
@@ -205,6 +203,8 @@ brew "stylua"
 brew "subversion"
 # Feature-rich console based todo list manager
 brew "task"
+# Tool Command Language
+brew "tcl-tk"
 # Very fast implementation of tldr in Rust
 brew "tealdeer"
 # Terminal multiplexer
@@ -299,6 +299,8 @@ cask "vlc"
 cask "wezterm"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
+# Gecko based web browser
+cask "zen-browser"
 # Collect, organise, cite, and share research sources
 cask "zotero"
 vscode "aaron-bond.better-comments"
@@ -321,6 +323,7 @@ vscode "james-yu.latex-workshop"
 vscode "janisdd.vscode-edit-csv"
 vscode "johnnymorganz.stylua"
 vscode "johnpapa.vscode-peacock"
+vscode "kahole.magit"
 vscode "kaiwood.center-editor-window"
 vscode "keifererikson.nightfox"
 vscode "kevinrose.vsc-python-indent"
@@ -357,6 +360,7 @@ vscode "streetsidesoftware.code-spell-checker"
 vscode "sumneko.lua"
 vscode "tamasfe.even-better-toml"
 vscode "timonwong.shellcheck"
+vscode "tomrijndorp.find-it-faster"
 vscode "usernamehw.errorlens"
 vscode "valentjn.vscode-ltex"
 vscode "vscodevim.vim"
