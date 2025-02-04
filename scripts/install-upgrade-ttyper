@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+# Function to check if a command is installed and its version
+command_installed() {
+  local command="$1"
+  local desired_version="$2"
+
+  if command -v "$command" &> /dev/null; then
+    if [[ -n "$desired_version" ]]; then
+      local installed_version="$("$command" --version 2>/dev/null | awk '{print $2}' || "$command" -V 2>/dev/null | awk '{print $2}' || "")" # Robust version extraction
+      if [[ "$installed_version" == "$desired_version" ]]; then
+        return 0 # Installed and up-to-date
+      else
+        return 2 # Installed but out-of-date
+      fi
+    else
+      return 0 # Installed (version check skipped)
+    fi
+  else
+    return 1 # Not installed
+  fi
+}
+
+# Function to install or upgrade ttyper
+install_upgrade_ttyper() {
+  local desired_version="$1" # Optional: Specify a version
+
+  if command_installed "ttyper" "$desired_version" == 0; then
+    echo "[SUCCESS] ttyper is already installed and up-to-date."
+    return 0
+  elif command_installed "ttyper" "$desired_version" == 2; then
+    echo "[UPGRADING] ttyper is installed but out-of-date. Upgrading..."
+    cargo install --force ttyper "$desired_version" 2>/dev/null # --force is crucial for upgrades
+    if [[ $? -eq 0 ]]; then
+      echo "[SUCCESS] ttyper upgraded successfully."
+      return 0
+    else
+      echo "[ERROR] Failed to upgrade ttyper."
+      return 1
+    fi
+  else # Not installed
+    echo "[INSTALLING] ttyper is not installed. Installing..."
+    cargo install ttyper "$desired_version" 2>/dev/null
+    if [[ $? -eq 0 ]]; then
+      echo "[SUCCESS] ttyper installed successfully."
+      return 0
+    else
+      echo "[ERROR] Failed to install ttyper."
+      return 1
+    fi
+  fi
+}
+
+# Example usage (install/upgrade to latest version)
+install_upgrade_ttyper
+
+# Example usage (install/upgrade to a specific version - uncomment if needed)
+# install_upgrade_ttyper "0.5.0"  # Replace with the desired version

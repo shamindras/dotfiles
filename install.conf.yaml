@@ -107,18 +107,15 @@
       description: upgrade gh extensions
 
 # Load espanso extension
-# TODO: note down instructions to set up espanso security settings
 - shell:
     - command: espanso service register
       description: register espanso app
 
 # Load ttyper
-# TODO: note down instructions to set up espanso security settings
 - shell:
-    - command: cargo install ttyper
-      description: install ttyper
+    - command: ./scripts/install-upgrade-ttyper
+      description: install ttyper, or upgrade to the latest version
 
-# TODO: make this the last item in this script
 # macOS default settings
 - shell:
     - command: ./scripts/macos
