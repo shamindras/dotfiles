@@ -81,9 +81,9 @@
     - config/brew/Brewfile
 
 # rust + cargo
-# - shell:
-#     - command: curl https://sh.rustup.rs -sSf | sh
-#       description: install rust and cargo
+- shell:
+    - command: ./scripts/install-rust-cargo
+      description: install rust and cargo, or upgrade both
 
 # Update bat themes cache
 # NOTE: here we prefix with `command` to use the original `bat` command, without any alias.
