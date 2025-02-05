@@ -116,6 +116,11 @@
     - command: ./scripts/setup-upgrade-ttyper
       description: install ttyper, or upgrade to the latest version
 
+# Install npm packages
+- shell:
+    - command: npm install -g eslint_d prettier
+      description: install eslint_d and prettier using npm
+
 # macOS default settings
 - shell:
     - command: ./scripts/setup-macos
