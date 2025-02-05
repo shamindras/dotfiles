@@ -27,7 +27,7 @@ keymap(
 -- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua#L40-L46
 keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
 keymap('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
--- keymap("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
+keymap('n', '<leader>bd', '<cmd>:bd<cr>', { desc = 'Delete Buffer and Window' })
 
 -- ------------------------------------------------------------------------- }}}
 
@@ -122,11 +122,11 @@ local function toggle_window_maximize()
 end
 
 -- window management
-keymap('n', '<leader>we', '<C-w>=') -- make split windows equal width & height
-keymap('n', '<leader>wh', '<C-w>s') -- split window horizontally
+keymap('n', '<leader>we', '<C-w>=')               -- make split windows equal width & height
+keymap('n', '<leader>wh', '<C-w>s')               -- split window horizontally
 keymap('n', '<leader>wm', toggle_window_maximize) -- toggle maximize active window
-keymap('n', '<leader>wv', '<C-w>v') -- split window vertically
-keymap('n', '<leader>wx', '<cmd>close<CR>') -- close current split window
+keymap('n', '<leader>wv', '<C-w>v')               -- split window vertically
+keymap('n', '<leader>wx', '<cmd>close<CR>')       -- close current split window
 
 -- ------------------------------------------------------------------------- }}}
 
