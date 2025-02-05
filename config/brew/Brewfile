@@ -241,6 +241,7 @@ cask "dropbox"
 cask "espanso"
 # Web browser
 cask "firefox"
+cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
 cask "font-hasklug-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
