@@ -48,9 +48,110 @@ return {
       require('mini.pairs').setup()
     end,
   },
+
   -- General workflow plugins
+  {
+    'echasnovski/mini.bracketed',
+    version = '*',
+    event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
+    config = function()
+      require('mini.bracketed').setup()
+    end,
+  },
+  {
+    'echasnovski/mini.files',
+    version = '*',
+    cmd = {
+      'MiniFiles',
+      'MiniFilesBufferDir',
+      'MiniFilesCursorFile',
+    },
+    keys = {
+      {
+        '<leader>fm',
+        '<cmd>lua MiniFiles.open()<cr>',
+        desc = 'Open Mini Files',
+      },
+      {
+        '<leader>fe',
+        '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>',
+        desc = 'Mini Files Current File',
+      },
+      {
+        '<leader>fh',
+        "<cmd>lua MiniFiles.open('~')<cr>",
+        desc = 'Mini Files Home Dir',
+      },
+    },
+    config = function()
+      local minifiles = require 'mini.files'
+      minifiles.setup {
+        -- Customize windows
+        windows = {
+          -- Maximum number of windows to show side by side
+          max_number = 3,
+          -- Whether to show preview of file/directory under cursor
+          preview = true,
+          -- Width of focused window
+          width_focus = 30,
+          -- Width of non-focused window
+          width_nofocus = 15,
+          -- Width of preview window
+          width_preview = 60,
+        },
+        options = {
+          -- Whether to delete permanently or move into trash
+          permanent_delete = false,
+          -- Whether to use for editing directories
+          use_as_default_explorer = true,
+        },
+      }
+
+      -- Add split window functionality
+      local map_split = function(buf_id, lhs, direction)
+        local rhs = function()
+          -- Make new window and set it as target
+          local new_target_window
+          vim.api.nvim_win_call(minifiles.get_target_window(), function()
+            vim.cmd(direction .. ' split')
+            new_target_window = vim.api.nvim_get_current_win()
+          end)
+
+          minifiles.set_target_window(new_target_window)
+        end
+
+        -- Adding buffer-local mapping
+        vim.keymap.set('n', lhs, rhs, { buffer = buf_id, desc = 'Split ' .. direction })
+      end
+
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'MiniFilesBufferCreate',
+        callback = function(args)
+          local buf_id = args.data.buf_id
+          -- Add mappings only for mini.files buffer
+          map_split(buf_id, 'gs', 'horizontal') -- Go Split
+          map_split(buf_id, 'gv', 'vertical') -- Go Vertical
+
+          -- Add quit mappings
+          vim.keymap.set('n', 'q', MiniFiles.close, { buffer = buf_id, desc = 'Close Mini Files' })
+          vim.keymap.set('n', 'Q', function()
+            MiniFiles.close()
+            -- Ensure all mini.files windows are closed
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              local buf = vim.api.nvim_win_get_buf(win)
+              local buf_name = vim.api.nvim_buf_get_name(buf)
+              if buf_name:match 'mini.files' then
+                vim.api.nvim_win_close(win, true)
+              end
+            end
+          end, { buffer = buf_id, desc = 'Force Close Mini Files' })
+        end,
+      })
+    end,
+  },
 
   -- Appearance plugins
+
   {
     'echasnovski/mini.statusline',
     version = '*',
