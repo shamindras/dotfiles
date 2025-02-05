@@ -62,15 +62,6 @@ return {
         lua_ls = {
           -- Your existing lua_ls configuration
         },
-        checkmake = {
-          -- Your existing lua_ls configuration
-        },
-        eslint_d = {
-          -- Your existing lua_ls configuration
-        },
-        shfmt = {
-          -- Your existing lua_ls configuration
-        },
         ruff = {
           -- Your existing lua_ls configuration
         },
