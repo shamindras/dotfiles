@@ -290,11 +290,6 @@ run = "move-node-to-workspace D"
 if.app-id = "com.apple.finder"
 run = "move-node-to-workspace E"
 
-# jDownloader
-[[on-window-detected]]
-if.app-id = "org.jdownloader.launcher"
-run = "move-node-to-workspace 6"
-
 # Si[G]nal
 [[on-window-detected]]
 if.app-id = "org.whispersystems.signal-desktop"
@@ -323,6 +318,11 @@ run = "move-node-to-workspace P"
 # [S]potify
 [[on-window-detected]]
 if.app-id = "com.spotify.client"
+run = "move-node-to-workspace S"
+
+# [S]lack
+[[on-window-detected]]
+if.app-id = "com.tinyspeck.slackmacgap"
 run = "move-node-to-workspace S"
 
 # [T]erminal
