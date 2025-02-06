@@ -20,8 +20,8 @@ require('lazy').setup({
   require 'shamindras.plugins.which-key',
 
   -- fuzzy finder
-  require 'shamindras.plugins.telescope',
-  -- require 'shamindras.plugins.snacks-picker',
+  -- require 'shamindras.plugins.telescope',
+  require 'shamindras.plugins.snacks-picker',
 
   -- lsp
   require 'shamindras.plugins.lspconfig',
