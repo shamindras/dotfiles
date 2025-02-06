@@ -6,15 +6,15 @@
 
 function z1_aliases {
     alias -- -='z -' # note we need -- since command begins with -
-    alias ~='z ~'                              # Go Home
+    alias ~='z ~'    # Go Home
     alias ..='z ..'
     alias ...='z ../..'
     alias ....='z ../../..'
-    alias .2='z ../../'                        # Go up 2 dirs
-    alias .3='z ../../../'                     # Go up 3 dirs
-    alias .4='z ../../../../'                  # Go up 4 dirs
-    alias .5='z ../../../../../'               # Go up 5 dirs
-    alias .6='z ../../../../../../'            # Go up 6 dirs
+    alias .2='z ../../'             # Go up 2 dirs
+    alias .3='z ../../../'          # Go up 3 dirs
+    alias .4='z ../../../../'       # Go up 4 dirs
+    alias .5='z ../../../../../'    # Go up 5 dirs
+    alias .6='z ../../../../../../' # Go up 6 dirs
     alias asl='aerospace list-apps'
     alias asr='aerospace reload-config;clear;'
     alias asf='(killall AeroSpace || true) && open -a AeroSpace;clear;' # [a]eroSpace [f]orced [r]estart
@@ -38,10 +38,10 @@ function z1_aliases {
     alias less='less -R'
     alias md='mkdir -p'
     alias man='batman'
-    alias n='nvim .;clear'
-    alias nm='nvim;clear'
+    alias n='nvim;clear'
+    alias nn='nvim .;clear'
     alias nb='newsboat;clear;'
-    alias paths='echo -e ${PATH//:/\\n}'       # Echo all executable Paths
+    alias paths='echo -e ${PATH//:/\\n}' # Echo all executable Paths
     alias rcp='rsync -ah --info=progress2'
     alias rmi='rm -i'
     alias rmf='rm -rf'
@@ -87,7 +87,7 @@ function z1_aliases {
     alias play='z ~/DROPBOX/REPOS/pyplay;clear;'
 
     # source: running `xdg-ninja` in `$HOME` gave these suggestion
-    # subversion 
+    # subversion
     alias svn="svn --config-dir ${XDG_CONFIG_HOME}/subversion"
     alias gpg='${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\"'
     alias wget='wget --hsts-file=\"$XDG_DATA_HOME/wget-hsts\"'
@@ -95,7 +95,7 @@ function z1_aliases {
     # Additional clean/wash aliases --
     # Source: https://github.com/sharkdp/fd/discussions/1615
     # Adapted from: https://github.com/ameensol/shell/blob/master/.zshenv#L29-L30
-    
+
     # clean up current directory
     alias clean="fd '\.(DS_Store|swo|swp)$|~$' -d1 -tf -u -X rm"
 
