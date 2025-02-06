@@ -23,7 +23,7 @@
   ui = true
 
 [core]
-  editor = vim
+  editor = nvim
   excludesfile = ~/.config/git/ignore
   pager = delta
 	attributesfile = ~/.config/git/attributes
@@ -76,7 +76,7 @@
   tool = vimdiff
 
 [mergetool]
-  path = vim
+  path = nvim
 
 [pull]
 	rebase = true
