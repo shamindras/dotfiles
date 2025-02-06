@@ -98,6 +98,8 @@ return {
           width_nofocus = 15,
           -- Width of preview window
           width_preview = 60,
+          -- Use mini.icons for file icons
+          use_icons = true,
         },
         options = {
           -- Whether to delete permanently or move into trash
@@ -151,7 +153,6 @@ return {
   },
 
   -- Appearance plugins
-
   {
     'echasnovski/mini.statusline',
     version = '*',
@@ -169,6 +170,14 @@ return {
       end
     end,
   },
-}
 
--- vim: ts=2 sts=2 sw=2 et
+  -- Add mini.icons plugin
+  {
+    'echasnovski/mini.icons',
+    version = '*',
+    event = 'VeryLazy',
+    config = function()
+      require('mini.icons').setup()
+    end,
+  },
+}
