@@ -5,9 +5,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-require 'shamindras.core.options'        -- general options
-require 'shamindras.core.autocmds'       -- autocommands
-require 'shamindras.core.keymaps'        -- custom keymaps
+require 'shamindras.core.options' -- general options
+require 'shamindras.core.autocmds' -- autocommands
+require 'shamindras.core.keymaps' -- custom keymaps
 require 'shamindras.core.lazy-bootstrap' -- lazy package manager
 
 -- [[ Configure and install plugins ]]
@@ -21,6 +21,7 @@ require('lazy').setup({
 
   -- fuzzy finder
   require 'shamindras.plugins.telescope',
+  -- require 'shamindras.plugins.snacks-picker',
 
   -- lsp
   require 'shamindras.plugins.lspconfig',
