@@ -27,6 +27,7 @@ return {
       end,
     },
     { 'nvim-telescope/telescope-ui-select.nvim', lazy = true },
+    -- TODO: using mini.icons instead of nvim-web-devicons
     {
       'nvim-tree/nvim-web-devicons',
       enabled = vim.g.have_nerd_font,
