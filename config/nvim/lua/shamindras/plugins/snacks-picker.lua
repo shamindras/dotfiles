@@ -6,17 +6,17 @@ return {
     -- Custom fd args for the find files picker
     local fd_args = {
       '--type',
-      'f', -- Only files
+      'f',                  -- Only files
       '--strip-cwd-prefix', -- Strip the cwd prefix
-      '--hidden', -- Include hidden files
-      '--no-ignore-vcs', -- Don't respect .gitignore
+      '--hidden',           -- Include hidden files
+      '--no-ignore-vcs',    -- Don't respect .gitignore
       '--exclude',
-      '.git', -- Exclude .git directory
+      '.git',               -- Exclude .git directory
       '--exclude',
-      'node_modules', -- Exclude node_modules directory
+      'node_modules',       -- Exclude node_modules directory
       '--exclude',
-      'submods', -- Exclude submods directory
-      '--follow', -- Follow symlinks
+      'submods',            -- Exclude submods directory
+      '--follow',           -- Follow symlinks
     }
 
     -- Wrapper function to apply ivy layout to a picker
@@ -29,8 +29,8 @@ return {
     -- Wrapper for the find files picker using fd with custom args
     local function find_files_with_fd(opts)
       opts = opts or {}
-      opts.cmd = 'fd' -- Use fd as the command
-      opts.args = fd_args -- Pass custom fd args to override default
+      opts.cmd = 'fd'                            -- Use fd as the command
+      opts.args = fd_args                        -- Pass custom fd args to override default
       with_ivy_layout(Snacks.picker.files, opts) -- Apply ivy layout to files picker
     end
 
