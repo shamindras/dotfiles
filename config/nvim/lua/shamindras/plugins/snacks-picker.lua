@@ -1,153 +1,88 @@
--- Define keymap configurations once
-local keymap_configs = {
-  { key = '<leader>sf', picker = 'files', desc = '[S]earch [F]iles' },
-  { key = '<leader>sg', picker = 'grep', desc = '[S]earch by [G]rep' },
-  { key = '<leader>sw', picker = 'grep_string', desc = '[S]earch current [W]ord' },
-  { key = '<leader>sb', picker = 'buffers', desc = '[S]earch [B]uffers' },
-  { key = '<leader>sh', picker = 'help', desc = '[S]earch [H]elp' },
-  { key = '<leader>sk', picker = 'keymaps', desc = '[S]earch [K]eymaps' },
-  { key = '<leader>ss', picker = 'pickers', desc = '[S]earch [S]elect Picker' },
-  { key = '<leader>sd', picker = 'diagnostics', desc = '[S]earch [D]iagnostics' },
-  { key = '<leader>sr', picker = 'resume', desc = '[S]earch [R]esume' },
-  { key = '<leader>s.', picker = 'oldfiles', desc = '[S]earch Recent Files' },
-  {
-    key = '<leader>/',
-    picker = 'buffer_lines',
-    desc = '[/] Fuzzily search in current buffer',
-    opts = { winblend = 10 },
-  },
-  {
-    key = '<leader>s/',
-    picker = 'grep',
-    desc = '[S]earch [/] in Open Files',
-    opts = {
-      grep_open_files = true,
-      prompt_title = 'Live Grep in Open Files',
-    },
-  },
-  {
-    key = '<leader>sn',
-    picker = 'files',
-    desc = '[S]earch [N]eovim files',
-    opts = function()
-      return { cwd = vim.fn.stdpath 'config' }
-    end,
-  },
-}
-
-local M = {
+return {
   'folke/snacks.nvim',
-  lazy = true,
-  cmd = 'Snacks',
-  keys = function()
-    return vim.tbl_map(function(k)
-      return { k.key, mode = 'n', desc = k.desc }
-    end, keymap_configs)
-  end,
-  dependencies = {
-    {
-      'nvim-tree/nvim-web-devicons',
-      enabled = vim.g.have_nerd_font,
-      lazy = true,
-      module = true,
-    },
-  },
-  init = function()
-    vim.g.snacks_ignore_patterns = {
-      '.git/',
-      'node_modules/',
-      '.next/',
-      '.yarn/',
-      '.venv/',
-      '.idea/',
-      '.vscode/',
-      '.env',
-      '.DS_Store',
-      'target/',
-      'build/',
-      'dist/',
-      'vendor/',
-      'submods/', -- Ensure this is recognized
-    }
-  end,
   config = function()
-    local snacks = require 'snacks'
+    local Snacks = require 'snacks'
 
-    snacks.setup {
-      defaults = {
-        layout = 'ivy', -- Set ivy as the default layout
-        previewer = true,
-      },
-      layouts = {
-        ivy = { -- Configure the ivy layout
-          height = 0.4,
-          preview = {
-            side = 'right',
-            width = 0.6,
-          },
-        },
-      },
-      picker = {
-        fd = {
-          cmd = {
-            'fd',
-            '--type',
-            'f',
-            '--strip-cwd-prefix',
-            '--hidden',
-            '--no-ignore-vcs',
-            '--exclude',
-            '.git',
-            '--exclude',
-            'node_modules',
-            '--exclude',
-            'submods', -- Explicitly exclude submods here for fd
-            '--follow',
-          },
-        },
-        rg = {
-          cmd = {
-            'rg',
-            '--color=never',
-            '--no-heading',
-            '--with-filename',
-            '--line-number',
-            '--column',
-            '--smart-case',
-            '--hidden',
-            '--glob=!.git/*',
-            '--glob=!node_modules/*',
-            '--glob=!submods/*', -- Explicitly exclude submods here for rg
-            '--no-ignore-vcs',
-            '--no-ignore-parent',
-            '--follow',
-          },
-        },
-        ignore = vim.g.snacks_ignore_patterns, -- Use ignore patterns defined in init()
-        cache = {
-          ttl = 3600,
-          size = 1000,
-        },
-      },
+    -- Custom fd args for the find files picker
+    local fd_args = {
+      '--type',
+      'f', -- Only files
+      '--strip-cwd-prefix', -- Strip the cwd prefix
+      '--hidden', -- Include hidden files
+      '--no-ignore-vcs', -- Don't respect .gitignore
+      '--exclude',
+      '.git', -- Exclude .git directory
+      '--exclude',
+      'node_modules', -- Exclude node_modules directory
+      '--exclude',
+      'submods', -- Exclude submods directory
+      '--follow', -- Follow symlinks
     }
 
-    -- Check if the Ivy layout is being applied properly
-    print 'Configured Snacks with Ivy layout'
-
-    -- Simplified picker command creation
-    local function create_picker_command(picker_type, opts)
-      return function()
-        local final_opts =
-          vim.tbl_deep_extend('force', {}, opts or {}, type(opts) == 'function' and opts() or {})
-        snacks.picker[picker_type](final_opts)
-      end
+    -- Wrapper function to apply ivy layout to a picker
+    local function with_ivy_layout(picker_func, opts)
+      opts = opts or {}
+      opts.layout = { preset = 'ivy', position = 'bottom' } -- Set Ivy layout by default
+      picker_func(opts)
     end
 
-    -- Setup keymaps
-    for _, k in ipairs(keymap_configs) do
-      vim.keymap.set('n', k.key, create_picker_command(k.picker, k.opts), { desc = k.desc })
+    -- Wrapper for the find files picker using fd with custom args
+    local function find_files_with_fd(opts)
+      opts = opts or {}
+      opts.cmd = 'fd' -- Use fd as the command
+      opts.args = fd_args -- Pass custom fd args to override default
+      with_ivy_layout(Snacks.picker.files, opts) -- Apply ivy layout to files picker
     end
+
+    -- Set up Snacks with your configuration
+    Snacks.setup {
+      picker = {},
+      explorer = {},
+    }
+
+    -- Helper function for key mapping
+    local function map_key(key, picker_func, desc)
+      vim.keymap.set('n', key, function()
+        picker_func()
+      end, { noremap = true, silent = true, desc = desc })
+    end
+
+    -- Key mappings using the wrapper functions with meaningful mnemonics
+    map_key('<leader><space>', function()
+      with_ivy_layout(Snacks.picker.smart)
+    end, '[S]mart [F]ind Files')
+    map_key('<leader>,', function()
+      with_ivy_layout(Snacks.picker.buffers)
+    end, '[F]ind [B]uffers (Ivy Layout)')
+    map_key('<leader>/', function()
+      with_ivy_layout(Snacks.picker.grep)
+    end, '[F]ind [G]rep')
+    map_key('<leader>:', function()
+      with_ivy_layout(Snacks.picker.command_history)
+    end, '[C]ommand [H]istory')
+    map_key('<leader>n', function()
+      with_ivy_layout(Snacks.picker.notifications)
+    end, '[N]otification [H]istory')
+    map_key('<leader>e', Snacks.explorer, '[F]ile [E]xplorer')
+
+    -- Key mapping for custom find files with fd and ivy layout
+    map_key('<leader>ff', find_files_with_fd, '[F]ind [F]iles')
+
+    -- More key mappings with ivy layout and better mnemonics
+    map_key('<leader>fb', function()
+      with_ivy_layout(Snacks.picker.buffers)
+    end, '[F]ind [B]uffers (Ivy Layout)')
+    map_key('<leader>fc', function()
+      with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath 'config' })
+    end, '[F]ind [C]onfig file')
+    map_key('<leader>fg', function()
+      with_ivy_layout(Snacks.picker.git_files)
+    end, '[F]ind [G]it [F]iles')
+    map_key('<leader>fp', function()
+      with_ivy_layout(Snacks.picker.projects)
+    end, '[F]ind [P]rojects')
+    map_key('<leader>fr', function()
+      with_ivy_layout(Snacks.picker.recent)
+    end, '[F]ind [R]ecent')
   end,
 }
-
-return M
