@@ -53,7 +53,7 @@ return {
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities =
-          vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+        vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       local servers = {
         pylsp = {
@@ -71,9 +71,9 @@ return {
       require('mason').setup {
         ui = {
           icons = {
-            package_installed = '?',
-            package_pending = '?',
-            package_uninstalled = '?',
+            package_installed = '✅',
+            package_pending = '🟡',
+            package_uninstalled = '❌',
           },
         },
       }
@@ -86,7 +86,7 @@ return {
           function(server_name)
             local server = servers[server_name] or {}
             server.capabilities =
-                vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+              vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
         },

@@ -128,6 +128,10 @@ function M.setup_keymaps()
     M.with_ivy_layout(Snacks.picker.recent)
   end, '[F]ind [R]ecent')
 
+  map_key('<leader>fi', function()
+    M.with_ivy_layout(Snacks.picker.icons)
+  end, '[F]ind [I]cons')
+
   map_key('<leader>lg', function()
     Snacks.lazygit()
   end, '[L]azy[G]it')
