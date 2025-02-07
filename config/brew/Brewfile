@@ -29,6 +29,8 @@ brew "bat-extras"
 brew "btop"
 # Core application library for C
 brew "glib"
+# Linter/analyzer for Makefiles
+brew "checkmake"
 # Defines a standard way of committing rules and communicating it
 brew "commitizen"
 # GNU multiple precision arithmetic library
@@ -245,6 +247,7 @@ cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
 cask "font-hasklug-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
+cask "font-maple-mono"
 cask "font-monaspace-nerd-font"
 cask "font-sf-pro"
 cask "font-symbols-only-nerd-font"
