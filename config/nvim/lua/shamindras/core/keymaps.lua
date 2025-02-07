@@ -26,7 +26,6 @@ keymap(
 -- TODO: integrate these once snacks.nvim is installed
 -- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua#L40-L46
 keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
-keymap('n', '<leader>`', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
 keymap('n', '<leader>bd', '<cmd>:bd<cr>', { desc = 'Delete Buffer and Window' })
 
 -- ------------------------------------------------------------------------- }}}
@@ -122,11 +121,11 @@ local function toggle_window_maximize()
 end
 
 -- window management
-keymap('n', '<leader>we', '<C-w>=')               -- make split windows equal width & height
-keymap('n', '<leader>wh', '<C-w>s')               -- split window horizontally
+keymap('n', '<leader>we', '<C-w>=') -- make split windows equal width & height
+keymap('n', '<leader>wh', '<C-w>s') -- split window horizontally
 keymap('n', '<leader>wm', toggle_window_maximize) -- toggle maximize active window
-keymap('n', '<leader>wv', '<C-w>v')               -- split window vertically
-keymap('n', '<leader>wx', '<cmd>close<CR>')       -- close current split window
+keymap('n', '<leader>wv', '<C-w>v') -- split window vertically
+keymap('n', '<leader>wx', '<cmd>close<CR>') -- close current split window
 
 -- ------------------------------------------------------------------------- }}}
 
@@ -175,5 +174,20 @@ keymap('n', 'zj', 'zcjzOzz', { desc = 'Close fold & open next one' })
 
 -- Close current fold when open. Always open previous fold.
 keymap('n', 'zk', 'zckzOzz', { desc = 'Close fold & open previous one' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ lazy.nvim keymaps
+
+-- source: lazy.nvim default keymaps integrated with folke/lazy.nvim
+keymap('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = '[L]azy Menu' })
+keymap('n', '<leader>lu', '<cmd>Lazy update<cr>', { desc = '[L]azy [U]pdate' })
+keymap('n', '<leader>ls', '<cmd>Lazy sync<cr>', { desc = '[L]azy [S]ync' })
+keymap('n', '<leader>lc', '<cmd>Lazy clean<cr>', { desc = '[L]azy [C]lean' })
+keymap('n', '<leader>lx', '<cmd>Lazy check<cr>', { desc = '[L]azy Check' })
+keymap('n', '<leader>li', '<cmd>Lazy install<cr>', { desc = '[L]azy [I]nstall' })
+keymap('n', '<leader>lp', '<cmd>Lazy profile<cr>', { desc = '[L]azy [P]rofile' })
+keymap('n', '<leader>lr', '<cmd>Lazy restore<cr>', { desc = '[L]azy [R]estore' })
+keymap('n', '<leader>ld', '<cmd>Lazy debug<cr>', { desc = '[L]azy [D]ebug' })
 
 -- ------------------------------------------------------------------------- }}}
