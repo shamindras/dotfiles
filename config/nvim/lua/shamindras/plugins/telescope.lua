@@ -13,12 +13,12 @@ return {
     { '<leader>sr', desc = '[S]earch [R]esume' },
     { '<leader>s.', desc = '[S]earch Recent Files' },
     { '<leader>sb', desc = '[S]earch [B]uffers' },
-    { '<leader>/',  desc = '[/] Fuzzily search in current buffer' },
+    { '<leader>/', desc = '[/] Fuzzily search in current buffer' },
     { '<leader>s/', desc = '[S]earch [/] in Open Files' },
     { '<leader>sn', desc = '[S]earch [N]eovim files' },
   },
   dependencies = {
-    { 'nvim-lua/plenary.nvim',                   lazy = true },
+    { 'nvim-lua/plenary.nvim', lazy = true },
     {
       'nvim-telescope/telescope-fzf-native.nvim',
       build = 'make',
@@ -67,12 +67,12 @@ return {
           '--line-number',
           '--column',
           '--smart-case',
-          '--hidden',               -- Search hidden files
-          '--glob=!.git/*',         -- Exclude .git directory
+          '--hidden', -- Search hidden files
+          '--glob=!.git/*', -- Exclude .git directory
           '--glob=!node_modules/*', -- Exclude node_modules
-          '--no-ignore-vcs',        -- Don't respect .gitignore
-          '--no-ignore-parent',     -- Don't respect parent directory ignores
-          '--follow',               -- Follow symlinks
+          '--no-ignore-vcs', -- Don't respect .gitignore
+          '--no-ignore-parent', -- Don't respect parent directory ignores
+          '--follow', -- Follow symlinks
         },
         set_env = { COLORTERM = 'truecolor' },
         cache_picker = {
@@ -88,10 +88,10 @@ return {
             '--type',
             'f',
             '--strip-cwd-prefix',
-            '--hidden',        -- Include hidden files
+            '--hidden', -- Include hidden files
             '--no-ignore-vcs', -- Don't respect .gitignore
             '--exclude',
-            '.git',            -- Exclude .git directory
+            '.git', -- Exclude .git directory
             '--exclude',
             'node_modules',
             '--follow', -- Follow symlinks

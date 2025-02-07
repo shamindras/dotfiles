@@ -146,6 +146,7 @@ keymap('x', '<leader>p', '"_dP')
 keymap('n', '<leader>y', '"+y')
 keymap('v', '<leader>y', '"+y')
 keymap('n', '<leader>Y', '"+Y')
+keymap('n', '<leader>yb', '<cmd>%y+<CR>')
 
 keymap('n', '<leader>d', '"_d')
 keymap('v', '<leader>d', '"_d')

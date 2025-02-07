@@ -64,7 +64,7 @@ vim.api.nvim_create_autocmd({ 'VimResized' }, {
 
 -- Goto last location when opening a buffer.
 local go_last_location_buffer_group =
-    vim.api.nvim_create_augroup('go_last_location_buffer', { clear = true })
+  vim.api.nvim_create_augroup('go_last_location_buffer', { clear = true })
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')

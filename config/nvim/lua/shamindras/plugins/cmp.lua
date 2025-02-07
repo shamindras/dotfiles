@@ -36,8 +36,8 @@ return {
 
       cmp.setup {
         performance = {
-          debounce = 60,          -- Delay completions to save CPU
-          throttle = 30,          -- Throttle completion menu updates
+          debounce = 60, -- Delay completions to save CPU
+          throttle = 30, -- Throttle completion menu updates
           fetching_timeout = 100, -- Timeout for completion requests
         },
 
@@ -50,7 +50,7 @@ return {
         -- Optimize loading by setting a reasonable size limit
         completion = {
           completeopt = 'menu,menuone,noinsert',
-          keyword_length = 2,  -- Start completing after 2 characters
+          keyword_length = 2, -- Start completing after 2 characters
           max_item_count = 20, -- Limit number of suggestions
         },
 

@@ -106,8 +106,8 @@ return {
         local file_size = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
         -- Don't attach to large files or binary files
         return file_size
-            and #file_size < 100000
-            and not vim.tbl_contains({ 'binary', 'help' }, file_type)
+          and #file_size < 100000
+          and not vim.tbl_contains({ 'binary', 'help' }, file_type)
       end,
       on_attach = function(client, bufnr)
         if client.supports_method 'textDocument/formatting' then
