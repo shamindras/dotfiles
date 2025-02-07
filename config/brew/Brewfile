@@ -251,6 +251,7 @@ cask "font-maple-mono"
 cask "font-monaspace-nerd-font"
 cask "font-sf-pro"
 cask "font-symbols-only-nerd-font"
+cask "font-victor-mono"
 # Web browser
 cask "google-chrome"
 # Client for the Google Drive storage service
