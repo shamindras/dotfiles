@@ -17,7 +17,9 @@ end
 function M.setup(config)
   -- Font configuration
   config.font =
-      wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
+  -- wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
+  -- wezterm.font { family = 'Victor Mono', weight = 'Regular' }
+      wezterm.font { family = 'Maple Mono', weight = 'Regular' }
   config.font_size = 20
 
   -- Color scheme and window appearance
