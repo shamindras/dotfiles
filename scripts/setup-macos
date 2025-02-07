@@ -319,7 +319,6 @@ defaults write com.apple.dock show-recents -bool false
 # move windows by holding ctrl+cmd and dragging any part of the window
 # (not necessarily the window title)
 # source: https://github.com/nikitabobko/AeroSpace?tab=readme-ov-file#tip-of-the-day
-
 defaults write -g NSWindowShouldDragOnGesture -bool true
 
 # Ensure that pdf readers Skim and Preview never default to tab mode
