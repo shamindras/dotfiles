@@ -1,28 +1,49 @@
 return {
   'folke/snacks.nvim',
+  event = {
+    -- Load on specific events for better startup time
+    'VeryLazy',   -- Load after other plugins
+    'BufReadPre', -- Load before reading a file
+  },
+  keys = {
+    -- Pre-define keymaps so lazy.nvim knows about them
+    { '<leader><space>', desc = '[S]mart [F]ind Files' },
+    { '<leader>,',       desc = '[F]ind [B]uffers (Ivy Layout)' },
+    { '<leader>/',       desc = '[F]ind [G]rep' },
+    { '<leader>:',       desc = '[C]ommand [H]istory' },
+    { '<leader>n',       desc = '[N]otification [H]istory' },
+    { '<leader>e',       desc = '[F]ile [E]xplorer' },
+    { '<leader>ff',      desc = '[F]ind [F]iles' },
+    { '<leader>fb',      desc = '[F]ind [B]uffers (Ivy Layout)' },
+    { '<leader>fc',      desc = '[F]ind [C]onfig file' },
+    { '<leader>fg',      desc = '[F]ind [G]it [F]iles' },
+    { '<leader>fp',      desc = '[F]ind [P]rojects' },
+    { '<leader>fr',      desc = '[F]ind [R]ecent' },
+    { '<leader>lg',      desc = '[L]azy[G]it' },
+  },
   config = function()
     local Snacks = require 'snacks'
 
     -- Layout configuration
     local layout_config = {
-      height = 0.6,        -- Height as a percentage of the screen (0.0 to 1.0)
-      preview_width = 0.6, -- Preview width as a percentage of the screen
+      height = 0.7,
+      preview_width = 0.6,
     }
 
     -- Custom fd args for the find files picker
     local fd_args = {
       '--type',
-      'f',                  -- Only files
-      '--strip-cwd-prefix', -- Strip the cwd prefix
-      '--hidden',           -- Include hidden files
-      '--no-ignore-vcs',    -- Don't respect .gitignore
+      'f',
+      '--strip-cwd-prefix',
+      '--hidden',
+      '--no-ignore-vcs',
       '--exclude',
-      '.git',               -- Exclude .git directory
+      '.git',
       '--exclude',
-      'node_modules',       -- Exclude node_modules directory
+      'node_modules',
       '--exclude',
-      'submods',            -- Exclude submods directory
-      '--follow',           -- Follow symlinks
+      'submods',
+      '--follow',
     }
 
     -- Custom ivy layout configuration
@@ -57,7 +78,6 @@ return {
         ivy = ivy_layout,
       }
       opts.layout = 'ivy'
-      -- Add the matcher configuration for frecency
       opts.matcher = {
         sort_empty = true,
         cwd_bonus = true,
@@ -70,25 +90,24 @@ return {
     -- Wrapper for the find files picker using fd with custom args
     local function find_files_with_fd(opts)
       opts = opts or {}
-      opts.cmd = 'fd'                            -- Use fd as the command
-      opts.args = fd_args                        -- Pass custom fd args to override default
-      with_ivy_layout(Snacks.picker.files, opts) -- Apply ivy layout to files picker
+      opts.cmd = 'fd'
+      opts.args = fd_args
+      with_ivy_layout(Snacks.picker.files, opts)
     end
 
     -- Set up Snacks with minimal configuration
     Snacks.setup {
       picker = {
         matcher = {
-          sort_empty = true,    -- Default: false
-          cwd_bonus = true,     -- Default: false
-          frecency = true,      -- Default: false
-          history_bonus = true, -- Default: false
+          sort_empty = true,
+          cwd_bonus = true,
+          frecency = true,
+          history_bonus = true,
         },
       },
       explorer = {},
-      -- Minimal lazygit configuration
       lazygit = {
-        configure = false, -- Disable automatic configuration
+        configure = false,
         win = {
           style = 'lazygit',
           width = 0.99,
@@ -98,7 +117,13 @@ return {
           border = 'none',
         },
       },
+      opts = {
+        indent = {},
+      },
     }
+
+    -- Enable indent guides
+    -- Snacks.indent.enable()
 
     -- Helper function for key mapping
     local function map_key(key, picker_func, desc)
@@ -107,7 +132,7 @@ return {
       end, { noremap = true, silent = true, desc = desc })
     end
 
-    -- Key mappings using the wrapper functions with meaningful mnemonics
+    -- Key mappings using the wrapper functions
     map_key('<leader><space>', function()
       with_ivy_layout(Snacks.picker.smart)
     end, '[S]mart [F]ind Files')
@@ -124,11 +149,7 @@ return {
       with_ivy_layout(Snacks.picker.notifications)
     end, '[N]otification [H]istory')
     map_key('<leader>e', Snacks.explorer, '[F]ile [E]xplorer')
-
-    -- Key mapping for custom find files with fd and ivy layout
     map_key('<leader>ff', find_files_with_fd, '[F]ind [F]iles')
-
-    -- More key mappings with ivy layout and better mnemonics
     map_key('<leader>fb', function()
       with_ivy_layout(Snacks.picker.buffers)
     end, '[F]ind [B]uffers (Ivy Layout)')
@@ -144,7 +165,6 @@ return {
     map_key('<leader>fr', function()
       with_ivy_layout(Snacks.picker.recent)
     end, '[F]ind [R]ecent')
-    -- Add this with your other key mappings
     map_key('<leader>lg', function()
       Snacks.lazygit()
     end, '[L]azy[G]it')
