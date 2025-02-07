@@ -14,15 +14,12 @@ require 'shamindras.core.lazy-bootstrap' -- lazy package manager
 require('lazy').setup({
 
   -- colorscheme
-  -- require 'shamindras.plugins.tokyonight',
-  -- require 'shamindras.plugins.eldritch',
   require 'shamindras.plugins.colorscheme',
 
   -- which.key
   require 'shamindras.plugins.which-key',
 
   -- fuzzy finder
-  -- require 'shamindras.plugins.telescope',
   require 'shamindras.plugins.snacks-picker',
 
   -- lsp
