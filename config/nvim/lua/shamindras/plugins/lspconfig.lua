@@ -47,13 +47,21 @@ return {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-          -- Your existing LSP attach code here
+          local map = function(keys, func, desc)
+            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          end
+
+          map('gd', vim.lsp.buf.definition, 'Go to Definition')
+          -- Optional: Add these complementary navigation mappings
+          map('gr', vim.lsp.buf.references, 'Go to References')
+          map('gI', vim.lsp.buf.implementation, 'Go to Implementation')
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
         end,
       })
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities =
-        vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+          vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       local servers = {
         pylsp = {
@@ -86,7 +94,7 @@ return {
           function(server_name)
             local server = servers[server_name] or {}
             server.capabilities =
-              vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+                vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
         },

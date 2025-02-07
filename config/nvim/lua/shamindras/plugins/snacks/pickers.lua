@@ -85,7 +85,7 @@ function M.setup_keymaps()
 
   -- Key mappings using the wrapper functions
   map_key('<leader><space>', function()
-    M.with_ivy_layout(Snacks.picker.smart)
+    M.with_ivj_layout(Snacks.picker.smart)
   end, '[S]mart [F]ind Files')
 
   map_key('<leader>,', function()
