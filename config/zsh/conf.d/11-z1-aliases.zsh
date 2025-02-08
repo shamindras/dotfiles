@@ -82,7 +82,7 @@ function z1_aliases {
 
   # directory aliases
   alias conf="z ${XDG_CONFIG_HOME};clear;"
-  alias dots='z ~/DROPBOX/REPOS/dotfiles;clear;'
+  alias dot='z ~/DROPBOX/REPOS/dotfiles;clear;'
   alias down='z ~/Downloads;clear;'
   alias reps='z ~/DROPBOX/REPOS;clear;'
   alias play='z ~/DROPBOX/REPOS/pyplay;clear;'
