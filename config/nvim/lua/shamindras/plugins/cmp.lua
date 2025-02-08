@@ -33,12 +33,15 @@ return {
     config = function()
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-
       cmp.setup {
         performance = {
           debounce = 60, -- Delay completions to save CPU
           throttle = 30, -- Throttle completion menu updates
           fetching_timeout = 100, -- Timeout for completion requests
+          async_budget = 1, -- ms to use for async operations
+          max_view_entries = 100, -- Maximum number of items to show in view
+          filtering_context_budget = 10, -- Budget for filtering context
+          confirm_resolve_timeout = 80, -- Timeout for confirmation resolving
         },
 
         snippet = {
