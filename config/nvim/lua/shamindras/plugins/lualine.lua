@@ -3,23 +3,24 @@ return {
   dependencies = {
     { 'lewis6991/gitsigns.nvim' },
   },
-  enabled = true,
-  event = { 'VeryLazy' },
+  event = {
+    'BufReadPost',
+    'BufNewFile',
+  },
   opts = function()
-    -- TODO: use mini.icons instead
     local icons = {
       diagnostics = {
-        error = '\u{2718}', -- ?
-        warn = '\u{26A0}', -- ?
-        info = '\u{2139}', -- ?
-        hint = '\u{2691}', -- ?
+        error = '\u{2718}',
+        warn = '\u{26A0}',
+        info = '\u{2139}',
+        hint = '\u{2691}',
       },
       git = {
-        added = '\u{271A}', -- ?
-        modified = '\u{2739}', -- ?
-        removed = '\u{2716}', -- ?
-        renamed = '\u{279C}', -- ?
-        untracked = '\u{2605}', -- ?
+        added = '\u{271A}',
+        modified = '\u{2739}',
+        removed = '\u{2716}',
+        renamed = '\u{279C}',
+        untracked = '\u{2605}',
       },
     }
 
@@ -68,7 +69,7 @@ return {
       path = 1,
       symbols = {
         modified = '[+]',
-        readonly = '\u{1F512}', -- ??
+        readonly = '\u{1F512}',
         unnamed = '[No Name]',
         newfile = '[New]',
       },

@@ -1,7 +1,7 @@
 return {
   'mrjones2014/smart-splits.nvim',
   lazy = true, -- Change to true since we'll load it on demand
-  event = { 'WinNew', 'WinEnter' },
+  event = { 'VeryLazy' },
   keys = {
     -- Moving between splits
     {
