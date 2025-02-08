@@ -43,6 +43,7 @@
     ${XDG_CONFIG_HOME}/gh-dash: config/gh-dash
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
+    ${XDG_CONFIG_HOME}/karabiner: config/karabiner
     ${XDG_CONFIG_HOME}/lazygit: config/lazygit
     ${XDG_CONFIG_HOME}/neofetch: config/neofetch
     ${XDG_CONFIG_HOME}/newsboat: config/newsboat
