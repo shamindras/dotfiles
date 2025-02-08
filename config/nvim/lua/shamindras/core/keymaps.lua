@@ -1,5 +1,4 @@
 -- Keymaps
--- Most of these are sourced from lazyvim: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 
 -- {{{ custom keymap helper
 
@@ -149,6 +148,18 @@ keymap('n', '<leader>yb', '<cmd>%y+<CR>')
 
 keymap('n', '<leader>d', '"_d')
 keymap('v', '<leader>d', '"_d')
+keymap(
+  'n',
+  '<leader>bl',
+  '<cmd>%d _<CR>',
+  { noremap = true, desc = 'Clear buffer without copying' }
+)
+keymap(
+  'n',
+  '<leader>bc',
+  '<cmd>%d<CR>',
+  { noremap = true, desc = 'Clear buffer and copy contents' }
+)
 
 -- ------------------------------------------------------------------------- }}}
 
