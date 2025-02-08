@@ -20,7 +20,7 @@ function M.setup(config)
     -- wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
     -- wezterm.font { family = 'Victor Mono', weight = 'Regular' }
     wezterm.font { family = 'Maple Mono', weight = 'Regular' }
-  config.font_size = 20
+  config.font_size = 18
 
   -- Color scheme and window appearance
   config.color_scheme = depending_on_appearance {
@@ -40,7 +40,7 @@ function M.setup(config)
   config.window_padding = {
     left = 0,
     right = 0,
-    top = 2,
+    top = 0,
     bottom = 0,
   }
 
