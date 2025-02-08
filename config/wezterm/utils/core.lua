@@ -1,6 +1,5 @@
 -- modules/core.lua
 local M = {}
-local wezterm = require 'wezterm'
 
 function M.setup(config)
   -- Environment variables

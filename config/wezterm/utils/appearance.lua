@@ -17,9 +17,9 @@ end
 function M.setup(config)
   -- Font configuration
   config.font =
-  -- wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
-  -- wezterm.font { family = 'Victor Mono', weight = 'Regular' }
-      wezterm.font { family = 'Maple Mono', weight = 'Regular' }
+    -- wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
+    -- wezterm.font { family = 'Victor Mono', weight = 'Regular' }
+    wezterm.font { family = 'Maple Mono', weight = 'Regular' }
   config.font_size = 20
 
   -- Color scheme and window appearance
@@ -35,6 +35,14 @@ function M.setup(config)
   config.macos_window_background_blur = 4
   config.window_close_confirmation = 'NeverPrompt'
   config.native_macos_fullscreen_mode = true
+
+  -- Window padding
+  config.window_padding = {
+    left = 0,
+    right = 0,
+    top = 2,
+    bottom = 0,
+  }
 
   return config
 end
