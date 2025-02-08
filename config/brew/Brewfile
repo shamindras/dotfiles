@@ -143,6 +143,8 @@ brew "lazygit"
 brew "libmng"
 # Powerful, lightweight programming language
 brew "lua"
+# Tool for linting and static analysis of Lua code
+brew "luacheck"
 # Package manager for the Lua programming language
 brew "luarocks"
 # NCurses Disk Usage
@@ -219,6 +221,8 @@ brew "uv"
 brew "wget"
 # Check your $HOME for unwanted files and directories
 brew "xdg-ninja"
+# Linter for YAML files
+brew "yamllint"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
@@ -264,6 +268,8 @@ cask "jdownloader"
 cask "jordanbaird-ice"
 # Programming language for technical computing
 cask "julia"
+# Keyboard customiser
+cask "karabiner-elements"
 # Free cross-platform office suite, fresh version
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications
