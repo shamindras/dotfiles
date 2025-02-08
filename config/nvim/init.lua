@@ -1,16 +1,25 @@
 -- Adapted from the amazing kickstart.nvim
 
+-- {{{ Set leader keys -------------------------------------------------------------------------------
+
 -- Set <space> as the leader key
 -- Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+-- }}}
+
+-- {{{ Load custom settings --------------------------------------------------------------------------
 
 require 'shamindras.core.options' -- general options
 require 'shamindras.core.autocmds' -- autocommands
 require 'shamindras.core.keymaps' -- custom keymaps
 require 'shamindras.core.lazy-bootstrap' -- lazy package manager
 
--- [[ Configure and install plugins ]]
+-- }}}
+
+-- {{{ Configure and install plugins ------------------------------------------------------------------------
+
 require('lazy').setup({
 
   -- colorscheme
@@ -51,7 +60,7 @@ require('lazy').setup({
   require 'shamindras.plugins.smart-splits',
 
   -- tabout
-  -- require 'shamindras.plugins.tabout',
+  require 'shamindras.plugins.tabout',
 }, {
   defaults = { lazy = false },
   install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },
@@ -113,5 +122,7 @@ require('lazy').setup({
     },
   },
 })
+
+-- }}}
 
 -- vim: ts=2 sts=2 sw=2 et
