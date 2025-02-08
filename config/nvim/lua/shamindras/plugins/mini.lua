@@ -32,14 +32,6 @@ return {
       }
     end,
   },
-  -- {
-  --   'echasnovski/mini.ai',
-  --   version = '*',
-  --   event = 'VeryLazy', -- Load after startup
-  --   config = function()
-  --     require('mini.ai').setup()
-  --   end,
-  -- },
   {
     'echasnovski/mini.operators',
     version = '*',
@@ -163,7 +155,7 @@ return {
           local buf_id = args.data.buf_id
           -- Add mappings only for mini.files buffer
           map_split(buf_id, 'gs', 'horizontal') -- Go Split
-          map_split(buf_id, 'gv', 'vertical')   -- Go Vertical
+          map_split(buf_id, 'gv', 'vertical') -- Go Vertical
 
           -- Add quit mappings
           vim.keymap.set('n', 'q', MiniFiles.close, { buffer = buf_id, desc = 'Close Mini Files' })
