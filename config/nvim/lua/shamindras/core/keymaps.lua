@@ -65,6 +65,11 @@ keymap('v', '<', '<gv^')
 -- change in word
 keymap('n', '<C-c>', 'ciw')
 
+-- Remap <Esc> in insert mode based on cursor position
+vim.keymap.set('i', '<Esc>', function()
+  return vim.fn.col '.' == 1 and '<Esc>' or '<Esc>l'
+end, { expr = true, desc = 'Exit insert, move right' })
+
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ navigation
