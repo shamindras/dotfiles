@@ -16,6 +16,9 @@ require('lazy').setup({
   -- colorscheme
   require 'shamindras.plugins.colorscheme',
 
+  -- statusline
+  require 'shamindras.plugins.lualine',
+
   -- which.key
   require 'shamindras.plugins.which-key',
 
@@ -48,7 +51,7 @@ require('lazy').setup({
   require 'shamindras.plugins.smart-splits',
 
   -- tabout
-  require 'shamindras.plugins.tabout',
+  -- require 'shamindras.plugins.tabout',
 }, {
   defaults = { lazy = false },
   install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },
