@@ -4,55 +4,55 @@ cache = true
 
 -- Global objects defined by the C code
 read_globals = {
-    -- Neovim globals
-    "vim",
-    
-    -- Builtins
-    "debug",
-    "jit",
-    "os",
-    "assert",
-    "collectgarbage",
-    "error",
-    "getfenv",
-    "getmetatable",
-    "ipairs",
-    "load",
-    "loadfile",
-    "loadstring",
-    "next",
-    "pairs",
-    "pcall",
-    "print",
-    "rawequal",
-    "rawget",
-    "rawset",
-    "select",
-    "setfenv",
-    "setmetatable",
-    "tonumber",
-    "tostring",
-    "type",
-    "unpack",
-    "xpcall",
-    "coroutine",
-    "string",
-    "table",
-    "math",
-    "io",
-    "package",
+  -- Neovim globals
+  'vim',
+
+  -- Builtins
+  'debug',
+  'jit',
+  'os',
+  'assert',
+  'collectgarbage',
+  'error',
+  'getfenv',
+  'getmetatable',
+  'ipairs',
+  'load',
+  'loadfile',
+  'loadstring',
+  'next',
+  'pairs',
+  'pcall',
+  'print',
+  'rawequal',
+  'rawget',
+  'rawset',
+  'select',
+  'setfenv',
+  'setmetatable',
+  'tonumber',
+  'tostring',
+  'type',
+  'unpack',
+  'xpcall',
+  'coroutine',
+  'string',
+  'table',
+  'math',
+  'io',
+  'package',
 }
 
 -- Global objects that can be modified
 globals = {
-    -- Test-related globals
-    "describe",
-    "it",
-    "before_each",
-    "after_each",
-    "teardown",
-    "pending",
-    "assert",
+  -- Test-related globals
+  'describe',
+  'it',
+  'before_each',
+  'after_each',
+  'teardown',
+  'pending',
+  'assert',
 }
 
 -- Redef warnings are turned off since we may have multiple files defining the same objects
@@ -63,17 +63,17 @@ self = false
 
 -- Warnings to ignore
 ignore = {
-    -- Ignore warnings about unused variables with _ prefix
-    "212/_.*",
-    -- Ignore warnings about unused arguments
-    "212",
-    -- Ignore warnings about line length
-    "631",
+  -- Ignore warnings about unused variables with _ prefix
+  '212/_.*',
+  -- Ignore warnings about unused arguments
+  '212',
+  -- Ignore warnings about line length
+  '631',
 }
 
 -- Options for specific files/directories
-files["spec"] = {
-    std = "+busted",
+files['spec'] = {
+  std = '+busted',
 }
 
 -- Maximum line length
