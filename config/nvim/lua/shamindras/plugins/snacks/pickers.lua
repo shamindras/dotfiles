@@ -25,19 +25,19 @@ M.fd_args = {
 
 -- Custom ripgrep args for the grep picker (escaped glob patterns for zsh)
 M.ripgrep_args = {
-  'rg',                       -- Command to run ripgrep
-  '--color=never',            -- Disable color output
-  '--no-heading',             -- Don't show headings (file names) before results
-  '--with-filename',          -- Show the filename for each match
-  '--line-number',            -- Show line numbers in results
-  '--column',                 -- Show column numbers for matches
-  '--smart-case',             -- Enable smart case (case-insensitive if no uppercase letters)
-  '--hidden',                 -- Include hidden files
-  "--glob='!.git/*'",         -- Exclude .git directory (escaped)
+  'rg', -- Command to run ripgrep
+  '--color=never', -- Disable color output
+  '--no-heading', -- Don't show headings (file names) before results
+  '--with-filename', -- Show the filename for each match
+  '--line-number', -- Show line numbers in results
+  '--column', -- Show column numbers for matches
+  '--smart-case', -- Enable smart case (case-insensitive if no uppercase letters)
+  '--hidden', -- Include hidden files
+  "--glob='!.git/*'", -- Exclude .git directory (escaped)
   "--glob='!node_modules/*'", -- Exclude node_modules directory (escaped)
-  '--no-ignore-vcs',          -- Don't respect version control ignores like .gitignore
-  '--no-ignore-parent',       -- Don't respect parent directory ignore files
-  '--follow',                 -- Follow symlinks
+  '--no-ignore-vcs', -- Don't respect version control ignores like .gitignore
+  '--no-ignore-parent', -- Don't respect parent directory ignore files
+  '--follow', -- Follow symlinks
 }
 
 -- Custom ivy layout configuration
@@ -137,7 +137,7 @@ function M.setup_keymaps()
     M.with_ivy_layout(Snacks.picker.command_history)
   end, '[C]ommand [H]istory')
 
-  map_key('<leader>n', function()
+  map_key('<leader>nh', function()
     M.with_ivy_layout(Snacks.picker.notifications)
   end, '[N]otification [H]istory')
 
@@ -175,4 +175,3 @@ function M.setup_keymaps()
 end
 
 return M
-

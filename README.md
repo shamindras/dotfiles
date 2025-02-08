@@ -6,7 +6,7 @@
     - [Clone the repo and update and sync submodules](#clone-the-repo-and-update-and-sync-submodules)
     - [Run installation using `dotbot`](#run-installation-using-dotbot)
   - [Inspiration](#inspiration)
-  
+
 ## Personal dotfiles - philosophy
 
 **Warning:** _these dotfiles are currently a work in progress (not yet complete).
