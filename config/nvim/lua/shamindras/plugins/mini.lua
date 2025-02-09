@@ -1,6 +1,7 @@
 return {
 
-  -- Text editing plugins
+  -- {{{ Text editing plugins ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.ai',
     event = 'VeryLazy',
@@ -32,6 +33,11 @@ return {
       }
     end,
   },
+
+  --}}}
+
+  --{{{ Operators ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.operators',
     version = '*',
@@ -40,6 +46,11 @@ return {
       require('mini.operators').setup()
     end,
   },
+
+  --}}}
+
+  --{{{ Surround ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.surround',
     version = '*',
@@ -48,6 +59,11 @@ return {
       require('mini.surround').setup()
     end,
   },
+
+  --}}}
+
+  --{{{ Move ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.move',
     version = '*',
@@ -63,6 +79,11 @@ return {
       }
     end,
   },
+
+  --}}}
+
+  --{{{ Pairs ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.pairs',
     version = '*',
@@ -72,7 +93,10 @@ return {
     end,
   },
 
-  -- General workflow plugins
+  --}}}
+
+  --{{{ General workflow plugins ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.bracketed',
     version = '*',
@@ -81,6 +105,11 @@ return {
       require('mini.bracketed').setup()
     end,
   },
+
+  --}}}
+
+  --{{{ File Explorer ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.files',
     version = '*',
@@ -132,50 +161,21 @@ return {
         },
       }
 
-      -- Add split window functionality
-      local map_split = function(buf_id, lhs, direction)
-        local rhs = function()
-          -- Make new window and set it as target
-          local new_target_window
-          vim.api.nvim_win_call(minifiles.get_target_window(), function()
-            vim.cmd(direction .. ' split')
-            new_target_window = vim.api.nvim_get_current_win()
-          end)
-
-          minifiles.set_target_window(new_target_window)
-        end
-
-        -- Adding buffer-local mapping
-        vim.keymap.set('n', lhs, rhs, { buffer = buf_id, desc = 'Split ' .. direction })
-      end
-
       vim.api.nvim_create_autocmd('User', {
         pattern = 'MiniFilesBufferCreate',
         callback = function(args)
           local buf_id = args.data.buf_id
-          -- Add mappings only for mini.files buffer
-          map_split(buf_id, 'gs', 'horizontal') -- Go Split
-          map_split(buf_id, 'gv', 'vertical') -- Go Vertical
-
-          -- Add quit mappings
+          -- Add quit mapping
           vim.keymap.set('n', 'q', MiniFiles.close, { buffer = buf_id, desc = 'Close Mini Files' })
-          vim.keymap.set('n', 'Q', function()
-            MiniFiles.close()
-            -- Ensure all mini.files windows are closed
-            for _, win in ipairs(vim.api.nvim_list_wins()) do
-              local buf = vim.api.nvim_win_get_buf(win)
-              local buf_name = vim.api.nvim_buf_get_name(buf)
-              if buf_name:match 'mini.files' then
-                vim.api.nvim_win_close(win, true)
-              end
-            end
-          end, { buffer = buf_id, desc = 'Force Close Mini Files' })
         end,
       })
     end,
   },
 
-  -- Appearance plugins
+  --}}}
+
+  --{{{ Appearance plugins ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.statusline',
     version = '*',
@@ -194,7 +194,10 @@ return {
     end,
   },
 
-  -- Add mini.icons plugin
+  --}}}
+
+  --{{{ Icons plugin ------------------------------------------------------------------------
+
   {
     'echasnovski/mini.icons',
     version = '*',
@@ -203,4 +206,6 @@ return {
       require('mini.icons').setup()
     end,
   },
+
+  --}}}
 }
