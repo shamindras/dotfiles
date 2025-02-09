@@ -116,12 +116,16 @@ function M.smart_with_exclusions(opts)
   opts.args = vim.list_extend(M.fd_args, {
     '--type',
     'f', -- Ensure it's only files (like fd)
+    '--strip-cwd-prefix',
+    '--hidden',
+    '--no-ignore-vcs',
     '--exclude',
     '.git', -- Exclude .git directory
     '--exclude',
     'node_modules', -- Exclude node_modules directory
     '--exclude',
     'submods', -- Exclude submods directory
+    '--follow',
   })
 
   M.with_ivy_layout(require('snacks').picker.smart, opts)
@@ -141,13 +145,13 @@ function M.setup_keymaps()
 
   -- Top Pickers & Explorer
   map_key('<leader><space>', function()
-    M.with_ivy_layout(Snacks.picker.smart)
+    M.smart_with_exclusions()
   end, { desc = '[s]mart [F]ind Files' })
   map_key('<leader>,', function()
     M.with_ivy_layout(Snacks.picker.buffers)
   end, { desc = '[b]uffers' })
   map_key('<leader>/', function()
-    M.with_ivy_layout(Snacks.picker.grep)
+    M.grep_with_ripgrep()
   end, { desc = '[g]rep' })
   map_key('<leader>:', function()
     M.with_ivy_layout(Snacks.picker.command_history)
@@ -170,7 +174,7 @@ function M.setup_keymaps()
     M.with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath 'config' })
   end, { desc = '[f]ind [c]onfig file' })
   map_key('<leader>ff', function()
-    M.with_ivy_layout(Snacks.picker.files)
+    M.find_files_with_fd()
   end, { desc = '[f]ind [f]iles' })
   map_key('<leader>fg', function()
     M.with_ivy_layout(Snacks.picker.git_files)
