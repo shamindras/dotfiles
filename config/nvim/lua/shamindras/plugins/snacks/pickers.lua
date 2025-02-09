@@ -1,4 +1,3 @@
--- ~/.config/nvim/lua/plugins/snacks/pickers.lua
 local M = {}
 
 -- Layout configuration
@@ -90,16 +89,15 @@ function M.grep_with_ripgrep(opts)
   local grep_args = vim.list_extend({}, M.ripgrep_args)
   table.remove(grep_args, 1)
 
-  local picker_opts = {
-    cmd = 'rg',
-    args = grep_args,
-    layout = 'ivy',
-    layouts = {
-      ivy = M.ivy_layout,
-    },
+  -- Merge passed options with our defaults
+  opts.cmd = 'rg'
+  opts.args = grep_args
+  opts.layout = 'ivy'
+  opts.layouts = {
+    ivy = M.ivy_layout,
   }
 
-  require('snacks').picker.grep(picker_opts)
+  require('snacks').picker.grep(opts)
 end
 
 -- Wrapper for the find files picker using fd with custom args
@@ -114,21 +112,7 @@ end
 function M.smart_with_exclusions(opts)
   opts = opts or {}
   opts.cmd = 'fd'
-  opts.args = vim.list_extend(M.fd_args, {
-    '--type',
-    'f', -- Ensure it's only files (like fd)
-    '--strip-cwd-prefix',
-    '--hidden',
-    '--no-ignore-vcs',
-    '--exclude',
-    '.git', -- Exclude .git directory
-    '--exclude',
-    'node_modules', -- Exclude node_modules directory
-    '--exclude',
-    'submods', -- Exclude submods directory
-    '--follow',
-  })
-
+  opts.args = M.fd_args
   M.with_ivy_layout(require('snacks').picker.smart, opts)
 end
 
