@@ -1,7 +1,7 @@
 -- File: lua/shamindras/plugins/nvim-lint.lua
 return {
   'mfussenegger/nvim-lint',
-  event = { 'BufReadPre', 'BufNewFile' },
+  event = { 'BufReadPre', 'BufNewFile', 'InsertLeave' },
   dependencies = {
     {
       'williamboman/mason.nvim',
