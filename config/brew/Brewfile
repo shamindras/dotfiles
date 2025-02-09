@@ -135,6 +135,10 @@ brew "libraw"
 brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Platform built on V8 to build network applications
+brew "node"
+# JSON parser and validator with a CLI
+brew "jsonlint"
 # Handy way to save and run project-specific commands
 brew "just"
 # Simple terminal UI for git commands
@@ -155,8 +159,6 @@ brew "neofetch"
 brew "neovim"
 # RSS/Atom feed reader for text terminals
 brew "newsboat"
-# Platform built on V8 to build network applications
-brew "node"
 # Open source suite of directory software
 brew "openldap"
 # OpenBSD freely-licensed SSH connectivity tools
@@ -207,6 +209,8 @@ brew "starship"
 brew "stylua"
 # Version control system designed to be a better CVS
 brew "subversion"
+# TOML toolkit written in Rust
+brew "taplo"
 # Feature-rich console based todo list manager
 brew "task"
 # Tool Command Language
@@ -221,6 +225,8 @@ brew "uv"
 brew "wget"
 # Check your $HOME for unwanted files and directories
 brew "xdg-ninja"
+# Extensible command-line tool to format YAML files
+brew "yamlfmt"
 # Linter for YAML files
 brew "yamllint"
 # Blazing fast terminal file manager written in Rust, based on async I/O
