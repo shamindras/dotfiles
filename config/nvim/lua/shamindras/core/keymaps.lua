@@ -17,16 +17,19 @@ end
 -- save file
 keymap({ 'i', 'x', 'n', 's' }, '<C-s>', "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>", { desc = 'Save File' })
 
--- TODO: integrate these once snacks.nvim is installed
--- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua#L40-L46
+-- switch buffers
 keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
-keymap('n', '<leader>bd', '<cmd>:bd<cr>', { desc = 'Delete Buffer and Window' })
 
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ lua interactive e[x]ecution
 
-keymap('n', '<leader>bx', "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>", { desc = 'write and [b]uffer e[x]ecute' })
+keymap(
+  'n',
+  '<leader>bx',
+  "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>",
+  { desc = 'write and [b]uffer e[x]ecute' }
+)
 keymap('n', '<leader>x', '<cmd>.lua<CR>')
 keymap('v', '<leader>x', '<cmd>.lua<CR>')
 
