@@ -1,4 +1,3 @@
--- ~/.config/nvim/lua/plugins/snacks/init.lua
 return {
   'folke/snacks.nvim',
   event = {
