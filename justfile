@@ -1,6 +1,15 @@
 _default:
 	@just --choose
 
+clean:
+	@rm -rf ./config/zsh/.zsh_sessions
+	@fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
+
+stylua_config:
+	@printf ">>> Style all config lua files...\n"
+	@fd . 'config/' -e lua -j 4 -x sh -c 'stylua "$1" > /dev/null 2>&1 || true' sh {}
+	@printf ">>> Finished styling all config lua files...\n"
+
 update_brewfile:
 	@printf ">>> Creating brewfile...\n"
 	@brew bundle dump --describe --force --file=./config/brew/Brewfile
@@ -11,6 +20,3 @@ update_submods:
 	git submodule update --recursive --remote
 	@printf ">>> Updated all submods\n"
 
-clean:
-	@rm -rf ./config/zsh/.zsh_sessions
-	@fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
