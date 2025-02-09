@@ -20,6 +20,7 @@ return {
             'markdownlint-cli2',
             'shellcheck',
             'yamllint',
+            'jsonlint',
           },
           auto_update = true,
           run_on_start = true,
@@ -46,6 +47,7 @@ return {
       zsh = { 'shellcheck' },
       yaml = { 'yamllint' },
       markdown = { 'markdownlint-cli2' },
+      json = { 'jsonlint' }, -- Keep JSON linter
     }
 
     -- Configure shellcheck for multiple shell types
