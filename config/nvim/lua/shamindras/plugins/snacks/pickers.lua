@@ -24,20 +24,21 @@ M.fd_args = {
 }
 
 -- Custom ripgrep args for the grep picker (escaped glob patterns for zsh)
+-- Custom ripgrep args for the grep picker (fixed glob patterns)
 M.ripgrep_args = {
-  'rg', -- Command to run ripgrep
-  '--color=never', -- Disable color output
-  '--no-heading', -- Don't show headings (file names) before results
-  '--with-filename', -- Show the filename for each match
-  '--line-number', -- Show line numbers in results
-  '--column', -- Show column numbers for matches
-  '--smart-case', -- Enable smart case (case-insensitive if no uppercase letters)
-  '--hidden', -- Include hidden files
-  "--glob='!.git/*'", -- Exclude .git directory (escaped)
-  "--glob='!node_modules/*'", -- Exclude node_modules directory (escaped)
-  '--no-ignore-vcs', -- Don't respect version control ignores like .gitignore
-  '--no-ignore-parent', -- Don't respect parent directory ignore files
-  '--follow', -- Follow symlinks
+  'rg',
+  '--color=never',
+  '--no-heading',
+  '--with-filename',
+  '--line-number',
+  '--column',
+  '--smart-case',
+  '--hidden',
+  '--glob=!.git/*', -- Removed extra quotes
+  '--glob=!node_modules/*', -- Removed extra quotes
+  '--no-ignore-vcs',
+  '--no-ignore-parent',
+  '--follow',
 }
 
 -- Custom ivy layout configuration
@@ -84,21 +85,21 @@ end
 -- Wrapper for the grep picker using ripgrep with custom args
 function M.grep_with_ripgrep(opts)
   opts = opts or {}
-  opts.query = opts.query or vim.fn.input 'Grep for: '
 
-  -- Ensure a query is provided for ripgrep
-  if opts.query == '' then
-    print 'No search term provided. Exiting.'
-    return
-  end
+  -- Remove the initial 'rg' from args since it's in cmd
+  local grep_args = vim.list_extend({}, M.ripgrep_args)
+  table.remove(grep_args, 1)
 
-  opts.cmd = 'rg'
-  opts.args = vim.list_extend(M.ripgrep_args, { opts.query })
+  local picker_opts = {
+    cmd = 'rg',
+    args = grep_args,
+    layout = 'ivy',
+    layouts = {
+      ivy = M.ivy_layout,
+    },
+  }
 
-  -- Debugging: Print the arguments to be executed
-  print('Running ripgrep with arguments: ' .. vim.inspect(opts.args))
-
-  M.with_ivy_layout(require('snacks').picker.grep, opts)
+  require('snacks').picker.grep(picker_opts)
 end
 
 -- Wrapper for the find files picker using fd with custom args
@@ -174,7 +175,7 @@ function M.setup_keymaps()
     M.with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath 'config' })
   end, { desc = '[f]ind [c]onfig file' })
   map_key('<leader>ff', function()
-    M.find_files_with_fd()
+    M.with_ivy_layout(Snacks.picker.files)
   end, { desc = '[f]ind [f]iles' })
   map_key('<leader>fg', function()
     M.with_ivy_layout(Snacks.picker.git_files)
