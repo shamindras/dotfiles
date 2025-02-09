@@ -52,6 +52,7 @@
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/rstudio: config/rstudio
     ${XDG_CONFIG_HOME}/starship: config/starship
+    ${XDG_CONFIG_HOME}/stylua: config/stylua
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
