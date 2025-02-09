@@ -83,12 +83,7 @@ return {
     'eldritch-theme/eldritch.nvim',
     event = 'VimEnter',
     config = function()
-      vim.keymap.set(
-        'n',
-        '<leader>ct',
-        _G.toggle_colorscheme,
-        { noremap = true, silent = true, desc = 'Toggle colorscheme' }
-      )
+      vim.keymap.set('n', '<leader>ct', _G.toggle_colorscheme, { noremap = true, silent = true, desc = 'Toggle colorscheme' })
     end,
   },
 }
