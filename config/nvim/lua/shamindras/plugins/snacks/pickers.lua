@@ -1,10 +1,16 @@
 local M = {}
+local Snacks = require 'snacks'
 
--- Layout configuration
+-- {{{ Layout Configuration -----------------------------------------------------------------------
+
 M.layout_config = {
   height = 0.7,
   preview_width = 0.6,
 }
+
+-- }}}
+
+-- {{{ Custom Arguments for Pickers ---------------------------------------------------------------
 
 -- Custom fd args for the find files picker
 M.fd_args = {
@@ -23,7 +29,6 @@ M.fd_args = {
 }
 
 -- Custom ripgrep args for the grep picker (escaped glob patterns for zsh)
--- Custom ripgrep args for the grep picker (fixed glob patterns)
 M.ripgrep_args = {
   'rg',
   '--color=never',
@@ -33,14 +38,17 @@ M.ripgrep_args = {
   '--column',
   '--smart-case',
   '--hidden',
-  '--glob=!.git/*', -- Removed extra quotes
-  '--glob=!node_modules/*', -- Removed extra quotes
+  '--glob=!.git/*',
+  '--glob=!node_modules/*',
   '--no-ignore-vcs',
   '--no-ignore-parent',
   '--follow',
 }
 
--- Custom ivy layout configuration
+-- }}}
+
+-- {{{ Ivy Layout Configuration -------------------------------------------------------------------
+
 M.ivy_layout = {
   layout = {
     box = 'vertical',
@@ -64,6 +72,10 @@ M.ivy_layout = {
     },
   },
 }
+
+-- }}}
+
+-- {{{ Wrapper Functions -------------------------------------------------------------------------
 
 -- Wrapper function to apply ivy layout to a picker
 function M.with_ivy_layout(picker_func, opts)
@@ -97,7 +109,7 @@ function M.grep_with_ripgrep(opts)
     ivy = M.ivy_layout,
   }
 
-  require('snacks').picker.grep(opts)
+  Snacks.picker.grep(opts)
 end
 
 -- Wrapper for the find files picker using fd with custom args
@@ -105,7 +117,7 @@ function M.find_files_with_fd(opts)
   opts = opts or {}
   opts.cmd = 'fd'
   opts.args = M.fd_args
-  M.with_ivy_layout(require('snacks').picker.files, opts)
+  M.with_ivy_layout(Snacks.picker.files, opts)
 end
 
 -- Wrapper for the smart picker to exclude the same directories as fd_args
@@ -113,13 +125,15 @@ function M.smart_with_exclusions(opts)
   opts = opts or {}
   opts.cmd = 'fd'
   opts.args = M.fd_args
-  M.with_ivy_layout(require('snacks').picker.smart, opts)
+  M.with_ivy_layout(Snacks.picker.smart, opts)
 end
+
+-- }}}
+
+-- {{{ Keymap Configuration -----------------------------------------------------------------------
 
 -- Function to set up all picker-related keymaps
 function M.setup_keymaps()
-  local Snacks = require 'snacks'
-
   -- Helper function for key mapping
   local function map_key(key, picker_func, opts)
     opts = opts or {}
@@ -217,5 +231,7 @@ function M.setup_keymaps()
     M.with_ivy_layout(Snacks.picker.qflist)
   end, { desc = '[s]earch [q]uickfix list' })
 end
+
+-- }}}
 
 return M
