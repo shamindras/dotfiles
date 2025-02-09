@@ -36,7 +36,6 @@ return {
         prepend_args = {
           '--indent',
           '2', -- 2 spaces indentation
-          '--no-sort-keys', -- Sort JSON keys alphabetically to preserve order
         },
       },
       taplo = {
