@@ -9,7 +9,7 @@ local g = vim
 -- {{{ Useful options
 
 -- tabs & indentation
-o.tabstop = 2 -- 4 spaces for tabs (prettier default)
+o.tabstop = 2 -- 2 spaces for tabs (prettier default)
 o.softtabstop = 2 -- how many columns of whitespace is a tab keypress or a backspace keypress worth
 o.shiftwidth = 2 -- 2 spaces for indent width
 o.expandtab = true -- expand tab to spaces
