@@ -192,6 +192,6 @@ keymap('n', '<leader>ld', '<cmd>Lazy debug<cr>', { desc = '[L]azy [D]ebug' })
 
 -- Quit all and Save All
 keymap('n', '<leader>qa', '<cmd>qall!<cr>', { desc = 'Quit all!' })
-keymap('n', '<leader>wq', '<cmd>wall!<cr>', { desc = 'Write quit all!' })
+keymap('n', '<leader>wa', '<cmd>wall!<cr>', { desc = 'Write quit all!' })
 
 -- ------------------------------------------------------------------------- }}}
