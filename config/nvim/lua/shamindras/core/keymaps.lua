@@ -15,12 +15,7 @@ end
 -- {{{ buffers
 
 -- save file
-keymap(
-  { 'i', 'x', 'n', 's' },
-  '<C-s>',
-  "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>",
-  { desc = 'Save File' }
-)
+keymap({ 'i', 'x', 'n', 's' }, '<C-s>', "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>", { desc = 'Save File' })
 
 -- TODO: integrate these once snacks.nvim is installed
 -- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua#L40-L46
@@ -31,12 +26,7 @@ keymap('n', '<leader>bd', '<cmd>:bd<cr>', { desc = 'Delete Buffer and Window' })
 
 -- {{{ lua interactive e[x]ecution
 
-keymap(
-  'n',
-  '<leader>bx',
-  "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>",
-  { desc = 'write and [b]uffer e[x]ecute' }
-)
+keymap('n', '<leader>bx', "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>", { desc = 'write and [b]uffer e[x]ecute' })
 keymap('n', '<leader>x', '<cmd>.lua<CR>')
 keymap('v', '<leader>x', '<cmd>.lua<CR>')
 
@@ -153,18 +143,8 @@ keymap('n', '<leader>yb', '<cmd>%y+<CR>')
 
 keymap('n', '<leader>d', '"_d')
 keymap('v', '<leader>d', '"_d')
-keymap(
-  'n',
-  '<leader>bl',
-  '<cmd>%d _<CR>',
-  { noremap = true, desc = 'Clear buffer without copying' }
-)
-keymap(
-  'n',
-  '<leader>bc',
-  '<cmd>%d<CR>',
-  { noremap = true, desc = 'Clear buffer and copy contents' }
-)
+keymap('n', '<leader>bl', '<cmd>%d _<CR>', { noremap = true, desc = 'Clear buffer without copying' })
+keymap('n', '<leader>bc', '<cmd>%d<CR>', { noremap = true, desc = 'Clear buffer and copy contents' })
 
 -- ------------------------------------------------------------------------- }}}
 
@@ -205,5 +185,13 @@ keymap('n', '<leader>li', '<cmd>Lazy install<cr>', { desc = '[L]azy [I]nstall' }
 keymap('n', '<leader>lp', '<cmd>Lazy profile<cr>', { desc = '[L]azy [P]rofile' })
 keymap('n', '<leader>lr', '<cmd>Lazy restore<cr>', { desc = '[L]azy [R]estore' })
 keymap('n', '<leader>ld', '<cmd>Lazy debug<cr>', { desc = '[L]azy [D]ebug' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Q/q - Quit
+
+-- Quit all and Save All
+keymap('n', '<leader>qa', '<cmd>qall!<cr>', { desc = 'Quit all!' })
+keymap('n', '<leader>wq', '<cmd>wall!<cr>', { desc = 'Write quit all!' })
 
 -- ------------------------------------------------------------------------- }}}
