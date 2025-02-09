@@ -56,6 +56,9 @@ require('lazy').setup({
   -- comment
   require 'shamindras.plugins.comment',
 
+  -- noice
+  require 'shamindras.plugins.noice',
+
   -- smart-splits
   require 'shamindras.plugins.smart-splits',
 
