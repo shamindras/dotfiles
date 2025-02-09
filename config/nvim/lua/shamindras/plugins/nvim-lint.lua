@@ -16,11 +16,12 @@ return {
         require('mason-tool-installer').setup {
           ensure_installed = {
             'cmakelint',
+            'jsonlint',
             'luacheck',
             'markdownlint-cli2',
+            'ruff',
             'shellcheck',
             'yamllint',
-            'jsonlint',
           },
           auto_update = true,
           run_on_start = true,
@@ -39,15 +40,15 @@ return {
 
     -- Configure linters per filetype
     lint.linters_by_ft = {
-      cmake = { 'cmakelint' },
-      python = { 'ruff' },
-      lua = { 'luacheck' },
       bash = { 'shellcheck' },
-      sh = { 'shellcheck' },
-      zsh = { 'shellcheck' },
-      yaml = { 'yamllint' },
+      cmake = { 'cmakelint' },
+      json = { 'jsonlint' },
+      lua = { 'luacheck' },
       markdown = { 'markdownlint-cli2' },
-      json = { 'jsonlint' }, -- Keep JSON linter
+      python = { 'ruff' },
+      sh = { 'shellcheck' },
+      yaml = { 'yamllint' },
+      zsh = { 'shellcheck' },
     }
 
     -- Configure shellcheck for multiple shell types
