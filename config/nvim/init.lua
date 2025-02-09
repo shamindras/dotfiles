@@ -25,9 +25,6 @@ require('lazy').setup({
   -- colorscheme
   require 'shamindras.plugins.colorscheme',
 
-  -- statusline
-  -- require 'shamindras.plugins.lualine',
-
   -- which.key
   require 'shamindras.plugins.which-key',
 
