@@ -48,13 +48,7 @@ return {
           border = 'none',
         },
       },
-      opts = {
-        indent = {},
-      },
     }
-
-    -- Enable indent guides
-    -- Snacks.indent.enable()
 
     -- Set up all picker-related keymaps
     require('shamindras.plugins.snacks.pickers').setup_keymaps()
