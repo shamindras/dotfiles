@@ -1,9 +1,13 @@
 _default:
 	@just --choose
 
+all: clean stylua_config update_brewfile update_submods
+
 clean:
+	@printf ">>> Begin cleaning directories...\n"
 	@rm -rf ./config/zsh/.zsh_sessions
 	@fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
+	@printf ">>> Finished cleaning directories...\n"
 
 stylua_config:
 	@printf ">>> Style all config lua files...\n"
