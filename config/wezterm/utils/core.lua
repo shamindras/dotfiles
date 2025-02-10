@@ -4,7 +4,7 @@ local M = {}
 function M.setup(config)
   -- Environment variables
   config.set_environment_variables = {
-    PATH = '/usr/local/bin:' .. os.getenv 'PATH',
+    PATH = '/usr/local/bin:' .. '/opt/homebrew/bin:' .. os.getenv 'PATH',
   }
 
   -- Shell configuration
