@@ -316,8 +316,6 @@ cask "vlc"
 cask "wezterm"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
-# Gecko based web browser
-cask "zen-browser"
 # Collect, organise, cite, and share research sources
 cask "zotero"
 vscode "aaron-bond.better-comments"
