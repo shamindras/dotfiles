@@ -230,6 +230,9 @@ function M.setup_keymaps()
   map_key('<leader>sq', function()
     M.with_ivy_layout(Snacks.picker.qflist)
   end, { desc = '[s]earch [q]uickfix list' })
+  map_key('<leader>pc', function()
+    M.with_ivy_layout(Snacks.picker.colorschemes)
+  end, { desc = '[p]ick [c]olorscheme' })
 end
 
 -- }}}
