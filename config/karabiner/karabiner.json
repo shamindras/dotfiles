@@ -73,7 +73,17 @@
       "virtual_hid_keyboard": {
         "keyboard_type_v2": "ansi"
       },
-      "devices": []
+      "devices": [
+        {
+          "device_id": 4294977301
+        },
+        {
+          "device_id": 4294970074
+        },
+        {
+          "device_id": 4294970366
+        }
+      ]
     }
   ]
 }
