@@ -43,8 +43,10 @@ require('lazy').setup({
   -- todo comments
   require 'shamindras.plugins.todo-comments',
 
-  -- formatters and linters
+  -- linters
   require 'shamindras.plugins.nvim-lint',
+
+  -- formatters
   require 'shamindras.plugins.conform',
 
   -- mini.nvim
