@@ -32,10 +32,10 @@
   "nvim-treesitter": { "branch": "master", "commit": "a840137349fcc35b5ad2c718a9b034b93012fa43" },
   "nvim-treesitter-textobjects": { "branch": "master", "commit": "ad8f0a472148c3e0ae9851e26a722ee4e29b1595" },
   "plenary.nvim": { "branch": "master", "commit": "3707cdb1e43f5cea73afb6037e6494e7ce847a66" },
-  "smart-splits.nvim": { "branch": "master", "commit": "7f72bc445106fa041f79ee73e72505c093d0da10" },
-  "snacks.nvim": { "branch": "main", "commit": "6f398f5528a18ada905d43dfca570596513ad4fa" },
+  "smart-splits.nvim": { "branch": "master", "commit": "740a2e2bb3bf525f4e21f9748233480ebb0709a3" },
+  "snacks.nvim": { "branch": "main", "commit": "fcb2f508dd6b58c98b781229db895d22c69e6f21" },
   "tabout.nvim": { "branch": "master", "commit": "9a3499480a8e53dcaa665e2836f287e3b7764009" },
   "todo-comments.nvim": { "branch": "main", "commit": "304a8d204ee787d2544d8bc23cd38d2f929e7cc5" },
-  "tokyonight.nvim": { "branch": "main", "commit": "dca4adba7dc5f09302a00b0e76078d54d82d2658" },
+  "tokyonight.nvim": { "branch": "main", "commit": "84ea0b5f4651afdf50ececaf6f110fe9d9dc9458" },
   "which-key.nvim": { "branch": "main", "commit": "0e76a87ac51772569aec678dc74baa8e2a86100c" }
 }
