@@ -130,6 +130,37 @@ end
 
 -- }}}
 
+-- {{{ Helper Function for Buffers Picker --------------------------------------------------------
+
+-- Helper function to configure and show the buffers picker
+function M.buffers_picker(opts)
+  opts = opts or {}
+  Snacks.picker.buffers {
+    -- I always want my buffers picker to start in normal mode
+    on_show = function()
+      vim.cmd.stopinsert()
+    end,
+    finder = 'buffers',
+    format = 'buffer',
+    hidden = false,
+    unloaded = true,
+    current = true,
+    sort_lastused = true,
+    win = {
+      input = {
+        keys = {
+          ['d'] = 'bufdelete',
+        },
+      },
+      list = { keys = { ['d'] = 'bufdelete' } },
+    },
+    -- In case you want to override the layout for this keymap
+    layout = 'ivy',
+  }
+end
+
+-- }}}
+
 -- {{{ Keymap Configuration -----------------------------------------------------------------------
 
 -- Function to set up all picker-related keymaps
@@ -147,7 +178,7 @@ function M.setup_keymaps()
     M.smart_with_exclusions()
   end, { desc = '[s]mart [F]ind Files' })
   map_key('<leader>,', function()
-    M.with_ivy_layout(Snacks.picker.buffers)
+    M.buffers_picker()
   end, { desc = '[b]uffers' })
   map_key('<leader>/', function()
     M.grep_with_ripgrep()
@@ -167,7 +198,7 @@ function M.setup_keymaps()
 
   -- Find Pickers
   map_key('<leader>fb', function()
-    M.with_ivy_layout(Snacks.picker.buffers)
+    M.buffers_picker()
   end, { desc = '[f]ind [b]uffers' })
   map_key('<leader>fc', function()
     M.with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath 'config' })
