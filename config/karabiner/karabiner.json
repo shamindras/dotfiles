@@ -65,6 +65,25 @@
                 "type": "basic"
               }
             ]
+          },
+          {
+            "description": "Right Command to fn + F12",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "right_command"
+                },
+                "to": [
+                  {
+                    "key_code": "f12",
+                    "modifiers": [
+                      "fn"
+                    ]
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
           }
         ]
       },

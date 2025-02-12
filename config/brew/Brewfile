@@ -276,6 +276,8 @@ cask "jordanbaird-ice"
 cask "julia"
 # Keyboard customiser
 cask "karabiner-elements"
+# Application launcher
+cask "leader-key"
 # Free cross-platform office suite, fresh version
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications
