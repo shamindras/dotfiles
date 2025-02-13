@@ -1,7 +1,8 @@
 _default:
 	@just --choose
 
-all: clean stylua_config update_brewfile update_submods
+# NOTE: we don't include update submods here
+all: clean stylua_config update_brewfile
 
 clean:
 	@printf ">>> Begin cleaning directories...\n"
