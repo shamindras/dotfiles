@@ -181,13 +181,7 @@ keymap('n', 'zk', 'zckzOzz', { desc = 'Close fold & open previous one' })
 -- source: lazy.nvim default keymaps integrated with folke/lazy.nvim
 keymap('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = '[L]azy Menu' })
 keymap('n', '<leader>lu', '<cmd>Lazy update<cr>', { desc = '[L]azy [U]pdate' })
-keymap('n', '<leader>ls', '<cmd>Lazy sync<cr>', { desc = '[L]azy [S]ync' })
-keymap('n', '<leader>lc', '<cmd>Lazy clean<cr>', { desc = '[L]azy [C]lean' })
-keymap('n', '<leader>lx', '<cmd>Lazy check<cr>', { desc = '[L]azy Check' })
-keymap('n', '<leader>li', '<cmd>Lazy install<cr>', { desc = '[L]azy [I]nstall' })
 keymap('n', '<leader>lp', '<cmd>Lazy profile<cr>', { desc = '[L]azy [P]rofile' })
-keymap('n', '<leader>lr', '<cmd>Lazy restore<cr>', { desc = '[L]azy [R]estore' })
-keymap('n', '<leader>ld', '<cmd>Lazy debug<cr>', { desc = '[L]azy [D]ebug' })
 
 -- ------------------------------------------------------------------------- }}}
 
