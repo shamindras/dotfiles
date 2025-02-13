@@ -198,3 +198,27 @@ keymap('n', '<leader>qa', '<cmd>qall!<cr>', { desc = 'Quit all!' })
 keymap('n', '<leader>wa', '<cmd>wall!<cr>', { desc = 'Write quit all!' })
 
 -- ------------------------------------------------------------------------- }}}
+
+-- {{{ Line Number Toggle
+
+-- Define the custom toggle function
+local function custom_toggle_line_numbers()
+  if vim.o.relativenumber then
+    -- Switch to the two-column setup: absolute in left column, relative in right column
+    vim.o.number = true
+    vim.o.relativenumber = false
+    vim.wo.numberwidth = 4 -- Set width for absolute numbers (left-most gutter)
+    vim.wo.signcolumn = 'yes' -- Always show sign column (right-most gutter)
+  else
+    -- Switch back to the default 1-column setup: only relative numbers in the right column
+    vim.o.number = true
+    vim.o.relativenumber = true
+    vim.wo.numberwidth = nil -- Do not show absolute numbers in the left-most gutter
+    vim.wo.signcolumn = 'yes' -- Keep relative numbers in the right-most gutter
+  end
+end
+
+-- Toggle between 1-column and 2-column line number setups
+keymap('n', '<leader>tn', custom_toggle_line_numbers, { desc = 'Toggle line number setup' })
+
+-- ------------------------------------------------------------------------- }}}
