@@ -130,7 +130,7 @@ function z1_global_aliases {
   alias -g H='| head'
   # TODO fix this bat alias coloring
   alias -g L='| bat --pager="less -FRS" --color=always'
-  alias -g G='| batgrep --smart-case --no-separator --color --context=1'
+  alias -g G='| rg -p'
   alias -g W='| wc -l'
   alias -g J='| jq .'
   alias -g T="| tr -d '\n' "
