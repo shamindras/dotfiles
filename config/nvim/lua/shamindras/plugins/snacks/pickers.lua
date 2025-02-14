@@ -30,7 +30,6 @@ M.fd_args = {
 
 -- Custom ripgrep args for the grep picker (escaped glob patterns for zsh)
 M.ripgrep_args = {
-  'rg',
   '--color=never',
   '--no-heading',
   '--with-filename',
@@ -99,7 +98,6 @@ function M.grep_with_ripgrep(opts)
 
   -- Remove the initial 'rg' from args since it's in cmd
   local grep_args = vim.list_extend({}, M.ripgrep_args)
-  table.remove(grep_args, 1)
 
   -- Merge passed options with our defaults
   opts.cmd = 'rg'
