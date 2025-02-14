@@ -67,11 +67,11 @@
             ]
           },
           {
-            "description": "Right Command to fn + F12",
+            "description": "Right Shift to fn + F12",
             "manipulators": [
               {
                 "from": {
-                  "key_code": "right_command"
+                  "key_code": "right_shift"
                 },
                 "to": [
                   {
