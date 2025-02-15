@@ -110,20 +110,12 @@ function M.grep_with_ripgrep(opts)
   Snacks.picker.grep(opts)
 end
 
--- Wrapper for the find files picker using fd with custom args
-function M.find_files_with_fd(opts)
+-- Wrapper for the find files picker or smart picker using fd with custom args
+function M.picker_with_fd(picker_func, opts)
   opts = opts or {}
   opts.cmd = 'fd'
   opts.args = M.fd_args
-  M.with_ivy_layout(Snacks.picker.files, opts)
-end
-
--- Wrapper for the smart picker to exclude the same directories as fd_args
-function M.smart_with_exclusions(opts)
-  opts = opts or {}
-  opts.cmd = 'fd'
-  opts.args = M.fd_args
-  M.with_ivy_layout(Snacks.picker.smart, opts)
+  M.with_ivy_layout(picker_func, opts)
 end
 
 -- }}}
@@ -173,7 +165,7 @@ function M.setup_keymaps()
 
   -- Top Pickers & Explorer
   keymap('<leader><space>', function()
-    M.smart_with_exclusions()
+    M.picker_with_fd(Snacks.picker.smart)
   end, { desc = '[s]mart [F]ind Files' })
   keymap('<leader>,', function()
     M.buffers_picker()
@@ -202,7 +194,7 @@ function M.setup_keymaps()
     M.with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath 'config' })
   end, { desc = '[f]ind [c]onfig file' })
   keymap('<leader>ff', function()
-    M.find_files_with_fd()
+    M.picker_with_fd(Snacks.picker.files)
   end, { desc = '[f]ind [f]iles' })
   keymap('<leader>fg', function()
     M.with_ivy_layout(Snacks.picker.git_files)
