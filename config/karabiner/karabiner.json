@@ -67,11 +67,11 @@
             ]
           },
           {
-            "description": "Right Shift to fn + F12",
+            "description": "Right Alt to fn + F12",
             "manipulators": [
               {
                 "from": {
-                  "key_code": "right_shift"
+                  "key_code": "right_alt"
                 },
                 "to": [
                   {
