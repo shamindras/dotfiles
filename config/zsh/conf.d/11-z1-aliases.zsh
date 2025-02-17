@@ -27,6 +27,7 @@ function z1_aliases {
   alias cd='z'
   alias cp='cp -r'
   alias cpi='cp -iv'
+  alias da='deactivate'
   alias df='df -kH'
   alias dus='du -sckx * | sort -nr'
   alias er='espanso restart'
