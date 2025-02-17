@@ -34,11 +34,12 @@ ua() {
   local current_dir=$PWD
 
   while [[ $current_dir != "/" ]]; do
-    if [[ -d "$current_dir/uv.lock" ]] && [[ -d "$current_dir/.venv" ]]; then
+    if [[ -f "$current_dir/uv.lock" ]] && [[ -d "$current_dir/.venv" ]]; then
       if [[ -f "$current_dir/.venv/bin/activate" ]]; then
         print "Found uv environment in: $current_dir"
         cd $current_dir
         source .venv/bin/activate
+        cd $initial_dir
         return 0
       else
         print "Warning: Found incomplete uv environment in $current_dir (.venv/bin/activate missing)"
@@ -53,4 +54,3 @@ ua() {
   print "Error: No valid uv environment found in parent directories"
   return 1
 }
-
