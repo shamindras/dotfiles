@@ -362,6 +362,11 @@ run = "move-node-to-workspace 3"
 if.app-id = "us.zoom.xos"
 run = "move-node-to-workspace 4"
 
+# Cisco Anyconnect
+[[on-window-detected]]
+if.app-id = "com.cisco.anyconnect.gui"
+run = "move-node-to-workspace 7"
+
 # Floating windows - disable tiling for specific apps ----
 
 # system settings
@@ -383,4 +388,3 @@ run = "layout floating"
 [[on-window-detected]]
 if.app-id = "com.cisco.anyconnect.gui"
 run = "layout floating"
-
