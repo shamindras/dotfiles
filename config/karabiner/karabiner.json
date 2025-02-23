@@ -67,7 +67,7 @@
             ]
           },
           {
-            "description": "Right Alt to fn + F12",
+            "description": "Right alt to fn + F12",
             "manipulators": [
               {
                 "from": {
