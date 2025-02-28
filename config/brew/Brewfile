@@ -35,8 +35,6 @@ brew "glib"
 brew "checkmake"
 # Defines a standard way of committing rules and communicating it
 brew "commitizen"
-# Utility that creates projects from templates
-brew "cookiecutter"
 # GNU multiple precision arithmetic library
 brew "gmp"
 # GNU File, Shell, and Text utilities
