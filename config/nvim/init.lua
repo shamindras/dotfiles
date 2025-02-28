@@ -61,8 +61,11 @@ require('lazy').setup({
   -- smart-splits
   require 'shamindras.plugins.smart-splits',
 
+  -- backout
+  require 'shamindras.plugins.backout',
+
   -- tabout
-  require 'shamindras.plugins.tabout',
+  -- require 'shamindras.plugins.tabout',
 }, {
   defaults = { lazy = false },
   install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },
