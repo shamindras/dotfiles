@@ -18,7 +18,7 @@
 ##?     1. Starts from current directory
 ##?     2. Checks each parent directory for uv.lock and .venv
 ##?     3. If found, activates the virtual environment
-##?     4. If not found by root (/), returns to starting directory
+##?     4. Always returns to the starting directory regardless of outcome
 ##?
 ##? EXIT STATUS:
 ##?     0 - Successfully found and activated a uv environment
@@ -41,14 +41,16 @@ ua() {
 
     local initial_dir=$PWD
     local current_dir=$PWD
+    local found_env=false
+    local env_dir=""
 
     while [[ $current_dir != "/" ]]; do
         if [[ -f "$current_dir/uv.lock" ]] && [[ -d "$current_dir/.venv" ]]; then
             if [[ -f "$current_dir/.venv/bin/activate" ]]; then
                 print "Found uv environment in: $current_dir"
-                cd $current_dir
-                source .venv/bin/activate
-                return 0
+                env_dir=$current_dir
+                found_env=true
+                break
             else
                 print "Warning: Found incomplete uv environment in $current_dir (.venv/bin/activate missing)"
             fi
@@ -58,9 +60,17 @@ ua() {
         current_dir=$PWD
     done
 
+    # Return to initial directory regardless of success
     cd $initial_dir
-    print "Error: No valid uv environment found in parent directories"
-    return 1
+
+    # If environment was found, activate it from the initial directory
+    if $found_env; then
+        source "$env_dir/.venv/bin/activate"
+        return 0
+    else
+        print "Error: No valid uv environment found in parent directories"
+        return 1
+    fi
 }
 
 # vim: ft=zsh
