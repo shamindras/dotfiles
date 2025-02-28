@@ -1,6 +1,6 @@
 -- modules/keybindings.lua
 local M = {}
-local wezterm = require 'wezterm'
+local wezterm = require('wezterm')
 local act = wezterm.action
 
 -- Helper functions for pane navigation
@@ -65,54 +65,54 @@ function M.setup(config)
     {
       key = 'g',
       mods = 'CMD',
-      action = act.SpawnCommandInNewTab {
+      action = act.SpawnCommandInNewTab({
         args = { 'lazygit' },
-      },
+      }),
     },
 
     -- Split management
     {
       key = '\\',
       mods = 'CMD|SHIFT',
-      action = wezterm.action.SplitHorizontal {
+      action = wezterm.action.SplitHorizontal({
         domain = 'CurrentPaneDomain',
-      },
+      }),
     },
     {
       key = '-',
       mods = 'CMD|SHIFT',
-      action = wezterm.action.SplitVertical {
+      action = wezterm.action.SplitVertical({
         domain = 'CurrentPaneDomain',
-      },
+      }),
     },
 
     -- Tab management
     {
       key = 'E',
       mods = 'CMD|SHIFT',
-      action = wezterm.action.PromptInputLine {
+      action = wezterm.action.PromptInputLine({
         description = 'Enter new name for tab',
         action = wezterm.action_callback(function(window, _, line)
           if line then
             window:active_tab():set_title(line)
           end
         end),
-      },
+      }),
     },
     {
       key = 't',
       mods = 'CMD',
-      action = act.SpawnTab 'CurrentPaneDomain',
+      action = act.SpawnTab('CurrentPaneDomain'),
     },
     {
       key = 'w',
       mods = 'CMD',
-      action = wezterm.action.CloseCurrentPane { confirm = false },
+      action = wezterm.action.CloseCurrentPane({ confirm = false }),
     },
     {
       key = 'w',
       mods = 'CMD|SHIFT',
-      action = wezterm.action.CloseCurrentTab { confirm = true },
+      action = wezterm.action.CloseCurrentTab({ confirm = true }),
     },
 
     -- Window management
@@ -124,10 +124,10 @@ function M.setup(config)
     {
       key = 'k',
       mods = 'CMD',
-      action = act.Multiple {
-        act.ClearScrollback 'ScrollbackAndViewport',
-        act.SendKey { key = 'L', mods = 'CTRL' },
-      },
+      action = act.Multiple({
+        act.ClearScrollback('ScrollbackAndViewport'),
+        act.SendKey({ key = 'L', mods = 'CTRL' }),
+      }),
     },
 
     -- Tab switching

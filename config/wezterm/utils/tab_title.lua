@@ -1,6 +1,6 @@
 -- modules/tab_title.lua
 local M = {}
-local wezterm = require 'wezterm'
+local wezterm = require('wezterm')
 
 -- The filled in variants of the < and > symbols
 local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider

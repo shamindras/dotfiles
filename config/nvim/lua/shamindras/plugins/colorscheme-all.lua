@@ -127,7 +127,7 @@ end
 
 -- Function to get the state file path
 local function get_state_file()
-  return vim.fn.stdpath 'state' .. '/colorscheme_state.txt'
+  return vim.fn.stdpath('state') .. '/colorscheme_state.txt'
 end
 
 -- Function to save current colorscheme
@@ -143,7 +143,7 @@ end
 local function get_last_colorscheme()
   local file = io.open(get_state_file(), 'r')
   if file then
-    local scheme = file:read '*all'
+    local scheme = file:read('*all')
     file:close()
     -- Verify the scheme exists in our list
     for i, name in ipairs(color_scheme_order) do
@@ -187,7 +187,7 @@ local function load_colorscheme(scheme)
   end
 
   -- Common settings for all themes
-  vim.cmd.hi 'Comment gui=none'
+  vim.cmd.hi('Comment gui=none')
   vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = 'white' })
 end
 
@@ -269,7 +269,7 @@ return {
     priority = 1000,
     config = function()
       if is_family_scheme('rosepine', initial_scheme) then
-        require('rose-pine').setup {
+        require('rose-pine').setup({
           variant = 'auto',
           dark_variant = 'main',
           dim_inactive_windows = false,
@@ -321,7 +321,7 @@ return {
           highlight_groups = {},
           palette = {},
           before_highlight = function() end,
-        }
+        })
         vim.cmd.colorscheme(colorschemes[initial_scheme].scheme)
       end
     end,
@@ -334,7 +334,7 @@ return {
     priority = 1000,
     config = function()
       if is_family_scheme('nightfox', initial_scheme) then
-        require('nightfox').setup {}
+        require('nightfox').setup({})
         vim.cmd.colorscheme(colorschemes[initial_scheme].scheme)
       end
     end,
@@ -349,9 +349,9 @@ return {
     config = function()
       if is_family_scheme('catppuccin', initial_scheme) then
         local variant = string.match(initial_scheme, '_(%w+)$')
-        require('catppuccin').setup {
+        require('catppuccin').setup({
           flavour = variant,
-        }
+        })
         vim.cmd.colorscheme(colorschemes[initial_scheme].scheme)
       end
     end,

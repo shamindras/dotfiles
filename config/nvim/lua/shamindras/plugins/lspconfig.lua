@@ -75,7 +75,7 @@ return {
       }
 
       -- Mason setup with explicit ensure_installed configuration
-      require('mason').setup {
+      require('mason').setup({
         ui = {
           icons = {
             package_installed = '✅',
@@ -83,10 +83,10 @@ return {
             package_uninstalled = '❌',
           },
         },
-      }
+      })
 
       -- Mason-lspconfig setup with explicit handlers
-      require('mason-lspconfig').setup {
+      require('mason-lspconfig').setup({
         ensure_installed = vim.tbl_keys(servers),
         automatic_installation = true,
         handlers = {
@@ -96,18 +96,18 @@ return {
             require('lspconfig')[server_name].setup(server)
           end,
         },
-      }
+      })
 
       -- Mason-tool-installer setup
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua',
       })
-      require('mason-tool-installer').setup {
+      require('mason-tool-installer').setup({
         ensure_installed = ensure_installed,
         auto_update = true,
         run_on_start = true,
-      }
+      })
     end,
   },
 }

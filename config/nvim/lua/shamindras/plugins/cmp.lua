@@ -7,14 +7,14 @@ return {
         'L3MON4D3/LuaSnip',
         event = 'InsertEnter', -- Only load when entering insert mode
         build = (function()
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
+          if vim.fn.has('win32') == 1 or vim.fn.executable('make') == 0 then
             return
           end
           return 'make install_jsregexp'
         end)(),
         dependencies = {}, -- Removed friendly-snippets as it was commented out
         config = function()
-          require('luasnip').config.setup {}
+          require('luasnip').config.setup({})
         end,
       },
       {
@@ -31,9 +31,9 @@ return {
       },
     },
     config = function()
-      local cmp = require 'cmp'
-      local luasnip = require 'luasnip'
-      cmp.setup {
+      local cmp = require('cmp')
+      local luasnip = require('luasnip')
+      cmp.setup({
         performance = {
           debounce = 60, -- Delay completions to save CPU
           throttle = 30, -- Throttle completion menu updates
@@ -57,13 +57,13 @@ return {
           max_item_count = 20, -- Limit number of suggestions
         },
 
-        mapping = cmp.mapping.preset.insert {
+        mapping = cmp.mapping.preset.insert({
           ['<C-n>'] = cmp.mapping.select_next_item(),
           ['<C-p>'] = cmp.mapping.select_prev_item(),
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+          ['<C-Space>'] = cmp.mapping.complete({}),
           ['<C-l>'] = cmp.mapping(function()
             if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
@@ -74,7 +74,7 @@ return {
               luasnip.jump(-1)
             end
           end, { 'i', 's' }),
-        },
+        }),
 
         -- Prioritize sources and lazy load them
         sources = {
@@ -111,7 +111,7 @@ return {
         experimental = {
           ghost_text = false, -- Disable ghost text for better performance
         },
-      }
+      })
     end,
   },
 }

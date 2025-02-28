@@ -49,7 +49,7 @@ o.splitbelow = true -- split horizontal window to the bottom
 o.backup = false -- don't store backup while overwriting the file
 o.writebackup = false -- don't store backup while overwriting the file
 o.swapfile = false -- don't create swapfile
-o.undodir = os.getenv 'HOME' .. '/.local/state/nvim/undo'
+o.undodir = os.getenv('HOME') .. '/.local/state/nvim/undo'
 o.undofile = true
 
 -- misc
@@ -67,8 +67,8 @@ end)
 
 -- ------------------------------------------------------------------------- }}}
 
-opt.shortmess:append 'I' -- disable vim startup message
-opt.iskeyword:append '-' -- consider string-string as whole word
+opt.shortmess:append('I') -- disable vim startup message
+opt.iskeyword:append('-') -- consider string-string as whole word
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  TODO: check why `o. does not work here. Currently requires `opt..

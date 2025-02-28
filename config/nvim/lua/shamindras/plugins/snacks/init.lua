@@ -24,10 +24,10 @@ return {
     { '<leader>bD', desc = '[B]uffer and [W]indow [D]elete' }, -- Delete Buffer and Window
   },
   config = function()
-    local Snacks = require 'snacks'
+    local Snacks = require('snacks')
 
     -- Set up Snacks with minimal configuration
-    Snacks.setup {
+    Snacks.setup({
       picker = {
         matcher = {
           sort_empty = true,
@@ -48,7 +48,7 @@ return {
           border = 'none',
         },
       },
-    }
+    })
 
     -- Set up all picker-related keymaps
     require('shamindras.plugins.snacks.pickers').setup_keymaps()

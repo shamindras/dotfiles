@@ -12,7 +12,7 @@ return {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       lazy = false,
       config = function()
-        require('mason-tool-installer').setup {
+        require('mason-tool-installer').setup({
           ensure_installed = {
             'cmakelint',
             'jsonlint',
@@ -25,16 +25,16 @@ return {
           auto_update = true,
           run_on_start = true,
           automatic_installation = true,
-        }
+        })
       end,
       priority = 90,
     },
   },
   config = function()
-    local lint = require 'lint'
+    local lint = require('lint')
 
     -- Add mason bin path to ensure executables can be found
-    local mason_bin = vim.fn.stdpath 'data' .. '/mason/bin'
+    local mason_bin = vim.fn.stdpath('data') .. '/mason/bin'
     vim.env.PATH = mason_bin .. ':' .. vim.env.PATH
 
     -- Configure linters per filetype
@@ -57,7 +57,7 @@ return {
     }
 
     -- Configure luacheck to use config from nvim config directory
-    local config_path = vim.fn.stdpath 'config'
+    local config_path = vim.fn.stdpath('config')
     local luacheckrc_path = config_path .. '/.luacheckrc'
 
     if vim.fn.filereadable(luacheckrc_path) == 1 then

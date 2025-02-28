@@ -1,13 +1,13 @@
 -- modules/appearance.lua
 local M = {}
-local wezterm = require 'wezterm'
+local wezterm = require('wezterm')
 
 ---Return the suitable argument depending on the appearance
 ---@param arg { light: any, dark: any } light and dark alternatives
 ---@return any
 local function depending_on_appearance(arg)
   local appearance = wezterm.gui.get_appearance()
-  if appearance:find 'Dark' then
+  if appearance:find('Dark') then
     return arg.dark
   else
     return arg.light
@@ -22,14 +22,14 @@ function M.setup(config)
     -- wezterm.font { family = 'JetBrainsMono Nerd Font', weight = 'Regular' }
     -- wezterm.font { family = 'MonaspiceAr Nerd Font', weight = 'Regular' }
     -- wezterm.font { family = 'Iosevka Nerd Font Mono', weight = 'Regular' }
-    wezterm.font { family = 'Maple Mono', weight = 'Regular' }
+    wezterm.font({ family = 'Maple Mono', weight = 'Regular' })
   config.font_size = 18
 
   -- Color scheme and window appearance
-  config.color_scheme = depending_on_appearance {
+  config.color_scheme = depending_on_appearance({
     light = 'Night Owl (Gogh)',
     dark = 'Night Owl (Gogh)',
-  }
+  })
 
   -- Window configuration
   config.enable_tab_bar = true

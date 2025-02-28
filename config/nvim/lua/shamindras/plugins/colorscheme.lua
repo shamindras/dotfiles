@@ -24,7 +24,7 @@ local color_scheme_order = { 'eldritch', 'tokyonight', 'jellybeans' }
 
 -- Function to get the state file path
 local function get_state_file()
-  return vim.fn.stdpath 'state' .. '/colorscheme_state.txt'
+  return vim.fn.stdpath('state') .. '/colorscheme_state.txt'
 end
 
 -- Function to save current colorscheme
@@ -40,7 +40,7 @@ end
 local function get_last_colorscheme()
   local file = io.open(get_state_file(), 'r')
   if file then
-    local scheme = file:read '*all'
+    local scheme = file:read('*all')
     file:close()
     -- Verify the scheme exists in our list
     for i, name in ipairs(color_scheme_order) do
@@ -79,7 +79,7 @@ local function load_colorscheme(scheme)
   save_colorscheme(scheme)
 
   -- Common settings for all themes
-  vim.cmd.hi 'Comment gui=none'
+  vim.cmd.hi('Comment gui=none')
   vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = 'white' })
 end
 

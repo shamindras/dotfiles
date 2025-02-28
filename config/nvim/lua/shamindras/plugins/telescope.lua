@@ -23,7 +23,7 @@ return {
       'nvim-telescope/telescope-fzf-native.nvim',
       build = 'make',
       cond = function()
-        return vim.fn.executable 'make' == 1
+        return vim.fn.executable('make') == 1
       end,
     },
     { 'nvim-telescope/telescope-ui-select.nvim', lazy = true },
@@ -35,11 +35,11 @@ return {
     },
   },
   config = function()
-    local telescope = require 'telescope'
-    local builtin = require 'telescope.builtin'
-    local themes = require 'telescope.themes'
+    local telescope = require('telescope')
+    local builtin = require('telescope.builtin')
+    local themes = require('telescope.themes')
 
-    telescope.setup {
+    telescope.setup({
       defaults = {
         -- Respect .gitignore
         file_ignore_patterns = {
@@ -127,22 +127,22 @@ return {
           case_mode = 'smart_case',
         },
       },
-    }
+    })
 
     -- Load extensions lazily
     vim.schedule(function()
       pcall(function()
-        telescope.load_extension 'fzf'
+        telescope.load_extension('fzf')
       end)
       pcall(function()
-        telescope.load_extension 'ui-select'
+        telescope.load_extension('ui-select')
       end)
     end)
 
     -- Keymap definitions with lazy loading considerations
     local function map(key, func, desc)
       vim.keymap.set('n', key, function()
-        require 'telescope'
+        require('telescope')
         func()
       end, { desc = desc })
     end
@@ -161,21 +161,21 @@ return {
 
     -- Advanced mappings
     map('<leader>/', function()
-      builtin.current_buffer_fuzzy_find(themes.get_ivy {
+      builtin.current_buffer_fuzzy_find(themes.get_ivy({
         winblend = 10,
         previewer = false,
-      })
+      }))
     end, '[/] Fuzzily search in current buffer')
 
     map('<leader>s/', function()
-      builtin.live_grep(themes.get_ivy {
+      builtin.live_grep(themes.get_ivy({
         grep_open_files = true,
         prompt_title = 'Live Grep in Open Files',
-      })
+      }))
     end, '[S]earch [/] in Open Files')
 
     map('<leader>sn', function()
-      builtin.find_files { cwd = vim.fn.stdpath 'config' }
+      builtin.find_files({ cwd = vim.fn.stdpath('config') })
     end, '[S]earch [N]eovim files')
   end,
 }

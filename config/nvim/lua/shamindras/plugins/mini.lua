@@ -14,12 +14,12 @@ table.insert(M, {
       'nvim-treesitter/nvim-treesitter-textobjects',
       init = function()
         -- Only load the queries, not the full plugin
-        require('lazy.core.loader').disable_rtp_plugin 'nvim-treesitter-textobjects'
+        require('lazy.core.loader').disable_rtp_plugin('nvim-treesitter-textobjects')
       end,
     },
   },
   opts = function()
-    local ai = require 'mini.ai'
+    local ai = require('mini.ai')
     return {
       n_lines = 500,
       custom_textobjects = {
@@ -69,14 +69,14 @@ table.insert(M, {
   version = '*',
   event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
   config = function()
-    require('mini.move').setup {
+    require('mini.move').setup({
       mappings = {
         left = 'H',
         right = 'L',
         down = 'J',
         up = 'K',
       },
-    }
+    })
   end,
 })
 
@@ -136,8 +136,8 @@ table.insert(M, {
     },
   },
   config = function()
-    local minifiles = require 'mini.files'
-    minifiles.setup {
+    local minifiles = require('mini.files')
+    minifiles.setup({
       -- Customize windows
       windows = {
         -- Maximum number of windows to show side by side
@@ -159,7 +159,7 @@ table.insert(M, {
         -- Whether to use for editing directories
         use_as_default_explorer = true,
       },
-    }
+    })
 
     vim.api.nvim_create_autocmd('User', {
       pattern = 'MiniFilesBufferCreate',
@@ -182,9 +182,9 @@ table.insert(M, {
   event = 'VimEnter', -- Load when Vim starts
   config = function()
     -- Simple and easy statusline
-    local statusline = require 'mini.statusline'
+    local statusline = require('mini.statusline')
     -- set use_icons to true if you have a Nerd Font
-    statusline.setup { use_icons = vim.g.have_nerd_font }
+    statusline.setup({ use_icons = vim.g.have_nerd_font })
 
     -- Configure cursor location section to show LINE:COLUMN
     ---@diagnostic disable-next-line: duplicate-set-field

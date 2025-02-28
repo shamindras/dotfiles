@@ -11,10 +11,10 @@ vim.g.maplocalleader = ' '
 
 -- {{{ Load custom settings --------------------------------------------------------------------------
 
-require 'shamindras.core.options' -- general options
-require 'shamindras.core.autocmds' -- autocommands
-require 'shamindras.core.keymaps' -- custom keymaps
-require 'shamindras.core.lazy-bootstrap' -- lazy package manager
+require('shamindras.core.options') -- general options
+require('shamindras.core.autocmds') -- autocommands
+require('shamindras.core.keymaps') -- custom keymaps
+require('shamindras.core.lazy-bootstrap') -- lazy package manager
 
 -- }}}
 
@@ -23,46 +23,46 @@ require 'shamindras.core.lazy-bootstrap' -- lazy package manager
 require('lazy').setup({
 
   -- colorscheme
-  require 'shamindras.plugins.colorscheme',
+  require('shamindras.plugins.colorscheme'),
 
   -- which.key
-  require 'shamindras.plugins.which-key',
+  require('shamindras.plugins.which-key'),
 
   -- fuzzy finder
-  require 'shamindras.plugins.snacks',
+  require('shamindras.plugins.snacks'),
 
   -- lsp
-  require 'shamindras.plugins.lspconfig',
+  require('shamindras.plugins.lspconfig'),
 
   -- cmp
-  require 'shamindras.plugins.cmp',
+  require('shamindras.plugins.cmp'),
 
   -- treesitter
-  require 'shamindras.plugins.treesitter',
+  require('shamindras.plugins.treesitter'),
 
   -- todo comments
-  require 'shamindras.plugins.todo-comments',
+  require('shamindras.plugins.todo-comments'),
 
   -- linters
-  require 'shamindras.plugins.nvim-lint',
+  require('shamindras.plugins.nvim-lint'),
 
   -- formatters
-  require 'shamindras.plugins.conform',
+  require('shamindras.plugins.conform'),
 
   -- mini.nvim
-  require 'shamindras.plugins.mini',
+  require('shamindras.plugins.mini'),
 
   -- comment
-  require 'shamindras.plugins.comment',
+  require('shamindras.plugins.comment'),
 
   -- noice
-  require 'shamindras.plugins.noice',
+  require('shamindras.plugins.noice'),
 
   -- smart-splits
-  require 'shamindras.plugins.smart-splits',
+  require('shamindras.plugins.smart-splits'),
 
   -- backout
-  require 'shamindras.plugins.backout',
+  require('shamindras.plugins.backout'),
 
   -- tabout
   -- require 'shamindras.plugins.tabout',

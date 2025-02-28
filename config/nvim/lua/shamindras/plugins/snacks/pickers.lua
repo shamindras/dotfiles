@@ -1,5 +1,5 @@
 local M = {}
-local Snacks = require 'snacks'
+local Snacks = require('snacks')
 
 -- {{{ Layout Configuration -----------------------------------------------------------------------
 
@@ -125,7 +125,7 @@ end
 -- Helper function to configure and show the buffers picker
 function M.buffers_picker(opts)
   opts = opts or {}
-  Snacks.picker.buffers {
+  Snacks.picker.buffers({
     -- I always want my buffers picker to start in normal mode
     on_show = function()
       vim.cmd.stopinsert()
@@ -146,7 +146,7 @@ function M.buffers_picker(opts)
     },
     -- In case you want to override the layout for this keymap
     layout = 'ivy',
-  }
+  })
 end
 
 -- }}}
@@ -188,7 +188,7 @@ function M.setup_keymaps()
     M.buffers_picker()
   end, { desc = '[f]ind [b]uffers' })
   keymap('<leader>fc', function()
-    M.with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath 'config' })
+    M.with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath('config') })
   end, { desc = '[f]ind [c]onfig file' })
   keymap('<leader>ff', function()
     M.picker_with_fd(Snacks.picker.files)

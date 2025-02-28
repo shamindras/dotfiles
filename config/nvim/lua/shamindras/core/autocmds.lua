@@ -4,31 +4,31 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = { '*' },
   callback = function()
     -- let comments respect textwidth
-    vim.opt.formatoptions:prepend { 'c' }
+    vim.opt.formatoptions:prepend({ 'c' })
 
     -- auto-remove comments if possible
-    vim.opt.formatoptions:prepend { 'j' }
+    vim.opt.formatoptions:prepend({ 'j' })
 
     -- indent past the formatlistpat, not underneath it.
-    vim.opt.formatoptions:prepend { 'n' }
+    vim.opt.formatoptions:prepend({ 'n' })
 
     -- allow formatting comments with `gq`
-    vim.opt.formatoptions:prepend { 'q' }
+    vim.opt.formatoptions:prepend({ 'q' })
 
     -- continue comments when pressing enter in insert mode
-    vim.opt.formatoptions:prepend { 'r' }
+    vim.opt.formatoptions:prepend({ 'r' })
 
     -- auto-wrap text using textwidth
-    vim.opt.formatoptions:prepend { 't' }
+    vim.opt.formatoptions:prepend({ 't' })
 
     -- do not continue comments with `O` or `o`
-    vim.opt.formatoptions:remove { 'o' }
+    vim.opt.formatoptions:remove({ 'o' })
 
     -- no need to use autoformat, use linters
-    vim.opt.formatoptions:remove { 'a' }
+    vim.opt.formatoptions:remove({ 'a' })
 
     -- TODO: add more details for this option
-    vim.opt.formatoptions:remove { '2' }
+    vim.opt.formatoptions:remove({ '2' })
   end,
 })
 
@@ -36,7 +36,7 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
   callback = function()
-    vim.highlight.on_yank { timeout = 500, higroup = 'IncSearch', on_macro = true }
+    vim.highlight.on_yank({ timeout = 500, higroup = 'IncSearch', on_macro = true })
   end,
 })
 
@@ -57,7 +57,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 local resize_window_group = vim.api.nvim_create_augroup('resize_window', { clear = true })
 vim.api.nvim_create_autocmd({ 'VimResized' }, {
   callback = function()
-    vim.cmd 'tabdo wincmd ='
+    vim.cmd('tabdo wincmd =')
   end,
   group = resize_window_group,
 })
@@ -134,7 +134,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'WinLeave' }, {
 vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
   group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
   callback = function(event)
-    if event.match:match '^%w%w+:[\\/][\\/]' then
+    if event.match:match('^%w%w+:[\\/][\\/]') then
       return
     end
     local file = vim.uv.fs_realpath(event.match) or event.match

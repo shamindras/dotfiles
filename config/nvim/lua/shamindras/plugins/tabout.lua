@@ -3,7 +3,7 @@ return {
     'abecodes/tabout.nvim',
     event = 'InsertEnter', -- Load when entering insert mode
     config = function()
-      require('tabout').setup {
+      require('tabout').setup({
         tabkey = '<Tab>',
         backwards_tabkey = '<S-Tab>',
         act_as_tab = true,
@@ -22,7 +22,7 @@ return {
         },
         ignore_beginning = true,
         exclude = {},
-      }
+      })
     end,
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
