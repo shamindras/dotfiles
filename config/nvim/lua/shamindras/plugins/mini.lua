@@ -125,7 +125,7 @@ table.insert(M, {
       desc = 'Open Mini Files',
     },
     {
-      '<leader>fe',
+      '<leader>e',
       '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>',
       desc = 'Mini Files Current File',
     },
