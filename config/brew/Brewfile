@@ -121,6 +121,8 @@ brew "git"
 brew "git-delta"
 # Generate introspection data for GObject libraries
 brew "gobject-introspection"
+# Graph visualization software from AT&T and Bell Labs
+brew "graphviz"
 # Tool for glamorous shell scripts
 brew "gum"
 # Improved top (interactive process viewer)
@@ -347,6 +349,7 @@ vscode "kahole.magit"
 vscode "kaiwood.center-editor-window"
 vscode "keifererikson.nightfox"
 vscode "kevinrose.vsc-python-indent"
+vscode "marimo-team.vscode-marimo"
 vscode "mechatroner.rainbow-csv"
 vscode "ms-azuretools.vscode-docker"
 vscode "ms-python.debugpy"
