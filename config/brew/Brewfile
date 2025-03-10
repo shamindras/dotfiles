@@ -1,4 +1,3 @@
-tap "espanso/espanso"
 tap "felixkratz/formulae"
 tap "homebrew/bundle"
 tap "homebrew/services"
