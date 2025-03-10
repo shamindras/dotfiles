@@ -157,8 +157,6 @@ brew "luacheck"
 brew "luarocks"
 # NCurses Disk Usage
 brew "ncdu"
-# Fast, highly customisable system info script
-brew "neofetch"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # RSS/Atom feed reader for text terminals
