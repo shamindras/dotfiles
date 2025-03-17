@@ -86,7 +86,7 @@ function z1_aliases {
   alias dots='z ~/DROPBOX/REPOS/dotfiles;clear;'
   alias down='z ~/Downloads;clear;'
   alias reps='z ~/DROPBOX/REPOS;clear;'
-  alias play='z ~/DROPBOX/REPOS/pyplay;clear;'
+  alias play='z ~/DROPBOX/REPOS/codebox;ua;clear;' # Also activates uv
 
   # source: running `xdg-ninja` in `$HOME` gave these suggestion
   # subversion
