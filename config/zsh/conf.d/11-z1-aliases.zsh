@@ -58,6 +58,7 @@ function z1_aliases {
   alias t3='tree --level=3'
   alias tl3='t3 --long'
   alias tzsh="hyperfine --warmup=5 '/usr/bin/time zsh -i -c exit'"
+  alias uac="ua;clear" # run `ua` function and clear screen
 
   # bat-extras
   # source: https://github.com/eth-p/bat-extras/tree/master
