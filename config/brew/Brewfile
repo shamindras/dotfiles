@@ -60,10 +60,10 @@ brew "libidn2"
 brew "unbound"
 # GNU Transport Layer Security (TLS) Library
 brew "gnutls"
-# C/C++ and Java libraries for Unicode and globalization
-brew "icu4c@76"
 # OpenType text shaping engine
 brew "harfbuzz"
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@76"
 # Image processing and image analysis library
 brew "leptonica"
 # Subtitle renderer for the ASS/SSA subtitle format
