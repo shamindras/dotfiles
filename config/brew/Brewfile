@@ -298,6 +298,8 @@ cask "quarto"
 cask "r"
 # Data science software focusing on R and Python
 cask "rstudio"
+# Mathematics software system
+cask "sage"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
 # Screenshot measurement and annotation tool
