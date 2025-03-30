@@ -220,6 +220,8 @@ brew "tcl-tk"
 brew "tealdeer"
 # Terminal multiplexer
 brew "tmux"
+# Command-line unarchiving tools supporting multiple formats
+brew "unar"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # Internet file retriever
