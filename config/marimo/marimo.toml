@@ -1,0 +1,51 @@
+[completion]
+activate_on_typing = true
+copilot = false
+
+[runtime]
+auto_instantiate = true
+output_max_bytes = 8000000
+std_stream_max_bytes = 1000000
+on_cell_change = "autorun"
+auto_reload = "off"
+watcher_on_save = "lazy"
+
+[save]
+autosave_delay = 1000
+format_on_save = true
+autosave = "after_delay"
+
+[display]
+code_editor_font_size = 16
+default_width = "medium"
+cell_output = "above"
+theme = "dark"
+dataframes = "rich"
+
+[server]
+browser = "default"
+follow_symlink = false
+
+[experimental]
+
+[keymap]
+preset = "default"
+[keymap.overrides]
+
+[snippets]
+custom_paths = []
+include_default_snippets = true
+
+[formatting]
+line_length = 79
+
+[package_management]
+manager = "uv"
+
+[ai]
+rules = ""
+[ai.anthropic]
+
+[ai.open_ai]
+
+[ai.google]
