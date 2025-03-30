@@ -204,6 +204,8 @@ brew "shellcheck"
 brew "shellharden"
 # Autoformat shell script source code
 brew "shfmt"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Opinionated Lua code formatter
