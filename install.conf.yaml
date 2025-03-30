@@ -45,6 +45,7 @@
     ${XDG_CONFIG_HOME}/glow: config/glow
     ${XDG_CONFIG_HOME}/karabiner: config/karabiner
     ${XDG_CONFIG_HOME}/lazygit: config/lazygit
+    ${XDG_CONFIG_HOME}/leader-key: config/leader-key
     ${XDG_CONFIG_HOME}/marimo: config/marimo
     ${XDG_CONFIG_HOME}/newsboat: config/newsboat
     ${XDG_CONFIG_HOME}/npm: config/npm
