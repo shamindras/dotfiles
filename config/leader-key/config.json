@@ -1,67 +1,66 @@
 {
-  "actions": [
+  "actions" : [
     {
-      "key": "t",
-      "label": "",
-      "type": "application",
-      "value": "/Applications/WezTerm.app"
+      "key" : "t",
+      "label" : "",
+      "type" : "application",
+      "value" : "/Applications/WezTerm.app"
     },
     {
-      "key": "1",
-      "label": "",
-      "type": "application",
-      "value": "/Applications/1Password.app"
+      "key" : "1",
+      "label" : "",
+      "type" : "application",
+      "value" : "/Applications/1Password.app"
     },
     {
-      "key": "s",
-      "label": "",
-      "type": "application",
-      "value": "/Applications/Spotify.app"
+      "key" : "s",
+      "label" : "",
+      "type" : "application",
+      "value" : "/Applications/Spotify.app"
     },
     {
-      "key": "b",
-      "label": "",
-      "type": "application",
-      "value": "/Applications/Firefox.app"
+      "key" : "b",
+      "label" : "",
+      "type" : "application",
+      "value" : "/Applications/Firefox.app"
     },
     {
-      "key": "g",
-      "label": "",
-      "type": "application",
-      "value": "/Applications/Signal.app"
+      "key" : "g",
+      "label" : "",
+      "type" : "application",
+      "value" : "/Applications/Signal.app"
     },
     {
-      "key": "e",
-      "label": "",
-      "type": "application",
-      "value": "/System/Library/CoreServices/Finder.app"
+      "key" : "e",
+      "label" : "",
+      "type" : "application",
+      "value" : "/System/Library/CoreServices/Finder.app"
     },
     {
-      "key": "v",
-      "label": "",
-      "type": "application",
-      "value": "/Applications/Visual Studio Code.app"
+      "key" : "v",
+      "label" : "",
+      "type" : "application",
+      "value" : "/Applications/Visual Studio Code.app"
     },
     {
-      "actions": [
+      "actions" : [
         {
-          "key": "m",
-          "label": "",
-          "type": "command",
-          "value": "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" -o -iname \"*.epub\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\;"
+          "key" : "m",
+          "label" : "",
+          "type" : "command",
+          "value" : "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" -o -iname \"*.epub\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\;"
         },
         {
-          "key": "t",
-          "label": null,
-          "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to empty trash'"
+          "key" : "t",
+          "label" : "",
+          "type" : "command",
+          "value" : "osascript -e 'tell application \"Finder\" to empty trash'"
         }
       ],
-      "key": "r",
-      "label": "",
-      "type": "group"
+      "key" : "r",
+      "label" : "",
+      "type" : "group"
     }
   ],
-  "type": "group"
+  "type" : "group"
 }
-
