@@ -80,7 +80,6 @@ local function load_colorscheme(scheme)
 
   -- Common settings for all themes
   vim.cmd.hi('Comment gui=none')
-  vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = 'white' })
 end
 
 -- Make the cycle function globally accessible

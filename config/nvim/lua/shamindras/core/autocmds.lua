@@ -141,3 +141,17 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
     vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
   end,
 })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ WinSeparator color line
+
+-- Add this at the end of your file
+vim.api.nvim_create_autocmd('ColorScheme', {
+  pattern = '*',
+  callback = function()
+    vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = 'white' })
+  end,
+})
+
+-- ------------------------------------------------------------------------- }}}
