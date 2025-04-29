@@ -62,10 +62,10 @@ brew "unbound"
 brew "gnutls"
 # OpenType text shaping engine
 brew "harfbuzz"
-# C/C++ and Java libraries for Unicode and globalization
-brew "icu4c@76"
 # Image processing and image analysis library
 brew "leptonica"
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@76"
 # Subtitle renderer for the ASS/SSA subtitle format
 brew "libass"
 # Secure Reliable Transport
