@@ -63,9 +63,6 @@ require('lazy').setup({
 
   -- backout
   require('shamindras.plugins.backout'),
-
-  -- tabout
-  -- require 'shamindras.plugins.tabout',
 }, {
   defaults = { lazy = false },
   install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },
