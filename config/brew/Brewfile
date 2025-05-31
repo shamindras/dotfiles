@@ -250,6 +250,8 @@ cask "aerospace"
 cask "alacritty"
 # Application launcher and productivity software
 cask "alfred"
+# E-books management software
+cask "calibre"
 # DjVu viewer and browser plugin
 cask "djview"
 # Client for the Dropbox cloud storage service
@@ -306,6 +308,8 @@ cask "rstudio"
 cask "sage"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
+# Tool for sending personal documents to Kindles from Macs
+cask "send-to-kindle"
 # Screenshot measurement and annotation tool
 cask "shottr"
 # Instant messaging application focusing on security
