@@ -5,8 +5,8 @@
 # ------------------------------------------------------------------------------
 
 function z1_aliases {
-  alias -- -='z -' # note we need -- since command begins with -
-  alias ~='z ~'    # Go Home
+  alias -- -='z -;clear;' # note we need -- since command begins with -
+  alias ~='z ~'           # Go Home
   alias ..='z ..'
   alias ...='z ../..'
   alias ....='z ../../..'
