@@ -14,7 +14,7 @@ function z1_simple_prompt {
 
   setopt PROMPT_SUBST
   NEWLINE=$'\n'
-  PROMPT='%F{blue}%~%f %F{green}${vcs_info_msg_0_}%f${NEWLINE}➜ '
+  PROMPT='%F{blue}%~%f %F{green}${vcs_info_msg_0_}%f${NEWLINE}> '
 }
 
 # endregion --------------------------------------------------------------------
