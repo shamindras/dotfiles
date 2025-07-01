@@ -5,10 +5,10 @@
 # source: https://github.com/mingo99/yazi.config/blob/main/yazi.toml
 
 [mgr]
-ratio = [1, 2, 3]
-sort_by = "alphabetical"
-sort_sensitive = true
-sort_reverse = false
+ratio = [1, 3, 2]
+sort_by = "mtime"
+sort_sensitive = false
+sort_reverse = true
 sort_dir_first = true
 sort_translit = false
 linemode = "size"
