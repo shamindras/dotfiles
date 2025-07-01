@@ -64,8 +64,6 @@ brew "gnutls"
 brew "harfbuzz"
 # Image processing and image analysis library
 brew "leptonica"
-# C/C++ and Java libraries for Unicode and globalization
-brew "icu4c@76"
 # Subtitle renderer for the ASS/SSA subtitle format
 brew "libass"
 # Secure Reliable Transport
@@ -98,6 +96,8 @@ brew "shared-mime-info"
 brew "libheif"
 # Postgres C API library
 brew "libpq"
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@76"
 # Adds spatial SQL capabilities to SQLite
 brew "libspatialite"
 # Libraries and data formats for array-oriented scientific data
@@ -281,7 +281,7 @@ cask "jdownloader"
 # Menu bar manager
 cask "jordanbaird-ice"
 # Programming language for technical computing
-cask "julia"
+cask "julia-app"
 # Keyboard customiser
 cask "karabiner-elements"
 # Application launcher
@@ -301,7 +301,7 @@ cask "positron"
 # Scientific and technical publishing system built on Pandoc
 cask "quarto"
 # Environment for statistical computing and graphics
-cask "r"
+cask "r-app"
 # Data science software focusing on R and Python
 cask "rstudio"
 # Mathematics software system
@@ -330,6 +330,8 @@ cask "vlc"
 cask "wezterm"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
+# Video communication and virtual meeting platform
+cask "zoom"
 # Collect, organise, cite, and share research sources
 cask "zotero"
 vscode "aaron-bond.better-comments"
