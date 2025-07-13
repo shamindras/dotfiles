@@ -38,7 +38,7 @@ export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 # ------------------------------------------------------------------------------
 # region: Init z1
 # ------------------------------------------------------------------------------
- 
+
 () {
   typeset -g Z1_VERSION="0.0.1"
   typeset -gaH __z1_opts=(extended_glob NO_monitor NO_xtrace NO_ksh_arrays)
@@ -75,7 +75,7 @@ export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
 # ------------------------------------------------------------------------------
 # region: z1_confd: Source Zsh config files in a conf.d directory
 # ------------------------------------------------------------------------------
- 
+
 function z1_confd {
   local confd zfile
   zstyle -s ':z1:configs' dir 'confd' || confd=$__zsh_config_dir/conf.d
@@ -92,7 +92,7 @@ function z1_confd {
 # ------------------------------------------------------------------------------
 
 # source all conf.d files first, so that the `z1_` funcs below are loaded
-z1_confd 
+z1_confd
 
 # load all the conf.d functions ----
 # conf.d functions
@@ -121,4 +121,4 @@ z1_simple_prompt
 # Uncomment the following for profiling, must be at the bottom of `zshrc`
 # zprof
 
-# vim: ft=zsh 
+# vim: ft=zsh
