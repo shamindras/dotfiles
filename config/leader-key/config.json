@@ -48,7 +48,7 @@
           "key" : "m",
           "label" : "",
           "type" : "command",
-          "value" : "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" -o -iname \"*.epub\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\;"
+          "value" : "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\; ; find ~/Downloads -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\; ; find /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\;"
         },
         {
           "key" : "t",
