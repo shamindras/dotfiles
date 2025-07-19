@@ -2,43 +2,43 @@
   "actions" : [
     {
       "key" : "t",
-      "label" : "",
+      "label" : "wezterm",
       "type" : "application",
       "value" : "/Applications/WezTerm.app"
     },
     {
       "key" : "1",
-      "label" : "",
+      "label" : "1password",
       "type" : "application",
       "value" : "/Applications/1Password.app"
     },
     {
       "key" : "s",
-      "label" : "",
+      "label" : "spotify",
       "type" : "application",
       "value" : "/Applications/Spotify.app"
     },
     {
       "key" : "b",
-      "label" : "",
+      "label" : "firefox",
       "type" : "application",
       "value" : "/Applications/Firefox.app"
     },
     {
       "key" : "g",
-      "label" : "",
+      "label" : "signal",
       "type" : "application",
       "value" : "/Applications/Signal.app"
     },
     {
       "key" : "e",
-      "label" : "",
+      "label" : "finder",
       "type" : "application",
       "value" : "/System/Library/CoreServices/Finder.app"
     },
     {
       "key" : "v",
-      "label" : "",
+      "label" : "vscode",
       "type" : "application",
       "value" : "/Applications/Visual Studio Code.app"
     },
@@ -46,19 +46,68 @@
       "actions" : [
         {
           "key" : "m",
-          "label" : "",
+          "label" : "move-files",
           "type" : "command",
           "value" : "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\; ; find ~/Downloads -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\; ; find /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\;"
         },
         {
           "key" : "t",
-          "label" : "",
+          "label" : "trash-empty",
           "type" : "command",
           "value" : "osascript -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash'"
         }
       ],
       "key" : "r",
-      "label" : "",
+      "label" : "run",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "s",
+          "label" : "spotify",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"Spotify\"'"
+        },
+        {
+          "key" : "g",
+          "label" : "signal",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"Signal\"'"
+        },
+        {
+          "key" : "v",
+          "label" : "vscode",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"Code\"'"
+        },
+        {
+          "key" : "f",
+          "label" : "finder",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"Finder\"'"
+        },
+        {
+          "key" : "b",
+          "label" : "firefox",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"Firefox\"'"
+        },
+        {
+          "key" : "1",
+          "label" : "1password",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"1Password\"'"
+        },
+        {
+          "key" : "t",
+          "label" : "wezterm",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"Wezterm\"'"
+        }
+      ],
+      "key" : "q",
+      "label" : "quit",
       "type" : "group"
     }
   ],
