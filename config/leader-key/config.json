@@ -104,6 +104,12 @@
           "label" : "wezterm",
           "type" : "command",
           "value" : "osascript -e 'quit app \"Wezterm\"'"
+        },
+        {
+          "key" : "p",
+          "label" : "skim",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"Skim\"'"
         }
       ],
       "key" : "q",
