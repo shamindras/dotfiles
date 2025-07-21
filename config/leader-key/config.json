@@ -110,6 +110,12 @@
           "label" : "skim",
           "type" : "command",
           "value" : "osascript -e 'quit app \"Skim\"'"
+        },
+        {
+          "key" : "j",
+          "label" : "jdownloader",
+          "type" : "command",
+          "value" : "osascript -e 'quit app \"JDownloader2\"'"
         }
       ],
       "key" : "q",
