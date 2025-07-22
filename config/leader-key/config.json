@@ -13,7 +13,7 @@
       "value" : "/Applications/1Password.app"
     },
     {
-      "key" : "s",
+      "key" : "m",
       "label" : "spotify",
       "type" : "application",
       "value" : "/Applications/Spotify.app"
@@ -64,7 +64,7 @@
     {
       "actions" : [
         {
-          "key" : "s",
+          "key" : "m",
           "label" : "spotify",
           "type" : "command",
           "value" : "osascript -e 'quit app \"Spotify\"'"
@@ -120,6 +120,31 @@
       ],
       "key" : "q",
       "label" : "quit",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "c",
+          "label" : "clipboard",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/clipboard-history/clipboard-history"
+        },
+        {
+          "key" : "f",
+          "label" : "files",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/file-search/search-files"
+        },
+        {
+          "key" : "b",
+          "label" : "bookmarks",
+          "type" : "url",
+          "value" : "raycast://extensions/raycast/browser-bookmarks/index"
+        }
+      ],
+      "key" : "s",
+      "label" : "raycast",
       "type" : "group"
     }
   ],
