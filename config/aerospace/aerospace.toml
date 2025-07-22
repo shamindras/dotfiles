@@ -315,10 +315,10 @@ run = "move-node-to-workspace P"
 if.app-id = "com.apple.Preview"
 run = "move-node-to-workspace P"
 
-# [S]potify
+# Spotify - [M]usic
 [[on-window-detected]]
 if.app-id = "com.spotify.client"
-run = "move-node-to-workspace S"
+run = "move-node-to-workspace M"
 
 # [S]lack
 [[on-window-detected]]
