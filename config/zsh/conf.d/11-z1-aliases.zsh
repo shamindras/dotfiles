@@ -60,6 +60,10 @@ function z1_aliases {
   alias tzsh="hyperfine --warmup=20 '/usr/bin/time zsh -i -c exit'"
   alias uac="ua;clear" # run `ua` function and clear screen
 
+  # change directory and launch yazi
+  alias dy="z ~/Downloads;y"
+  alias ry="z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
+
   # bat-extras
   # source: https://github.com/eth-p/bat-extras/tree/master
   alias bdf='batdiff'
