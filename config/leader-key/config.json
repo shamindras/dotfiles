@@ -116,6 +116,12 @@
           "label" : "jdownloader",
           "type" : "command",
           "value" : "osascript -e 'quit app \"JDownloader2\"'"
+        },
+        {
+          "key" : "d",
+          "label" : "djview",
+          "type" : "command",
+          "value" : "killall -9 djview"
         }
       ],
       "key" : "q",
@@ -144,7 +150,7 @@
         }
       ],
       "key" : "s",
-      "label" : "raycast",
+      "label" : "search-raycast",
       "type" : "group"
     }
   ],
