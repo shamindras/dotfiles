@@ -36,7 +36,7 @@
     ${XDG_CONFIG_HOME}/borders: config/borders
     ${XDG_CONFIG_HOME}/bin: config/bin
     ${XDG_CONFIG_HOME}/btop: config/btop
-    ${XDG_CONFIG_HOME}/.curlrc: config/curl/curlrc
+    ${CURL_HOME}/.curlrc: config/curl/curlrc
     ${XDG_CONFIG_HOME}/delta: config/delta
     ${XDG_CONFIG_HOME}/fastfetch: config/fastfetch
     ${XDG_CONFIG_HOME}/gh: config/gh

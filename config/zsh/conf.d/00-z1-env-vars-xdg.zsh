@@ -40,7 +40,7 @@ export LESSHISTFILE="${LESSHISTFILE:-$XDG_CACHE_HOME/less/history}"
 # Python
 export PYENV_ROOT="${PYENV_ROOT:-$XDG_DATA_HOME/pyenv}"
 # export IPYTHONDIR="${IPYTHONDIR:-$XDG_CONFIG_HOME/ipython}"
-export PYTHONIOENCODING='UTF-8';
+export PYTHONIOENCODING='UTF-8'
 # export PYLINTHOME="${PYLINTHOME:-$XDG_CACHE_HOME/pylint.d}"
 # export PYTHONSTARTUP="${PYTHONSTARTUP:-$XDG_CONFIG_HOME/python/pythonrc}"
 # export MPLCONFIGDIR="${MPLCONFIGDIR:-$XDG_DATA_HOME/matplotlib}"
@@ -80,7 +80,7 @@ export _ZO_MAXAGE=100
 export GNUPGHOME="${GNUPGHOME:-$XDG_DATA_HOME/gnupg}"
 
 # gh
-# source: https://cli.github.com/manual/gh_help_environment 
+# source: https://cli.github.com/manual/gh_help_environment
 export GH_CONFIG_DIR="${GH_CONFIG_DIR:-$XDG_CONFIG_HOME/gh}"
 
 # gh-dash
@@ -137,7 +137,7 @@ export RIPGREP_CONFIG_PATH="${RIPGREP_CONFIG_PATH:-$XDG_CONFIG_HOME/ripgrep/ripg
 export WGETRC="${WGETRC:-$XDG_CONFIG_HOME/wget/wgetrc}"
 
 ## Respect XDG directories
-# export CURL_HOME="${XDG_CONFIG_HOME}/curl"
+export CURL_HOME="${XDG_CONFIG_HOME}/curl"
 # export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
 # export GIT_CONFIG="${XDG_CONFIG_HOME}/git/.gitconfig"
 
