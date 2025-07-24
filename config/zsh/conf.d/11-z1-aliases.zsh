@@ -61,8 +61,10 @@ function z1_aliases {
   alias uac="ua;clear" # run `ua` function and clear screen
 
   # change directory and launch yazi
-  alias dy="z ~/Downloads;y"
-  alias ry="z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
+  alias yd="z ~/Downloads;y"
+  alias yr="z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
+  alias yo="z ~/DROPBOX/RESOURCES/BOOKS/CURRENT_READING/books/ongoing;y"
+  alias yu="z ~/DROPBOX/RESOURCES/BOOKS/CURRENT_READING/books/upcoming;y"
 
   # bat-extras
   # source: https://github.com/eth-p/bat-extras/tree/master
