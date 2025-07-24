@@ -55,6 +55,12 @@
           "label" : "trash-empty",
           "type" : "command",
           "value" : "osascript -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash'"
+        },
+        {
+          "key" : "w",
+          "label" : "wash-dropbox",
+          "type" : "command",
+          "value" : "cd ~/DROPBOX && find . -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
         }
       ],
       "key" : "r",
