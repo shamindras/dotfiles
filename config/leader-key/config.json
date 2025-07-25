@@ -79,7 +79,7 @@
           "key" : "j",
           "label" : "jdownloader",
           "type" : "command",
-          "value" : "osascript -e 'quit app \"JDownloader2\"'"
+          "value" : "pkill -9 -f \"JDownloader\""
         },
         {
           "key" : "d",
