@@ -1,48 +1,6 @@
 {
   "actions" : [
     {
-      "key" : "t",
-      "label" : "wezterm",
-      "type" : "application",
-      "value" : "/Applications/WezTerm.app"
-    },
-    {
-      "key" : "1",
-      "label" : "1password",
-      "type" : "application",
-      "value" : "/Applications/1Password.app"
-    },
-    {
-      "key" : "m",
-      "label" : "spotify",
-      "type" : "application",
-      "value" : "/Applications/Spotify.app"
-    },
-    {
-      "key" : "b",
-      "label" : "firefox",
-      "type" : "application",
-      "value" : "/Applications/Firefox.app"
-    },
-    {
-      "key" : "g",
-      "label" : "signal",
-      "type" : "application",
-      "value" : "/Applications/Signal.app"
-    },
-    {
-      "key" : "e",
-      "label" : "finder",
-      "type" : "application",
-      "value" : "/System/Library/CoreServices/Finder.app"
-    },
-    {
-      "key" : "v",
-      "label" : "vscode",
-      "type" : "application",
-      "value" : "/Applications/Visual Studio Code.app"
-    },
-    {
       "actions" : [
         {
           "key" : "m",
@@ -157,6 +115,61 @@
       ],
       "key" : "s",
       "label" : "search-raycast",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "t",
+          "label" : "wezterm",
+          "type" : "application",
+          "value" : "/Applications/WezTerm.app"
+        },
+        {
+          "key" : "1",
+          "label" : "1password",
+          "type" : "application",
+          "value" : "/Applications/1Password.app"
+        },
+        {
+          "key" : "m",
+          "label" : "spotify",
+          "type" : "application",
+          "value" : "/Applications/Spotify.app"
+        },
+        {
+          "key" : "b",
+          "label" : "firefox",
+          "type" : "application",
+          "value" : "/Applications/Firefox.app"
+        },
+        {
+          "key" : "g",
+          "label" : "signal",
+          "type" : "application",
+          "value" : "/Applications/Signal.app"
+        },
+        {
+          "key" : "e",
+          "label" : "finder",
+          "type" : "application",
+          "value" : "/System/Library/CoreServices/Finder.app"
+        },
+        {
+          "key" : "v",
+          "label" : "vscode",
+          "type" : "application",
+          "value" : "/Applications/Visual Studio Code.app"
+        },
+        {
+          "key" : "j",
+          "label" : "jdownloader",
+          "type" : "application",
+          "value" : "/Applications/JDownloader 2/JDownloader2.app"
+        }
+      ],
+      "key" : "o",
+      "label" : "open",
       "type" : "group"
     }
   ],
