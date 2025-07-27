@@ -18,7 +18,7 @@
           "key" : "w",
           "label" : "wash-dropbox",
           "type" : "command",
-          "value" : "cd ~/DROPBOX && find . -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
+          "value" : "find ~/DROPBOX ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
         }
       ],
       "key" : "r",
@@ -46,7 +46,7 @@
           "value" : "osascript -e 'quit app \"Code\"'"
         },
         {
-          "key" : "f",
+          "key" : "e",
           "label" : "finder",
           "type" : "command",
           "value" : "osascript -e 'quit app \"Finder\"'"
@@ -86,6 +86,12 @@
           "label" : "djview",
           "type" : "command",
           "value" : "killall -9 djview"
+        },
+        {
+          "key" : "n",
+          "label" : "nordvpn",
+          "type" : "command",
+          "value" : "pkill -9 -f \"NordVPN\""
         }
       ],
       "key" : "q",
@@ -166,6 +172,12 @@
           "label" : "jdownloader",
           "type" : "application",
           "value" : "/Applications/JDownloader 2/JDownloader2.app"
+        },
+        {
+          "key" : "n",
+          "label" : "nordvpn",
+          "type" : "application",
+          "value" : "/Applications/NordVPN.app"
         }
       ],
       "key" : "o",
