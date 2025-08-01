@@ -240,24 +240,24 @@ run = "move-node-to-workspace 2"
 if.app-id = "org.videolan.vlc"
 run = "move-node-to-workspace 3"
 
+# jDownloader
+[[on-window-detected]]
+if.app-id = "org.jdownloader.launcher"
+run = "move-node-to-workspace 4"
+
 # Facetime
 [[on-window-detected]]
 if.app-id = "com.apple.FaceTime"
-run = "move-node-to-workspace 4"
+run = "move-node-to-workspace 5"
 
-# Messages
+# Books (epubs)
 [[on-window-detected]]
 if.app-id = "com.apple.iBooksX"
-run = "move-node-to-workspace 5"
+run = "move-node-to-workspace 6"
 
 # Messages
 [[on-window-detected]]
 if.app-id = "com.apple.MobileSMS"
-run = "move-node-to-workspace 5"
-
-# jDownloader
-[[on-window-detected]]
-if.app-id = "org.jdownloader.launcher"
 run = "move-node-to-workspace 6"
 
 # Apple TV
