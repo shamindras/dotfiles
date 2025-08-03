@@ -22,7 +22,9 @@ function M.setup(config)
     -- wezterm.font { family = 'MonaspiceAr Nerd Font', weight = 'Regular' }
     -- wezterm.font { family = 'Iosevka Nerd Font Mono', weight = 'Regular' }
     -- wezterm.font({ family = 'Maple Mono', weight = 'Regular' })
-    wezterm.font({ family = 'JetBrainsMono Nerd Font', weight = 'Regular' })
+    -- wezterm.font({ family = 'Cascadia Code NF', weight = 'Regular' })
+    -- wezterm.font({ family = 'JetBrainsMono Nerd Font', weight = 'Regular' })
+    wezterm.font({ family = 'CommitMono Nerd Font', weight = 'Regular' })
   config.font_size = 18
 
   -- Color scheme and window appearance
