@@ -1,6 +1,4 @@
 tap "felixkratz/formulae"
-tap "homebrew/bundle"
-tap "homebrew/services"
 tap "nikitabobko/tap"
 # Color management engine supporting ICC profiles
 brew "little-cms2"
@@ -96,8 +94,6 @@ brew "shared-mime-info"
 brew "libheif"
 # Postgres C API library
 brew "libpq"
-# C/C++ and Java libraries for Unicode and globalization
-brew "icu4c@76"
 # Adds spatial SQL capabilities to SQLite
 brew "libspatialite"
 # Libraries and data formats for array-oriented scientific data
@@ -244,6 +240,8 @@ brew "zoxide"
 brew "felixkratz/formulae/borders"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Command-line interface for 1Password
+cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "aerospace"
 # GPU-accelerated terminal emulator
@@ -260,6 +258,8 @@ cask "dropbox"
 cask "espanso"
 # Web browser
 cask "firefox"
+cask "font-cascadia-code-nf"
+cask "font-commit-mono-nerd-font"
 cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
 cask "font-hasklug-nerd-font"
@@ -302,6 +302,8 @@ cask "positron"
 cask "quarto"
 # Environment for statistical computing and graphics
 cask "r-app"
+# Control your tools with a few keystrokes
+cask "raycast"
 # Data science software focusing on R and Python
 cask "rstudio"
 # Mathematics software system
@@ -316,8 +318,6 @@ cask "shottr"
 cask "signal"
 # PDF reader and note-taking application
 cask "skim"
-# Video chat, voice call and instant messaging application
-cask "skype"
 # Team communication and collaboration software
 cask "slack"
 # Music streaming service
