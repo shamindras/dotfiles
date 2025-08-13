@@ -68,6 +68,29 @@ local function load_colorscheme(scheme)
     return
   end
 
+  -- Special handling for eldritch to ensure it's properly configured
+  if scheme == 'eldritch' then
+    local eldritch_ok, eldritch = pcall(require, 'eldritch')
+    if eldritch_ok then
+      -- Setup eldritch with default configuration to avoid the nil styles error
+      eldritch.setup({
+        palette = 'default',
+        transparent = false,
+        terminal_colors = true,
+        styles = {
+          comments = { italic = true },
+          keywords = { italic = true },
+          functions = {},
+          variables = {},
+          sidebars = 'dark',
+          floats = 'dark',
+        },
+        sidebars = { 'qf', 'help' },
+        hide_inactive_statusline = false,
+      })
+    end
+  end
+
   -- Protected call to load the colorscheme
   local ok, err = pcall(vim.cmd.colorscheme, config.scheme)
   if not ok then
@@ -106,6 +129,27 @@ return {
     'eldritch-theme/eldritch.nvim',
     priority = 1000,
     lazy = false, -- Ensure it loads immediately
+    config = function()
+      -- Setup eldritch with proper configuration matching official docs
+      require('eldritch').setup({
+        palette = 'default', -- Available options: "default" (standard palette), "darker" (darker variant)
+        transparent = false, -- Enable this to disable setting the background color
+        terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
+        styles = {
+          -- Style to be applied to different syntax groups
+          -- Value is any valid attr-list value for `:help nvim_set_hl`
+          comments = { italic = true },
+          keywords = { italic = true },
+          functions = {},
+          variables = {},
+          -- Background styles. Can be "dark", "transparent" or "normal"
+          sidebars = 'dark', -- style for sidebars, see below
+          floats = 'dark', -- style for floating windows
+        },
+        sidebars = { 'qf', 'help' }, -- Set a darker background on sidebar-like windows
+        hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead
+      })
+    end,
     init = function()
       -- Set colorscheme to last used or fallback
       vim.cmd.colorscheme(colorschemes[initial_scheme].scheme)
