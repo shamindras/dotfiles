@@ -87,6 +87,13 @@ local function load_colorscheme(scheme)
         },
         sidebars = { 'qf', 'help' },
         hide_inactive_statusline = false,
+        -- Optional callback functions for color and highlight customization
+        on_colors = function(colors)
+          -- Override colors here if needed
+        end,
+        on_highlights = function(highlights, colors)
+          -- Override highlight groups here if needed
+        end,
       })
     end
   end
@@ -148,6 +155,15 @@ return {
         },
         sidebars = { 'qf', 'help' }, -- Set a darker background on sidebar-like windows
         hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead
+        -- Optional callback functions for color and highlight customization
+        on_colors = function(colors)
+          -- Override colors here if needed
+          -- Example: colors.hint = colors.orange
+        end,
+        on_highlights = function(highlights, colors)
+          -- Override highlight groups here if needed
+          -- Example: highlights.Comment = { fg = colors.grey, italic = true }
+        end,
       })
     end,
     init = function()
