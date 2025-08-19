@@ -12,9 +12,9 @@ sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `.setup-macos` has finished
 while true; do
-    sudo -n true
-    sleep 60
-    kill -0 "$$" || exit
+  sudo -n true
+  sleep 60
+  kill -0 "$$" || exit
 done 2>/dev/null &
 
 ###############################################################################
@@ -219,9 +219,9 @@ sudo chflags nohidden /Volumes
 # Expand the following File Info panes:
 # “General”, “Open with”, and “Sharing & Permissions”
 defaults write com.apple.finder FXInfoPanesExpanded -dict \
-    General -bool true \
-    OpenWith -bool true \
-    Privileges -bool true
+  General -bool true \
+  OpenWith -bool true \
+  Privileges -bool true
 
 ###############################################################################
 # Dock, Dashboard, and hot corners                                            #
@@ -325,3 +325,6 @@ defaults write -g NSWindowShouldDragOnGesture -bool true
 # This way we can use aerospace in accordion mode to handle file switching
 defaults write -app Skim AppleWindowTabbingMode never
 defaults write -app Preview AppleWindowTabbingMode never
+
+# Set lock screen message
+sudo /usr/libexec/PlistBuddy -c "Set :LoginwindowText 'If found, please call +1 (415) 937 3701' to return it." /Library/Preferences/com.apple.loginwindow.plist
