@@ -29,6 +29,7 @@ function z1_aliases {
   alias cpi='cp -iv'
   alias da='deactivate'
   alias df='df -kH'
+  alias dn='z ~/DROPBOX/REPOS/dotfiles;nvim;clear'
   alias dus='du -sckx * | sort -nr'
   alias er='espanso restart'
   alias ghd='gh dash;clear;'
