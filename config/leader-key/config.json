@@ -1,189 +1,190 @@
 {
-  "actions" : [
+  "actions": [
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "m",
-          "label" : "move-files",
-          "type" : "command",
-          "value" : "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\; ; find ~/Downloads -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\; ; find /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\;"
+          "key": "m",
+          "label": "move-files",
+          "type": "command",
+          "value": "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\; ; find ~/Downloads -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\; ; find /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\;"
         },
         {
-          "key" : "t",
-          "label" : "trash-empty",
-          "type" : "command",
-          "value" : "osascript -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash'"
+          "key": "t",
+          "label": "trash-empty",
+          "type": "command",
+          "value": "osascript -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash'"
         },
         {
-          "key" : "w",
-          "label" : "wash-dropbox",
-          "type" : "command",
-          "value" : "find ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
+          "key": "w",
+          "label": "wash-dropbox",
+          "type": "command",
+          "value": "find ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
         }
       ],
-      "key" : "r",
-      "label" : "run",
-      "type" : "group"
+      "key": "r",
+      "label": "run",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "m",
-          "label" : "spotify",
-          "type" : "command",
-          "value" : "osascript -e 'quit app \"Spotify\"'"
+          "key": "m",
+          "label": "spotify",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Spotify\"' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "g",
-          "label" : "signal",
-          "type" : "command",
-          "value" : "osascript -e 'quit app \"Signal\"'"
+          "key": "g",
+          "label": "signal",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Signal\"' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "v",
-          "label" : "vscode",
-          "type" : "command",
-          "value" : "osascript -e 'quit app \"Code\"'"
+          "key": "v",
+          "label": "vscode",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Code\"' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "e",
-          "label" : "finder",
-          "type" : "command",
-          "value" : "(pgrep -q Finder && osascript -e 'tell application \"Finder\" to quit' && sleep 0.2 || true) && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "key": "e",
+          "label": "finder",
+          "type": "command",
+          "value": "(pgrep -q Finder && osascript -e 'tell application \"Finder\" to quit' && sleep 0.2 || true) && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "b",
-          "label" : "firefox",
-          "type" : "command",
-          "value" : "osascript -e 'quit app \"Firefox\"'"
+          "key": "b",
+          "label": "firefox",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Firefox\"' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "1",
-          "label" : "1password",
-          "type" : "command",
-          "value" : "osascript -e 'quit app \"1Password\"'"
+          "key": "1",
+          "label": "1password",
+          "type": "command",
+          "value": "osascript -e 'quit app \"1Password\"' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "t",
-          "label" : "wezterm",
-          "type" : "command",
-          "value" : "osascript -e 'quit app \"Wezterm\"'"
+          "key": "t",
+          "label": "wezterm",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Wezterm\"' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "p",
-          "label" : "skim",
-          "type" : "command",
-          "value" : "osascript -e 'quit app \"Skim\"'"
+          "key": "p",
+          "label": "skim",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "j",
-          "label" : "jdownloader",
-          "type" : "command",
-          "value" : "pkill -9 -f \"JDownloader\""
+          "key": "j",
+          "label": "jdownloader",
+          "type": "command",
+          "value": "pkill -9 -f \"JDownloader\" && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "d",
-          "label" : "djview",
-          "type" : "command",
-          "value" : "killall -9 djview 2>/dev/null || true"
+          "key": "d",
+          "label": "djview",
+          "type": "command",
+          "value": "(killall -9 djview 2>/dev/null || true) && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key" : "n",
-          "label" : "nordvpn",
-          "type" : "command",
-          "value" : "pkill -9 -f \"NordVPN\""
+          "key": "n",
+          "label": "nordvpn",
+          "type": "command",
+          "value": "pkill -9 -f \"NordVPN\" && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         }
       ],
-      "key" : "q",
-      "label" : "quit",
-      "type" : "group"
+      "key": "q",
+      "label": "quit",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "c",
-          "label" : "clipboard",
-          "type" : "url",
-          "value" : "raycast://extensions/raycast/clipboard-history/clipboard-history"
+          "key": "c",
+          "label": "clipboard",
+          "type": "url",
+          "value": "raycast://extensions/raycast/clipboard-history/clipboard-history"
         },
         {
-          "key" : "f",
-          "label" : "files",
-          "type" : "url",
-          "value" : "raycast://extensions/raycast/file-search/search-files"
+          "key": "f",
+          "label": "files",
+          "type": "url",
+          "value": "raycast://extensions/raycast/file-search/search-files"
         },
         {
-          "key" : "b",
-          "label" : "bookmarks",
-          "type" : "url",
-          "value" : "raycast://extensions/raycast/browser-bookmarks/index"
+          "key": "b",
+          "label": "bookmarks",
+          "type": "url",
+          "value": "raycast://extensions/raycast/browser-bookmarks/index"
         }
       ],
-      "key" : "s",
-      "label" : "search-raycast",
-      "type" : "group"
+      "key": "s",
+      "label": "search-raycast",
+      "type": "group"
     },
     {
-      "actions" : [
+      "actions": [
         {
-          "key" : "t",
-          "label" : "wezterm",
-          "type" : "application",
-          "value" : "/Applications/WezTerm.app"
+          "key": "t",
+          "label": "wezterm",
+          "type": "application",
+          "value": "/Applications/WezTerm.app"
         },
         {
-          "key" : "1",
-          "label" : "1password",
-          "type" : "application",
-          "value" : "/Applications/1Password.app"
+          "key": "1",
+          "label": "1password",
+          "type": "application",
+          "value": "/Applications/1Password.app"
         },
         {
-          "key" : "m",
-          "label" : "spotify",
-          "type" : "application",
-          "value" : "/Applications/Spotify.app"
+          "key": "m",
+          "label": "spotify",
+          "type": "application",
+          "value": "/Applications/Spotify.app"
         },
         {
-          "key" : "b",
-          "label" : "firefox",
-          "type" : "application",
-          "value" : "/Applications/Firefox.app"
+          "key": "b",
+          "label": "firefox",
+          "type": "application",
+          "value": "/Applications/Firefox.app"
         },
         {
-          "key" : "g",
-          "label" : "signal",
-          "type" : "application",
-          "value" : "/Applications/Signal.app"
+          "key": "g",
+          "label": "signal",
+          "type": "application",
+          "value": "/Applications/Signal.app"
         },
         {
-          "key" : "e",
-          "label" : "finder",
-          "type" : "application",
-          "value" : "/System/Library/CoreServices/Finder.app"
+          "key": "e",
+          "label": "finder",
+          "type": "application",
+          "value": "/System/Library/CoreServices/Finder.app"
         },
         {
-          "key" : "v",
-          "label" : "vscode",
-          "type" : "application",
-          "value" : "/Applications/Visual Studio Code.app"
+          "key": "v",
+          "label": "vscode",
+          "type": "application",
+          "value": "/Applications/Visual Studio Code.app"
         },
         {
-          "key" : "j",
-          "label" : "jdownloader",
-          "type" : "application",
-          "value" : "/Applications/JDownloader 2/JDownloader2.app"
+          "key": "j",
+          "label": "jdownloader",
+          "type": "application",
+          "value": "/Applications/JDownloader 2/JDownloader2.app"
         },
         {
-          "key" : "n",
-          "label" : "nordvpn",
-          "type" : "application",
-          "value" : "/Applications/NordVPN.app"
+          "key": "n",
+          "label": "nordvpn",
+          "type": "application",
+          "value": "/Applications/NordVPN.app"
         }
       ],
-      "key" : "o",
-      "label" : "open",
-      "type" : "group"
+      "key": "o",
+      "label": "open",
+      "type": "group"
     }
   ],
-  "type" : "group"
+  "type": "group"
 }
+
