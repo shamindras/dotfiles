@@ -18,7 +18,7 @@
           "key" : "w",
           "label" : "wash-dropbox",
           "type" : "command",
-          "value" : "find ~/DROPBOX ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
+          "value" : "find ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
         }
       ],
       "key" : "r",
@@ -49,7 +49,7 @@
           "key" : "e",
           "label" : "finder",
           "type" : "command",
-          "value" : "osascript -e 'quit app \"Finder\"'"
+          "value" : "(pgrep -q Finder && osascript -e 'tell application \"Finder\" to quit' && sleep 0.2 || true) && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key" : "b",
@@ -85,7 +85,7 @@
           "key" : "d",
           "label" : "djview",
           "type" : "command",
-          "value" : "killall -9 djview"
+          "value" : "killall -9 djview 2>/dev/null || true"
         },
         {
           "key" : "n",
