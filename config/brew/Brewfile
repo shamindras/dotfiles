@@ -38,6 +38,8 @@ brew "gmp"
 brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Network authentication protocol
+brew "krb5"
 # Good-lookin' diffs with diff-highlight and more
 brew "diff-so-fancy"
 # Load/unload environment variables based on $PWD
@@ -82,8 +84,6 @@ brew "geos"
 brew "gnupg"
 # File format designed to store large amounts of data
 brew "hdf5"
-# Network authentication protocol
-brew "krb5"
 # Cartographic Projections Library
 brew "proj"
 # Library and tools for dealing with GeoTIFF
@@ -266,7 +266,7 @@ cask "font-hasklug-nerd-font"
 cask "font-iosevka-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-maple-mono"
-cask "font-monaspace-nerd-font"
+cask "font-monaspice-nerd-font"
 cask "font-sf-pro"
 cask "font-symbols-only-nerd-font"
 cask "font-victor-mono"
