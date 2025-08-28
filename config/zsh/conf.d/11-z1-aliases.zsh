@@ -103,12 +103,9 @@ function z1_aliases {
   alias gpg='${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\"'
   alias wget='wget --hsts-file=\"$XDG_DATA_HOME/wget-hsts\"'
 
-  # Additional clean/wash aliases --
+  # Additional clean --
   # Source: https://github.com/sharkdp/fd/discussions/1615
-  # Adapted from: https://github.com/ameensol/shell/blob/master/.zshenv#L29-L30
-
-  # clean up current directory
-  # uses the `wash` function
+  # clean up current directory, uses the `wash` function
   alias clean="wash --current"
 
 }
