@@ -21,7 +21,7 @@ return {
       python = { 'ruff_format' },
       sh = { 'shfmt' },
       bash = { 'shfmt' },
-      zsh = { 'shfmt' },
+      -- zsh = { 'shfmt' },
       make = { 'make-format' },
       json = { 'jq' },
       toml = { 'taplo' },

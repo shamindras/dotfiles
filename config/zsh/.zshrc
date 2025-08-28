@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+# shfmt:disable
+
 # Uncomment the following for profiling, must be at the top of `zshrc`
 # zmodload zsh/zprof
 

@@ -1,0 +1,76 @@
+#!/bin/zsh
+
+##? wash - clean up DS_Store, swap files, and backup files
+##?
+##? usage:
+##?   wash [--current] [directory...] [--help]
+##?
+##? arguments:
+##?   directory...  Directories to start cleaning (default: current directory)
+##?
+##? options:
+##?   --current  Search only current directory level (don't recurse into subdirectories)
+##?   --help     Show this help message
+##?
+##? examples:
+##?   wash                         # clean current directory and subdirectories
+##?   wash --current               # clean current directory only (one level)
+##?   wash ~/Downloads             # clean ~/Downloads and subdirectories
+##?   wash ~/Desktop ~/Downloads   # clean multiple directories
+##?   wash --current ~/Downloads   # clean ~/Downloads one level only
+
+wash() {
+    local target_dirs=()
+    local use_depth=false
+
+    # Show help if --help flag
+    if test "$1" = "--help"; then
+        grep "^##?" "$0" | cut -c 5-
+        return 0
+    fi
+
+    # Parse arguments
+    while test $# -gt 0; do
+        case $1 in
+            --current)
+                use_depth=true
+                shift
+                ;;
+            --help)
+                # Already handled above
+                shift
+                ;;
+            -*)
+                echo "Unknown option: $1" >&2
+                echo "Use 'wash --help' for usage information." >&2
+                return 1
+                ;;
+            *)
+                # Add valid directories to the array
+                if test -d "$1"; then
+                    target_dirs+=("$1")
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    # Default to current directory if no valid directories provided
+    if test "${#target_dirs[@]}" -eq 0; then
+        target_dirs=(".")
+    fi
+
+    # Execute the cleanup for each directory
+    local original_pwd="$PWD"
+    for dir in "${target_dirs[@]}"; do
+        cd "$dir" || continue
+        if test "$use_depth" = true; then
+            fd '\.(DS_Store|swo|swp)$|~$' -d1 -tf -u -X rm
+        else
+            fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
+        fi
+        cd "$original_pwd" || return 1
+    done
+}
+
+# vim: ft=zsh
