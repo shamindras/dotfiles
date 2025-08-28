@@ -2,6 +2,9 @@
 gui:
   # stuff relating to the UI
   nerdFontsVersion: "3"
+  # If true (default), file icons are shown in the file views. Only relevant if
+  # NerdFontsVersion is not empty.
+  showFileIcons: true
   scrollHeight: 2 # how many lines you scroll by
   scrollPastBottom: true # enable scrolling past the bottom
   sidePanelWidth: 0.3333 # number from 0 to 1
@@ -35,12 +38,9 @@ gui:
       - "#db4b4b"
     defaultFgColor:
       - "#c0caf5"
-  # If true (default), file icons are shown in the file views. Only relevant if
-  # NerdFontsVersion is not empty.
-  showFileIcons: true
   # Window border style.
   # One of 'rounded' (default) | 'single' | 'double' | 'hidden'
-  border: "single"
+  border: "rounded"
   mouseEvents: true
   skipDiscardChangeWarning: false
   skipStashWarning: true

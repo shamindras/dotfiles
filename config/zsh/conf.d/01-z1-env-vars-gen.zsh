@@ -11,8 +11,9 @@ export PAGER=${PAGER:-less}
 export BROWSER=${BROWSER:-firefox}
 
 # Encodings, languges and misc settings
-export LANG=${LANG:-en_US.UTF-8}
-export LC_ALL='C';
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=UTF-8
 
 # Set the Less input preprocessor.
 # Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
