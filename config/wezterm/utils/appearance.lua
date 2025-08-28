@@ -17,10 +17,10 @@ end
 function M.setup(config)
   -- Font configuration
   config.font =
-    -- wezterm.font { family = 'MonaspiceNe Nerd Font', weight = 'Regular' }
-    -- wezterm.font { family = 'Victor Mono', weight = 'Regular' }
-    -- wezterm.font { family = 'MonaspiceAr Nerd Font', weight = 'Regular' }
-    -- wezterm.font { family = 'Iosevka Nerd Font Mono', weight = 'Regular' }
+    -- wezterm.font({ family = 'MonaspiceNe Nerd Font', weight = 'Regular' })
+    -- wezterm.font({ family = 'Victor Mono', weight = 'Regular' })
+    -- wezterm.font({ family = 'MonaspiceAr Nerd Font', weight = 'Regular' })
+    -- wezterm.font({ family = 'Iosevka Nerd Font Mono', weight = 'Regular' })
     -- wezterm.font({ family = 'Maple Mono', weight = 'Regular' })
     -- wezterm.font({ family = 'Cascadia Code NF', weight = 'Regular' })
     -- wezterm.font({ family = 'JetBrainsMono Nerd Font', weight = 'Regular' })
