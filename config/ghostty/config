@@ -13,12 +13,15 @@ bold-is-bright = true
 macos-titlebar-style = hidden
 macos-window-shadow = false
 mouse-hide-while-typing = true
-window-decoration = false
+window-decoration = true
 window-padding-balance = true
 window-padding-x = 2
 window-padding-y = 4
 window-save-state = always
 window-theme = auto
+theme = light:catppuccin-mocha,dark:catppuccin-macchiato
+background-opacity = 0.80
+# background-blur-radius = 23
 
 # maximise by default
 window-width = 9999
@@ -35,3 +38,6 @@ cursor-invert-fg-bg = true
 clipboard-read = "allow"
 clipboard-trim-trailing-spaces = true
 clipboard-write = "allow"
+
+# keybindings
+macos-option-as-alt = true
