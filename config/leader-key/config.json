@@ -49,7 +49,7 @@
           "key": "e",
           "label": "finder",
           "type": "command",
-          "value": "(pgrep -q Finder && osascript -e 'tell application \"Finder\" to quit' && sleep 0.2 || true) && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "(pgrep -q Finder && osascript -e 'tell application \"Finder\" to quit' && sleep 0.1 || true) && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "b",
