@@ -3,7 +3,7 @@ local M = {}
 -- {{{ Text editing plugins ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.ai',
+  'nvim-mini/mini.ai',
   event = 'VeryLazy',
   keys = {
     { 'a', mode = { 'x', 'o' } },
@@ -39,7 +39,7 @@ table.insert(M, {
 --{{{ Operators ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.operators',
+  'nvim-mini/mini.operators',
   version = '*',
   event = 'VeryLazy', -- Load after startup
   config = function()
@@ -52,7 +52,7 @@ table.insert(M, {
 --{{{ Surround ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.surround',
+  'nvim-mini/mini.surround',
   version = '*',
   event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
   config = function()
@@ -65,7 +65,7 @@ table.insert(M, {
 --{{{ Move ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.move',
+  'nvim-mini/mini.move',
   version = '*',
   event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
   config = function()
@@ -85,7 +85,7 @@ table.insert(M, {
 --{{{ Pairs ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.pairs',
+  'nvim-mini/mini.pairs',
   version = '*',
   event = 'InsertEnter', -- Load when entering insert mode
   config = function()
@@ -98,7 +98,7 @@ table.insert(M, {
 --{{{ General workflow plugins ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.bracketed',
+  'nvim-mini/mini.bracketed',
   version = '*',
   event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
   config = function()
@@ -111,7 +111,7 @@ table.insert(M, {
 --{{{ File Explorer ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.files',
+  'nvim-mini/mini.files',
   version = '*',
   cmd = {
     'MiniFiles',
@@ -177,7 +177,7 @@ table.insert(M, {
 --{{{ Appearance plugins ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.statusline',
+  'nvim-mini/mini.statusline',
   version = '*',
   event = 'VimEnter', -- Load when Vim starts
   config = function()
@@ -199,7 +199,7 @@ table.insert(M, {
 --{{{ Icons plugin ------------------------------------------------------------------------
 
 table.insert(M, {
-  'echasnovski/mini.icons',
+  'nvim-mini/mini.icons',
   version = '*',
   event = 'VeryLazy',
   config = function()

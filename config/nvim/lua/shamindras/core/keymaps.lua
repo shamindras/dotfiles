@@ -60,7 +60,7 @@ keymap('n', '<C-c>', 'ciw')
 
 -- Remap <Esc> in insert mode based on cursor position
 vim.keymap.set('i', '<Esc>', function()
-  return vim.fn.col '.' == 1 and '<Esc>' or '<Esc>l'
+  return vim.fn.col('.') == 1 and '<Esc>' or '<Esc>l'
 end, { expr = true, desc = 'Exit insert, move right' })
 
 -- ------------------------------------------------------------------------- }}}
@@ -104,12 +104,12 @@ local function toggle_window_maximize()
 
   if is_maximized then
     -- Restore the previous window layout
-    vim.cmd 'wincmd ='
+    vim.cmd('wincmd =')
     vim.t.maximized_window = nil
   else
     -- Maximize the current window
-    vim.cmd 'wincmd |' -- Maximize vertically
-    vim.cmd 'wincmd _' -- Maximize horizontally
+    vim.cmd('wincmd |') -- Maximize vertically
+    vim.cmd('wincmd _') -- Maximize horizontally
     vim.t.maximized_window = current_win
   end
 
@@ -153,7 +153,7 @@ keymap('n', '<leader>bc', '<cmd>%d<CR>', { noremap = true, desc = 'Clear buffer 
 
 -- {{{ insert missing lines above/below
 
--- source: https://github.com/echasnovski/mini.nvim/blob/main/lua/mini/basics.lua#L576-L577
+-- source: https://github.com/nvim-mini/mini.nvim/blob/0ffc2af38b3c5293076317b138635d6d7c80a40f/lua/mini/basics.lua#L565-L566
 -- NOTE: does not support `.` repeat
 keymap('n', 'gO', "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>")
 keymap('n', 'go', "<Cmd>call append(line('.'),     repeat([''], v:count1))<CR>")

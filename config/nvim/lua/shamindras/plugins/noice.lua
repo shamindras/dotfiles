@@ -4,7 +4,7 @@ return {
   dependencies = {
     'MunifTanjim/nui.nvim',
     {
-      'echasnovski/mini.notify',
+      'nvim-mini/mini.notify',
       version = false,
       opts = {
         -- Disable notifications since we're only using cmdline
