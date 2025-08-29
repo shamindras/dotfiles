@@ -46,6 +46,12 @@ if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   export HELPDIR="${MANPATH}"
 fi
 
+# Ghostty - terminal color fix
+# source: https://vninja.net/2024/12/28/ghostty-workaround-for-missing-or-unsuitable-terminal-xterm-ghostty/
+if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+    export TERM=xterm-256color
+fi
+
 # Set $PATH.
 
 # Ensure path arrays do not contain duplicates.

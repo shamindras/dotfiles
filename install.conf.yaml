@@ -41,6 +41,7 @@
     ${XDG_CONFIG_HOME}/fastfetch: config/fastfetch
     ${XDG_CONFIG_HOME}/gh: config/gh
     ${XDG_CONFIG_HOME}/gh-dash: config/gh-dash
+    ${XDG_CONFIG_HOME}/ghostty: config/ghostty
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
     ${XDG_CONFIG_HOME}/karabiner: config/karabiner

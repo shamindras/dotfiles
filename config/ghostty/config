@@ -1,0 +1,37 @@
+# vim: set filetype=sh
+
+# BUG: Improper handling of window title sequences can lead to arbitrary command execution
+# https://github.com/ghostty-org/ghostty/security/advisories/GHSA-5hcq-3j4q-4v6p
+title = Ghostty
+
+# shell
+shell-integration = zsh
+shell-integration-features = "no-cursor,sudo,title"
+
+# UI
+bold-is-bright = true
+macos-titlebar-style = hidden
+macos-window-shadow = false
+mouse-hide-while-typing = true
+window-decoration = false
+window-padding-balance = true
+window-padding-x = 2
+window-padding-y = 4
+window-save-state = always
+window-theme = auto
+
+# maximise by default
+window-width = 9999
+window-height = 9999
+
+# visuals
+font-family = "CommitMono Nerd Font"
+font-size = 20
+cursor-style = block
+cursor-style-blink = false
+cursor-invert-fg-bg = true
+
+# clipboard
+clipboard-read = "allow"
+clipboard-trim-trailing-spaces = true
+clipboard-write = "allow"
