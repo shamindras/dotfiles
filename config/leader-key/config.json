@@ -126,7 +126,7 @@
     {
       "actions": [
         {
-          "key": "t",
+          "key": "w",
           "label": "wezterm",
           "type": "application",
           "value": "/Applications/WezTerm.app"
@@ -178,6 +178,12 @@
           "label": "nordvpn",
           "type": "application",
           "value": "/Applications/NordVPN.app"
+        },
+        {
+          "key": "t",
+          "label": "ghostty",
+          "type": "application",
+          "value": "/Applications/Ghostty.app"
         }
       ],
       "key": "o",
