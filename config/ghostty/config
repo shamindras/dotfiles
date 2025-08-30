@@ -1,6 +1,6 @@
 # vim: set filetype=sh
 
-# BUG: Improper handling of window title sequences can lead to arbitrary command execution
+# NOTE: Improper handling of window title sequences can lead to arbitrary command execution
 # https://github.com/ghostty-org/ghostty/security/advisories/GHSA-5hcq-3j4q-4v6p
 title = Ghostty
 
@@ -20,8 +20,8 @@ window-padding-y = 4
 window-save-state = always
 window-theme = auto
 theme = light:catppuccin-mocha,dark:catppuccin-macchiato
-background-opacity = 0.80
-# background-blur-radius = 23
+background-opacity = 0.9
+# background-blur-radius = 20
 
 # maximise by default
 window-width = 9999
