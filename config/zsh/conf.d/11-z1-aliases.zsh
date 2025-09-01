@@ -61,11 +61,9 @@ function z1_aliases {
   alias tzsh="hyperfine --warmup=20 '/usr/bin/time zsh -i -c exit'"
   alias uac="ua;clear" # run `ua` function and clear screen
 
-  # change directory and launch yazi
-  alias yd="z ~/Downloads;y"
-  alias yr="z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
-  alias yo="z ~/DROPBOX/RESOURCES/BOOKS/CURRENT_READING/books/ongoing;y"
-  alias yu="z ~/DROPBOX/RESOURCES/BOOKS/CURRENT_READING/books/upcoming;y"
+  # wash hidden files in downloads and refs, change into directory and launch yazi
+  alias yd="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;z ~/Downloads;y"
+  alias yr="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
 
   # bat-extras
   # source: https://github.com/eth-p/bat-extras/tree/master
