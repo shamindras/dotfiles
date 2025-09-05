@@ -64,10 +64,16 @@
           "value": "osascript -e 'quit app \"1Password\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key": "t",
+          "key": "w",
           "label": "wezterm",
           "type": "command",
-          "value": "osascript -e 'quit app \"Wezterm\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "osascript -e 'quit app \"WezTerm\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+        },
+        {
+          "key": "t",
+          "label": "ghostty",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "p",
@@ -79,13 +85,13 @@
           "key": "j",
           "label": "jdownloader",
           "type": "command",
-          "value": "osascript -e 'quit app \"JDownloader 2\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "(pkill -f \"JDownloader2.app\" 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "d",
           "label": "djview",
           "type": "command",
-          "value": "(pkill -f djview 2>/dev/null || true) && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
         },
         {
           "key": "n",
@@ -184,6 +190,18 @@
           "label": "ghostty",
           "type": "application",
           "value": "/Applications/Ghostty.app"
+        },
+        {
+          "key": "p",
+          "label": "skim",
+          "type": "application",
+          "value": "/Applications/Skim.app"
+        },
+        {
+          "key": "d",
+          "label": "djview",
+          "type": "application",
+          "value": "/Applications/DjView.app"
         }
       ],
       "key": "o",
