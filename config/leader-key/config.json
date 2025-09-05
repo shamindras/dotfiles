@@ -12,13 +12,19 @@
           "key": "t",
           "label": "trash-empty",
           "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to activate' -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash' && sleep 0.1 && (pkill -9 -f Finder 2>/dev/null || true)"
+          "value": "osascript -e 'tell application \"Finder\" to activate' -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash' && sleep 0.2 && (pkill -9 -f Finder 2>/dev/null || true)"
         },
         {
           "key": "w",
           "label": "wash-dropbox",
           "type": "command",
           "value": "find ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
+        },
+        {
+          "key": "u",
+          "label": "toggle-mute",
+          "type": "command",
+          "value": "osascript -e 'set curVolume to get volume settings' -e 'if output muted of curVolume is false then' -e 'set volume with output muted' -e 'else' -e 'set volume without output muted' -e 'end if'"
         }
       ],
       "key": "r",
@@ -211,4 +217,3 @@
   ],
   "type": "group"
 }
-
