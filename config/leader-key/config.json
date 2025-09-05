@@ -12,7 +12,7 @@
           "key": "t",
           "label": "trash-empty",
           "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash'"
+          "value": "osascript -e 'tell application \"Finder\" to activate' -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash' && sleep 0.1 && (pkill -9 -f Finder 2>/dev/null || true)"
         },
         {
           "key": "w",
@@ -85,7 +85,7 @@
           "key": "d",
           "label": "djview",
           "type": "command",
-          "value": "(pkill -f djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "(pkill -f djview 2>/dev/null || true) && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
         },
         {
           "key": "n",
