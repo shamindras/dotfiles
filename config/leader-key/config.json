@@ -12,7 +12,7 @@
           "key": "t",
           "label": "trash-empty",
           "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to activate' -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash' && sleep 0.2 && (pkill -9 -f Finder 2>/dev/null || true)"
+          "value": "osascript -e 'tell application \"Finder\" to activate' -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash' && sleep 0.2 && (killall Finder 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "w",
@@ -217,3 +217,4 @@
   ],
   "type": "group"
 }
+
