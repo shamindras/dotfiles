@@ -55,7 +55,7 @@
           "key": "e",
           "label": "finder",
           "type": "command",
-          "value": "(pkill -9 -f Finder 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "(killall -9 Finder 2>/dev/null || true) && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "b",
