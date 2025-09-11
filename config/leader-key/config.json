@@ -55,7 +55,7 @@
           "key": "e",
           "label": "finder",
           "type": "command",
-          "value": "(killall -9 Finder 2>/dev/null || true) && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "b",
@@ -104,6 +104,12 @@
           "label": "nordvpn",
           "type": "command",
           "value": "osascript -e 'quit app \"NordVPN\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "i",
+          "label": "books",
+          "type": "command",
+          "value": "(pkill -x Books 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         }
       ],
       "key": "q",
@@ -208,6 +214,12 @@
           "label": "djview",
           "type": "application",
           "value": "/Applications/DjView.app"
+        },
+        {
+          "key": "i",
+          "label": "books",
+          "type": "application",
+          "value": "/System/Applications/Books.app"
         }
       ],
       "key": "o",
