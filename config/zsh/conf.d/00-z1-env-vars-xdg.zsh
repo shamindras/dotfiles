@@ -74,7 +74,7 @@ export TERMINFO_DIRS="${TERMINFO_DIRS:-$XDG_DATA_HOME}"/terminfo:/usr/share/term
 # Zoxide
 export _ZO_DATA_DIR="${_ZO_DATA_DIR:-$XDG_DATA_HOME/zoxide}"
 export _ZO_ECHO=0
-export _ZO_MAXAGE=100
+export _ZO_MAXAGE=10000
 
 # gpg
 export GNUPGHOME="${GNUPGHOME:-$XDG_DATA_HOME/gnupg}"
