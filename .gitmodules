@@ -38,3 +38,6 @@
 [submodule "submods/newsboat/dracula/newsboat"]
 	path = submods/newsboat/dracula/newsboat
 	url = git@github.com:dracula/newsboat.git
+[submodule "submods/taskwarrior/taskwarrior-themes"]
+	path = submods/taskwarrior/taskwarrior-themes
+	url = git@github.com:jrcharney/taskwarrior-themes.git
