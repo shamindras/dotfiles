@@ -1,0 +1,175 @@
+# Taskwarrior Configuration File
+# Location: ~/.config/task/taskrc
+
+# =============================================================================
+# DATA STORAGE - XDG Compliant
+# =============================================================================
+data.location=~/.local/share/task
+
+# =============================================================================
+# CONTEXT DEFINITIONS
+# =============================================================================
+
+# Reading contexts
+context.reading.read=+reading
+context.reading.ai.read=+reading.ai
+context.reading.general.read=+reading.general
+context.reading.math.read=+reading.math
+context.reading.statml.read=+reading.statml
+
+# Domain-specific contexts
+context.ai.read=+ai
+context.math.read=+math
+context.statml.read=+statml
+context.blog.read=+blog
+
+context.ai.coding.read=+ai.coding
+context.ai.writing.read=+ai.writing
+context.math.problems.read=+math.problems
+context.statml.analysis.read=+statml.analysis
+context.statml.coding.read=+statml.coding
+context.statml.writing.read=+statml.writing
+context.blog.write.read=+blog.write
+context.blog.update.read=+blog.update
+
+# Location and activity contexts
+context.home.read=+home
+context.work.read=+work
+context.home.errands.read=+home.errands
+context.home.calls.read=+home.calls
+context.home.emails.read=+home.emails
+context.work.calls.read=+work.calls
+context.work.emails.read=+work.emails
+context.quick.read=+quick
+
+# =============================================================================
+# ALIASES FOR EASY CONTEXT SWITCHING
+# =============================================================================
+
+# Reading shortcuts
+alias.read=context reading.general
+alias.readai=context reading.ai
+alias.readmath=context reading.math
+alias.readml=context reading.statml
+
+# Domain shortcuts
+alias.ai=context ai
+alias.math=context math
+alias.ml=context statml
+alias.blog=context blog
+
+# Home activity shortcuts
+alias.errands=context home.errands
+alias.hcalls=context home.calls
+alias.hemails=context home.emails
+
+# Work activity shortcuts
+alias.wcalls=context work.calls
+alias.wemails=context work.emails
+
+# Activity shortcuts
+alias.quick=context quick
+
+# Combined shortcuts
+alias.aicode=context ai.coding
+alias.aiwrite=context ai.writing
+alias.mlcode=context statml.coding
+alias.blogwrite=context blog.write
+alias.blogup=context blog.update
+
+# =============================================================================
+# REPORTS AND DISPLAY SETTINGS
+# =============================================================================
+
+# Default command when no command is specified
+default.command=next
+
+# Nag message for urgent tasks
+nag=You have more urgent tasks.
+
+# Date format
+dateformat=Y-M-D
+dateformat.report=Y-M-D
+dateformat.holiday=YMD
+dateformat.annotation=Y-M-D
+
+# Default priority values
+uda.priority.values=H,M,L,
+
+# Urgency coefficients (adjust these based on your preferences)
+urgency.user.project.Inbox.coefficient=15.0
+urgency.user.tag.next.coefficient=15.0
+urgency.age.coefficient=2.0
+urgency.annotations.coefficient=5.0
+urgency.tags.coefficient=1.0
+urgency.project.coefficient=5.0
+urgency.active.coefficient=4.0
+urgency.scheduled.coefficient=5.0
+urgency.waiting.coefficient=-3.0
+urgency.blocked.coefficient=-5.0
+
+# =============================================================================
+# COLOR THEME
+# =============================================================================
+
+# =============================================================================
+# COLOR THEME
+# =============================================================================
+
+# Available themes (uncomment one):
+# include ~/.config/task/themes/light-256.theme
+# include ~/.config/task/themes/light-16.theme
+# include ~/.config/task/themes/dark-256.theme
+# include ~/.config/task/themes/dark-16.theme
+# include ~/.config/task/themes/dark-blue-256.theme
+# include ~/.config/task/themes/dark-gray-256.theme
+# include ~/.config/task/themes/dark-green-256.theme
+# include ~/.config/task/themes/dark-red-256.theme
+# include ~/.config/task/themes/dark-violets-256.theme
+# include ~/.config/task/themes/dark-yellow-green.theme
+include ~/.config/task/themes/solarized-dark-256.theme
+# include ~/.config/task/themes/solarized-light-256.theme
+# include ~/.config/task/themes/no-color.theme
+
+# =============================================================================
+# ADDITIONAL SETTINGS
+# =============================================================================
+
+# Confirmation settings
+confirmation=yes
+recurrence.confirmation=yes
+
+# Search settings
+search.case.sensitive=no
+
+# Display settings
+fontunderline=on
+rule.precedence.color=deleted,completed,active,keyword.,tag.,project.,overdue,scheduled,due.today,due,blocked,blocking,recurring,tagged,uda.
+
+# Weekly starts on Monday
+weekstart=monday
+
+# =============================================================================
+# CUSTOM REPORTS
+# =============================================================================
+
+# Context-aware next report
+report.next.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.next.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.next.filter=status:pending limit:page
+report.next.sort=urgency-
+
+# Reading tasks report
+report.reading.description=Reading tasks across all domains
+report.reading.columns=id,priority,project,tags,description,due
+report.reading.labels=ID,Pri,Project,Tags,Description,Due
+report.reading.filter=status:pending and +reading
+report.reading.sort=urgency-
+
+# Study report for academic contexts
+report.study.description=All academic study tasks
+report.study.columns=id,priority,project,tags,description,due
+report.study.labels=ID,Pri,Project,Tags,Description,Due
+report.study.filter=status:pending and (+ai or +math or +statml or +reading.ai or +reading.math or +reading.statml)
+report.study.sort=urgency-
+news.version=3.4.1
