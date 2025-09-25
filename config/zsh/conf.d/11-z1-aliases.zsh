@@ -52,7 +52,7 @@ function z1_aliases {
   alias sc="source ${XDG_CONFIG_HOME}/zsh/.zshrc" # source ~/.zshrc
   alias top='btop;clear;'
   alias t='task' # taskwarrior
-  alias tt='taskwarrior-tui'
+  alias tt='taskwarrior-tui;clear'
   alias tree='eza --tree --all --group-directories-first -I ".git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache"'
   alias t1='tree --level=1'
   alias tl1='t1 --long'

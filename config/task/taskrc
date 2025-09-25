@@ -38,6 +38,7 @@ context.work.read=+work
 context.home.errands.read=+home.errands
 context.home.calls.read=+home.calls
 context.home.emails.read=+home.emails
+context.home.comp.read=+home.comp
 context.work.calls.read=+work.calls
 context.work.emails.read=+work.emails
 context.quick.read=+quick
@@ -62,6 +63,7 @@ alias.blog=context blog
 alias.errands=context home.errands
 alias.hcalls=context home.calls
 alias.hemails=context home.emails
+alias.hcomp=context home.comp
 
 # Work activity shortcuts
 alias.wcalls=context work.calls
@@ -172,4 +174,3 @@ report.study.columns=id,priority,project,tags,description,due
 report.study.labels=ID,Pri,Project,Tags,Description,Due
 report.study.filter=status:pending and (+ai or +math or +statml or +reading.ai or +reading.math or +reading.statml)
 report.study.sort=urgency-
-news.version=3.4.1
