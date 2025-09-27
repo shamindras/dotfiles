@@ -13,5 +13,14 @@
 # dark = "tokyo-night"
 # light = "tokyo-night"
 
-dark = "monokai-vibrant"
-light = "monokai-vibrant"
+# dark = "monokai-vibrant"
+# light = "monokai-vibrant"
+
+# dark = "dracula"
+# light = "dracula"
+
+# dark = "moonfly"
+# light = "moonfly"
+
+dark = "nightfly"
+light = "nightfly"
