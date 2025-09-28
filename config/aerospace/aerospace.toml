@@ -310,6 +310,11 @@ run = "move-node-to-workspace I"
 if.app-id = "com.rstudio.desktop"
 run = "move-node-to-workspace O"
 
+# positron
+[[on-window-detected]]
+if.app-id = "co.posit.positron"
+run = "move-node-to-workspace O"
+
 # [P]df - Skim
 [[on-window-detected]]
 if.app-id = "net.sourceforge.skim-app.skim"
