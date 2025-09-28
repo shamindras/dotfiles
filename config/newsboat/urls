@@ -4,15 +4,15 @@
 # programming feeds
 https://jvns.ca/atom.xml programming "~Julia Evans"
 https://third-bit.com/atom.xml "~Greg Wilson"
-https://linkarzu.com/feed.xml "~Christian Arzu (linkarzu)"
+# https://linkarzu.com/feed.xml "~Christian Arzu (linkarzu)"
 https://www.stephendiehl.com/feed.xml "~Stephen Diehl"
 
 # data science
 https://blog.djnavarro.net/index.xml science math programming data_science "~Danielle Navarro"
 
 # mathematics
-https://terrytao.wordpress.com/feed/ science math "~Terry Tao's blog"
-https://www.quantamagazine.org/feed/ science math "~Quanta Magazine"
+# https://terrytao.wordpress.com/feed/ science math "~Terry Tao's blog"
+# https://www.quantamagazine.org/feed/ science math "~Quanta Magazine"
 https://mathvoices.ams.org/featurecolumn/feed science math "~AMS Feature Column"
 https://gregorygundersen.com/feed.xml math "~Greg Gunderson"
 https://almostsuremath.com/feed science math "~Almost Sure (George Lowther)"
