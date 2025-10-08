@@ -27,7 +27,7 @@ function z1_aliases {
   alias cd='z'
   alias cp='cp -r'
   alias cpi='cp -iv'
-  alias da='deactivate'
+  alias da='deactivate;clear'
   alias df='df -kH'
   alias dn='z ~/DROPBOX/REPOS/dotfiles;nvim;clear'
   alias dus='du -sckx * | sort -nr'
