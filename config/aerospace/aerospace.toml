@@ -338,7 +338,8 @@ run = "move-node-to-workspace S"
 # [T]erminal
 [[on-window-detected]]
 if.app-id = "com.github.wez.wezterm"
-run = "move-node-to-workspace W"
+run = "move-node-to-workspace T"
+# run = "move-node-to-workspace W"
 
 # [T]erminal
 [[on-window-detected]]
