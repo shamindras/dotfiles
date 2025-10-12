@@ -194,8 +194,8 @@
         {
           "key": "n",
           "label": "nordvpn",
-          "type": "application",
-          "value": "/Applications/NordVPN.app"
+          "type": "command",
+          "value": "open -a '/Applications/NordVPN.app'; sleep 0.5; /opt/homebrew/bin/aerospace workspace B"
         },
         {
           "key": "t",
