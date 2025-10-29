@@ -18,8 +18,7 @@ function z1_aliases {
   alias asl='aerospace list-apps'
   alias asr='aerospace reload-config;clear;'
   alias asf='(killall AeroSpace || true) && open -a AeroSpace;clear;' # [a]eroSpace [f]orced [r]estart
-  alias b='bat --style=grid,numbers'
-  alias bat='bat --style=grid,numbers'
+  alias b='bat'
   alias bu='brew update && brew upgrade && brew cleanup'
   alias brewinfo='brew leaves | xargs brew desc --eval-all'
   alias c='clear'
