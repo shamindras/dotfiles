@@ -57,6 +57,7 @@
     ${XDG_CONFIG_HOME}/stylua: config/stylua
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/task: config/task
+    ${XDG_CONFIG_HOME}/tmux: config/tmux
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
     ${XDG_CONFIG_HOME}/yazi: config/yazi
