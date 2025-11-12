@@ -28,12 +28,12 @@ brew "bat-extras"
 brew "btop"
 # Core application library for C
 brew "glib"
+# GNU multiple precision arithmetic library
+brew "gmp"
 # Linter/analyzer for Makefiles
 brew "checkmake"
 # Defines a standard way of committing rules and communicating it
 brew "commitizen"
-# GNU multiple precision arithmetic library
-brew "gmp"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
@@ -134,7 +134,7 @@ brew "libraw"
 brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Platform built on V8 to build network applications
+# Open-source, cross-platform JavaScript runtime environment
 brew "node"
 # JSON parser and validator with a CLI
 brew "jsonlint"
@@ -212,6 +212,8 @@ brew "subversion"
 brew "taplo"
 # Feature-rich console based todo list manager
 brew "task"
+# Terminal user interface for taskwarrior
+brew "taskwarrior-tui"
 # Tool Command Language
 brew "tcl-tk"
 # Very fast implementation of tldr in Rust
@@ -250,6 +252,8 @@ cask "alacritty"
 cask "alfred"
 # E-books management software
 cask "calibre"
+# Terminal-based AI coding assistant
+cask "claude-code"
 # DjVu viewer and browser plugin
 cask "djview"
 # Client for the Dropbox cloud storage service
@@ -269,6 +273,7 @@ cask "font-maple-mono"
 cask "font-monaspice-nerd-font"
 cask "font-sf-pro"
 cask "font-symbols-only-nerd-font"
+cask "font-udev-gothic-nf"
 cask "font-victor-mono"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
