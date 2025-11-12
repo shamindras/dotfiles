@@ -67,10 +67,10 @@ gui:
     "*": "red"
 # use delta for git diffs
 git:
-  paging:
-    useConfig: false
-    colorArg: always
-    pager: delta --dark --side-by-side --line-numbers --paging=never
+  pagers:
+    - useConfig: false
+      colorArg: always
+      pager: delta --dark --side-by-side --line-numbers --paging=never
   merging:
     # only applicable to unix users
     manualCommit: false
