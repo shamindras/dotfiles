@@ -95,9 +95,9 @@
         },
         {
           "key": "d",
-          "label": "djview",
+          "label": "preview",
           "type": "command",
-          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "n",
@@ -110,6 +110,12 @@
           "label": "books",
           "type": "command",
           "value": "(pkill -x Books 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "a",
+          "label": "djview",
+          "type": "command",
+          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace A'"
         }
       ],
       "key": "q",
@@ -211,15 +217,21 @@
         },
         {
           "key": "d",
-          "label": "djview",
+          "label": "preview",
           "type": "application",
-          "value": "/Applications/DjView.app"
+          "value": "/System/Applications/Preview.app"
         },
         {
           "key": "i",
           "label": "books",
           "type": "application",
           "value": "/System/Applications/Books.app"
+        },
+        {
+          "key": "a",
+          "label": "djview",
+          "type": "application",
+          "value": "/Applications/DjView.app"
         }
       ],
       "key": "o",
