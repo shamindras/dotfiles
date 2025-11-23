@@ -265,6 +265,11 @@ run = "move-node-to-workspace 7"
 if.app-id = "com.apple.VoiceMemos"
 run = "move-node-to-workspace A"
 
+# [A]rchive - Djview
+[[on-window-detected]]
+if.app-id = "org.djvu.DjView"
+run = "move-node-to-workspace A"
+
 # [B]rowser - chrome
 [[on-window-detected]]
 if.app-id = "com.google.Chrome"
@@ -280,9 +285,9 @@ run = "move-node-to-workspace B"
 if.app-id = "com.apple.iCal"
 run = "move-node-to-workspace C"
 
-# [D]jview
+# p[D]f  - Preview
 [[on-window-detected]]
-if.app-id = "org.djvu.DjView"
+if.app-id = "com.apple.Preview"
 run = "move-node-to-workspace D"
 
 # [E]xplorer - finder
@@ -318,11 +323,6 @@ run = "move-node-to-workspace O"
 # [P]df - Skim
 [[on-window-detected]]
 if.app-id = "net.sourceforge.skim-app.skim"
-run = "move-node-to-workspace P"
-
-# [P]df - Preview
-[[on-window-detected]]
-if.app-id = "com.apple.Preview"
 run = "move-node-to-workspace P"
 
 # Spotify - [M]usic
