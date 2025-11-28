@@ -3,6 +3,188 @@
     {
       "actions": [
         {
+          "key": "1",
+          "label": "1password",
+          "type": "application",
+          "value": "/Applications/1Password.app"
+        },
+        {
+          "key": "a",
+          "label": "djview",
+          "type": "application",
+          "value": "/Applications/DjView.app"
+        },
+        {
+          "key": "b",
+          "label": "firefox",
+          "type": "application",
+          "value": "/Applications/Firefox.app"
+        },
+        {
+          "key": "d",
+          "label": "preview",
+          "type": "application",
+          "value": "/System/Applications/Preview.app"
+        },
+        {
+          "key": "e",
+          "label": "finder",
+          "type": "application",
+          "value": "/System/Library/CoreServices/Finder.app"
+        },
+        {
+          "key": "g",
+          "label": "signal",
+          "type": "application",
+          "value": "/Applications/Signal.app"
+        },
+        {
+          "key": "i",
+          "label": "books",
+          "type": "application",
+          "value": "/System/Applications/Books.app"
+        },
+        {
+          "key": "j",
+          "label": "jdownloader",
+          "type": "application",
+          "value": "/Applications/JDownloader 2/JDownloader2.app"
+        },
+        {
+          "key": "m",
+          "label": "spotify",
+          "type": "application",
+          "value": "/Applications/Spotify.app"
+        },
+        {
+          "key": "n",
+          "label": "nordvpn",
+          "type": "command",
+          "value": "open -a '/Applications/NordVPN.app'; sleep 0.5; /opt/homebrew/bin/aerospace workspace B"
+        },
+        {
+          "key": "p",
+          "label": "skim",
+          "type": "application",
+          "value": "/Applications/Skim.app"
+        },
+        {
+          "key": "t",
+          "label": "ghostty",
+          "type": "application",
+          "value": "/Applications/Ghostty.app"
+        },
+        {
+          "key": "v",
+          "label": "vscode",
+          "type": "application",
+          "value": "/Applications/Visual Studio Code.app"
+        },
+        {
+          "key": "w",
+          "label": "wezterm",
+          "type": "application",
+          "value": "/Applications/WezTerm.app"
+        }
+      ],
+      "key": "o",
+      "label": "open",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "1",
+          "label": "1password",
+          "type": "command",
+          "value": "osascript -e 'quit app \"1Password\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "a",
+          "label": "djview",
+          "type": "command",
+          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace A'"
+        },
+        {
+          "key": "b",
+          "label": "firefox",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Firefox\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "d",
+          "label": "preview",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "e",
+          "label": "finder",
+          "type": "command",
+          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "g",
+          "label": "signal",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Signal\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "i",
+          "label": "books",
+          "type": "command",
+          "value": "(pkill -x Books 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "j",
+          "label": "jdownloader",
+          "type": "command",
+          "value": "(pkill -f \"JDownloader2.app\" 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "m",
+          "label": "spotify",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Spotify\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "n",
+          "label": "nordvpn",
+          "type": "command",
+          "value": "osascript -e 'quit app \"NordVPN\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "p",
+          "label": "skim",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+        },
+        {
+          "key": "t",
+          "label": "ghostty",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "v",
+          "label": "vscode",
+          "type": "command",
+          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+        },
+        {
+          "key": "w",
+          "label": "wezterm",
+          "type": "command",
+          "value": "osascript -e 'quit app \"WezTerm\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+        }
+      ],
+      "key": "q",
+      "label": "quit",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
           "key": "m",
           "label": "move-files",
           "type": "command",
@@ -15,16 +197,16 @@
           "value": "osascript -e 'tell application \"Finder\" to activate' -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash' && sleep 0.2 && (killall Finder 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key": "w",
-          "label": "wash-dropbox",
-          "type": "command",
-          "value": "find ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
-        },
-        {
           "key": "u",
           "label": "toggle-mute",
           "type": "command",
           "value": "osascript -e 'set curVolume to get volume settings' -e 'if output muted of curVolume is false then' -e 'set volume with output muted' -e 'else' -e 'set volume without output muted' -e 'end if'"
+        },
+        {
+          "key": "w",
+          "label": "wash-dropbox",
+          "type": "command",
+          "value": "find ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
         }
       ],
       "key": "r",
@@ -34,96 +216,11 @@
     {
       "actions": [
         {
-          "key": "m",
-          "label": "spotify",
-          "type": "command",
-          "value": "osascript -e 'quit app \"Spotify\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "g",
-          "label": "signal",
-          "type": "command",
-          "value": "osascript -e 'quit app \"Signal\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "v",
-          "label": "vscode",
-          "type": "command",
-          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "e",
-          "label": "finder",
-          "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
           "key": "b",
-          "label": "firefox",
-          "type": "command",
-          "value": "osascript -e 'quit app \"Firefox\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "label": "bookmarks",
+          "type": "url",
+          "value": "raycast://extensions/raycast/browser-bookmarks/index"
         },
-        {
-          "key": "1",
-          "label": "1password",
-          "type": "command",
-          "value": "osascript -e 'quit app \"1Password\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "w",
-          "label": "wezterm",
-          "type": "command",
-          "value": "osascript -e 'quit app \"WezTerm\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
-        },
-        {
-          "key": "t",
-          "label": "ghostty",
-          "type": "command",
-          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "p",
-          "label": "skim",
-          "type": "command",
-          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
-        },
-        {
-          "key": "j",
-          "label": "jdownloader",
-          "type": "command",
-          "value": "(pkill -f \"JDownloader2.app\" 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "d",
-          "label": "preview",
-          "type": "command",
-          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "n",
-          "label": "nordvpn",
-          "type": "command",
-          "value": "osascript -e 'quit app \"NordVPN\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "i",
-          "label": "books",
-          "type": "command",
-          "value": "(pkill -x Books 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
-          "key": "a",
-          "label": "djview",
-          "type": "command",
-          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace A'"
-        }
-      ],
-      "key": "q",
-      "label": "quit",
-      "type": "group"
-    },
-    {
-      "actions": [
         {
           "key": "c",
           "label": "clipboard",
@@ -135,110 +232,12 @@
           "label": "files",
           "type": "url",
           "value": "raycast://extensions/raycast/file-search/search-files"
-        },
-        {
-          "key": "b",
-          "label": "bookmarks",
-          "type": "url",
-          "value": "raycast://extensions/raycast/browser-bookmarks/index"
         }
       ],
       "key": "s",
       "label": "search-raycast",
       "type": "group"
-    },
-    {
-      "actions": [
-        {
-          "key": "w",
-          "label": "wezterm",
-          "type": "application",
-          "value": "/Applications/WezTerm.app"
-        },
-        {
-          "key": "1",
-          "label": "1password",
-          "type": "application",
-          "value": "/Applications/1Password.app"
-        },
-        {
-          "key": "m",
-          "label": "spotify",
-          "type": "application",
-          "value": "/Applications/Spotify.app"
-        },
-        {
-          "key": "b",
-          "label": "firefox",
-          "type": "application",
-          "value": "/Applications/Firefox.app"
-        },
-        {
-          "key": "g",
-          "label": "signal",
-          "type": "application",
-          "value": "/Applications/Signal.app"
-        },
-        {
-          "key": "e",
-          "label": "finder",
-          "type": "application",
-          "value": "/System/Library/CoreServices/Finder.app"
-        },
-        {
-          "key": "v",
-          "label": "vscode",
-          "type": "application",
-          "value": "/Applications/Visual Studio Code.app"
-        },
-        {
-          "key": "j",
-          "label": "jdownloader",
-          "type": "application",
-          "value": "/Applications/JDownloader 2/JDownloader2.app"
-        },
-        {
-          "key": "n",
-          "label": "nordvpn",
-          "type": "command",
-          "value": "open -a '/Applications/NordVPN.app'; sleep 0.5; /opt/homebrew/bin/aerospace workspace B"
-        },
-        {
-          "key": "t",
-          "label": "ghostty",
-          "type": "application",
-          "value": "/Applications/Ghostty.app"
-        },
-        {
-          "key": "p",
-          "label": "skim",
-          "type": "application",
-          "value": "/Applications/Skim.app"
-        },
-        {
-          "key": "d",
-          "label": "preview",
-          "type": "application",
-          "value": "/System/Applications/Preview.app"
-        },
-        {
-          "key": "i",
-          "label": "books",
-          "type": "application",
-          "value": "/System/Applications/Books.app"
-        },
-        {
-          "key": "a",
-          "label": "djview",
-          "type": "application",
-          "value": "/Applications/DjView.app"
-        }
-      ],
-      "key": "o",
-      "label": "open",
-      "type": "group"
     }
   ],
   "type": "group"
 }
-
