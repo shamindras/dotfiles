@@ -65,6 +65,7 @@ function z1_aliases {
   # wash hidden files in downloads and refs, change into directory and launch yazi
   alias yd="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/Downloads;y"
   alias yr="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
+  alias y0="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/DROPBOX/RESOURCES/BOOKS/CURRENT_READING/books/00_now_reading;y"
 
   # bat-extras
   # source: https://github.com/eth-p/bat-extras/tree/master
