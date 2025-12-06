@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+# Create new idea note with interactive title prompt
+# Prompts user for a title and creates a new note in the ideas directory
+# Validates that title is not empty or only whitespace
+# Usage: ki
+# Example:
+#   ki
+#   (prompts for title, then creates note)
+
+ki() {
+  vared -p "Idea title: " -c idea_title
+
+  # Trim whitespace and convert to lowercase
+  idea_title="${idea_title:l}"
+  idea_title="${idea_title## ##}"
+
+  # Check if title is not empty after trimming
+  if [[ -n "$idea_title" ]]; then
+    k new ideas --title "$idea_title"
+  else
+    echo "Error: Title cannot be empty or only whitespace"
+  fi
+
+  unset idea_title
+}

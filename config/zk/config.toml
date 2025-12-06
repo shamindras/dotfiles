@@ -36,9 +36,6 @@ template = "idea.md"
 # Create new daily journal entry
 daily = 'zk new --no-input "$ZK_NOTEBOOK_DIR/journal"'
 
-# Create new idea (interactive - prompts for title)
-idea = 'zk new --group ideas --interactive'
-
 # Edit a note interactively with fzf
 edit = "zk edit --interactive"
 

@@ -80,9 +80,6 @@ function z1_aliases {
   # Quick edit today's journal
   alias kd='k daily;clear'
 
-  # Quick new idea
-  alias ki='k idea;clear'
-
   # Open zk config
   alias kc='$EDITOR $HOME/.config/zk/config.toml;clear'
 
