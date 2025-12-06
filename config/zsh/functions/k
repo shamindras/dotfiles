@@ -1,19 +1,29 @@
 #!/bin/zsh
 
 # Wrapper function for zk (zettelkasten) CLI tool
-# Syncs templates from dotfiles to Dropbox before executing zk commands
-# Usage: k [zk-command] [args...]
+# Optionally syncs templates from dotfiles to Dropbox before executing zk commands
+# Usage: k [--sync-templates] [zk-command] [args...]
 # Examples:
-#   k daily        # Create/open today's journal entry
-#   k idea         # Create new idea (prompts for title)
-#   k edit         # Edit a note interactively
+#   k daily                    # Create/open today's journal entry (no sync)
+#   k idea                     # Create new idea (no sync)
+#   k --sync-templates idea    # Sync templates, then create idea
+#   k edit                     # Edit a note interactively
 
 k() {
-  # Sync templates from dotfiles to Dropbox (one-way)
-  # Only updates if source is newer, very fast when no changes
-  rsync -au --delete \
-    ~/.config/zk/templates/ \
-    ~/DROPBOX/notes/zk/.zk/templates/ 2>/dev/null
+  local sync_templates=false
+
+  # Check if first argument is --sync-templates flag
+  if [[ "$1" == "--sync-templates" ]]; then
+    sync_templates=true
+    shift  # Remove the flag from arguments
+  fi
+
+  # Sync templates if flag was provided
+  if [[ "$sync_templates" == true ]]; then
+    rsync -au --delete \
+      ~/.config/zk/templates/ \
+      ~/DROPBOX/notes/zk/.zk/templates/ 2>/dev/null
+  fi
 
   # Call the actual zk command with all arguments
   command zk "$@"

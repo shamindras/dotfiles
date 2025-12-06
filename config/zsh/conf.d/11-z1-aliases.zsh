@@ -79,6 +79,11 @@ function z1_aliases {
 
   # Quick edit today's journal
   alias kd='k daily;clear'
+  alias kds='k --sync-templates daily;clear'
+
+  # Quick add idea
+  alias ki='ki'
+  alias kis='ki --sync-templates'
 
   # Open zk config
   alias kc='$EDITOR $HOME/.config/zk/config.toml;clear'
