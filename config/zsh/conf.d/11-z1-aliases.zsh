@@ -67,8 +67,24 @@ function z1_aliases {
   alias yr="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
   alias y0="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/DROPBOX/RESOURCES/BOOKS/CURRENT_READING/books/00_now_reading;y"
 
+  # ============================================================================
+  # zk (zettelkasten) aliases
+  # ============================================================================
+
   # launch zk (zettlekasten) directory in yazi
   alias yk="wash wash ~/DROPBOX/notes/zk;z ~/DROPBOX/notes/zk;y"
+
+  # Search notes interactively
+  alias ks='k edit --interactive;clear'
+
+  # Quick edit today's journal
+  alias kd='k daily;clear'
+
+  # Quick new idea
+  alias ki='k idea;clear'
+
+  # Open zk config
+  alias kc='$EDITOR $HOME/.config/zk/config.toml;clear'
 
   # bat-extras
   # source: https://github.com/eth-p/bat-extras/tree/master

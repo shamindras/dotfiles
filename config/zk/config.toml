@@ -51,7 +51,8 @@ search = "zk list --interactive --match $@"
 # Tool settings
 [tool]
 editor      = "nvim"
-fzf-preview = "bat --color=always --style=plain {}"
+pager       = "less -FIRX"
+fzf-preview = "bat --style=plain --color=always --paging=never {-1}"
 
 # LSP settings (for zk-nvim and other LSP integrations)
 [lsp]
