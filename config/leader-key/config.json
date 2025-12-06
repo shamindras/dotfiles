@@ -60,7 +60,7 @@
           "key": "n",
           "label": "nordvpn",
           "type": "command",
-          "value": "open -a '/Applications/NordVPN.app'; sleep 1.0; /opt/homebrew/bin/aerospace workspace B"
+          "value": "open -a '/Applications/NordVPN.app'; sleep 0.5; /opt/homebrew/bin/aerospace workspace B"
         },
         {
           "key": "p",
@@ -241,3 +241,4 @@
   ],
   "type": "group"
 }
+
