@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "=========================================="
+echo "Dropbox Setup for First Time Installation"
+echo "=========================================="
+echo ""
+
+# Install Homebrew if needed
+echo "Step 1: Installing/updating Homebrew..."
+./scripts/setup-upgrade-homebrew.sh
+
+# Install Dropbox
+echo ""
+echo "Step 2: Installing Dropbox..."
+brew install --cask dropbox
+
+echo ""
+echo "=========================================="
+echo "MANUAL STEPS REQUIRED"
+echo "=========================================="
+echo ""
+echo "1. Open Dropbox from Applications"
+echo "2. Sign in to your Dropbox account"
+echo "3. Wait for Dropbox to complete initial sync"
+echo "4. Verify that ~/DROPBOX directory exists and contains your files"
+echo ""
+echo "Once Dropbox sync is complete, run:"
+echo "  ./install"
+echo ""
+echo "=========================================="

@@ -1,0 +1,60 @@
+# zk configuration
+# See: https://github.com/zk-org/zk/blob/main/docs/config.md
+
+[notebook]
+dir = "$HOME/DROPBOX/notes/zk"
+
+# Default note settings
+[note]
+filename      = "{{slug title}}-{{id}}"
+extension     = "md"
+id-charset    = "alphanum"
+id-length     = 5
+default-title = "Untitled"
+lang          = "en"
+
+# Template settings
+[format.markdown]
+
+# Group: Daily Journal
+[group.journal]
+paths = ["journal"]
+
+[group.journal.note]
+filename = "{{format-date now}}"
+template = "daily.md"
+
+# Group: Ideas
+[group.ideas]
+paths = ["ideas"]
+
+[group.ideas.note]
+template = "idea.md"
+
+# Aliases for common commands
+[alias]
+# Create new daily journal entry
+daily = 'zk new --no-input "$ZK_NOTEBOOK_DIR/journal"'
+
+# Create new idea (interactive - prompts for title)
+idea = 'zk new --group ideas --interactive'
+
+# Edit a note interactively with fzf
+edit = "zk edit --interactive"
+
+# List recent notes
+list = "zk list --sort modified- --limit 10"
+
+# Search notes
+search = "zk list --interactive --match $@"
+
+# Tool settings
+[tool]
+editor      = "nvim"
+fzf-preview = "bat --color=always --style=plain {}"
+
+# LSP settings (for zk-nvim and other LSP integrations)
+[lsp]
+[lsp.diagnostics]
+wiki-title = "hint"
+dead-link  = "error"

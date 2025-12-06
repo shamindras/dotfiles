@@ -2,6 +2,7 @@
 
 - [Dotfiles (macOS)](#dotfiles-macos)
   - [Personal dotfiles - philosophy](#personal-dotfiles---philosophy)
+  - [First Time Setup on New macOS](#first-time-setup-on-new-macos)
   - [Installation](#installation)
     - [Clone the repo and update and sync submodules](#clone-the-repo-and-update-and-sync-submodules)
     - [Run installation using `dotbot`](#run-installation-using-dotbot)
@@ -17,6 +18,32 @@ use
 
 - A [modern Unix](https://github.com/ibraheemdev/modern-unix) workflow.
 - The [`XDG`](https://wiki.archlinux.org/title/XDG_user_directories) directory specification.
+
+## First Time Setup on New macOS
+
+If this is your first time setting up these dotfiles on a new Mac:
+
+1. **Setup Dropbox:**
+
+```bash
+   make setup-dropbox
+```
+
+Follow the on-screen instructions to:
+
+- Sign in to your Dropbox account
+- Wait for initial sync to complete
+- Verify `~/DROPBOX` directory exists and contains your files
+
+2. **Install dotfiles** (after Dropbox sync completes):
+
+```bash
+   ./install
+```
+
+For subsequent updates, just run `./install`.
+
+---
 
 ## Installation
 
@@ -54,6 +81,7 @@ for openly sharing their work.
 - [Josh Medeski's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86).
 - [Josean Martinez's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86)
   and accompanying [YouTube videos](https://www.youtube.com/watch?v=U-omALWIBos&ab_channel=JoseanMartinez).
+- [Shivan's zk config](https://github.com/shivan-s/dotfiles/tree/main/zk)
 - [Mathias Bynen's dotfiles](https://github.com/mathiasbynens/dotfiles/blob/master/.macos)
   and in particular [his macOS dotfiles](https://mths.be/macos).
 - [Kevin Suttle](http://kevinsuttle.com/) and his [macOS-Defaults project](https://github.com/kevinSuttle/macOS-Defaults),
@@ -61,3 +89,4 @@ for openly sharing their work.
 - [Dylan McDowell's zsh config](https://github.com/dylanjm/teton/blob/2eb03539fe2c9489ed6b5ade4ee4ee44d8c6f421/config/shells/zsh/zshenv.zsh)
 
 </details>
+

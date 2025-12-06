@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -e # Exit on error
+
+echo "Setting up zk (zettelkasten) configuration..."
+
+# 1. Check if Dropbox is set up
+if [ ! -d ~/DROPBOX ]; then
+  echo "ERROR: Dropbox directory not found at ~/DROPBOX"
+  echo "Please set up Dropbox first by running: make setup-dropbox"
+  echo "Then run ./install again after Dropbox sync completes"
+  exit 1
+fi
+
+# 2. Create zk directory structure if needed
+echo "Creating zk directory structure..."
+mkdir -p ~/DROPBOX/notes/zk/journal
+mkdir -p ~/DROPBOX/notes/zk/ideas
+mkdir -p ~/DROPBOX/notes/zk/.zk/templates
+
+# 3. Copy starter templates ONLY if none exist
+if [ -z "$(ls -A ~/DROPBOX/notes/zk/.zk/templates/*.md 2>/dev/null)" ]; then
+  echo "No templates found in Dropbox, copying starter templates..."
+  cp config/zk/templates/*.md ~/DROPBOX/notes/zk/.zk/templates/
+  echo "✓ Starter templates copied successfully"
+else
+  echo "✓ Templates already exist in Dropbox, skipping copy"
+fi
+
+echo "✓ zk setup complete!"

@@ -141,4 +141,7 @@ export CURL_HOME="${XDG_CONFIG_HOME}/curl"
 # export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
 # export GIT_CONFIG="${XDG_CONFIG_HOME}/git/.gitconfig"
 
+## zk - https://zk-org.github.io/zk/
+export ZK_NOTEBOOK_DIR="$HOME/DROPBOX/notes/zk"
+
 # endregion --------------------------------------------------------------------

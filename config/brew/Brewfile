@@ -236,6 +236,8 @@ brew "yamllint"
 brew "yazi"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
+# Plain text note-taking assistant
+brew "zk"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # A window border system for macOS

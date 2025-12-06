@@ -25,6 +25,11 @@
     ~/.config:
       force: true
 
+# Install zk (zettlekasten)
+- shell:
+    - command: ./scripts/setup-zk
+      description: Setup zk (zettlekasten)
+
 # Symlink locations for files / directories
 - link:
     # XDG_CONFIG_HOME configs
@@ -61,6 +66,7 @@
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
     ${XDG_CONFIG_HOME}/yazi: config/yazi
+    ${XDG_CONFIG_HOME}/zk/config.toml: config/zk/config.toml
     ${XDG_CONFIG_HOME}/zsh: config/zsh
 
     # ssh
