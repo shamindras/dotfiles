@@ -66,7 +66,7 @@
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
     ${XDG_CONFIG_HOME}/yazi: config/yazi
-    ${XDG_CONFIG_HOME}/zk/config.toml: config/zk/config.toml
+    ${XDG_CONFIG_HOME}/zk: config/zk
     ${XDG_CONFIG_HOME}/zsh: config/zsh
 
     # ssh
