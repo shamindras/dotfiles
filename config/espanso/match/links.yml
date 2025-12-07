@@ -1,0 +1,7 @@
+name: links
+parent: base
+
+matches:
+  # [dot]files
+  - trigger: ";dots"
+    replace: "https://github.com/shamindras/dotfiles"
