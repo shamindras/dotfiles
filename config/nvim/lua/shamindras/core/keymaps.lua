@@ -73,14 +73,24 @@ keymap({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', exp
 keymap({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
 keymap({ 'n', 'x' }, '<Up>', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
 
--- open link under cursor
 -- mini.operators overrides default gx (moves it to gX for opening links)
--- Create <leader>gx to preserve the original gx behavior alongside mini.operators
+-- Create <leader>gx to preserve the original gx behavior using vim.ui.open
 keymap({ 'n', 'x' }, '<leader>gx', function()
-  local curpos = vim.fn.getcurpos()
-  local cfile = vim.fn.expand('<cfile>')
-  vim.ui.open(cfile)
-  vim.fn.setpos('.', curpos)
+  local mode = vim.fn.mode()
+  local url
+
+  if mode == 'v' or mode == 'V' or mode == '\22' then
+    -- Visual mode: get selected text
+    vim.cmd('normal! "vy')
+    url = vim.fn.getreg('v')
+  else
+    -- Normal mode: get file/URL under cursor
+    url = vim.fn.expand('<cfile>')
+  end
+
+  if url ~= '' then
+    vim.ui.open(url)
+  end
 end, { desc = 'Open link under cursor' })
 
 -- Map H and L to ^ and $, respectively
