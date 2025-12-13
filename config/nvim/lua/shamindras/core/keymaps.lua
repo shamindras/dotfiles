@@ -73,6 +73,16 @@ keymap({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', exp
 keymap({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
 keymap({ 'n', 'x' }, '<Up>', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
 
+-- open link under cursor
+-- mini.operators overrides default gx (moves it to gX for opening links)
+-- Create <leader>gx to preserve the original gx behavior alongside mini.operators
+keymap({ 'n', 'x' }, '<leader>gx', function()
+  local curpos = vim.fn.getcurpos()
+  local cfile = vim.fn.expand('<cfile>')
+  vim.ui.open(cfile)
+  vim.fn.setpos('.', curpos)
+end, { desc = 'Open link under cursor' })
+
 -- Map H and L to ^ and $, respectively
 -- source: https://github.com/famiu/dot-nvim/blob/d7922d6ce9d9483cd68c67abb883e8ab91a17e4f/lua/keybinds.lua#L4-L6
 -- TODO: check if the `H` and `L` can be used as operators, e.g. `dH` deletes to beginning of line.
