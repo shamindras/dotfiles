@@ -93,11 +93,10 @@ keymap({ 'n', 'x' }, '<leader>gx', function()
   end
 end, { desc = 'Open link under cursor' })
 
--- Map H and L to ^ and $, respectively
--- source: https://github.com/famiu/dot-nvim/blob/d7922d6ce9d9483cd68c67abb883e8ab91a17e4f/lua/keybinds.lua#L4-L6
--- TODO: check if the `H` and `L` can be used as operators, e.g. `dH` deletes to beginning of line.
-keymap('n', 'H', '^')
-keymap('n', 'L', '$')
+--- Map H and L to ^ and $ (beginning/end of line)
+-- Works in normal mode for movement and operator-pending mode for motions (e.g., dH, yL)
+keymap({ 'n', 'o' }, 'H', '^')
+keymap({ 'n', 'o' }, 'L', '$')
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 keymap('n', 'n', "'Nn'[v:searchforward].'zv'", { expr = true, desc = 'Next Search Result' })
