@@ -73,23 +73,20 @@ keymap({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', exp
 keymap({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
 keymap({ 'n', 'x' }, '<Up>', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
 
--- mini.operators overrides default gx (moves it to gX for opening links)
--- Create <leader>gx to preserve the original gx behavior using vim.ui.open
+-- mini.operators overrides default gx and moves it to gX for opening links
+-- This mapping provides <leader>gx as an additional way to open links
+-- If mini.operators is loaded, use its gX callback; otherwise fall back to default gx
 keymap({ 'n', 'x' }, '<leader>gx', function()
-  local mode = vim.fn.mode()
-  local url
-
-  if mode == 'v' or mode == 'V' or mode == '\22' then
-    -- Visual mode: get selected text
-    vim.cmd('normal! "vy')
-    url = vim.fn.getreg('v')
+  -- Check if mini.operators is loaded
+  if _G.MiniOperators then
+    -- mini.operators is loaded, use its gX callback (the preserved original gx)
+    local gx_keymap = vim.fn.maparg('gX', 'n', false, true)
+    if gx_keymap.callback then
+      gx_keymap.callback()
+    end
   else
-    -- Normal mode: get file/URL under cursor
-    url = vim.fn.expand('<cfile>')
-  end
-
-  if url ~= '' then
-    vim.ui.open(url)
+    -- Fallback to default gx behavior
+    vim.cmd('normal! gx')
   end
 end, { desc = 'Open link under cursor' })
 
