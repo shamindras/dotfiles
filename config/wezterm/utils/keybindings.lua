@@ -55,7 +55,12 @@ function M.setup(config)
     split_nav('move', 'j'),
     split_nav('move', 'k'),
     split_nav('move', 'l'),
-
+    -- disable alt-Enter for maximizing screen
+    {
+      key = 'Enter',
+      mods = 'ALT',
+      action = wezterm.action.DisableDefaultAssignment,
+    },
     -- Tab navigation
     {
       key = 'p',
