@@ -167,12 +167,24 @@ keymap('n', '<leader>bc', '<cmd>%d<CR>', { noremap = true, desc = 'Clear buffer 
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ insert missing lines above/below
+-- {{{ Dot-repeatable empty line insertion
 
--- source: https://github.com/nvim-mini/mini.nvim/blob/0ffc2af38b3c5293076317b138635d6d7c80a40f/lua/mini/basics.lua#L565-L566
--- NOTE: does not support `.` repeat
-keymap('n', 'gO', "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>")
-keymap('n', 'go', "<Cmd>call append(line('.'),     repeat([''], v:count1))<CR>")
+-- insert missing lines above/below
+-- Source: https://github.com/nvim-mini/mini.basics
+_G.put_empty_line = function(put_above)
+  if type(put_above) == 'boolean' then
+    vim.o.operatorfunc = 'v:lua.put_empty_line'
+    vim.g.put_empty_line_above = put_above
+    return 'g@l'
+  end
+
+  local target_line = vim.fn.line('.') - (vim.g.put_empty_line_above and 1 or 0)
+  vim.fn.append(target_line, vim.fn['repeat']({ '' }, vim.v.count1))
+end
+
+-- Keymaps
+keymap('n', 'gO', 'v:lua.put_empty_line(v:true)', { expr = true, desc = 'Put empty line above' })
+keymap('n', 'go', 'v:lua.put_empty_line(v:false)', { expr = true, desc = 'Put empty line below' })
 
 -- ------------------------------------------------------------------------- }}}
 
