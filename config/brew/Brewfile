@@ -24,6 +24,8 @@ brew "atuin"
 brew "bat"
 # Bash scripts that integrate bat with various command-line tools
 brew "bat-extras"
+# New way to see and navigate directory trees
+brew "broot"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Core application library for C
@@ -80,7 +82,7 @@ brew "freetds"
 brew "fzf"
 # Geometry Engine
 brew "geos"
-# GNU Pretty Good Privacy (PGP) package
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
 # File format designed to store large amounts of data
 brew "hdf5"
