@@ -1,51 +1,83 @@
+[snippets]
+include_default_snippets = true
+custom_paths = []
+
 [runtime]
-watcher_on_save = "lazy"
-std_stream_max_bytes = 1000000
-output_max_bytes = 8000000
-on_cell_change = "autorun"
-auto_reload = "off"
+default_sql_output = "auto"
 auto_instantiate = true
+output_max_bytes = 8000000
+watcher_on_save = "lazy"
+reactive_tests = true
+default_auto_download = []
+auto_reload = "autorun"
+on_cell_change = "autorun"
+std_stream_max_bytes = 1000000
+
+[completion]
+activate_on_typing = true
+copilot = false
+
+[save]
+autosave = "after_delay"
+format_on_save = true
+autosave_delay = 1000
+
+[mcp]
+presets = []
+
+[mcp.mcpServers]
+
+[server]
+browser = "default"
+follow_symlink = false
+
+[formatting]
+line_length = 79
+
+[diagnostics]
+sql_linter = true
+
+[experimental]
 
 [package_management]
 manager = "uv"
 
 [keymap]
 preset = "default"
+destructive_delete = true
+
 [keymap.overrides]
 
-[display]
-dataframes = "rich"
-code_editor_font_size = 16
-default_width = "full"
-theme = "light"
-cell_output = "above"
-
-[save]
-autosave = "after_delay"
-autosave_delay = 1000
-format_on_save = true
-
-[experimental]
-
-[server]
-browser = "default"
-follow_symlink = false
-
-[snippets]
-custom_paths = []
-include_default_snippets = true
-
-[formatting]
-line_length = 79
-
 [ai]
+mode = "manual"
 rules = ""
+inline_tooltip = false
+
 [ai.anthropic]
 
 [ai.open_ai]
 
 [ai.google]
 
-[completion]
-activate_on_typing = true
-copilot = false
+[ai.models]
+displayed_models = []
+custom_models = []
+
+[display]
+cell_output = "above"
+default_table_page_size = 10
+dataframes = "rich"
+theme = "light"
+default_table_max_columns = 50
+reference_highlighting = false
+default_width = "full"
+code_editor_font_size = 16
+
+[language_servers.pylsp]
+enable_pydocstyle = false
+enable_flake8 = false
+enable_mypy = true
+enable_pylint = false
+enable_ruff = true
+enabled = false
+enable_pyflakes = false
