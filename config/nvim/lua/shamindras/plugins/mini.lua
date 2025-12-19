@@ -67,14 +67,7 @@ table.insert(M, {
   version = '*',
   event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
   config = function()
-    require('mini.move').setup({
-      mappings = {
-        left = 'H',
-        right = 'L',
-        down = 'J',
-        up = 'K',
-      },
-    })
+    require('mini.move').setup()
   end,
 })
 
