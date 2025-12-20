@@ -7,22 +7,18 @@ return {
   {
     'MeanderingProgrammer/treesitter-modules.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    event = { 'BufReadPost', 'BufNewFile' },
+    event = 'VeryLazy',
     opts = {
-      -- Add languages to be installed here that you want installed for treesitter
       ensure_installed = {
-        -- 'html',
         -- 'json',
         'lua',
-        -- 'make',
         'markdown',
-        -- 'markdown_inline',
+        'markdown_inline',
         'python',
-        -- 'toml',
-        -- 'yaml',
+        'vim',
+        'vimdoc',
       },
-      -- Autoinstall languages that are not installed
-      -- auto_install = true,
+      auto_install = true,
       highlight = {
         enable = true,
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
