@@ -165,28 +165,6 @@ table.insert(M, {
 
 --}}}
 
---{{{ Appearance plugins ------------------------------------------------------------------------
-
-table.insert(M, {
-  'nvim-mini/mini.statusline',
-  version = '*',
-  event = 'VimEnter', -- Load when Vim starts
-  config = function()
-    -- Simple and easy statusline
-    local statusline = require('mini.statusline')
-    -- set use_icons to true if you have a Nerd Font
-    statusline.setup({ use_icons = vim.g.have_nerd_font })
-
-    -- Configure cursor location section to show LINE:COLUMN
-    ---@diagnostic disable-next-line: duplicate-set-field
-    statusline.section_location = function()
-      return '%2l:%-2v'
-    end
-  end,
-})
-
---}}}
-
 --{{{ Icons plugin ------------------------------------------------------------------------
 
 table.insert(M, {
@@ -195,6 +173,53 @@ table.insert(M, {
   event = 'VeryLazy',
   config = function()
     require('mini.icons').setup()
+  end,
+})
+
+--}}}
+
+--{{{ Appearance plugins ------------------------------------------------------------------------
+
+table.insert(M, {
+  'nvim-mini/mini.statusline',
+  version = '*',
+  event = 'VimEnter',
+  config = function()
+    local statusline = require('mini.statusline')
+    statusline.setup({ use_icons = vim.g.have_nerd_font })
+
+    ---@diagnostic disable-next-line: duplicate-set-field
+    statusline.section_location = function()
+      return '%2l:%-2v'
+    end
+
+    -- Custom git branch function with icon
+    local function git_branch()
+      local branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
+      if vim.v.shell_error == 0 and branch ~= '' then
+        return '󰘬 ' .. branch -- Using nf-md-source_branch icon
+      end
+      return ''
+    end
+
+    ---@diagnostic disable-next-line: duplicate-set-field
+    statusline.active = function()
+      local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
+      local git = git_branch()
+      local filename = statusline.section_filename({ trunc_width = 140 })
+      local fileinfo = statusline.section_fileinfo({ trunc_width = 120 })
+      local location = statusline.section_location({ trunc_width = 75 })
+
+      return statusline.combine_groups({
+        { hl = mode_hl, strings = { mode } },
+        { hl = 'MiniStatuslineDevinfo', strings = { git } },
+        '%<',
+        { hl = 'MiniStatuslineFilename', strings = { filename } },
+        '%=',
+        { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
+        { hl = mode_hl, strings = { location } },
+      })
+    end
   end,
 })
 
