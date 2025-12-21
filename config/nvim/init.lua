@@ -28,6 +28,9 @@ require('lazy').setup({
   -- which.key
   require('shamindras.plugins.which-key'),
 
+  -- todo comments
+  require('shamindras.plugins.todo-comments'),
+
   -- fuzzy finder
   require('shamindras.plugins.snacks'),
 
@@ -39,9 +42,6 @@ require('lazy').setup({
 
   -- treesitter
   require('shamindras.plugins.treesitter'),
-
-  -- todo comments
-  require('shamindras.plugins.todo-comments'),
 
   -- linters
   require('shamindras.plugins.nvim-lint'),

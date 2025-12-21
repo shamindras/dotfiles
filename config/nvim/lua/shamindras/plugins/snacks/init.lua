@@ -35,6 +35,11 @@ return {
           frecency = true,
           history_bonus = true,
         },
+        sources = {
+          todo_comments = {
+            enabled = true,
+          },
+        },
       },
       explorer = {},
       lazygit = {
