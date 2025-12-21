@@ -10,6 +10,7 @@ return {
     event = 'VeryLazy',
     opts = {
       ensure_installed = {
+        -- FIX: `'json'` parser causes delays in opening json files
         -- 'json',
         'lua',
         'markdown',
