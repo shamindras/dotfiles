@@ -49,6 +49,9 @@ require('lazy').setup({
   -- formatters
   require('shamindras.plugins.conform'),
 
+  -- flash (jump)
+  require('shamindras.plugins.flash'),
+
   -- mini.nvim
   require('shamindras.plugins.mini'),
 
