@@ -109,22 +109,11 @@ table.insert(M, {
     'MiniFilesBufferDir',
     'MiniFilesCursorFile',
   },
+  -- stylua: ignore
   keys = {
-    {
-      '<leader>fm',
-      '<cmd>lua MiniFiles.open()<cr>',
-      desc = 'Open Mini Files',
-    },
-    {
-      '<leader>fa',
-      '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>',
-      desc = 'Mini Files [A]ctive File',
-    },
-    {
-      '<leader>fh',
-      "<cmd>lua MiniFiles.open('~')<cr>",
-      desc = 'Mini Files Home Dir',
-    },
+    { '<leader>fm', '<cmd>lua MiniFiles.open()<cr>', desc = 'Open Mini Files', },
+    { '<leader>fa', '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>', desc = 'Mini Files [A]ctive File', },
+    { '<leader>fh', "<cmd>lua MiniFiles.open('~')<cr>", desc = 'Mini Files Home Dir', },
   },
   config = function()
     local minifiles = require('mini.files')
