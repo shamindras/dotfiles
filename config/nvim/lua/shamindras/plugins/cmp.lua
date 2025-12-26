@@ -77,7 +77,9 @@ return {
         }),
 
         -- Prioritize sources and lazy load them
-        sources = {
+        -- NOTE: Using cmp.config.sources with two groups allows fallback behavior
+        sources = cmp.config.sources({
+          -- Primary sources (high priority)
           {
             name = 'lazydev',
             group_index = 0,
@@ -86,7 +88,7 @@ return {
           {
             name = 'nvim_lsp',
             max_item_count = 20,
-            keyword_length = 3, -- Require more chars for LSP completions
+            keyword_length = 1, -- Lower threshold to trigger for [[ in zk
             priority = 1000,
           },
           {
@@ -94,13 +96,15 @@ return {
             max_item_count = 10,
             priority = 750,
           },
+        }, {
+          -- Secondary sources (fallback when primary sources have no results)
           {
             name = 'path',
             max_item_count = 10,
             priority = 500,
             keyword_length = 3,
           },
-        },
+        }),
 
         -- Add view options to optimize performance
         view = {
