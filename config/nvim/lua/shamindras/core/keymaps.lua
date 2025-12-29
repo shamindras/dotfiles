@@ -56,7 +56,7 @@ keymap('v', '>', '>gv^')
 keymap('v', '<', '<gv^')
 
 -- change in word
-keymap('n', '<C-c>', 'ciw')
+keymap('n', '<C-c>', 'ciW')
 
 -- Remap <Esc> in insert mode based on cursor position
 vim.keymap.set('i', '<Esc>', function()
