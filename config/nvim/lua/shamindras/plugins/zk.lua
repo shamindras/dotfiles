@@ -24,6 +24,16 @@ return {
   config = function()
     -- {{{ Helper Functions -------------------------------------------------------------------
 
+    -- Get notebook directory
+    local function get_notebook_dir()
+      local notebook_dir = vim.fn.getenv('ZK_NOTEBOOK_DIR')
+      if notebook_dir == vim.NIL or notebook_dir == '' then
+        vim.notify('ZK_NOTEBOOK_DIR environment variable not set', vim.log.levels.WARN)
+        return nil
+      end
+      return notebook_dir
+    end
+
     -- Sync templates from ~/.config/zk/templates to notebook
     local function sync_templates()
       local source = vim.fn.expand('~/.config/zk/templates/')
@@ -70,18 +80,14 @@ return {
         return
       end
 
-      -- Create the note
-      zk.new({ group = 'ideas', title = title })
-    end
-
-    -- Get notebook directory
-    local function get_notebook_dir()
-      local notebook_dir = vim.fn.getenv('ZK_NOTEBOOK_DIR')
-      if notebook_dir == vim.NIL or notebook_dir == '' then
-        vim.notify('ZK_NOTEBOOK_DIR environment variable not set', vim.log.levels.WARN)
-        return nil
+      -- Get notebook directory
+      local notebook_dir = get_notebook_dir()
+      if not notebook_dir then
+        return
       end
-      return notebook_dir
+
+      -- Create the note in ideas directory
+      zk.new({ dir = notebook_dir .. '/ideas', title = title })
     end
 
     -- }}}
@@ -107,10 +113,6 @@ return {
           name = 'zk',
           cmd = { 'zk', 'lsp' },
           filetypes = { 'markdown' },
-          -- Ensure LSP provides completions from entire notebook
-          root_dir = function(fname)
-            return require('zk.util').notebook_root(fname)
-          end,
           on_attach = function(client, bufnr)
             -- Setup omnifunc for completion
             vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -155,7 +157,11 @@ return {
     commands.add('ZkIdea', function(options)
       -- If options with title are provided, use them directly (for programmatic calls)
       if options and options.title then
-        options = vim.tbl_extend('force', { group = 'ideas' }, options)
+        local notebook_dir = get_notebook_dir()
+        if not notebook_dir then
+          return
+        end
+        options = vim.tbl_extend('force', { dir = notebook_dir .. '/ideas' }, options)
         zk.new(options)
       else
         -- Otherwise, use interactive prompt with validation
@@ -172,7 +178,11 @@ return {
         end
 
         vim.defer_fn(function()
-          options = vim.tbl_extend('force', { group = 'ideas' }, options)
+          local notebook_dir = get_notebook_dir()
+          if not notebook_dir then
+            return
+          end
+          options = vim.tbl_extend('force', { dir = notebook_dir .. '/ideas' }, options)
           zk.new(options)
         end, 100)
       else

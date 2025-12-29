@@ -72,17 +72,17 @@ function z1_aliases {
   # ============================================================================
 
   # launch zk (zettlekasten) directory in yazi
-  alias yk="wash wash ~/DROPBOX/notes/zk;z ~/DROPBOX/notes/zk;y"
+  alias yk="wash $ZK_NOTEBOOK_DIR;z $ZK_NOTEBOOK_DIR;y"
 
   # Search notes interactively
   alias ks='k edit --interactive;clear'
 
   # Quick edit today's journal
-  alias kd='k daily;clear'
-  alias kds='k --sync-templates daily;clear'
+  alias kd='z $ZK_NOTEBOOK_DIR;k daily;clear'
+  alias kds='z $ZK_NOTEBOOK_DIR;k --sync-templates daily;clear'
 
   # Quick add idea
-  alias kis='ki --sync-templates' # calls the `ki` custom function
+  alias kis='z $ZK_NOTEBOOK_DIR;ki --sync-templates' # calls the `ki` custom function
 
   # Open zk config
   alias kc='$EDITOR $HOME/.config/zk/config.toml;clear'
