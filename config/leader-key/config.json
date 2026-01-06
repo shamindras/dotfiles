@@ -237,7 +237,27 @@
       "key": "s",
       "label": "search-raycast",
       "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "d",
+          "label": "dotfiles",
+          "type": "url",
+          "value": "https://github.com/shamindras/dotfiles"
+        },
+        {
+          "key": "n",
+          "label": "neovim-config",
+          "type": "url",
+          "value": "https://github.com/shamindras/dotfiles/tree/main/config/nvim"
+        }
+      ],
+      "key": "u",
+      "label": "urls",
+      "type": "group"
     }
   ],
   "type": "group"
 }
+
