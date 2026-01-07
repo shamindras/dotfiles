@@ -6,8 +6,11 @@
 # https://third-bit.com/atom.xml "~Greg Wilson"
 # https://linkarzu.com/feed.xml "~Christian Arzu (linkarzu)"
 # https://www.stephendiehl.com/feed.xml "~Stephen Diehl"
+
+# AI
 https://www.julian.ac/feeds/all.rss.xml "~Julian Schrittwieser"
 https://www.benkuhn.net/index.xml "~Ben Kuhn"
+https://simonwillison.net/atom/everything/ "~Simon Willison"
 
 # data science
 # https://blog.djnavarro.net/index.xml science math programming data_science "~Daniela Navarro"
