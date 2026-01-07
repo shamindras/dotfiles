@@ -29,10 +29,10 @@ function M.setup(config)
 
   -- Color scheme and window appearance
   config.color_scheme = depending_on_appearance({
-    -- light = 'Night Owl (Gogh)',
-    -- dark = 'Night Owl (Gogh)',
-    light = 'Catppuccin Mocha (Gogh)',
-    dark = 'Catppuccin Mocha (Gogh)',
+    light = 'Night Owl (Gogh)',
+    dark = 'Night Owl (Gogh)',
+    -- light = 'Catppuccin Mocha (Gogh)',
+    -- dark = 'Catppuccin Mocha (Gogh)',
   })
 
   -- Window configuration
