@@ -170,6 +170,8 @@ brew "p7zip"
 brew "pandoc"
 # Pandoc filter for numbering and cross-referencing
 brew "pandoc-crossref"
+# Shell command parallelization utility
+brew "parallel"
 # Highly capable, feature-rich programming language
 brew "perl"
 # General-purpose scripting language
