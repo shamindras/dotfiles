@@ -91,5 +91,5 @@ rules = [
     { mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#0D96DE" },
     { name = "*", is = "orphan", fg = "#FF3F4F" },
     { name = "*", is = "exec", fg = "#81F900" },
-    { name = "*/", fg = "#19D1E5"}
+    { url = "*/", fg = "#19D1E5"}
 ]

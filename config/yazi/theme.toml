@@ -4,23 +4,23 @@
 "$schema" = "https://yazi-rs.github.io/schemas/theme.json"
 
 [flavor]
-# dark = "catppuccin-mocha"
+# dark  = "catppuccin-mocha"
 # light = "catppuccin-mocha"
 
-# dark = "catppuccin-latte"
+# dark  = "catppuccin-latte"
 # light = "catppuccin-latte"
 
-# dark = "tokyo-night"
+# dark  = "tokyo-night"
 # light = "tokyo-night"
 
-# dark = "monokai-vibrant"
+# dark  = "monokai-vibrant"
 # light = "monokai-vibrant"
 
-# dark = "dracula"
+# dark  = "dracula"
 # light = "dracula"
 
-# dark = "moonfly"
+# dark  = "moonfly"
 # light = "moonfly"
 
-dark = "nightfly"
+dark  = "nightfly"
 light = "nightfly"
