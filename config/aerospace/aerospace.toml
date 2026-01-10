@@ -144,6 +144,7 @@ alt-s = 'workspace S'
 alt-t = 'workspace T'
 alt-v = 'workspace V'
 alt-w = 'workspace W'
+alt-x = 'workspace X'
 alt-z = 'workspace Z'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -172,6 +173,7 @@ alt-shift-s = 'move-node-to-workspace S'
 alt-shift-t = 'move-node-to-workspace T'
 alt-shift-v = 'move-node-to-workspace V'
 alt-shift-w = 'move-node-to-workspace W'
+alt-shift-x = 'move-node-to-workspace X'
 alt-shift-z = 'move-node-to-workspace Z'
 
 # alt-f = 'fullscreen'
@@ -225,20 +227,20 @@ alt-shift-l = ['join-with right', 'mode main']
 if.app-id = "com.1password.1password"
 run = "move-node-to-workspace 1"
 
-# NordVPN
+# [N]ordVPN
 [[on-window-detected]]
 if.app-id = "com.nordvpn.macos"
-run = "move-node-to-workspace 2"
+run = "move-node-to-workspace N"
 
 # Keychain
 [[on-window-detected]]
 if.app-id = "com.apple.keychainaccess"
 run = "move-node-to-workspace 2"
 
-# jDownloader
+# jDownloader - e[X]tract
 [[on-window-detected]]
 if.app-id = "org.jdownloader.launcher"
-run = "move-node-to-workspace 3"
+run = "move-node-to-workspace X"
 
 # VLC player
 [[on-window-detected]]
