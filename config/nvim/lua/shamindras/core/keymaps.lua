@@ -224,8 +224,48 @@ end, { expr = true, desc = 'Exit insert (smart cursor)' })
 -- {{{ Folding
 
 keymap('n', 'zv', 'zMzvzz', { desc = 'Focus current fold' })
-keymap('n', 'zj', 'zcjzOzz', { desc = 'Next fold' })
-keymap('n', 'zk', 'zckzOzz', { desc = 'Previous fold' })
+
+keymap('n', 'zj', function()
+  -- Close current fold if we're on one
+  if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
+    vim.cmd('normal! zc')
+  end
+
+  local current_line = vim.fn.line('.')
+  vim.cmd('silent! normal! zj')
+
+  -- If we didn't move, we're at the last fold - cycle to first
+  if vim.fn.line('.') == current_line then
+    vim.cmd('normal! gg') -- Go to top of file
+    vim.cmd('silent! normal! zj') -- Find first fold
+  end
+
+  vim.cmd('normal! zOzz')
+end, { desc = 'Next fold (cycle)' })
+
+keymap('n', 'zk', function()
+  -- Close current fold if we're on one
+  if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
+    vim.cmd('normal! zc')
+  end
+
+  local current_line = vim.fn.line('.')
+  vim.cmd('silent! normal! zk')
+
+  -- If we didn't move, we're at the first fold - cycle to last
+  if vim.fn.line('.') == current_line then
+    vim.cmd('normal! G') -- Go to bottom of file
+    vim.cmd('silent! normal! zk') -- Find last fold
+  end
+
+  -- Jump to start of fold (for both cycled and normal cases)
+  local fold_start = vim.fn.foldclosed('.')
+  if fold_start ~= -1 then
+    vim.api.nvim_win_set_cursor(0, { fold_start, 0 })
+  end
+
+  vim.cmd('normal! zOzz')
+end, { desc = 'Previous fold (cycle)' })
 
 -- ------------------------------------------------------------------------- }}}
 
