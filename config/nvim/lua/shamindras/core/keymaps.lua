@@ -1,8 +1,8 @@
 -- Keymaps
 
--- {{{ custom keymap helper
+-- {{{ Keymap Helper
 
--- keymap helper, which sets default options for silent and noremap to true
+-- Keymap helper which sets default options for silent and noremap to true
 local function keymap(mode, lhs, rhs, opts)
   opts = opts or {}
   opts.silent = opts.silent ~= false
@@ -12,165 +12,82 @@ end
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ buffers
+-- {{{ [b]uffer Operations
 
--- save file
-keymap({ 'i', 'x', 'n', 's' }, '<C-s>', "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>", { desc = 'Save File' })
-
--- switch buffers
-keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = 'Switch to Other Buffer' })
-
--- ------------------------------------------------------------------------- }}}
-
--- {{{ lua interactive e[x]ecution
-
-keymap(
-  'n',
-  '<leader>bx',
-  "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>",
-  { desc = 'write and [b]uffer e[x]ecute' }
-)
-keymap('n', '<leader>x', '<cmd>.lua<CR>')
-keymap('v', '<leader>x', '<cmd>.lua<CR>')
+keymap({ 'i', 'x', 'n', 's' }, '<C-s>', "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>", { desc = 'Save file' })
+keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = '[b]uffer [b]ack (alternate)' })
+keymap('n', '<leader>by', '<cmd>%y+<CR>', { desc = '[b]uffer [y]ank all' })
+keymap('n', '<leader>bl', '<cmd>%d _<CR>', { desc = '[b]uffer c[l]ear (no copy)' })
+keymap('n', '<leader>bc', '<cmd>%d<CR>', { desc = '[b]uffer [c]lear (with copy)' })
+keymap('n', '<leader>bw', '<cmd>wall!<cr>', { desc = '[b]uffer [w]rite all' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ macros
+-- {{{ [d]elete to Black Hole
 
--- quickly executing macros with the q register
-keymap('n', 'Q', '@q')
-keymap('v', 'Q', '<cmd>norm @q<cr>')
+keymap({ 'n', 'v' }, '<leader>d', '"_d', { desc = '[d]elete to black hole' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ editing text
+-- {{{ [f]ile Operations
 
--- delete/change single character without copying into register
-keymap('n', 'x', '"_x')
-keymap('n', 'X', '"_X')
-keymap('n', 'c', '"_c')
-keymap('n', 'C', '"_C')
+local function rename_file()
+  local old_name = vim.fn.expand('%')
+  if old_name == '' then
+    vim.notify('No file to rename', vim.log.levels.WARN)
+    return
+  end
 
--- don't leave visual mode after indenting
-keymap('v', '>', '>gv^')
-keymap('v', '<', '<gv^')
+  local new_name = vim.fn.input('New name: ', old_name, 'file')
 
--- change in word
-keymap('n', '<C-c>', 'ciW')
+  if new_name == '' or new_name == old_name then
+    return
+  end
 
--- Remap <Esc> in insert mode based on cursor position
-vim.keymap.set('i', '<Esc>', function()
-  return vim.fn.col('.') == 1 and '<Esc>' or '<Esc>l'
-end, { expr = true, desc = 'Exit insert, move right' })
+  local ok, err = pcall(vim.fn.rename, old_name, new_name)
+  if not ok then
+    vim.notify('Rename failed: ' .. err, vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd('edit ' .. vim.fn.fnameescape(new_name))
+  vim.cmd('bdelete ' .. vim.fn.bufnr(old_name))
+  vim.notify('Renamed: ' .. old_name .. ' ø ' .. new_name)
+end
+
+local function make_executable()
+  local file = vim.fn.expand('%')
+  if file == '' then
+    vim.notify('No file to make executable', vim.log.levels.WARN)
+    return
+  end
+
+  vim.cmd('silent !chmod +x ' .. vim.fn.shellescape(file))
+  vim.notify('Made executable: ' .. file)
+end
+
+keymap('n', '<leader>fx', make_executable, { desc = '[f]ile e[x]ecutable (chmod +x)' })
+keymap('n', '<leader>fr', rename_file, { desc = '[f]ile [r]ename' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ navigation
+-- {{{ [g]o/Navigate
 
--- better up/down
-keymap({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr = true })
-keymap({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr = true })
-keymap({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
-keymap({ 'n', 'x' }, '<Up>', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true })
-
--- mini.operators overrides default gx and moves it to gX for opening links
--- This mapping provides <leader>gx as an additional way to open links
--- If mini.operators is loaded, use its gX callback; otherwise fall back to default gx
 keymap({ 'n', 'x' }, '<leader>gx', function()
-  -- Check if mini.operators is loaded
   if _G.MiniOperators then
-    -- mini.operators is loaded, use its gX callback (the preserved original gx)
     local gx_keymap = vim.fn.maparg('gX', 'n', false, true)
     if gx_keymap.callback then
       gx_keymap.callback()
     end
   else
-    -- Fallback to default gx behavior
     vim.cmd('normal! gx')
   end
-end, { desc = 'Open link under cursor' })
-
---- Map H and L to ^ and $ (beginning/end of line)
--- Works in normal mode for movement and operator-pending mode for motions (e.g., dH, yL)
-keymap({ 'n', 'o' }, 'H', '^')
-keymap({ 'n', 'o' }, 'L', '$')
-
--- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-keymap('n', 'n', "'Nn'[v:searchforward].'zv'", { expr = true, desc = 'Next Search Result' })
-keymap('x', 'n', "'Nn'[v:searchforward]", { expr = true, desc = 'Next Search Result' })
-keymap('o', 'n', "'Nn'[v:searchforward]", { expr = true, desc = 'Next Search Result' })
-keymap('n', 'N', "'nN'[v:searchforward].'zv'", { expr = true, desc = 'Prev Search Result' })
-keymap('x', 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Prev Search Result' })
-keymap('o', 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Prev Search Result' })
+end, { desc = '[g]o open lin[x]/link' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ windows and splits
+-- {{{ [i]nsert Operations
 
----Toggle the maximization state of the current window.
----Maximizes the window if it's not maximized, restores the previous layout if it is.
----Preserves the cursor and scroll position of the window.
----@return nil
-local function toggle_window_maximize()
-  local current_win = vim.api.nvim_get_current_win()
-  local current_view = vim.fn.winsaveview()
-
-  -- Store the current window configuration
-  local is_maximized = vim.t.maximized_window == current_win
-
-  if is_maximized then
-    -- Restore the previous window layout
-    vim.cmd('wincmd =')
-    vim.t.maximized_window = nil
-  else
-    -- Maximize the current window
-    vim.cmd('wincmd |') -- Maximize vertically
-    vim.cmd('wincmd _') -- Maximize horizontally
-    vim.t.maximized_window = current_win
-  end
-
-  -- Restore the view (cursor position, scroll position, etc.)
-  vim.fn.winrestview(current_view)
-end
-
--- window management
-keymap('n', '<leader>we', '<C-w>=') -- make split windows equal width & height
-keymap('n', '<leader>wh', '<C-w>s') -- split window horizontally
-keymap('n', '<leader>wm', toggle_window_maximize) -- toggle maximize active window
-keymap('n', '<leader>wv', '<C-w>v') -- split window vertically
-keymap('n', '<leader>wx', '<cmd>close<CR>') -- close current split window
-
--- ------------------------------------------------------------------------- }}}
-
--- {{{ yanking and selecting
-
--- keymap('n', 'Y', 'yg$') -- yank up to the end of visual line
--- keymap('n', '<leader>yl', 'yg$') -- yank up to the end of visual line
--- keymap('n', '<leader>yh', 'yg^') -- yank up to the beginning of visual line
-keymap('n', 'J', 'mzJ`z')
-keymap('n', '<C-d>', '<C-d>zz')
-keymap('n', '<C-u>', '<C-u>zz')
-
--- greatest remap ever
-keymap('x', '<leader>p', '"_dP')
-
--- next greatest remap ever : asbjornHaland
-keymap('n', '<leader>y', '"+y')
-keymap('v', '<leader>y', '"+y')
-keymap('n', '<leader>Y', '"+Y')
-keymap('n', '<leader>yb', '<cmd>%y+<CR>')
-
-keymap('n', '<leader>d', '"_d')
-keymap('v', '<leader>d', '"_d')
-keymap('n', '<leader>bl', '<cmd>%d _<CR>', { noremap = true, desc = 'Clear buffer without copying' })
-keymap('n', '<leader>bc', '<cmd>%d<CR>', { noremap = true, desc = 'Clear buffer and copy contents' })
-
--- ------------------------------------------------------------------------- }}}
-
--- {{{ Dot-repeatable empty line insertion
-
--- insert missing lines above/below
--- Source: https://github.com/nvim-mini/mini.basics
 _G.put_empty_line = function(put_above)
   if type(put_above) == 'boolean' then
     vim.o.operatorfunc = 'v:lua.put_empty_line'
@@ -182,65 +99,160 @@ _G.put_empty_line = function(put_above)
   vim.fn.append(target_line, vim.fn['repeat']({ '' }, vim.v.count1))
 end
 
--- Keymaps
-keymap('n', 'gO', 'v:lua.put_empty_line(v:true)', { expr = true, desc = 'Put empty line above' })
-keymap('n', 'go', 'v:lua.put_empty_line(v:false)', { expr = true, desc = 'Put empty line below' })
+keymap('n', '<leader>in', 'v:lua.put_empty_line(v:false)', { expr = true, desc = '[i]nsert line [n]ext (below)' })
+keymap('n', '<leader>ip', 'v:lua.put_empty_line(v:true)', { expr = true, desc = '[i]nsert line [p]revious (above)' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ Folding commands.
+-- {{{ [l]azy Plugin Manager
 
--- Author: Karl Yngve Lervåg
---    See: https://github.com/lervag/dotnvim
-
--- Close all fold except the current one.
-keymap('n', 'zv', 'zMzvzz', { desc = 'Close all folds except current' })
-
--- Close current fold when open. Always open next fold.
-keymap('n', 'zj', 'zcjzOzz', { desc = 'Close fold & open next one' })
-
--- Close current fold when open. Always open previous fold.
-keymap('n', 'zk', 'zckzOzz', { desc = 'Close fold & open previous one' })
+keymap('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = '[l]azy menu' })
+keymap('n', '<leader>lu', '<cmd>Lazy update<cr>', { desc = '[l]azy [u]pdate' })
+keymap('n', '<leader>lp', '<cmd>Lazy profile<cr>', { desc = '[l]azy [p]rofile' })
+keymap('n', '<leader>ls', '<cmd>Lazy sync<cr>', { desc = '[l]azy [s]ync' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ lazy.nvim keymaps
+-- {{{ [p]aste (Register-Aware)
 
--- source: lazy.nvim default keymaps integrated with folke/lazy.nvim
-keymap('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = '[L]azy Menu' })
-keymap('n', '<leader>lu', '<cmd>Lazy update<cr>', { desc = '[L]azy [U]pdate' })
-keymap('n', '<leader>lp', '<cmd>Lazy profile<cr>', { desc = '[L]azy [P]rofile' })
+keymap('v', '<leader>p', '"_dP', { desc = '[p]aste (preserve register)' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ Q/q - Quit
+-- {{{ [q]uit Operations
 
--- Quit all and Save All
-keymap('n', '<leader>qa', '<cmd>qall!<cr>', { desc = 'Quit all!' })
-keymap('n', '<leader>wa', '<cmd>wall!<cr>', { desc = 'Write quit all!' })
+keymap('n', '<leader>qa', '<cmd>qall!<cr>', { desc = '[q]uit [a]ll (force, no save)' })
+keymap('n', '<leader>qs', '<cmd>wqall!<cr>', { desc = '[q]uit [s]ave all and exit' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ Line Number Toggle
+-- {{{ [t]oggle Operations
 
--- Define the custom toggle function
 local function custom_toggle_line_numbers()
   if vim.o.relativenumber then
-    -- Switch to the two-column setup: absolute in left column, relative in right column
     vim.o.number = true
     vim.o.relativenumber = false
-    vim.wo.numberwidth = 4 -- Set width for absolute numbers (left-most gutter)
-    vim.wo.signcolumn = 'yes' -- Always show sign column (right-most gutter)
+    vim.wo.numberwidth = 4
+    vim.wo.signcolumn = 'yes'
   else
-    -- Switch back to the default 1-column setup: only relative numbers in the right column
     vim.o.number = true
     vim.o.relativenumber = true
-    vim.wo.numberwidth = nil -- Do not show absolute numbers in the left-most gutter
-    vim.wo.signcolumn = 'yes' -- Keep relative numbers in the right-most gutter
+    vim.wo.numberwidth = nil
+    vim.wo.signcolumn = 'yes'
   end
 end
 
--- Toggle between 1-column and 2-column line number setups
-keymap('n', '<leader>tn', custom_toggle_line_numbers, { desc = 'Toggle line number setup' })
+keymap('n', '<leader>tn', custom_toggle_line_numbers, { desc = '[t]oggle line [n]umbers' })
+
+keymap('n', '<leader>ts', function()
+  vim.wo.spell = not vim.wo.spell
+  if vim.wo.spell then
+    vim.opt.spelllang = { 'en_au', 'en_gb' }
+    vim.notify('Spell check enabled (en_AU/en_GB)')
+  else
+    vim.notify('Spell check disabled')
+  end
+end, { desc = '[t]oggle [s]pell check' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ [w]indow Operations
+
+local function toggle_window_maximize()
+  local current_win = vim.api.nvim_get_current_win()
+  local current_view = vim.fn.winsaveview()
+  local is_maximized = vim.t.maximized_window == current_win
+
+  if is_maximized then
+    vim.cmd('wincmd =')
+    vim.t.maximized_window = nil
+  else
+    vim.cmd('wincmd |')
+    vim.cmd('wincmd _')
+    vim.t.maximized_window = current_win
+  end
+
+  vim.fn.winrestview(current_view)
+end
+
+keymap('n', '<leader>we', '<C-w>=', { desc = '[w]indow [e]qualize' })
+keymap('n', '<leader>wh', '<C-w>s', { desc = '[w]indow split [h]orizontal' })
+keymap('n', '<leader>wm', toggle_window_maximize, { desc = '[w]indow [m]aximize toggle' })
+keymap('n', '<leader>wv', '<C-w>v', { desc = '[w]indow split [v]ertical' })
+keymap('n', '<leader>wx', '<cmd>close<CR>', { desc = '[w]indow close [x]' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ E[x]ecute Operations
+
+keymap('n', '<leader>xl', '<cmd>.lua<CR>', { desc = 'e[x]ecute [l]ine (Lua)' })
+keymap('v', '<leader>xv', '<cmd>.lua<CR>', { desc = 'e[x]ecute [v]isual (Lua)' })
+keymap(
+  'n',
+  '<leader>xb',
+  "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>",
+  { desc = 'e[x]ecute [b]uffer (source file)' }
+)
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ [y]ank to Clipboard
+
+keymap({ 'n', 'v' }, '<leader>y', '"+y', { desc = '[y]ank to clipboard' })
+keymap('n', '<leader>Y', '"+Y', { desc = '[y]ank line to clipboard' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Editing Text
+
+keymap('n', 'x', '"_x', { desc = 'Delete char (no copy)' })
+keymap('n', 'X', '"_X', { desc = 'Delete back char (no copy)' })
+keymap('n', 'c', '"_c', { desc = 'Change (no copy)' })
+keymap('n', 'C', '"_C', { desc = 'Change to EOL (no copy)' })
+
+keymap('v', '>', '>gv^', { desc = 'Indent right (stay in visual)' })
+keymap('v', '<', '<gv^', { desc = 'Indent left (stay in visual)' })
+
+keymap('n', '<C-c>', 'ciW', { desc = 'Change in WORD' })
+
+keymap('i', '<Esc>', function()
+  return vim.fn.col('.') == 1 and '<Esc>' or '<Esc>l'
+end, { expr = true, desc = 'Exit insert (smart cursor)' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Folding
+
+keymap('n', 'zv', 'zMzvzz', { desc = 'Focus current fold' })
+keymap('n', 'zj', 'zcjzOzz', { desc = 'Next fold' })
+keymap('n', 'zk', 'zckzOzz', { desc = 'Previous fold' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Macros
+
+keymap('n', 'Q', '@q', { desc = 'Execute macro q' })
+keymap('v', 'Q', '<cmd>norm @q<cr>', { desc = 'Execute macro q on selection' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Navigation
+
+keymap({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down (display line)', expr = true })
+keymap({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down (display line)', expr = true })
+keymap({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up (display line)', expr = true })
+keymap({ 'n', 'x' }, '<Up>', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up (display line)', expr = true })
+
+keymap({ 'n', 'o' }, 'H', '^', { desc = 'Start of line' })
+keymap({ 'n', 'o' }, 'L', '$', { desc = 'End of line' })
+
+keymap('n', 'n', "'Nn'[v:searchforward].'zv'", { expr = true, desc = 'Next search result' })
+keymap({ 'x', 'o' }, 'n', "'Nn'[v:searchforward]", { expr = true, desc = 'Next search result' })
+keymap('n', 'N', "'nN'[v:searchforward].'zv'", { expr = true, desc = 'Previous search result' })
+keymap({ 'x', 'o' }, 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Previous search result' })
+
+keymap('n', 'J', 'mzJ`z', { desc = 'Join lines (stay in place)' })
+keymap('n', '<C-d>', '<C-d>zz', { desc = 'Half page down (centered)' })
+keymap('n', '<C-u>', '<C-u>zz', { desc = 'Half page up (centered)' })
 
 -- ------------------------------------------------------------------------- }}}

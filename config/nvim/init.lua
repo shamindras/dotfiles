@@ -26,7 +26,7 @@ require('lazy').setup({
   require('shamindras.plugins.colorscheme'),
 
   -- which.key
-  require('shamindras.plugins.which-key'),
+  -- require('shamindras.plugins.which-key'),
 
   -- todo comments
   require('shamindras.plugins.todo-comments'),

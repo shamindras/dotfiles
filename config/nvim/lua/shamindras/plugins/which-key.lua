@@ -1,25 +1,20 @@
 return {
-  { -- Useful plugin to show you pending keybinds.
+  {
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    event = 'VimEnter',
     opts = {
-      -- delay between pressing a key and opening which-key (milliseconds)
-      -- this setting is independent of vim.opt.timeoutlen
       delay = 0,
       icons = {
-        -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
-        -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-        -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
         keys = vim.g.have_nerd_font and {} or {
           Up = '<Up> ',
           Down = '<Down> ',
           Left = '<Left> ',
           Right = '<Right> ',
-          C = '<C-É> ',
-          M = '<M-É> ',
-          D = '<D-É> ',
-          S = '<S-É> ',
+          C = '<C-¿> ',
+          M = '<M-¿> ',
+          D = '<D-¿> ',
+          S = '<S-¿> ',
           CR = '<CR> ',
           Esc = '<Esc> ',
           ScrollWheelDown = '<ScrollWheelDown> ',
@@ -42,16 +37,20 @@ return {
           F12 = '<F12>',
         },
       },
-
-      -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]ocument' },
-        { '<leader>r', group = '[R]ename' },
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>w', group = '[W]orkspace' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        -- Core keymaps from our refactored keymaps.lua
+        { '<leader>b', group = '[b]uffer' },
+        { '<leader>d', group = '[d]elete (black hole)' },
+        { '<leader>f', group = '[f]ile' },
+        { '<leader>g', group = '[g]o/navigate' },
+        { '<leader>i', group = '[i]nsert' },
+        { '<leader>l', group = '[l]azy' },
+        { '<leader>p', group = '[p]aste (register-aware)', mode = 'v' },
+        { '<leader>q', group = '[q]uit' },
+        { '<leader>t', group = '[t]oggle' },
+        { '<leader>w', group = '[w]indow' },
+        { '<leader>x', group = 'e[x]ecute' },
+        { '<leader>y', group = '[y]ank (clipboard)' },
       },
     },
   },

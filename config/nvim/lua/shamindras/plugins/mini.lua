@@ -1,9 +1,10 @@
 local M = {}
 
--- {{{ Text editing plugins ------------------------------------------------------------------------
+-- {{{ Text Editing Plugins
 
 table.insert(M, {
   'nvim-mini/mini.ai',
+  version = '*',
   event = 'VeryLazy',
   keys = {
     { 'a', mode = { 'x', 'o' } },
@@ -13,7 +14,7 @@ table.insert(M, {
     {
       'nvim-treesitter/nvim-treesitter-textobjects',
       branch = 'main',
-      lazy = true, -- Let mini.ai trigger the load when needed
+      lazy = true,
     },
   },
   opts = function()
@@ -32,74 +33,54 @@ table.insert(M, {
   end,
 })
 
---}}}
-
---{{{ Operators ------------------------------------------------------------------------
-
 table.insert(M, {
   'nvim-mini/mini.operators',
   version = '*',
-  event = 'VeryLazy', -- Load after startup
+  event = 'VeryLazy',
   config = function()
     require('mini.operators').setup()
   end,
 })
 
---}}}
-
---{{{ Surround ------------------------------------------------------------------------
-
 table.insert(M, {
   'nvim-mini/mini.surround',
   version = '*',
-  event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
+  event = { 'BufReadPost', 'BufNewFile' },
   config = function()
     require('mini.surround').setup()
   end,
 })
 
---}}}
-
---{{{ Move ------------------------------------------------------------------------
-
 table.insert(M, {
   'nvim-mini/mini.move',
   version = '*',
-  event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
+  event = { 'BufReadPost', 'BufNewFile' },
   config = function()
     require('mini.move').setup()
   end,
 })
 
---}}}
-
---{{{ Pairs ------------------------------------------------------------------------
-
 table.insert(M, {
   'nvim-mini/mini.pairs',
   version = '*',
-  event = 'InsertEnter', -- Load when entering insert mode
+  event = 'InsertEnter',
   config = function()
     require('mini.pairs').setup()
   end,
 })
 
---}}}
+-- ------------------------------------------------------------------------- }}}
 
---{{{ General workflow plugins ------------------------------------------------------------------------
+-- {{{ General Workflow Plugins
 
 table.insert(M, {
   'nvim-mini/mini.bracketed',
   version = '*',
-  event = { 'BufReadPost', 'BufNewFile' }, -- Load when buffer is read or created
+  event = { 'BufReadPost', 'BufNewFile' },
   config = function()
     require('mini.bracketed').setup()
   end,
 })
-
---}}}
-
---{{{ File Explorer ------------------------------------------------------------------------
 
 table.insert(M, {
   'nvim-mini/mini.files',
@@ -109,34 +90,23 @@ table.insert(M, {
     'MiniFilesBufferDir',
     'MiniFilesCursorFile',
   },
-  -- stylua: ignore
   keys = {
-    { '<leader>fm', '<cmd>lua MiniFiles.open()<cr>', desc = 'Open Mini Files', },
-    { '<leader>fa', '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>', desc = 'Mini Files [A]ctive File', },
-    { '<leader>fh', "<cmd>lua MiniFiles.open('~')<cr>", desc = 'Mini Files Home Dir', },
+    { '<leader>fm', '<cmd>lua MiniFiles.open()<cr>', desc = '[f]ile [m]ini files' },
+    { '<leader>fa', '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>', desc = '[f]ile [a]ctive file' },
+    { '<leader>fh', "<cmd>lua MiniFiles.open('~')<cr>", desc = '[f]ile [h]ome dir' },
   },
   config = function()
     local minifiles = require('mini.files')
     minifiles.setup({
-      -- Customize windows
       windows = {
-        -- Maximum number of windows to show side by side
         max_number = 3,
-        -- Whether to show preview of file/directory under cursor
         preview = true,
-        -- Width of focused window
         width_focus = 30,
-        -- Width of non-focused window
         width_nofocus = 15,
-        -- Width of preview window
         width_preview = 60,
-        -- Use mini.icons for file icons
-        use_icons = true,
       },
       options = {
-        -- Whether to delete permanently or move into trash
         permanent_delete = false,
-        -- Whether to use for editing directories
         use_as_default_explorer = true,
       },
     })
@@ -145,16 +115,15 @@ table.insert(M, {
       pattern = 'MiniFilesBufferCreate',
       callback = function(args)
         local buf_id = args.data.buf_id
-        -- Add quit mapping
         vim.keymap.set('n', 'q', MiniFiles.close, { buffer = buf_id, desc = 'Close Mini Files' })
       end,
     })
   end,
 })
 
---}}}
+-- ------------------------------------------------------------------------- }}}
 
---{{{ Icons plugin ------------------------------------------------------------------------
+-- {{{ Appearance Plugins
 
 table.insert(M, {
   'nvim-mini/mini.icons',
@@ -164,10 +133,6 @@ table.insert(M, {
     require('mini.icons').setup()
   end,
 })
-
---}}}
-
---{{{ Appearance plugins ------------------------------------------------------------------------
 
 table.insert(M, {
   'nvim-mini/mini.statusline',
@@ -182,11 +147,10 @@ table.insert(M, {
       return '%2l:%-2v'
     end
 
-    -- Custom git branch function with icon
     local function git_branch()
       local branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
       if vim.v.shell_error == 0 and branch ~= '' then
-        return '󰘬 ' .. branch -- Using nf-md-source_branch icon
+        return '󰘬 ' .. branch
       end
       return ''
     end
@@ -212,6 +176,70 @@ table.insert(M, {
   end,
 })
 
---}}}
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Keymap Discovery
+
+table.insert(M, {
+  'nvim-mini/mini.clue',
+  version = '*',
+  event = 'VeryLazy',
+  config = function()
+    local miniclue = require('mini.clue')
+    miniclue.setup({
+      triggers = {
+        { mode = 'n', keys = '<leader>' },
+        { mode = 'x', keys = '<leader>' },
+        { mode = 'i', keys = '<C-x>' },
+        { mode = 'n', keys = 'g' },
+        { mode = 'x', keys = 'g' },
+        { mode = 'n', keys = "'" },
+        { mode = 'n', keys = '`' },
+        { mode = 'x', keys = "'" },
+        { mode = 'x', keys = '`' },
+        { mode = 'n', keys = '"' },
+        { mode = 'x', keys = '"' },
+        { mode = 'i', keys = '<C-r>' },
+        { mode = 'c', keys = '<C-r>' },
+        { mode = 'n', keys = '<C-w>' },
+        { mode = 'n', keys = 'z' },
+        { mode = 'x', keys = 'z' },
+        { mode = 'n', keys = '[' },
+        { mode = 'n', keys = ']' },
+      },
+
+      clues = {
+        { mode = 'n', keys = '<leader>b', desc = '+[b]uffer' },
+        { mode = 'n', keys = '<leader>d', desc = '+[d]elete (black hole)' },
+        { mode = 'n', keys = '<leader>f', desc = '+[f]ile' },
+        { mode = 'n', keys = '<leader>g', desc = '+[g]o/navigate' },
+        { mode = 'n', keys = '<leader>i', desc = '+[i]nsert' },
+        { mode = 'n', keys = '<leader>l', desc = '+[l]azy' },
+        { mode = 'v', keys = '<leader>p', desc = '+[p]aste (register-aware)' },
+        { mode = 'n', keys = '<leader>q', desc = '+[q]uit' },
+        { mode = 'n', keys = '<leader>t', desc = '+[t]oggle' },
+        { mode = 'n', keys = '<leader>w', desc = '+[w]indow' },
+        { mode = 'n', keys = '<leader>x', desc = '+e[x]ecute' },
+        { mode = 'n', keys = '<leader>y', desc = '+[y]ank (clipboard)' },
+        { mode = 'v', keys = '<leader>y', desc = '+[y]ank (clipboard)' },
+        { mode = 'n', keys = '<leader>s', desc = '+[s]earch' },
+        miniclue.gen_clues.builtin_completion(),
+        miniclue.gen_clues.g(),
+        miniclue.gen_clues.marks(),
+        miniclue.gen_clues.registers(),
+        miniclue.gen_clues.windows(),
+        miniclue.gen_clues.z(),
+      },
+      window = {
+        delay = 0,
+        config = {
+          width = 40,
+        },
+      },
+    })
+  end,
+})
+
+-- ------------------------------------------------------------------------- }}}
 
 return M

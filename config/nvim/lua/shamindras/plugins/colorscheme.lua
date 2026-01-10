@@ -193,11 +193,11 @@ return {
     'eldritch-theme/eldritch.nvim',
     keys = {
       {
-        '<leader>ct',
+        '<leader>tc',
         function()
           _G.cycle_colorscheme()
         end,
-        desc = 'Cycle colorscheme',
+        desc = '[t]oggle cycle [c]olorscheme',
       },
     },
   },
