@@ -45,12 +45,6 @@
           "value": "/System/Applications/Books.app"
         },
         {
-          "key": "j",
-          "label": "jdownloader",
-          "type": "application",
-          "value": "/Applications/JDownloader 2/JDownloader2.app"
-        },
-        {
           "key": "m",
           "label": "spotify",
           "type": "application",
@@ -85,6 +79,12 @@
           "label": "wezterm",
           "type": "application",
           "value": "/Applications/WezTerm.app"
+        },
+        {
+          "key": "x",
+          "label": "jdownloader",
+          "type": "application",
+          "value": "/Applications/JDownloader 2/JDownloader2.app"
         }
       ],
       "key": "o",
@@ -136,12 +136,6 @@
           "value": "(pkill -x Books 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
-          "key": "j",
-          "label": "jdownloader",
-          "type": "command",
-          "value": "(pkill -f \"JDownloader2.app\" 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
-        },
-        {
           "key": "m",
           "label": "spotify",
           "type": "command",
@@ -176,6 +170,12 @@
           "label": "wezterm",
           "type": "command",
           "value": "osascript -e 'quit app \"WezTerm\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+        },
+        {
+          "key": "x",
+          "label": "jdownloader",
+          "type": "command",
+          "value": "(pkill -f \"JDownloader2.app\" 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         }
       ],
       "key": "q",
@@ -260,4 +260,3 @@
   ],
   "type": "group"
 }
-
