@@ -287,3 +287,6 @@ n
 !config/zsh/lib/unplugged.zsh
 config/brew/Brewfile.lock.json
 config/zsh/.zsh_sessions
+
+# Neovim compiled spell files
+*.spl
