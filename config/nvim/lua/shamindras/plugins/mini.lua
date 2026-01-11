@@ -234,6 +234,7 @@ table.insert(M, {
         delay = 0,
         config = {
           width = 40,
+          border = 'rounded',
         },
       },
     })
