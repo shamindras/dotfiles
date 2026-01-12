@@ -51,10 +51,10 @@ return {
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          map('gd', vim.lsp.buf.definition, 'Go to Definition')
+          map('<leader>gd', vim.lsp.buf.definition, 'Go to Definition')
           -- Optional: Add these complementary navigation mappings
-          map('gr', vim.lsp.buf.references, 'Go to References')
-          map('gI', vim.lsp.buf.implementation, 'Go to Implementation')
+          map('<leader>gr', vim.lsp.buf.references, 'Go to References')
+          map('<leader>gI', vim.lsp.buf.implementation, 'Go to Implementation')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
         end,
       })

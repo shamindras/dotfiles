@@ -226,6 +226,20 @@ end, { expr = true, desc = 'Exit insert (smart cursor)' })
 keymap('n', 'zv', 'zMzvzz', { desc = 'Focus current fold' })
 
 keymap('n', 'zj', function()
+  -- Check if there are any folds in the buffer
+  local has_folds = false
+  for i = 1, vim.fn.line('$') do
+    if vim.fn.foldlevel(i) > 0 then
+      has_folds = true
+      break
+    end
+  end
+
+  if not has_folds then
+    vim.notify('No folds in buffer', vim.log.levels.INFO)
+    return
+  end
+
   -- Close current fold if we're on one
   if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
     vim.cmd('normal! zc')
@@ -236,14 +250,28 @@ keymap('n', 'zj', function()
 
   -- If we didn't move, we're at the last fold - cycle to first
   if vim.fn.line('.') == current_line then
-    vim.cmd('normal! gg') -- Go to top of file
-    vim.cmd('silent! normal! zj') -- Find first fold
+    vim.cmd('normal! gg')
+    vim.cmd('silent! normal! zj')
   end
 
   vim.cmd('normal! zOzz')
 end, { desc = 'Next fold (cycle)' })
 
 keymap('n', 'zk', function()
+  -- Check if there are any folds in the buffer
+  local has_folds = false
+  for i = 1, vim.fn.line('$') do
+    if vim.fn.foldlevel(i) > 0 then
+      has_folds = true
+      break
+    end
+  end
+
+  if not has_folds then
+    vim.notify('No folds in buffer', vim.log.levels.INFO)
+    return
+  end
+
   -- Close current fold if we're on one
   if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
     vim.cmd('normal! zc')
@@ -254,11 +282,11 @@ keymap('n', 'zk', function()
 
   -- If we didn't move, we're at the first fold - cycle to last
   if vim.fn.line('.') == current_line then
-    vim.cmd('normal! G') -- Go to bottom of file
-    vim.cmd('silent! normal! zk') -- Find last fold
+    vim.cmd('normal! G')
+    vim.cmd('silent! normal! zk')
   end
 
-  -- Jump to start of fold (for both cycled and normal cases)
+  -- Jump to start of fold
   local fold_start = vim.fn.foldclosed('.')
   if fold_start ~= -1 then
     vim.api.nvim_win_set_cursor(0, { fold_start, 0 })
