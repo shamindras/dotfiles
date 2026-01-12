@@ -251,6 +251,12 @@
           "label": "neovim-config",
           "type": "url",
           "value": "https://github.com/shamindras/dotfiles/tree/main/config/nvim"
+        },
+        {
+          "key": "i",
+          "label": "youtube-incognito",
+          "type": "command",
+          "value": "open -na 'Firefox' --args -private-window 'https://youtube.com'; sleep 3; osascript -e 'tell application \"Firefox\" to activate' -e 'tell application \"System Events\" to repeat 4 times' -e 'key code 48' -e 'end repeat'; /opt/homebrew/bin/aerospace workspace B"
         }
       ],
       "key": "u",
