@@ -1,7 +1,8 @@
 // ============================================
 // SURFINGKEYS CONFIGURATION
 // Ported from Vimium with custom enhancements
-// Last updated: 2026-01-11
+// Theme: Tomorrow Night
+// Last updated: 2026-01-13
 // ============================================
 
 // ============================================
@@ -60,7 +61,7 @@ api.map('zz', 'x');
 // Override 'on' to open blank page instead of about:blank
 api.unmap('on');
 api.mapkey('on', 'Open new tab with blank page', function() {
-    window.open('data:text/html,<html><head><title>New Tab</title></head><body style="background:#24273a;"></body></html>');
+    window.open('data:text/html,<html><head><title>New Tab</title></head><body style="background:#1d1f21;"></body></html>');
 });
 
 // ============================================
@@ -206,116 +207,182 @@ api.unmap('a', /localhost:2718/);
 api.unmap('m', /localhost:2718/);
 
 // ============================================
-// OMNIBAR CUSTOMIZATION & THEME - Modular approach
+// THEME: TOMORROW NIGHT
 // ============================================
 
-// --- OMNIBAR SIZE/FONT (always applied) ---
-const omnibarSizing = `
-/* Omnibar - Main container */
+// Hint styling
+api.Hints.style('border: solid 1px #373b41; color: #81a2be; background: #1d1f21; padding: 1px 3px; font-family: Menlo, Monaco, monospace; font-size: 11pt;');
+api.Hints.style('border: solid 1px #373b41; color: #81a2be; background: #1d1f21; padding: 1px 3px; font-family: Menlo, Monaco, monospace; font-size: 11pt;', 'text');
+
+// Main theme
+settings.theme = `
+/* ===== TOMORROW NIGHT THEME ===== */
+
+/* Base theme */
+.sk_theme {
+    font-family: Menlo, Monaco, monospace;
+    font-size: 12pt;
+    background: #1d1f21;
+    color: #c5c8c6;
+}
+
+.sk_theme tbody {
+    color: #c5c8c6;
+}
+
+.sk_theme input {
+    font-family: Menlo, Monaco, monospace;
+    color: #c5c8c6;
+    background: #1d1f21;
+}
+
+.sk_theme .url {
+    color: #8abeb7;
+    font-size: 11pt;
+}
+
+.sk_theme .annotation {
+    color: #b294bb;
+    font-size: 10pt;
+}
+
+.sk_theme .omnibar_highlight {
+    color: #f0c674;
+    font-weight: bold;
+}
+
+.sk_theme .omnibar_timestamp {
+    color: #de935f;
+    font-size: 10pt;
+}
+
+.sk_theme .omnibar_visitcount {
+    color: #b5bd68;
+    font-size: 10pt;
+}
+
+.sk_theme .omnibar_folder {
+    color: #81a2be;
+}
+
+/* Omnibar container */
 #sk_omnibar {
-    width: 80% !important;
-    max-width: 1000px !important;
-    font-size: 18px !important;
+    width: 80%;
+    max-width: 1000px;
+    background: #1d1f21;
+    border: 2px solid #373b41;
 }
 
-/* Omnibar - Input field */
+/* Omnibar input field */
 #sk_omnibar input {
-    font-size: 20px !important;
-    padding: 16px 20px !important;
-    font-family: 'Menlo', 'Monaco', monospace !important;
+    font-size: 14pt;
+    padding: 12px 16px;
+    background: #1d1f21;
+    color: #c5c8c6;
+    border: none;
 }
 
-/* Omnibar - Result items */
-#sk_omnibar li {
-    font-size: 16px !important;
-    padding: 12px 20px !important;
-    line-height: 1.6 !important;
-    font-family: 'Menlo', 'Monaco', monospace !important;
+/* Omnibar search results */
+#sk_omnibarSearchResult {
+    background: #1d1f21;
 }
 
-/* Omnibar - Result titles */
-#sk_omnibar .title {
-    font-size: 17px !important;
-    font-weight: 600 !important;
+#sk_omnibarSearchResult ul {
+    background: #1d1f21;
 }
 
-/* Omnibar - URLs */
-#sk_omnibar .url {
-    font-size: 14px !important;
-}
-`;
-
-// --- THEME: Catppuccin Macchiato (swappable) ---
-const catppuccinTheme = `
-/* Catppuccin Macchiato Palette */
-:root {
-  --sk-rosewater: #f4dbd6;
-  --sk-peach: #f5a97f;
-  --sk-green: #a6da95;
-  --sk-blue: #8aadf4;
-  --sk-lavender: #b7bdf8;
-  --sk-text: #cad3f5;
-  --sk-subtext0: #a5adcb;
-  --sk-subtext1: #b8c0e0;
-  --sk-surface2: #5b6078;
-  --sk-surface1: #494d64;
-  --sk-surface0: #363a4f;
-  --sk-base: #24273a;
-  --sk-mantle: #1e2030;
-  --sk-crust: #181926;
+#sk_omnibarSearchResult ul li {
+    background: #1d1f21;
+    padding: 8px 16px;
+    border-bottom: 1px solid #282a2e;
 }
 
-/* Hint markers */
-#sk_hints .begin {
-    color: var(--sk-mantle) !important;
-    background: var(--sk-green) !important;
-    border: 1px solid var(--sk-mantle) !important;
+/* Fix for odd/even rows - keep them the same color */
+#sk_omnibarSearchResult ul li:nth-child(odd) {
+    background: #1d1f21;
 }
 
-#sk_hints .begin.focused {
-    color: var(--sk-surface2) !important;
+#sk_omnibarSearchResult ul li:nth-child(even) {
+    background: #1d1f21;
 }
 
-/* Omnibar colors */
-#sk_omnibar {
-    background: var(--sk-base);
-    border: 2px solid var(--sk-lavender);
+/* Focused/selected item - use slightly lighter background */
+#sk_omnibarSearchResult ul li.focused {
+    background: #282a2e !important;
+    color: #c5c8c6 !important;
 }
 
-#sk_omnibar input {
-    color: var(--sk-text);
-    background: var(--sk-base);
+#sk_omnibarSearchResult ul li.focused .url {
+    color: #8abeb7 !important;
 }
 
-#sk_omnibar .omnibar_timestamp {
-    color: var(--sk-peach);
-}
-
-#sk_omnibar .omnibar_folder {
-    color: var(--sk-blue);
-}
-
-#sk_omnibar .url {
-    color: var(--sk-rosewater);
-}
-
-#sk_omnibar li.focused {
-    background: var(--sk-surface0);
+#sk_omnibarSearchResult ul li.focused .annotation {
+    color: #b294bb !important;
 }
 
 /* Status bar */
 #sk_status {
-    background: var(--sk-base);
-    color: var(--sk-text);
-    border: 1px solid var(--sk-text);
+    font-family: Menlo, Monaco, monospace;
+    font-size: 11pt;
+    background: #1d1f21;
+    color: #c5c8c6;
+    border: 1px solid #373b41;
+}
+
+#sk_status .feature_name {
+    color: #81a2be;
+}
+
+#sk_status .feature_name span {
+    color: #f0c674;
+}
+
+/* Find mode */
+#sk_find {
+    font-family: Menlo, Monaco, monospace;
+    font-size: 11pt;
+    background: #1d1f21;
+    color: #c5c8c6;
+    border: 1px solid #373b41;
+}
+
+#sk_find input {
+    background: #1d1f21;
+    color: #c5c8c6;
+}
+
+#sk_find .counter {
+    color: #f0c674;
 }
 
 /* Visual mode */
-.surfingkeys_visual_hints_host {
-    background-color: var(--sk-peach) !important;
-    color: var(--sk-mantle) !important;
+.sk_theme #sk_visual {
+    background: #282a2e;
+    color: #c5c8c6;
+}
+
+/* Bubble */
+#sk_bubble {
+    background: #1d1f21;
+    color: #c5c8c6;
+    border: 1px solid #373b41;
+}
+
+#sk_bubble .sk_bubble_content {
+    color: #c5c8c6;
+}
+
+/* Scrollable marks */
+#sk_keystroke {
+    background: #1d1f21;
+    color: #c5c8c6;
+    border: 1px solid #373b41;
+}
+
+/* Key pressed display */
+.expandRichHints span.annotation {
+    background: #282a2e;
+    color: #b294bb;
+    border: 1px solid #373b41;
 }
 `;
-
-// --- COMBINE AND APPLY ---
-settings.theme = omnibarSizing + catppuccinTheme;
