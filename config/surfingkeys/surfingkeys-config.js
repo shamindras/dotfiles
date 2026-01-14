@@ -7,8 +7,8 @@
 // BASIC SETTINGS
 // ============================================
 
-// Show hints with 300ms delay for multi-key sequences
-settings.richHintsForKeystroke = 300;
+// Show hints with 400ms delay for multi-key sequences
+settings.richHintsForKeystroke = 400;
 
 // Show omnibar suggestions instantly (for og, ow, etc.)
 settings.omnibarSuggestionTimeout = 0;
@@ -291,6 +291,20 @@ if (/iview\.abc\.net\.au/.test(window.location.host)) {
 ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
     api.unmap(key, /mail\.google\.com/);
 });
+
+// Gmail - Custom z-prefixed navigation shortcuts (to avoid conflict with Gmail's g shortcuts)
+// Helper function to navigate to Gmail views with correct account
+const gmailNavigate = (view) => {
+    const accountMatch = window.location.pathname.match(/\/u\/(\d+)\//);
+    const accountNum = accountMatch ? accountMatch[1] : '0';
+    window.location.href = `https://mail.google.com/mail/u/${accountNum}/#${view}`;
+};
+
+api.mapkey('zgi', '#0Go to inbox', () => gmailNavigate('inbox'), {domain: /mail\.google\.com/i});
+api.mapkey('zgs', '#0Go to starred', () => gmailNavigate('starred'), {domain: /mail\.google\.com/i});
+api.mapkey('zgt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
+api.mapkey('zgd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
+api.mapkey('zga', '#0Go to all mail', () => gmailNavigate('all'), {domain: /mail\.google\.com/i});
 
 // Gmail - Use runtime conditional for / remapping
 if (/mail\.google\.com/.test(window.location.host)) {
