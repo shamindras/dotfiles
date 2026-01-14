@@ -42,6 +42,14 @@ api.map('>', '>>');  // > = move tab right (single press)
 // Link hints with Ctrl-F (safe on macOS where Cmd+F is native find)
 api.map('<Ctrl-f>', 'f');
 
+// Global gf mapping for link hints (useful on sites where f is unmapped)
+api.mapkey('gf', '#1Open link hints', function() {
+    api.Hints.create("", api.Hints.dispatchMouseClick);
+});
+
+// Global gt mapping for URL omnibar (useful on sites where t is unmapped)
+api.map('gt', 't');  // gt = open URL omnibar (search bookmarks/history)
+
 // Move tab to start/end - use zh/zl to preserve marks (m key)
 api.mapkey('zh', '#3Move tab to beginning', function() {
     // Move tab left repeatedly until it's at position 0
@@ -195,123 +203,87 @@ api.mapkey('<Ctrl-z>', 'Search Amazon AU', function() {
 settings.blocklistPattern = /localhost:888[89]|localhost:8890|multiplexer-prod\.datacamp\.com|app\.gather\.town|type-fu\.com|app\.coderpad\.io|games\.usatoday\.com|vimaroo\.vercel\.app|static\.licdn\.com|cocalc\.com\/projects|docs\.google\.com\/(document|presentation)/i;
 
 // ============================================
-// PASSTHROUGH HELPER FUNCTION
+// SITE-SPECIFIC KEY UNMAPPING
 // ============================================
 
-// Helper: Pass a key through to the page's native handlers
-function passKeyToPage(key) {
-    // Dispatch keyboard events that sites can catch
-    ['keydown', 'keypress', 'keyup'].forEach(eventType => {
-        document.dispatchEvent(new KeyboardEvent(eventType, {
-            key: key,
-            code: `Key${key.toUpperCase()}`,
-            keyCode: key.charCodeAt(0),
-            which: key.charCodeAt(0),
-            bubbles: true,
-            cancelable: true
-        }));
-    });
-}
+// ========== VIDEO SITES ==========
 
-// ============================================
-// VIDEO SITES - Passthrough for f, m, t
-// ============================================
+// YouTube - Unmap keys on entire domain
+['f', 'm', 't'].forEach(key => {
+    api.unmap(key, /youtube\.com/);
+});
 
-// YouTube - f (fullscreen), m (mute), t (theater mode)
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /youtube\.com\/watch/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /youtube\.com\/watch/});
-api.mapkey('t', '#0Theater mode', () => passKeyToPage('t'), {domain: /youtube\.com\/watch/});
-
-// YouTube homepage - just m
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /youtube\.com/});
-
-// YouTube search (/) - focus search input
+// YouTube search (/) - remap to focus search (no unmap needed)
 api.mapkey('/', '#0Focus YouTube search', function() {
     const searchInput = document.querySelector('input#search');
     if (searchInput) searchInput.focus();
 }, {domain: /youtube\.com/i});
 
-// Netflix
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /netflix\.com\/watch/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /netflix\.com\/watch/});
+// Netflix - domain-wide (SPA site)
+['f', 'm'].forEach(key => {
+    api.unmap(key, /netflix\.com/);
+});
 
-// Amazon Video
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /amazon\.com\/gp\/video/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /amazon\.com\/gp\/video/});
+// Amazon Video - domain-wide for /gp/video section
+['f', 'm'].forEach(key => {
+    api.unmap(key, /amazon\.com/);
+});
 
-// Prime Video
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /primevideo\.com/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /primevideo\.com/});
+// Prime Video - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /primevideo\.com/);
+});
 
-// Crunchyroll
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /crunchyroll\.com/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /crunchyroll\.com\/watch/});
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /static\.crunchyroll\.com/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /static\.crunchyroll\.com/});
+// Crunchyroll - domain-wide (handles both main and static domains)
+['f', 'm'].forEach(key => {
+    api.unmap(key, /crunchyroll\.com/);
+});
 
-// HiAnime
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /hianime\.to/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /hianime\.to/});
+// HiAnime - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /hianime\.to/);
+});
 
-// AniCrush
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /anicrush\.to/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /anicrush\.to/});
+// AniCrush - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /anicrush\.to/);
+});
 
-// Bilibili
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /bilibili\.com/});
+// Bilibili - domain-wide
+api.unmap('f', /bilibili\.com/);
 
-// Peacock
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /peacocktv\.com/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /peacocktv\.com/});
+// Peacock - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /peacocktv\.com/);
+});
 
-// Paramount+
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /paramountplus\.com/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /paramountplus\.com/});
+// Paramount+ - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /paramountplus\.com/);
+});
 
-// Dailymotion
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /dailymotion\.com/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /dailymotion\.com/});
+// Dailymotion - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /dailymotion\.com/);
+});
 
-// iView ABC
-api.mapkey('f', '#0Fullscreen', () => passKeyToPage('f'), {domain: /iview\.abc\.net\.au/});
-api.mapkey('m', '#0Mute', () => passKeyToPage('m'), {domain: /iview\.abc\.net\.au/});
+// iView ABC - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /iview\.abc\.net\.au/);
+});
+
+// iView ABC search (/)
 api.mapkey('/', '#0Focus iView search', function() {
     const searchInput = document.querySelector('input[type="search"]') ||
                        document.querySelector('input[placeholder*="Search"]');
     if (searchInput) searchInput.focus();
 }, {domain: /iview\.abc\.net\.au/i});
 
-// ============================================
-// GOOGLE SERVICES - Passthrough
-// ============================================
+// ========== GOOGLE SERVICES ==========
 
-// Google Drive - / (search)
-api.mapkey('/', '#0Focus Drive search', function() {
-    const searchInput = document.querySelector('input[aria-label*="Search"]') ||
-                       document.querySelector('input[placeholder*="Search"]');
-    if (searchInput) searchInput.focus();
-}, {domain: /drive\.google\.com/i});
-
-// Google Docs - p (print), m, / (find)
-api.mapkey('p', '#0Print', () => passKeyToPage('p'), {domain: /docs\.google\.com/});
-api.mapkey('m', '#0Passthrough m', () => passKeyToPage('m'), {domain: /docs\.google\.com/});
-api.mapkey('/', '#0Open Docs find', function() {
-    document.dispatchEvent(new KeyboardEvent('keydown', {
-        key: 'f',
-        code: 'KeyF',
-        ctrlKey: true,
-        bubbles: true
-    }));
-}, {domain: /docs\.google\.com/i});
-
-// Google Calendar - d (day), m (month)
-api.mapkey('d', '#0Day view', () => passKeyToPage('d'), {domain: /calendar\.google\.com/});
-api.mapkey('m', '#0Month view', () => passKeyToPage('m'), {domain: /calendar\.google\.com/});
-
-// Gmail - Pass through ALL Gmail shortcuts
-const gmailKeys = ['a', 'b', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'l', 'm', 'r', 'v', 'x', 'X'];
-gmailKeys.forEach(key => {
-    api.mapkey(key, `#0Gmail shortcut: ${key}`, () => passKeyToPage(key), {domain: /mail\.google\.com/});
+// Gmail - Unmap keys to allow native Gmail shortcuts (except 'l' for tab navigation)
+['a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
+    api.unmap(key, /mail\.google\.com/);
 });
 
 // Gmail search (/)
@@ -321,9 +293,34 @@ api.mapkey('/', '#0Focus Gmail search', function() {
     if (searchInput) searchInput.focus();
 }, {domain: /mail\.google\.com/i});
 
-// ============================================
-// OTHER SITES - Passthrough
-// ============================================
+// Google Drive - / (search)
+api.mapkey('/', '#0Focus Drive search', function() {
+    const searchInput = document.querySelector('input[aria-label*="Search"]') ||
+                       document.querySelector('input[placeholder*="Search"]');
+    if (searchInput) searchInput.focus();
+}, {domain: /drive\.google\.com/i});
+
+// Google Docs
+['p', 'm'].forEach(key => {
+    api.unmap(key, /docs\.google\.com/);
+});
+
+// Google Docs - / (find)
+api.mapkey('/', '#0Open Docs find', function() {
+    document.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'f',
+        code: 'KeyF',
+        ctrlKey: true,
+        bubbles: true
+    }));
+}, {domain: /docs\.google\.com/i});
+
+// Google Calendar
+['d', 'm'].forEach(key => {
+    api.unmap(key, /calendar\.google\.com/);
+});
+
+// ========== OTHER SITES ==========
 
 // DuckDuckGo - / (search)
 api.mapkey('/', '#0Focus DuckDuckGo search', function() {
@@ -333,17 +330,18 @@ api.mapkey('/', '#0Focus DuckDuckGo search', function() {
     if (searchInput) searchInput.focus();
 }, {domain: /duckduckgo\.com/i});
 
-// Container Store - p
-api.mapkey('p', '#0Passthrough p', () => passKeyToPage('p'), {domain: /containerstore\.com/});
+// Container Store
+api.unmap('p', /containerstore\.com/);
 
-// Walmart - b, m, p
-api.mapkey('b', '#0Passthrough b', () => passKeyToPage('b'), {domain: /walmart\.wd5\.myworkdayjobs\.com/});
-api.mapkey('m', '#0Passthrough m', () => passKeyToPage('m'), {domain: /walmart\.wd5\.myworkdayjobs\.com/});
-api.mapkey('p', '#0Passthrough p', () => passKeyToPage('p'), {domain: /walmart\.wd5\.myworkdayjobs\.com/});
+// Walmart Jobs
+['b', 'm', 'p'].forEach(key => {
+    api.unmap(key, /walmart\.wd5\.myworkdayjobs\.com/);
+});
 
-// Localhost:2718 - a, m
-api.mapkey('a', '#0Passthrough a', () => passKeyToPage('a'), {domain: /localhost:2718/});
-api.mapkey('m', '#0Passthrough m', () => passKeyToPage('m'), {domain: /localhost:2718/});
+// Localhost:2718
+['a', 'm'].forEach(key => {
+    api.unmap(key, /localhost:2718/);
+});
 
 // ============================================
 // THEME: TOMORROW NIGHT (Foldex-style)
@@ -649,4 +647,4 @@ input {
   font-size: var(--font-size);
   font-weight: var(--font-weight);
 }
-`;
+`
