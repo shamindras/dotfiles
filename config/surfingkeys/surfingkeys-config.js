@@ -213,11 +213,14 @@ settings.blocklistPattern = /localhost:888[89]|localhost:8890|multiplexer-prod\.
     api.unmap(key, /youtube\.com/);
 });
 
-// YouTube search (/) - remap to focus search (no unmap needed)
-api.mapkey('/', '#0Focus YouTube search', function() {
-    const searchInput = document.querySelector('input#search');
-    if (searchInput) searchInput.focus();
-}, {domain: /youtube\.com/i});
+// YouTube - Use runtime conditional for / remapping (domain parameter doesn't work reliably)
+if (/youtube\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus YouTube search', function() {
+        const searchInput = document.querySelector('input#search');
+        if (searchInput) searchInput.focus();
+    });
+}
 
 // Netflix - domain-wide (SPA site)
 ['f', 'm'].forEach(key => {
@@ -272,48 +275,60 @@ api.unmap('f', /bilibili\.com/);
     api.unmap(key, /iview\.abc\.net\.au/);
 });
 
-// iView ABC search (/)
-api.mapkey('/', '#0Focus iView search', function() {
-    const searchInput = document.querySelector('input[type="search"]') ||
-                       document.querySelector('input[placeholder*="Search"]');
-    if (searchInput) searchInput.focus();
-}, {domain: /iview\.abc\.net\.au/i});
+// iView ABC - Use runtime conditional for / remapping
+if (/iview\.abc\.net\.au/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus iView search', function() {
+        const searchInput = document.querySelector('input[type="search"]') ||
+                           document.querySelector('input[placeholder*="Search"]');
+        if (searchInput) searchInput.focus();
+    });
+}
 
 // ========== GOOGLE SERVICES ==========
 
-// Gmail - Unmap keys to allow native Gmail shortcuts (except 'l' for tab navigation)
-['a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
+// Gmail - Unmap keys to allow native Gmail shortcuts (except 'i' and 'l' for Surfingkeys)
+['a', 'b', 'c', 'd', 'e', 'f', 'g', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
     api.unmap(key, /mail\.google\.com/);
 });
 
-// Gmail search (/)
-api.mapkey('/', '#0Focus Gmail search', function() {
-    const searchInput = document.querySelector('input[aria-label*="Search"]') ||
-                       document.querySelector('input[name="q"]');
-    if (searchInput) searchInput.focus();
-}, {domain: /mail\.google\.com/i});
+// Gmail - Use runtime conditional for / remapping
+if (/mail\.google\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus Gmail search', function() {
+        const searchInput = document.querySelector('input[aria-label*="Search"]') ||
+                           document.querySelector('input[name="q"]');
+        if (searchInput) searchInput.focus();
+    });
+}
 
-// Google Drive - / (search)
-api.mapkey('/', '#0Focus Drive search', function() {
-    const searchInput = document.querySelector('input[aria-label*="Search"]') ||
-                       document.querySelector('input[placeholder*="Search"]');
-    if (searchInput) searchInput.focus();
-}, {domain: /drive\.google\.com/i});
+// Google Drive - Use runtime conditional for / remapping
+if (/drive\.google\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus Drive search', function() {
+        const searchInput = document.querySelector('input[aria-label*="Search"]') ||
+                           document.querySelector('input[placeholder*="Search"]');
+        if (searchInput) searchInput.focus();
+    });
+}
 
 // Google Docs
 ['p', 'm'].forEach(key => {
     api.unmap(key, /docs\.google\.com/);
 });
 
-// Google Docs - / (find)
-api.mapkey('/', '#0Open Docs find', function() {
-    document.dispatchEvent(new KeyboardEvent('keydown', {
-        key: 'f',
-        code: 'KeyF',
-        ctrlKey: true,
-        bubbles: true
-    }));
-}, {domain: /docs\.google\.com/i});
+// Google Docs - Use runtime conditional for / remapping
+if (/docs\.google\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Open Docs find', function() {
+        document.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'f',
+            code: 'KeyF',
+            ctrlKey: true,
+            bubbles: true
+        }));
+    });
+}
 
 // Google Calendar
 ['d', 'm'].forEach(key => {
@@ -322,13 +337,16 @@ api.mapkey('/', '#0Open Docs find', function() {
 
 // ========== OTHER SITES ==========
 
-// DuckDuckGo - / (search)
-api.mapkey('/', '#0Focus DuckDuckGo search', function() {
-    const searchInput = document.querySelector('input#search_form_input') ||
-                       document.querySelector('input[name="q"]') ||
-                       document.querySelector('input[type="search"]');
-    if (searchInput) searchInput.focus();
-}, {domain: /duckduckgo\.com/i});
+// DuckDuckGo - Use runtime conditional for / remapping
+if (/duckduckgo\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus DuckDuckGo search', function() {
+        const searchInput = document.querySelector('input#search_form_input') ||
+                           document.querySelector('input[name="q"]') ||
+                           document.querySelector('input[type="search"]');
+        if (searchInput) searchInput.focus();
+    });
+}
 
 // Container Store
 api.unmap('p', /containerstore\.com/);
