@@ -1,0 +1,11 @@
+# Suppress citation notice (cite parallel once in your academic/professional work)
+--will-cite
+
+# Display a progress bar showing job completion status
+--bar
+
+# Log all jobs to file for debugging and resume capability
+--joblog $XDG_DATA_HOME/parallel/joblog
+
+# Use 50% of available CPU cores (safe default, leaves headroom for system)
+--jobs 50%
