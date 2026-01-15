@@ -161,7 +161,7 @@ api.addSearchAlias('g', 'google', 'https://www.google.com/search?q=');
 api.addSearchAlias('k', 'duckduckgo', 'https://duckduckgo.com/?q=');
 api.addSearchAlias('l', 'libgen', 'https://libgen.li/index.php?req=');
 api.addSearchAlias('m', 'google-maps', 'https://www.google.com/maps?q=');
-api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.li/search?q=');
+api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.li/search?index=&page=1&sort=newest&content=book_nonfiction&content=book_fiction&content=book_unknown&ext=pdf&ext=epub&lang=en&display=list_compact&q=');
 api.addSearchAlias('w', 'wikipedia', 'https://www.wikipedia.org/w/index.php?title=Special:Search&search=');
 api.addSearchAlias('y', 'youtube', 'https://www.youtube.com/results?search_query=');
 api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=');
@@ -305,6 +305,7 @@ api.mapkey('zgs', '#0Go to starred', () => gmailNavigate('starred'), {domain: /m
 api.mapkey('zgt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
 api.mapkey('zgd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
 api.mapkey('zga', '#0Go to all mail', () => gmailNavigate('all'), {domain: /mail\.google\.com/i});
+api.mapkey('zgz', '#0Go to snoozed', () => gmailNavigate('snoozed'), {domain: /mail\.google\.com/i});
 
 // Gmail - Use runtime conditional for / remapping
 if (/mail\.google\.com/.test(window.location.host)) {
@@ -379,9 +380,9 @@ api.unmap('p', /containerstore\.com/);
 // THEME: TOMORROW NIGHT (Foldex-style)
 // ============================================
 
-// Hint styling
-api.Hints.style('border: solid 2px #373B41; color:#52C196; background: initial; background-color: #1D1F21;');
-api.Hints.style("border: solid 2px #373B41 !important; padding: 1px !important; color: #C5C8C6 !important; background: #1D1F21 !important;", "text");
+// Hint styling - 12pt with monospace font matching keystroke popup style
+api.Hints.style('border: solid 2px #373B41; color:#52C196; background: initial; background-color: #1D1F21; font-size: 12pt; font-weight: bold; padding: 4px 7px; font-family: "Menlo", "Monaco", "Source Code Pro", monospace;');
+api.Hints.style("border: solid 2px #373B41 !important; padding: 4px 7px !important; color: #C5C8C6 !important; background: #1D1F21 !important; font-size: 12pt !important; font-weight: bold !important; font-family: 'Menlo', 'Monaco', 'Source Code Pro', monospace !important;", "text");
 api.Visual.style('marks', 'background-color: #52C19699;');
 api.Visual.style('cursor', 'background-color: #81A2BE;');
 
@@ -465,18 +466,21 @@ input {
 
 /* ---------- Omnibar ---------- */
 #sk_omnibar {
-  width: 80%;
+  width: 95%;
   max-width: 1000px;
   background: var(--bg) !important;
   border: 2px solid var(--border);
+  padding: 15px;
 }
 
 .sk_theme .title {
   color: var(--accent-fg) !important;
+  font-size: 14pt !important;
 }
 
 .sk_theme .url {
   color: var(--main-fg) !important;
+  font-size: 13pt !important;
 }
 
 .sk_theme .annotation {
@@ -498,6 +502,8 @@ input {
 /* CRITICAL FIX: Force dark backgrounds on all list items */
 .sk_theme #sk_omnibarSearchResult ul li {
   background: var(--bg-dark) !important;
+  font-size: 14pt !important;
+  padding: 10px 14px !important;
 }
 
 .sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
@@ -528,11 +534,12 @@ input {
   border-top-color: var(--border);
   border-bottom-color: var(--border);
   background: var(--bg) !important;
+  padding: 8px 0;
 }
 
 .sk_theme #sk_omnibarSearchArea input,
 .sk_theme #sk_omnibarSearchArea span {
-  font-size: var(--font-size);
+  font-size: 16pt;
   color: var(--fg) !important;
   background: var(--bg) !important;
 }
