@@ -37,6 +37,9 @@ export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
 export LESSKEY="${LESSKEY:-$XDG_CONFIG_HOME/less/lesskey}"
 export LESSHISTFILE="${LESSHISTFILE:-$XDG_CACHE_HOME/less/history}"
 
+# GNU parallel
+export PARALLEL_HOME="$XDG_CONFIG_HOME"/parallel
+
 # Python
 export PYENV_ROOT="${PYENV_ROOT:-$XDG_DATA_HOME/pyenv}"
 # export IPYTHONDIR="${IPYTHONDIR:-$XDG_CONFIG_HOME/ipython}"
