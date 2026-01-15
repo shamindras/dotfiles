@@ -1,0 +1,12 @@
+name: personal
+parent: base
+
+matches:
+  # For example (Australian/UK)
+  - trigger: ";ega"
+    replace: ", e.g. "
+
+  # For example (Australian/UK)
+  - trigger: ";egu"
+    replace: ", e.g., "
+
