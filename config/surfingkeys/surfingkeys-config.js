@@ -171,12 +171,10 @@ api.map('T', 'go');  // go = open URL in current tab
 // Note: t (lowercase) = new tab (default), T (uppercase) = current tab
 
 // ============================================
-// NEW TAB - Open blank page where Surfingkeys works
+// NEW TAB - Open with example.com
 // ============================================
 
-// Open new tab with example.com (O = "Open new tab")
-// Fast, benign URL where Surfingkeys keymaps work
-api.unmap('on');
+// O - Open new tab with example.com (fast, benign URL where Surfingkeys works)
 api.mapkey('O', '#3Open new tab', function() {
     window.open('https://example.com', '_blank');
 });
