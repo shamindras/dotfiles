@@ -23,9 +23,9 @@ end
 
 -- Only change these `active` values to toggle options
 local active = {
-  font    = 'RobotoMono',
+  font    = 'Iosevka',
   theme   = 'nightfox',
-  size    = 20,
+  size    = 22,
   opacity = 0.90,
   blur    = 4,
   padding = { left = 0, right = 0, top = 0, bottom = 0 },
