@@ -174,10 +174,11 @@ api.map('T', 'go');  // go = open URL in current tab
 // NEW TAB - Open blank page where Surfingkeys works
 // ============================================
 
-// Override 'on' to open blank page instead of about:blank
+// Open new tab with example.com (gn = "go new tab")
+// Fast, benign URL where Surfingkeys keymaps work
 api.unmap('on');
-api.mapkey('on', 'Open new tab with blank page', function() {
-    window.open('data:text/html,<html><head><title>New Tab</title></head><body style="background:#1D1F21;"></body></html>');
+api.mapkey('gn', '#3Open new tab', function() {
+    window.open('https://example.com', '_blank');
 });
 
 // ============================================
