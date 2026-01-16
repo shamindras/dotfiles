@@ -311,3 +311,4 @@ tags
 
 # Neovim compiled spell files
 *.spl
+config/parallel/tmp/sshlogin/Shamindras-MacBook-Pro.local
