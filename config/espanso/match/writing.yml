@@ -6,7 +6,7 @@ matches:
   - trigger: ";ega"
     replace: ", e.g. "
 
-  # For example (Australian/UK)
+  # For example (USA)
   - trigger: ";egu"
     replace: ", e.g., "
 
