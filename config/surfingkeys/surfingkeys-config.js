@@ -42,9 +42,19 @@ api.map('>', '>>');  // > = move tab right (single press)
 // Link hints with Ctrl-F (safe on macOS where Cmd+F is native find)
 api.map('<Ctrl-f>', 'f');
 
-// Global gf mapping for link hints (useful on sites where f is unmapped)
-api.mapkey('gf', '#1Open link hints', function() {
+// Remap f to open link hints in NEW tab
+api.mapkey('f', '#1Open link hints in new tab', function() {
+    api.Hints.create("", api.Hints.dispatchMouseClick, {tabbed: true});
+});
+
+// F for link hints in current tab (counterpart to f which opens in new tab)
+api.mapkey('F', '#1Open link hints in current tab', function() {
     api.Hints.create("", api.Hints.dispatchMouseClick);
+});
+
+// Global gf mapping for link hints in new tab (useful on sites where f is unmapped)
+api.mapkey('gf', '#1Open link hints in new tab', function() {
+    api.Hints.create("", api.Hints.dispatchMouseClick, {tabbed: true});
 });
 
 // Global gt mapping for URL omnibar (useful on sites where t is unmapped)
@@ -75,13 +85,48 @@ api.map('zz', 'x');
 // YANK MARKDOWN LINK
 // ============================================
 
+// Helper function to create markdown link
+const createMarkdownLink = (text, url) => {
+    return `[${text}](${url})`;
+};
+
 // Yank current page as markdown link: [title](url)
-api.mapkey('ym', '#7Copy as markdown link', function() {
+api.mapkey('ym', '#7Copy current page as markdown link', function() {
     const title = document.title;
     const url = window.location.href;
-    const markdown = `[${title}](${url})`;
+    const markdown = createMarkdownLink(title, url);
     api.Clipboard.write(markdown);
     api.Front.showBanner(`Copied: ${markdown}`);
+});
+
+// Yank link as markdown via hints: [link text](url)
+api.mapkey('yp', '#7Copy link as markdown', function() {
+    api.Hints.create("", function(element) {
+        let link, url, text;
+
+        // Try to find actual <a> tag
+        link = element.tagName === 'A' ? element : element.closest('a');
+
+        if (link && link.href) {
+            url = link.href;
+            text = (link.innerText || link.textContent || url).trim();
+        } else {
+            // Fallback: check for data-href or other attributes
+            url = element.getAttribute('data-href') ||
+                  element.getAttribute('href') ||
+                  element.closest('[data-href]')?.getAttribute('data-href');
+            text = (element.innerText || element.textContent || '').trim();
+        }
+
+        if (!url) {
+            api.Front.showBanner('No valid link found');
+            return;
+        }
+
+        const markdown = createMarkdownLink(text || url, url);
+        api.Clipboard.write(markdown);
+        api.Front.showBanner(`Copied: ${markdown}`);
+    });
 });
 
 // ============================================
@@ -155,15 +200,29 @@ api.removeSearchAlias('s');  // Remove Stack Overflow
 api.removeSearchAlias('w');  // Remove Bing
 api.removeSearchAlias('y');  // Remove YouTube (will re-add)
 
-// STEP 2: Add our custom search engines
+// STEP 2: Add our custom search engines with suggestion support
 api.addSearchAlias('b', 'imdb', 'http://www.imdb.com/find?s=all&q=');
-api.addSearchAlias('g', 'google', 'https://www.google.com/search?q=');
-api.addSearchAlias('k', 'duckduckgo', 'https://duckduckgo.com/?q=');
+api.addSearchAlias('g', 'google', 'https://www.google.com/search?q=', 's', 'https://www.google.com/complete/search?client=chrome&q=', function(response) {
+    var res = JSON.parse(response.text);
+    return res[1];
+});
+api.addSearchAlias('k', 'duckduckgo', 'https://duckduckgo.com/?q=', 's', 'https://duckduckgo.com/ac/?q=', function(response) {
+    var res = JSON.parse(response.text);
+    return res.map(function(r){
+        return r.phrase;
+    });
+});
 api.addSearchAlias('l', 'libgen', 'https://libgen.li/index.php?req=');
 api.addSearchAlias('m', 'google-maps', 'https://www.google.com/maps?q=');
 api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.li/search?index=&page=1&sort=newest&content=book_nonfiction&content=book_fiction&content=book_unknown&ext=pdf&ext=epub&lang=en&display=list_compact&q=');
-api.addSearchAlias('w', 'wikipedia', 'https://www.wikipedia.org/w/index.php?title=Special:Search&search=');
-api.addSearchAlias('y', 'youtube', 'https://www.youtube.com/results?search_query=');
+api.addSearchAlias('w', 'wikipedia', 'https://www.wikipedia.org/w/index.php?title=Special:Search&search=', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
+    var res = JSON.parse(response.text);
+    return res[1];
+});
+api.addSearchAlias('y', 'youtube', 'https://www.youtube.com/results?search_query=', 's', 'https://clients1.google.com/complete/search?client=youtube&ds=yt&q=', function(response) {
+    var res = JSON.parse(response.text);
+    return res[1];
+});
 api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=');
 
 // STEP 3: Add Ctrl-based shortcuts for quick access (matches Vimium)
@@ -209,18 +268,9 @@ settings.blocklistPattern = /localhost:888[89]|localhost:8890|multiplexer-prod\.
 // ========== VIDEO SITES ==========
 
 // YouTube - Unmap keys on entire domain
-['f', 'm', 't'].forEach(key => {
+['f', 'm', 't', 'c'].forEach(key => {
     api.unmap(key, /youtube\.com/);
 });
-
-// YouTube - Use runtime conditional for / remapping (domain parameter doesn't work reliably)
-if (/youtube\.com/.test(window.location.host)) {
-    api.unmap('/');
-    api.mapkey('/', '#0Focus YouTube search', function() {
-        const searchInput = document.querySelector('input#search');
-        if (searchInput) searchInput.focus();
-    });
-}
 
 // Netflix - domain-wide (SPA site)
 ['f', 'm'].forEach(key => {
