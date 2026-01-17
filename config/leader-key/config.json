@@ -191,6 +191,12 @@
           "value": "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\; ; find ~/Downloads -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\; ; find /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\;"
         },
         {
+          "key": "r",
+          "label": "restart-leaderkey",
+          "type": "command",
+          "value": "killall 'Leader Key' 2>/dev/null; sleep 0.5; open -a 'Leader Key'"
+        },
+        {
           "key": "t",
           "label": "trash-empty",
           "type": "command",
@@ -256,7 +262,7 @@
           "key": "i",
           "label": "youtube-incognito",
           "type": "command",
-          "value": "open -na 'Firefox' --args -private-window 'https://youtube.com'; sleep 3; osascript -e 'tell application \"Firefox\" to activate' -e 'tell application \"System Events\" to repeat 4 times' -e 'key code 48' -e 'end repeat'; /opt/homebrew/bin/aerospace workspace B"
+          "value": "open -na 'Firefox' --args -private-window 'https://youtube.com'"
         }
       ],
       "key": "u",
