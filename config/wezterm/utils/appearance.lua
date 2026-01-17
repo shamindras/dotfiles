@@ -8,7 +8,15 @@ local wezterm = require('wezterm')
 ---@param arg { light: any, dark: any }
 local function depending_on_appearance(arg)
   local appearance = wezterm.gui.get_appearance()
-  if appearance:find('Dark') then
+  -- Handle both string returns (older API) and boolean returns (newer API)
+  local is_dark = false
+  if type(appearance) == 'string' then
+    is_dark = appearance:find('Dark') ~= nil
+  else
+    is_dark = appearance == true
+  end
+
+  if is_dark then
     return arg.dark
   else
     return arg.light
@@ -33,16 +41,18 @@ local active = {
 
 -- Registry of available fonts
 local font_library = {
-  Cascadia    = 'Cascadia Code NF',
-  CommitMono  = 'CommitMono Nerd Font',
-  Hack        = 'Hack Nerd Font Mono',
-  Iosevka     = 'Iosevka Nerd Font Mono',
-  JetBrains   = 'JetBrainsMono Nerd Font',
-  Maple       = 'Maple Mono',
-  MonaspiceAr = 'MonaspiceAr Nerd Font',
-  MonaspiceNe = 'MonaspiceNe Nerd Font',
-  RobotoMono  = 'RobotoMono Nerd Font',
-  Victor      = 'Victor Mono',
+  Cascadia     = 'Cascadia Code NF',
+  CommitMono   = 'CommitMono Nerd Font',
+  Hack         = 'Hack Nerd Font Mono',
+  Iosevka      = 'Iosevka Nerd Font Mono',
+  JetBrains    = 'JetBrainsMono Nerd Font',
+  Maple        = 'Maple Mono',
+  MonaspiceAr  = 'MonaspiceAr Nerd Font',
+  MonaspiceNe  = 'MonaspiceNe Nerd Font',
+  RedHatMono   = 'Red Hat Mono',
+  RobotoMono   = 'RobotoMono Nerd Font',
+  SourceCode   = 'Source Code Pro',
+  Victor       = 'Victor Mono',
 }
 
 -- Registry of available themes
