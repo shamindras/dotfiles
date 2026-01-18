@@ -85,9 +85,27 @@ api.map('zz', 'x');
 // YANK MARKDOWN LINK
 // ============================================
 
-// Helper function to create markdown link
+// Helper function to create markdown link with two-stage title trimming
+// Stage 1: Trim at first delimiter (" - ", " | ", " : ")
+// Stage 2: If no delimiters, take first contiguous word (before first space)
+// Examples:
+//   "GitHub - microsoft/vscode" -> "GitHub"
+//   "Anna's Archive | Books" -> "Anna's Archive"
+//   "dotfiles/.config/file.lua at main" -> "dotfiles/.config/file.lua"
 const createMarkdownLink = (text, url) => {
-    return `[${text}](${url})`;
+    let trimmedText;
+
+    // Stage 1: Try to trim at delimiters: " - ", " | ", " : "
+    const delimiterMatch = text.match(/^(.*?)(\s-\s|\s\|\s|\s:\s)/);
+    if (delimiterMatch) {
+        trimmedText = delimiterMatch[1];
+    } else {
+        // Stage 2: No delimiters found, take first contiguous word (before first space)
+        trimmedText = text.split(/\s/)[0];
+    }
+
+    // Final trim to handle any extra spaces on left and right
+    return `[${trimmedText.trim()}](${url})`;
 };
 
 // Yank current page as markdown link: [title](url)
@@ -195,7 +213,7 @@ api.removeSearchAlias('b');  // Remove Baidu
 api.removeSearchAlias('d');  // Remove DuckDuckGo (default)
 api.removeSearchAlias('g');  // Remove Google (will re-add with our settings)
 api.removeSearchAlias('h');  // Remove GitHub
-api.removeSearchAlias('s');  // Remove Stack Overflow
+api.removeSearchAlias('s');  // Remove Stack Overflow (will re-add softarchive)
 api.removeSearchAlias('w');  // Remove Bing
 api.removeSearchAlias('y');  // Remove YouTube (will re-add)
 
@@ -211,9 +229,10 @@ api.addSearchAlias('k', 'duckduckgo', 'https://duckduckgo.com/?q=', 's', 'https:
         return r.phrase;
     });
 });
-api.addSearchAlias('l', 'libgen', 'https://libgen.li/index.php?req=');
+api.addSearchAlias('l', 'libgen', 'https://libgen.li/index.php?columns%5B%5D=t&columns%5B%5D=a&columns%5B%5D=s&columns%5B%5D=y&columns%5B%5D=p&columns%5B%5D=i&objects%5B%5D=f&objects%5B%5D=e&objects%5B%5D=s&objects%5B%5D=a&objects%5B%5D=p&objects%5B%5D=w&topics%5B%5D=l&res=100&filesuns=all&curtab=f&order=year&ordermode=desc&req=');
 api.addSearchAlias('m', 'google-maps', 'https://www.google.com/maps?q=');
 api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.li/search?index=&page=1&sort=newest&content=book_nonfiction&content=book_fiction&content=book_unknown&ext=pdf&ext=epub&lang=en&display=list_compact&q=');
+api.addSearchAlias('s', 'softarchive', 'https://softarchive.download/search?scope=title&category=5&q=');
 api.addSearchAlias('w', 'wikipedia', 'https://www.wikipedia.org/w/index.php?title=Special:Search&search=', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
     var res = JSON.parse(response.text);
     return res[1];
@@ -242,6 +261,9 @@ api.mapkey('<Ctrl-m>', 'Search Google Maps', function() {
 });
 api.mapkey('<Ctrl-n>', 'Search Anna\'s Archive', function() {
     api.Front.openOmnibar({type: "SearchEngine", extra: "n"});
+});
+api.mapkey('<Ctrl-s>', 'Search Softarchive', function() {
+    api.Front.openOmnibar({type: "SearchEngine", extra: "s"});
 });
 api.mapkey('<Ctrl-w>', 'Search Wikipedia', function() {
     api.Front.openOmnibar({type: "SearchEngine", extra: "w"});
@@ -287,7 +309,7 @@ settings.blocklistPattern = /localhost:888[89]|localhost:8890|multiplexer-prod\.
 });
 
 // Crunchyroll - domain-wide (handles both main and static domains)
-['f', 'm'].forEach(key => {
+['f', 'm', 'c', 'j', 'k'].forEach(key => {
     api.unmap(key, /crunchyroll\.com/);
 });
 
