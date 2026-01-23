@@ -115,7 +115,7 @@
           "key": "d",
           "label": "preview",
           "type": "command",
-          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
         },
         {
           "key": "e",
@@ -151,7 +151,7 @@
           "key": "p",
           "label": "skim",
           "type": "command",
-          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; fi"
         },
         {
           "key": "t",
@@ -272,4 +272,3 @@
   ],
   "type": "group"
 }
-
