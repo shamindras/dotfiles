@@ -10,7 +10,7 @@
 // Show hints with 400ms delay for multi-key sequences
 settings.richHintsForKeystroke = 400;
 
-// Show omnibar suggestions instantly (for og, ow, etc.)
+// Show omnibar suggestions instantly (for search engines, etc.)
 settings.omnibarSuggestionTimeout = 0;
 
 // Show mode status and available keys immediately
@@ -57,9 +57,6 @@ api.mapkey('gf', '#1Open link hints in new tab', function() {
     api.Hints.create("", api.Hints.dispatchMouseClick, {tabbed: true});
 });
 
-// Global gt mapping for URL omnibar (useful on sites where t is unmapped)
-api.map('gt', 't');  // gt = open URL omnibar (search bookmarks/history)
-
 // Move tab to start/end - use zh/zl to preserve marks (m key)
 api.mapkey('zh', '#3Move tab to beginning', function() {
     // Move tab left repeatedly until it's at position 0
@@ -80,6 +77,42 @@ api.map('gl', 'g$');  // Last tab
 
 // Close current tab with zz
 api.map('zz', 'x');
+
+// ============================================
+// OMNIBAR & TAB MANAGEMENT - Vimium style
+// ============================================
+
+// o/O - Omnibar (Vimium convention: lowercase = new tab, uppercase = current tab)
+api.map('o', 't');   // o = omnibar, open in NEW tab
+api.map('O', 'go');  // O = omnibar, open in CURRENT tab
+
+// t/T - Tab operations (Vimium convention)
+api.mapkey('t', '#3Create new tab', function() {
+    window.open('https://example.com', '_blank');
+});
+// TODO: Revisit blank page alternatives (browser.runtime.getURL or local file)
+
+// gt - Fallback for t on restricted sites (e.g., YouTube)
+api.mapkey('gt', '#3Create new tab (fallback)', function() {
+    window.open('https://example.com', '_blank');
+});
+
+api.map('T', 'T');   // T = tab picker (default Surfingkeys 'T')
+
+// B - Bookmarks in current tab (counterpart to b which opens in new tab)
+api.mapkey('B', '#8Open bookmarks in current tab', function() {
+    api.Front.openOmnibar({type: "Bookmarks", tabbed: false});
+});
+
+// Ctrl-x - Omnibar with recently closed URLs (relocated from ox)
+api.mapkey('<Ctrl-x>', '#8Open recently closed URLs', function() {
+    api.Front.openOmnibar({type: "URLs", extra: "recentlyClosed"});
+});
+
+// ;i - Open incognito window (relocated from oi)
+api.mapkey(';i', '#3Open incognito window', function() {
+    api.RUNTIME("openIncognito", {url: window.location.href});
+});
 
 // ============================================
 // YANK MARKDOWN LINK
@@ -176,28 +209,6 @@ api.map('K', '[[');  // Previous page
 api.map('J', ']]');  // Next page
 
 // ============================================
-// OMNIBAR & BUFFER PICKER
-// ============================================
-
-// Buffer/tab picker (vim-style - moved to B to free up b for bookmarks)
-api.map('B', 'T');   // B = buffer/tab picker (uppercase)
-                     // b = bookmarks (keep default)
-
-// Open omnibar in current tab (override/replace)
-// This pairs with 't' (new tab) for a consistent uppercase/lowercase pattern
-api.map('T', 'go');  // go = open URL in current tab
-// Note: t (lowercase) = new tab (default), T (uppercase) = current tab
-
-// ============================================
-// NEW TAB - Open with example.com
-// ============================================
-
-// O - Open new tab with example.com (fast, benign URL where Surfingkeys works)
-api.mapkey('O', '#3Open new tab', function() {
-    window.open('https://example.com', '_blank');
-});
-
-// ============================================
 // LINK HINT CHARACTERS - Home row optimized
 // ============================================
 
@@ -243,7 +254,19 @@ api.addSearchAlias('y', 'youtube', 'https://www.youtube.com/results?search_query
 });
 api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=');
 
-// STEP 3: Add Ctrl-based shortcuts for quick access (matches Vimium)
+// STEP 3: Remove auto-generated o* mappings (we use Ctrl-* instead)
+api.unmap('ob');
+api.unmap('og');
+api.unmap('ok');
+api.unmap('ol');
+api.unmap('om');
+api.unmap('on');
+api.unmap('os');
+api.unmap('ow');
+api.unmap('oy');
+api.unmap('oz');
+
+// STEP 4: Add Ctrl-based shortcuts for quick access (matches Vimium)
 api.mapkey('<Ctrl-b>', 'Search IMDB', function() {
     api.Front.openOmnibar({type: "SearchEngine", extra: "b"});
 });
@@ -371,12 +394,12 @@ const gmailNavigate = (view) => {
     window.location.href = `https://mail.google.com/mail/u/${accountNum}/#${view}`;
 };
 
-api.mapkey('zgi', '#0Go to inbox', () => gmailNavigate('inbox'), {domain: /mail\.google\.com/i});
-api.mapkey('zgs', '#0Go to starred', () => gmailNavigate('starred'), {domain: /mail\.google\.com/i});
-api.mapkey('zgt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
-api.mapkey('zgd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
-api.mapkey('zga', '#0Go to all mail', () => gmailNavigate('all'), {domain: /mail\.google\.com/i});
-api.mapkey('zgz', '#0Go to snoozed', () => gmailNavigate('snoozed'), {domain: /mail\.google\.com/i});
+api.mapkey('agi', '#0Go to inbox', () => gmailNavigate('inbox'), {domain: /mail\.google\.com/i});
+api.mapkey('ags', '#0Go to starred', () => gmailNavigate('starred'), {domain: /mail\.google\.com/i});
+api.mapkey('agt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
+api.mapkey('agd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
+api.mapkey('aga', '#0Go to all mail', () => gmailNavigate('all'), {domain: /mail\.google\.com/i});
+api.mapkey('agz', '#0Go to snoozed', () => gmailNavigate('snoozed'), {domain: /mail\.google\.com/i});
 
 // Gmail - Use runtime conditional for / remapping
 if (/mail\.google\.com/.test(window.location.host)) {
