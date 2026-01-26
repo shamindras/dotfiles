@@ -249,18 +249,35 @@ api.addSearchAlias('w', 'wikipedia', 'https://www.wikipedia.org/w/index.php?titl
     return res[1];
 });
 api.addSearchAlias('y', 'youtube', 'https://www.youtube.com/results?search_query=', 's', 'https://clients1.google.com/complete/search?client=youtube&ds=yt&q=', function(response) {
+    // YouTube returns JSONP, need to extract JSON array
+    var match = response.text.match(/\[.*\]/);
+    if (match) {
+        var res = JSON.parse(match[0]);
+        return res[1].map(function(item) {
+            return item[0];
+        });
+    }
+    return [];
+});
+api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=');
+api.addSearchAlias('e', 'homebrew', 'https://www.google.com/search?btnI&q=site:formulae.brew.sh+', 's', 'https://www.google.com/complete/search?client=chrome&q=site:formulae.brew.sh+', function(response) {
     var res = JSON.parse(response.text);
     return res[1];
 });
-api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=');
+api.addSearchAlias('q', 'quick-google', 'https://www.google.com/search?btnI&q=', 's', 'https://www.google.com/complete/search?client=chrome&q=', function(response) {
+    var res = JSON.parse(response.text);
+    return res[1];
+});
 
 // STEP 3: Remove auto-generated o* mappings (we use Ctrl-* instead)
 api.unmap('ob');
+api.unmap('oe');
 api.unmap('og');
 api.unmap('ok');
 api.unmap('ol');
 api.unmap('om');
 api.unmap('on');
+api.unmap('oq');
 api.unmap('os');
 api.unmap('ow');
 api.unmap('oy');
@@ -296,6 +313,12 @@ api.mapkey('<Ctrl-y>', 'Search YouTube', function() {
 });
 api.mapkey('<Ctrl-z>', 'Search Amazon AU', function() {
     api.Front.openOmnibar({type: "SearchEngine", extra: "z"});
+});
+api.mapkey('<Ctrl-e>', 'Search Homebrew (Environment)', function() {
+    api.Front.openOmnibar({type: "SearchEngine", extra: "e"});
+});
+api.mapkey('<Ctrl-q>', 'Quick Google (I\'m Feeling Lucky)', function() {
+    api.Front.openOmnibar({type: "SearchEngine", extra: "q"});
 });
 
 // ============================================
