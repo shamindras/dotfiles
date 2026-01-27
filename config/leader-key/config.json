@@ -278,6 +278,12 @@
           "value": "https://github.com/shamindras/dotfiles"
         },
         {
+          "key": "g",
+          "label": "github",
+          "type": "url",
+          "value": "https://github.com/shamindras"
+        },
+        {
           "key": "h",
           "label": "homepage",
           "type": "url",
