@@ -3,6 +3,31 @@
     {
       "actions": [
         {
+          "key": "r",
+          "label": "claude-recents",
+          "type": "url",
+          "value": "https://claude.ai/recents"
+        },
+        {
+          "key": "n",
+          "label": "claude-new-chat",
+          "type": "url",
+          "value": "https://claude.ai/new"
+        },
+        {
+          "key": "u",
+          "label": "claude-usage",
+          "type": "url",
+          "value": "https://claude.ai/settings/usage"
+        }
+      ],
+      "key": "c",
+      "label": "claude",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
           "key": "1",
           "label": "1password",
           "type": "application",
@@ -247,28 +272,28 @@
     {
       "actions": [
         {
-          "key": "c",
-          "label": "claude-recents",
-          "type": "url",
-          "value": "https://claude.ai/recents"
-        },
-        {
           "key": "d",
           "label": "dotfiles",
           "type": "url",
           "value": "https://github.com/shamindras/dotfiles"
         },
         {
-          "key": "n",
-          "label": "neovim-config",
+          "key": "h",
+          "label": "homepage",
           "type": "url",
-          "value": "https://github.com/shamindras/dotfiles/tree/main/config/nvim"
+          "value": "https://www.shamindras.com/"
         },
         {
           "key": "i",
           "label": "youtube-incognito",
           "type": "command",
           "value": "open -na 'Firefox' --args -private-window 'https://youtube.com'"
+        },
+        {
+          "key": "n",
+          "label": "neovim-config",
+          "type": "url",
+          "value": "https://github.com/shamindras/dotfiles/tree/main/config/nvim"
         }
       ],
       "key": "u",
@@ -278,4 +303,3 @@
   ],
   "type": "group"
 }
-
