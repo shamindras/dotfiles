@@ -7,8 +7,8 @@
 // BASIC SETTINGS
 // ============================================
 
-// Show hints with 400ms delay for multi-key sequences
-settings.richHintsForKeystroke = 400;
+// Show hints with 150ms delay for multi-key sequences
+settings.richHintsForKeystroke = 150;
 
 // Show omnibar suggestions instantly (for search engines, etc.)
 settings.omnibarSuggestionTimeout = 0;
