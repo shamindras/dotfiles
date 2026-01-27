@@ -57,37 +57,114 @@ return {
       end
     end
 
-    -- Create idea note with interactive prompt and validation (replicates ki function)
-    local function create_idea_note(sync_first)
-      local zk = require('zk')
+    -- Convert slug to human-readable Title Case (e.g., "deep-learning" → "Deep Learning")
+    local function slugify_to_title(slug)
+      local with_spaces = slug:gsub('-', ' ')
+      local title = with_spaces:gsub("(%a)([%w_']*)", function(first, rest)
+        return first:upper() .. rest:lower()
+      end)
+      return title
+    end
 
-      -- Optionally sync templates first
-      if sync_first then
-        if not sync_templates() then
+    -- }}}
+
+    -- {{{ Notification Helpers ---------------------------------------------------------------
+
+    -- Create note with automatic notification
+    local function create_note_with_notification(options, note_type)
+      local zk_api = require('zk.api')
+
+      zk_api.new(nil, options, function(err, res)
+        if err then
+          vim.notify(string.format('Failed to create %s: %s', note_type, tostring(err)), vim.log.levels.ERROR)
           return
         end
+
+        if res and res.path then
+          -- Open the file first
+          vim.cmd.edit(res.path)
+
+          -- Then show notification (with slight delay so it appears after buffer loads)
+          vim.defer_fn(function()
+            local filename = vim.fn.fnamemodify(res.path, ':t')
+            vim.notify(
+              string.format('Created %s: %s', note_type, filename),
+              vim.log.levels.INFO,
+              { timeout = 2000 } -- Linger for 2 seconds
+            )
+          end, 100)
+        end
+      end)
+    end
+
+    -- Sync templates with callback on success
+    local function sync_templates_with_callback(on_success)
+      if not sync_templates() then
+        return false
       end
 
-      -- Prompt for title
-      local title = vim.fn.input('Idea title: ')
-
-      -- Trim whitespace and convert to lowercase
-      title = vim.trim(title):lower()
-
-      -- Validate title is not empty after trimming
-      if title == '' then
-        vim.notify('Error: Title cannot be empty or only whitespace', vim.log.levels.ERROR)
-        return
+      if on_success then
+        vim.defer_fn(on_success, 100)
       end
+      return true
+    end
 
-      -- Get notebook directory
+    -- Create note in specified directory with notification
+    local function create_note_in_dir(dir_name, note_type, options)
       local notebook_dir = get_notebook_dir()
       if not notebook_dir then
         return
       end
 
-      -- Create the note in ideas directory
-      zk.new({ dir = notebook_dir .. '/ideas', title = title })
+      local full_options = vim.tbl_extend('force', {
+        dir = notebook_dir .. '/' .. dir_name,
+      }, options or {})
+
+      create_note_with_notification(full_options, note_type)
+    end
+
+    -- Generic wrapper: create note with optional template sync
+    local function create_note_with_sync(dir_name, note_type, sync_first, options)
+      local function do_create()
+        create_note_in_dir(dir_name, note_type, options)
+      end
+
+      if sync_first then
+        sync_templates_with_callback(do_create)
+      else
+        do_create()
+      end
+    end
+
+    -- }}}
+
+    -- {{{ Interactive Note Creation ----------------------------------------------------------
+
+    -- Create idea note with interactive prompt and validation
+    local function create_idea_note(sync_first)
+      local function do_create()
+        local title = vim.fn.input('Idea title: ')
+        title = vim.trim(title):lower()
+
+        if title == '' then
+          vim.notify('Error: Title cannot be empty or only whitespace', vim.log.levels.ERROR)
+          return
+        end
+
+        -- Generate human-readable display title
+        local display_title = slugify_to_title(title)
+
+        create_note_in_dir('ideas', 'idea', {
+          title = title, -- Slug for filename
+          extra = { display_title = display_title }, -- Human-readable for content
+        })
+      end
+
+      if sync_first then
+        sync_templates_with_callback(do_create)
+      else
+        do_create()
+      end
     end
 
     -- }}}
@@ -133,36 +210,21 @@ return {
 
     -- Daily journal (uses template with yyyy-mm-dd format)
     commands.add('ZkDaily', function(options)
-      local notebook_dir = get_notebook_dir()
-      if not notebook_dir then
-        return
-      end
-
-      options = vim.tbl_extend('force', { dir = notebook_dir .. '/journal' }, options or {})
-      zk.new(options)
+      create_note_with_sync('journal', 'daily journal', false, options)
     end)
 
     -- Daily journal with template sync
     commands.add('ZkDailySync', function(options)
-      if not sync_templates() then
-        return
-      end
-
-      vim.defer_fn(function()
-        require('zk.commands').get('ZkDaily')(options)
-      end, 100)
+      create_note_with_sync('journal', 'daily journal', true, options)
     end)
 
     -- Idea note with validation
     commands.add('ZkIdea', function(options)
       -- If options with title are provided, use them directly (for programmatic calls)
       if options and options.title then
-        local notebook_dir = get_notebook_dir()
-        if not notebook_dir then
-          return
-        end
-        options = vim.tbl_extend('force', { dir = notebook_dir .. '/ideas' }, options)
-        zk.new(options)
+        local display_title = slugify_to_title(options.title)
+        options.extra = { display_title = display_title }
+        create_note_with_sync('ideas', 'idea', false, options)
       else
         -- Otherwise, use interactive prompt with validation
         create_idea_note(false)
@@ -173,18 +235,9 @@ return {
     commands.add('ZkIdeaSync', function(options)
       -- If options with title are provided, use them directly
       if options and options.title then
-        if not sync_templates() then
-          return
-        end
-
-        vim.defer_fn(function()
-          local notebook_dir = get_notebook_dir()
-          if not notebook_dir then
-            return
-          end
-          options = vim.tbl_extend('force', { dir = notebook_dir .. '/ideas' }, options)
-          zk.new(options)
-        end, 100)
+        local display_title = slugify_to_title(options.title)
+        options.extra = { display_title = display_title }
+        create_note_with_sync('ideas', 'idea', true, options)
       else
         -- Otherwise, use interactive prompt with validation
         create_idea_note(true)

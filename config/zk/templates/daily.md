@@ -1,3 +1,9 @@
+---
+date: {{format-date now "%Y-%m-%d"}}
+title: {{format-date now "long"}}
+tags: [daily, journal]
+---
+
 # {{format-date now "long"}}
 
 ## Tasks
