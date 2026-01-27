@@ -247,6 +247,12 @@
     {
       "actions": [
         {
+          "key": "c",
+          "label": "claude-recents",
+          "type": "url",
+          "value": "https://claude.ai/recents"
+        },
+        {
           "key": "d",
           "label": "dotfiles",
           "type": "url",
@@ -272,3 +278,4 @@
   ],
   "type": "group"
 }
+
