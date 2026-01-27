@@ -3,17 +3,6 @@ return {
   event = 'VimEnter',
   dependencies = {
     'MunifTanjim/nui.nvim',
-    {
-      'nvim-mini/mini.notify',
-      version = false,
-      opts = {
-        -- Disable notifications since we're only using cmdline
-        silent = true,
-        lsp_progress = {
-          enable = false,
-        },
-      },
-    },
   },
   opts = {
     -- Disable everything by default
@@ -33,7 +22,7 @@ return {
         filter = { pattern = '^:%s*!', icon = '$', lang = 'bash' },
         lua = { pattern = { '^:%s*lua%s+', '^:%s*lua%s*=%s*', '^:%s*=%s*' }, icon = '', lang = 'lua' },
         help = { pattern = '^:%s*he?l?p?%s+', icon = '' },
-        input = { view = 'cmdline_input', icon = '?? ' },
+        input = { view = 'cmdline_input', icon = '✎ ' },
       },
     },
     -- Configure view positioning

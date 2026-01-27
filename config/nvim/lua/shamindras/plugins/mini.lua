@@ -150,7 +150,7 @@ table.insert(M, {
     local function git_branch()
       local branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
       if vim.v.shell_error == 0 and branch ~= '' then
-        return '󰘬 ' .. branch
+        return '󰊢 ' .. branch
       end
       return ''
     end
@@ -173,6 +173,19 @@ table.insert(M, {
         { hl = mode_hl, strings = { location } },
       })
     end
+  end,
+})
+
+table.insert(M, {
+  'nvim-mini/mini.notify',
+  version = '*',
+  event = 'VeryLazy',
+  config = function()
+    local mini_notify = require('mini.notify')
+    -- Use all defaults - they're already sensible
+    mini_notify.setup()
+    -- Set as vim.notify handler
+    vim.notify = mini_notify.make_notify()
   end,
 })
 
