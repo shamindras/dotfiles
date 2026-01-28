@@ -7,8 +7,8 @@
 // BASIC SETTINGS
 // ============================================
 
-// Show hints with 150ms delay for multi-key sequences
-settings.richHintsForKeystroke = 150;
+// Show hints with 100ms delay for multi-key sequences
+settings.richHintsForKeystroke = 100;
 
 // Show omnibar suggestions instantly (for search engines, etc.)
 settings.omnibarSuggestionTimeout = 0;
@@ -117,6 +117,15 @@ api.mapkey(';i', '#3Open incognito window', function() {
 });
 
 // ============================================
+// THESAURUS - Inline synonym lookup
+// ============================================
+
+// Ctrl-t - Open thesaurus omnibar
+api.mapkey('<Ctrl-t>', '#8Open thesaurus', function() {
+    api.Front.openOmnibar({type: "SearchEngine", extra: "th"});
+});
+
+// ============================================
 // YANK MARKDOWN LINK
 // ============================================
 
@@ -186,13 +195,8 @@ api.mapkey('yp', '#7Copy link as markdown', function() {
 // VIM-STYLE SCROLLING (from Foldex)
 // ============================================
 
-// Scroll half page down/up (classic vim bindings)
-api.mapkey("<Ctrl-d>", "Scroll half page down", () => {
-    api.Normal.scroll("pageDown");
-});
-api.mapkey("<Ctrl-u>", "Scroll half page up", () => {
-    api.Normal.scroll("pageUp");
-});
+// Note: Ctrl-d and Ctrl-u removed to free up for other features
+// Use 'd' and 'u' for half-page scrolling instead
 
 // ============================================
 // HISTORY NAVIGATION (uppercase H/L)
@@ -261,6 +265,71 @@ api.addSearchAlias('y', 'youtube', 'https://www.youtube.com/results?search_query
     }
     return [];
 });
+api.addSearchAlias('th', 'thesaurus', 'https://www.onelook.com/thesaurus/?s=', 's', 'https://api.datamuse.com/words?md=d&rel_syn=', function(response) {
+    var res = JSON.parse(response.text);
+    return res.slice(0, 15).map(function(item) {
+        var word = item.word;
+        var defs = item.defs || [];
+        var pos = '';
+        var defText = '';
+
+        if (defs.length > 0) {
+            var parts = defs[0].split('\t');
+            if (parts.length >= 2) {
+                pos = parts[0];
+                defText = parts.slice(1).join(' ');
+            }
+        }
+
+        var displayTitle = word;
+        if (pos) displayTitle += ' (' + pos + ')';
+
+        if (defText.length > 80) {
+            defText = defText.substring(0, 80) + '...';
+        }
+
+        return {
+            title: displayTitle,
+            url: 'https://www.onelook.com/thesaurus/?s=' + encodeURIComponent(word),
+            annotation: defText
+        };
+    });
+});
+api.addSearchAlias('de', 'dictionary', 'https://www.onelook.com/?w=', 's', 'https://api.datamuse.com/words?qe=sp&md=d&max=1&sp=', function(response) {
+    var res = JSON.parse(response.text);
+    if (res.length === 0) return [];
+
+    var word = res[0].word;
+    var defs = res[0].defs || [];
+
+    var groups = { 'adj': [], 'n': [], 'v': [], 'adv': [] };
+
+    defs.forEach(function(def) {
+        var parts = def.split('\t');
+        if (parts.length >= 2) {
+            var pos = parts[0];
+            var defText = parts.slice(1).join(' ');
+            if (groups[pos]) {
+                groups[pos].push(defText);
+            }
+        }
+    });
+
+    var results = [];
+    var order = ['adj', 'n', 'v', 'adv'];
+
+    order.forEach(function(pos) {
+        if (groups[pos].length > 0) {
+            var firstDef = groups[pos][0];
+            if (firstDef.length > 100) {
+                firstDef = firstDef.substring(0, 97) + '...';
+            }
+            results.push(word + ' (' + pos + '): ' + firstDef);
+        }
+    });
+
+    return results;
+});
 api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=');
 api.addSearchAlias('e', 'homebrew', 'https://www.google.com/search?btnI&q=site:formulae.brew.sh+', 's', 'https://www.google.com/complete/search?client=chrome&q=site:formulae.brew.sh+', function(response) {
     var res = JSON.parse(response.text);
@@ -273,6 +342,7 @@ api.addSearchAlias('q', 'quick-google', 'https://www.google.com/search?btnI&q=',
 
 // STEP 3: Remove auto-generated o* mappings (we use Ctrl-* instead)
 api.unmap('ob');
+api.unmap('ode');
 api.unmap('oe');
 api.unmap('og');
 api.unmap('ok');
@@ -281,6 +351,7 @@ api.unmap('om');
 api.unmap('on');
 api.unmap('oq');
 api.unmap('os');
+api.unmap('oth');
 api.unmap('ow');
 api.unmap('oy');
 api.unmap('oz');
@@ -322,6 +393,10 @@ api.mapkey('<Ctrl-e>', 'Search Homebrew (Environment)', function() {
 api.mapkey('<Ctrl-q>', 'Quick Google (I\'m Feeling Lucky)', function() {
     api.Front.openOmnibar({type: "SearchEngine", extra: "q"});
 });
+api.mapkey('<Ctrl-d>', 'Search Dictionary', function() {
+    api.Front.openOmnibar({type: "SearchEngine", extra: "de"});
+});
+
 
 // ============================================
 // SITE EXCLUSIONS - Port from Vimium
@@ -346,155 +421,6 @@ settings.blocklistPattern = /localhost:888[89]|localhost:8890|multiplexer-prod\.
     api.unmap(key, /netflix\.com/);
 });
 
-// Amazon Video - domain-wide for /gp/video section
-['f', 'm'].forEach(key => {
-    api.unmap(key, /amazon\.com/);
-});
-
-// Prime Video - domain-wide
-['f', 'm'].forEach(key => {
-    api.unmap(key, /primevideo\.com/);
-});
-
-// Crunchyroll - domain-wide (handles both main and static domains)
-['f', 'm', 'c', 'j', 'k'].forEach(key => {
-    api.unmap(key, /crunchyroll\.com/);
-});
-
-// HiAnime - domain-wide
-['f', 'm'].forEach(key => {
-    api.unmap(key, /hianime\.to/);
-});
-
-// AniCrush - domain-wide
-['f', 'm'].forEach(key => {
-    api.unmap(key, /anicrush\.to/);
-});
-
-// Bilibili - domain-wide
-api.unmap('f', /bilibili\.com/);
-
-// Peacock - domain-wide
-['f', 'm'].forEach(key => {
-    api.unmap(key, /peacocktv\.com/);
-});
-
-// Paramount+ - domain-wide
-['f', 'm'].forEach(key => {
-    api.unmap(key, /paramountplus\.com/);
-});
-
-// Dailymotion - domain-wide
-['f', 'm'].forEach(key => {
-    api.unmap(key, /dailymotion\.com/);
-});
-
-// iView ABC - domain-wide
-['f', 'm'].forEach(key => {
-    api.unmap(key, /iview\.abc\.net\.au/);
-});
-
-// iView ABC - Use runtime conditional for / remapping
-if (/iview\.abc\.net\.au/.test(window.location.host)) {
-    api.unmap('/');
-    api.mapkey('/', '#0Focus iView search', function() {
-        const searchInput = document.querySelector('input[type="search"]') ||
-                           document.querySelector('input[placeholder*="Search"]');
-        if (searchInput) searchInput.focus();
-    });
-}
-
-// ========== GOOGLE SERVICES ==========
-
-// Gmail - Unmap keys to allow native Gmail shortcuts (except 'i' and 'l' for Surfingkeys)
-['a', 'b', 'c', 'd', 'e', 'f', 'g', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
-    api.unmap(key, /mail\.google\.com/);
-});
-
-// Gmail - Custom z-prefixed navigation shortcuts (to avoid conflict with Gmail's g shortcuts)
-// Helper function to navigate to Gmail views with correct account
-const gmailNavigate = (view) => {
-    const accountMatch = window.location.pathname.match(/\/u\/(\d+)\//);
-    const accountNum = accountMatch ? accountMatch[1] : '0';
-    window.location.href = `https://mail.google.com/mail/u/${accountNum}/#${view}`;
-};
-
-api.mapkey('agi', '#0Go to inbox', () => gmailNavigate('inbox'), {domain: /mail\.google\.com/i});
-api.mapkey('ags', '#0Go to starred', () => gmailNavigate('starred'), {domain: /mail\.google\.com/i});
-api.mapkey('agt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
-api.mapkey('agd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
-api.mapkey('aga', '#0Go to all mail', () => gmailNavigate('all'), {domain: /mail\.google\.com/i});
-api.mapkey('agz', '#0Go to snoozed', () => gmailNavigate('snoozed'), {domain: /mail\.google\.com/i});
-
-// Gmail - Use runtime conditional for / remapping
-if (/mail\.google\.com/.test(window.location.host)) {
-    api.unmap('/');
-    api.mapkey('/', '#0Focus Gmail search', function() {
-        const searchInput = document.querySelector('input[aria-label*="Search"]') ||
-                           document.querySelector('input[name="q"]');
-        if (searchInput) searchInput.focus();
-    });
-}
-
-// Google Drive - Use runtime conditional for / remapping
-if (/drive\.google\.com/.test(window.location.host)) {
-    api.unmap('/');
-    api.mapkey('/', '#0Focus Drive search', function() {
-        const searchInput = document.querySelector('input[aria-label*="Search"]') ||
-                           document.querySelector('input[placeholder*="Search"]');
-        if (searchInput) searchInput.focus();
-    });
-}
-
-// Google Docs
-['p', 'm'].forEach(key => {
-    api.unmap(key, /docs\.google\.com/);
-});
-
-// Google Docs - Use runtime conditional for / remapping
-if (/docs\.google\.com/.test(window.location.host)) {
-    api.unmap('/');
-    api.mapkey('/', '#0Open Docs find', function() {
-        document.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'f',
-            code: 'KeyF',
-            ctrlKey: true,
-            bubbles: true
-        }));
-    });
-}
-
-// Google Calendar
-['d', 'm'].forEach(key => {
-    api.unmap(key, /calendar\.google\.com/);
-});
-
-// ========== OTHER SITES ==========
-
-// DuckDuckGo - Use runtime conditional for / remapping
-if (/duckduckgo\.com/.test(window.location.host)) {
-    api.unmap('/');
-    api.mapkey('/', '#0Focus DuckDuckGo search', function() {
-        const searchInput = document.querySelector('input#search_form_input') ||
-                           document.querySelector('input[name="q"]') ||
-                           document.querySelector('input[type="search"]');
-        if (searchInput) searchInput.focus();
-    });
-}
-
-// Container Store
-api.unmap('p', /containerstore\.com/);
-
-// Walmart Jobs
-['b', 'm', 'p'].forEach(key => {
-    api.unmap(key, /walmart\.wd5\.myworkdayjobs\.com/);
-});
-
-// Localhost:2718
-['a', 'm'].forEach(key => {
-    api.unmap(key, /localhost:2718/);
-});
-
 // ============================================
 // THEME: TOMORROW NIGHT (Foldex-style)
 // ============================================
@@ -508,16 +434,11 @@ api.Visual.style('cursor', 'background-color: #81A2BE;');
 // Main theme
 settings.theme = `
 /* ===== TOMORROW NIGHT THEME ===== */
-/* Based on Foldex's surfingkeys-config structure */
 
-/* Edit these variables for easy color customization */
 :root {
-  /* Font */
   --font: 'Menlo', 'Monaco', 'Source Code Pro', monospace;
   --font-size: 12pt;
   --font-weight: normal;
-
-  /* Tomorrow Night Colors */
   --fg: #C5C8C6;
   --bg: #282A2E;
   --bg-dark: #1D1F21;
@@ -528,7 +449,6 @@ settings.theme = `
   --select: #585858;
 }
 
-/* ---------- Generic ---------- */
 .sk_theme {
   background: var(--bg) !important;
   color: var(--fg) !important;
@@ -553,7 +473,6 @@ input {
   background: var(--bg) !important;
 }
 
-/* Hints */
 #sk_hints .begin {
   color: var(--accent-fg) !important;
 }
@@ -583,7 +502,6 @@ input {
   color: var(--accent-fg) !important;
 }
 
-/* ---------- Omnibar ---------- */
 #sk_omnibar {
   width: 95%;
   max-width: 1000px;
@@ -618,7 +536,6 @@ input {
   color: var(--accent-fg) !important;
 }
 
-/* CRITICAL FIX: Force dark backgrounds on all list items */
 .sk_theme #sk_omnibarSearchResult ul li {
   background: var(--bg-dark) !important;
   font-size: 14pt !important;
@@ -633,7 +550,6 @@ input {
   background: var(--bg-dark) !important;
 }
 
-/* Explicit overrides for each position to defeat default styles */
 .sk_theme #sk_omnibarSearchResult ul li:nth-child(1) { background: var(--bg-dark) !important; }
 .sk_theme #sk_omnibarSearchResult ul li:nth-child(2) { background: var(--bg-dark) !important; }
 .sk_theme #sk_omnibarSearchResult ul li:nth-child(3) { background: var(--bg-dark) !important; }
@@ -667,7 +583,6 @@ input {
   color: var(--accent-fg) !important;
 }
 
-/* ---------- Popup Notification Banner ---------- */
 #sk_banner {
   font-family: var(--font);
   font-size: var(--font-size);
@@ -678,7 +593,6 @@ input {
   opacity: 0.9;
 }
 
-/* ---------- Popup Keys ---------- */
 #sk_keystroke {
   background-color: var(--bg) !important;
   color: var(--fg) !important;
@@ -712,7 +626,6 @@ input {
   font-size: 16pt;
 }
 
-/* ---------- Popup Translation Bubble ---------- */
 #sk_bubble {
   background-color: var(--bg) !important;
   color: var(--fg) !important;
@@ -733,7 +646,6 @@ input {
   border-bottom-color: var(--bg) !important;
 }
 
-/* ---------- Search ---------- */
 #sk_status,
 #sk_find {
   font-size: var(--font-size);
@@ -758,7 +670,6 @@ input {
   color: var(--main-fg) !important;
 }
 
-/* ---------- ACE Editor ---------- */
 #sk_editor {
   background: var(--bg-dark) !important;
   height: 50% !important;
