@@ -83,14 +83,16 @@ api.map('zz', 'x');
 // ============================================
 
 // o/O - Omnibar (Vimium convention: lowercase = new tab, uppercase = current tab)
-api.map('o', 't');   // o = omnibar, open in NEW tab
+api.mapkey('o', '#8Open URLs in new tab', function() {
+    api.Front.openOmnibar({type: "URLs", tabbed: true});
+});
 api.map('O', 'go');  // O = omnibar, open in CURRENT tab
 
 // t/T - Tab operations (Vimium convention)
+// Using example.com as a lightweight page where SK keymaps work
 api.mapkey('t', '#3Create new tab', function() {
     window.open('https://example.com', '_blank');
 });
-// TODO: Revisit blank page alternatives (browser.runtime.getURL or local file)
 
 // gt - Fallback for t on restricted sites (e.g., YouTube)
 api.mapkey('gt', '#3Create new tab (fallback)', function() {
