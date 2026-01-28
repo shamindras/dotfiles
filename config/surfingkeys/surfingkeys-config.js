@@ -421,6 +421,155 @@ settings.blocklistPattern = /localhost:888[89]|localhost:8890|multiplexer-prod\.
     api.unmap(key, /netflix\.com/);
 });
 
+// Amazon Video - domain-wide for /gp/video section
+['f', 'm'].forEach(key => {
+    api.unmap(key, /amazon\.com/);
+});
+
+// Prime Video - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /primevideo\.com/);
+});
+
+// Crunchyroll - domain-wide (handles both main and static domains)
+['f', 'm', 'c', 'j', 'k'].forEach(key => {
+    api.unmap(key, /crunchyroll\.com/);
+});
+
+// HiAnime - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /hianime\.to/);
+});
+
+// AniCrush - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /anicrush\.to/);
+});
+
+// Bilibili - domain-wide
+api.unmap('f', /bilibili\.com/);
+
+// Peacock - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /peacocktv\.com/);
+});
+
+// Paramount+ - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /paramountplus\.com/);
+});
+
+// Dailymotion - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /dailymotion\.com/);
+});
+
+// iView ABC - domain-wide
+['f', 'm'].forEach(key => {
+    api.unmap(key, /iview\.abc\.net\.au/);
+});
+
+// iView ABC - Use runtime conditional for / remapping
+if (/iview\.abc\.net\.au/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus iView search', function() {
+        const searchInput = document.querySelector('input[type="search"]') ||
+                           document.querySelector('input[placeholder*="Search"]');
+        if (searchInput) searchInput.focus();
+    });
+}
+
+// ========== GOOGLE SERVICES ==========
+
+// Gmail - Unmap keys to allow native Gmail shortcuts (except 'i' and 'l' for Surfingkeys)
+['a', 'b', 'c', 'd', 'e', 'f', 'g', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
+    api.unmap(key, /mail\.google\.com/);
+});
+
+// Gmail - Custom z-prefixed navigation shortcuts (to avoid conflict with Gmail's g shortcuts)
+// Helper function to navigate to Gmail views with correct account
+const gmailNavigate = (view) => {
+    const accountMatch = window.location.pathname.match(/\/u\/(\d+)\//);
+    const accountNum = accountMatch ? accountMatch[1] : '0';
+    window.location.href = `https://mail.google.com/mail/u/${accountNum}/#${view}`;
+};
+
+api.mapkey('agi', '#0Go to inbox', () => gmailNavigate('inbox'), {domain: /mail\.google\.com/i});
+api.mapkey('ags', '#0Go to starred', () => gmailNavigate('starred'), {domain: /mail\.google\.com/i});
+api.mapkey('agt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
+api.mapkey('agd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
+api.mapkey('aga', '#0Go to all mail', () => gmailNavigate('all'), {domain: /mail\.google\.com/i});
+api.mapkey('agz', '#0Go to snoozed', () => gmailNavigate('snoozed'), {domain: /mail\.google\.com/i});
+
+// Gmail - Use runtime conditional for / remapping
+if (/mail\.google\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus Gmail search', function() {
+        const searchInput = document.querySelector('input[aria-label*="Search"]') ||
+                           document.querySelector('input[name="q"]');
+        if (searchInput) searchInput.focus();
+    });
+}
+
+// Google Drive - Use runtime conditional for / remapping
+if (/drive\.google\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus Drive search', function() {
+        const searchInput = document.querySelector('input[aria-label*="Search"]') ||
+                           document.querySelector('input[placeholder*="Search"]');
+        if (searchInput) searchInput.focus();
+    });
+}
+
+// Google Docs
+['p', 'm'].forEach(key => {
+    api.unmap(key, /docs\.google\.com/);
+});
+
+// Google Docs - Use runtime conditional for / remapping
+if (/docs\.google\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Open Docs find', function() {
+        document.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'f',
+            code: 'KeyF',
+            ctrlKey: true,
+            bubbles: true
+        }));
+    });
+}
+
+// Google Calendar
+['d', 'm'].forEach(key => {
+    api.unmap(key, /calendar\.google\.com/);
+});
+
+// ========== OTHER SITES ==========
+
+// DuckDuckGo - Use runtime conditional for / remapping
+if (/duckduckgo\.com/.test(window.location.host)) {
+    api.unmap('/');
+    api.mapkey('/', '#0Focus DuckDuckGo search', function() {
+        const searchInput = document.querySelector('input#search_form_input') ||
+                           document.querySelector('input[name="q"]') ||
+                           document.querySelector('input[type="search"]');
+        if (searchInput) searchInput.focus();
+    });
+}
+
+// Container Store
+api.unmap('p', /containerstore\.com/);
+
+// Walmart Jobs
+['b', 'm', 'p'].forEach(key => {
+    api.unmap(key, /walmart\.wd5\.myworkdayjobs\.com/);
+});
+
+// Localhost:2718
+['a', 'm'].forEach(key => {
+    api.unmap(key, /localhost:2718/);
+});
+
 // ============================================
 // THEME: TOMORROW NIGHT (Foldex-style)
 // ============================================
