@@ -481,8 +481,8 @@ if (/iview\.abc\.net\.au/.test(window.location.host)) {
 
 // ========== GOOGLE SERVICES ==========
 
-// Gmail - Unmap keys to allow native Gmail shortcuts (except 'i' and 'l' for Surfingkeys)
-['a', 'b', 'c', 'd', 'e', 'f', 'g', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
+// Gmail - Unmap keys to allow native Gmail shortcuts (except 'i', 'l', 'd', and 'u' for Surfingkeys)
+['a', 'b', 'c', 'e', 'f', 'g', 'j', 'k', 'm', 'r', 'v', 'x', 'X'].forEach(key => {
     api.unmap(key, /mail\.google\.com/);
 });
 
