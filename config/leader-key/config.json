@@ -210,6 +210,12 @@
     {
       "actions": [
         {
+          "key": "b",
+          "label": "brew-upgrade",
+          "type": "command",
+          "value": "/Applications/WezTerm.app/Contents/MacOS/wezterm start -- /bin/zsh -c '/opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade && /opt/homebrew/bin/brew cleanup; printf \"\\n===[ BREW UPDATE END ]===\\n\"; printf \"\\nPress any key to close this window...\"; read -k 1 -s'"
+        },
+        {
           "key": "m",
           "label": "move-files",
           "type": "command",
@@ -271,6 +277,12 @@
     },
     {
       "actions": [
+        {
+          "key": "c",
+          "label": "codebox",
+          "type": "url",
+          "value": "https://github.com/shamindras/codebox"
+        },
         {
           "key": "d",
           "label": "dotfiles",
