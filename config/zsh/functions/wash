@@ -1,76 +1,79 @@
 #!/bin/zsh
 
-##? wash - clean up DS_Store, swap files, and backup files
-##?
-##? usage:
-##?   wash [--current] [directory...] [--help]
-##?
-##? arguments:
-##?   directory...  Directories to start cleaning (default: current directory)
-##?
-##? options:
-##?   --current  Search only current directory level (don't recurse into subdirectories)
-##?   --help     Show this help message
-##?
-##? examples:
-##?   wash                         # clean current directory and subdirectories
-##?   wash --current               # clean current directory only (one level)
-##?   wash ~/Downloads             # clean ~/Downloads and subdirectories
-##?   wash ~/Desktop ~/Downloads   # clean multiple directories
-##?   wash --current ~/Downloads   # clean ~/Downloads one level only
-
 wash() {
-    local target_dirs=()
-    local use_depth=false
+    # 1. Colors and Help Text
+    local bold=$'\e[1m'
+    local blue=$'\e[34m'
+    local green=$'\e[32m'
+    local yellow=$'\e[33m'
+    local reset=$'\e[0m'
 
-    # Show help if --help flag
-    if test "$1" = "--help"; then
-        grep "^##?" "$0" | cut -c 5-
+    # Show help immediately if requested
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        cat << EOF
+${bold}wash${reset} - clean up DS_Store, swap files, and backup files
+
+${bold}usage:${reset}
+   wash [options] [directory...]
+
+${bold}options:${reset}
+   -p, --preview  Show files to be deleted without removing them
+   -c, --current  Only clean the specified directory level (no recursion)
+   -h, --help     Show this help message
+
+${bold}examples:${reset}
+   wash -p                        # Preview cleanup in current directory
+   wash ~/Downloads               # Run cleanup recursively in Downloads
+EOF
         return 0
     fi
 
-    # Parse arguments
-    while test $# -gt 0; do
-        case $1 in
-            --current)
-                use_depth=true
-                shift
-                ;;
-            --help)
-                # Already handled above
-                shift
-                ;;
-            -*)
-                echo "Unknown option: $1" >&2
-                echo "Use 'wash --help' for usage information." >&2
-                return 1
-                ;;
-            *)
-                # Add valid directories to the array
-                if test -d "$1"; then
-                    target_dirs+=("$1")
-                fi
-                shift
-                ;;
+    # 2. Argument Parsing
+    local target_dirs=()
+    local use_depth=false
+    local preview_mode=false
+
+    while (($# > 0)); do
+        case "$1" in
+            -p|--preview) preview_mode=true ;;
+            -c|--current) use_depth=true ;;
+            -h|--help)    wash --help; return 0 ;;
+            -*)           echo "${yellow}Unknown option: $1${reset}"; return 1 ;;
+            *)            [[ -d "$1" ]] && target_dirs+=("$1") ;;
         esac
+        shift
     done
 
-    # Default to current directory if no valid directories provided
-    if test "${#target_dirs[@]}" -eq 0; then
-        target_dirs=(".")
-    fi
+    # Default to current dir
+    [[ ${#target_dirs[@]} -eq 0 ]] && target_dirs=(".")
 
-    # Execute the cleanup for each directory
-    local original_pwd="$PWD"
+    # 3. Execution
     for dir in "${target_dirs[@]}"; do
-        cd "$dir" || continue
-        if test "$use_depth" = true; then
-            fd '\.(DS_Store|swo|swp)$|~$' -d1 -tf -u -X rm
-        else
-            fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
-        fi
-        cd "$original_pwd" || return 1
+        (
+            # Normalize path
+            local abs_path=$(builtin cd "$dir" && pwd)
+            builtin cd "$abs_path" || exit 1
+
+            local fd_args=('-tf' '-u')
+            [[ "$use_depth" == true ]] && fd_args+=('-d' '1')
+            local pattern='\.(DS_Store|swo|swp)$|~$'
+
+            # Find files and store in array
+            local results=("${(@f)$(fd $pattern "${fd_args[@]}")}")
+
+            # If the first element is empty, no files were found
+            if [[ -z "${results[1]}" ]]; then
+                echo "${blue}✨ $abs_path is already clean.${reset}"
+            else
+                if [[ "$preview_mode" == true ]]; then
+                    echo "${bold}${blue}--- Preview: Files in $abs_path ---${reset}"
+                    printf '%s\n' "${results[@]}"
+                    echo "${yellow}Total: ${#results} file(s)${reset}"
+                else
+                    fd $pattern "${fd_args[@]}" -X rm
+                    echo "${green}✅ Cleaned ${#results} file(s) from: $abs_path${reset}"
+                fi
+            fi
+        )
     done
 }
-
-# vim: ft=zsh
