@@ -79,7 +79,7 @@
           "key": "n",
           "label": "nordvpn",
           "type": "command",
-          "value": "open -a '/Applications/NordVPN.app'; sleep 0.5; /opt/homebrew/bin/aerospace workspace B"
+          "value": "open -a '/Applications/NordVPN.app'; sleep 2.5; /opt/homebrew/bin/aerospace workspace N; sleep 0.5; /opt/homebrew/bin/aerospace fullscreen; sleep 0.2; /opt/homebrew/bin/aerospace workspace B"
         },
         {
           "key": "p",
@@ -128,7 +128,7 @@
           "key": "a",
           "label": "djview",
           "type": "command",
-          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace A'"
+          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
         },
         {
           "key": "b",
@@ -146,7 +146,7 @@
           "key": "e",
           "label": "finder",
           "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
         },
         {
           "key": "g",
@@ -176,19 +176,19 @@
           "key": "p",
           "label": "skim",
           "type": "command",
-          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; fi"
+          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
         },
         {
           "key": "t",
           "label": "ghostty",
           "type": "command",
-          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && if pgrep -x \"wezterm-gui\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
         },
         {
           "key": "v",
           "label": "vscode",
           "type": "command",
-          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
         },
         {
           "key": "w",
@@ -219,7 +219,7 @@
           "key": "m",
           "label": "move-files",
           "type": "command",
-          "value": "find ~/Downloads -type f \\( -iname \"*.pdf\" -o -iname \"*.djvu\" \\) -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS \\; ; find ~/Downloads -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\; ; find /Users/shamindras/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -type f -iname \"*.epub\" -exec mv {} /Users/shamindras/DROPBOX/RESOURCES/BOOKS/EBOOKS \\;"
+          "value": "fd . ~/Downloads -e pdf -e djvu -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS ; fd . ~/Downloads -e epub -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/EBOOKS ; fd . ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -e epub -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/EBOOKS"
         },
         {
           "key": "r",
@@ -243,7 +243,7 @@
           "key": "w",
           "label": "wash-dropbox",
           "type": "command",
-          "value": "find ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -type f -name \".DS_Store\" -print0 | xargs -0 -P $(sysctl -n hw.ncpu) rm"
+          "value": "fd -HI -t f '.DS_Store' ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -x rm"
         }
       ],
       "key": "r",
