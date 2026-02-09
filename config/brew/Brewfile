@@ -40,8 +40,6 @@ brew "commitizen"
 brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
-# Network authentication protocol
-brew "krb5"
 # Good-lookin' diffs with diff-highlight and more
 brew "diff-so-fancy"
 # Load/unload environment variables based on $PWD
@@ -56,23 +54,7 @@ brew "eza"
 brew "fastfetch"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# International domain name library (IDNA2008, Punycode and TR46)
-brew "libidn2"
-# Validating, recursive, caching DNS resolver
-brew "unbound"
-# GNU Transport Layer Security (TLS) Library
-brew "gnutls"
-# OpenType text shaping engine
-brew "harfbuzz"
-# Image processing and image analysis library
-brew "leptonica"
-# Subtitle renderer for the ASS/SSA subtitle format
-brew "libass"
-# Secure Reliable Transport
-brew "srt"
-# OCR (Optical Character Recognition) engine
-brew "tesseract"
-# Play, record, convert, and stream audio and video
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # ODBC 3 connectivity for UNIX
 brew "unixodbc"
@@ -82,10 +64,18 @@ brew "freetds"
 brew "fzf"
 # Geometry Engine
 brew "geos"
+# International domain name library (IDNA2008, Punycode and TR46)
+brew "libidn2"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
+# GNU Transport Layer Security (TLS) Library
+brew "gnutls"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
 # File format designed to store large amounts of data
 brew "hdf5"
+# Network authentication protocol
+brew "krb5"
 # Cartographic Projections Library
 brew "proj"
 # Library and tools for dealing with GeoTIFF
@@ -110,6 +100,12 @@ brew "poppler"
 brew "gdal"
 # GitHub command-line tool
 brew "gh"
+# OpenType text shaping engine
+brew "harfbuzz"
+# Image processing and image analysis library
+brew "leptonica"
+# OCR (Optical Character Recognition) engine
+brew "tesseract"
 # Interpreter for PostScript and PDF
 brew "ghostscript"
 # Distributed revision control system
@@ -130,9 +126,7 @@ brew "httpie"
 brew "hunspell"
 # Command-line benchmarking tool
 brew "hyperfine"
-# Library for reading RAW files from digital photo cameras
-brew "libraw"
-# Tools and libraries to manipulate images in many formats
+# Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
@@ -144,8 +138,12 @@ brew "jsonlint"
 brew "just"
 # Simple terminal UI for git commands
 brew "lazygit"
+# Subtitle renderer for the ASS/SSA subtitle format
+brew "libass"
 # MNG/JNG reference library
 brew "libmng"
+# Library for reading RAW files from digital photo cameras
+brew "libraw"
 # Powerful, lightweight programming language
 brew "lua"
 # Tool for linting and static analysis of Lua code
@@ -206,6 +204,8 @@ brew "shellharden"
 brew "shfmt"
 # Command-line interface for https://speedtest.net bandwidth tests
 brew "speedtest-cli"
+# Secure Reliable Transport
+brew "srt"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Opinionated Lua code formatter
@@ -251,7 +251,7 @@ cask "1password"
 # Command-line interface for 1Password
 cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
-cask "aerospace"
+cask "nikitabobko/tap/aerospace"
 # GPU-accelerated terminal emulator
 cask "alacritty"
 # Application launcher and productivity software
@@ -273,11 +273,16 @@ cask "font-commit-mono-nerd-font"
 cask "font-fira-code-nerd-font"
 cask "font-hack-nerd-font"
 cask "font-hasklug-nerd-font"
+cask "font-input"
 cask "font-iosevka-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-maple-mono"
 cask "font-monaspice-nerd-font"
+cask "font-monoid"
+cask "font-red-hat-mono"
+cask "font-roboto-mono-nerd-font"
 cask "font-sf-pro"
+cask "font-source-code-pro"
 cask "font-symbols-only-nerd-font"
 cask "font-udev-gothic-nf"
 cask "font-victor-mono"
