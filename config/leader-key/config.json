@@ -219,7 +219,7 @@
           "key": "m",
           "label": "move-files",
           "type": "command",
-          "value": "fd . ~/Downloads -e pdf -e djvu -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS ; fd . ~/Downloads -e epub -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/EBOOKS ; fd . ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -e epub -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/EBOOKS"
+          "value": "/opt/homebrew/bin/fd . ~/Downloads -e pdf -e djvu -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS ; /opt/homebrew/bin/fd . ~/Downloads -e epub -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/EBOOKS ; /opt/homebrew/bin/fd . ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS -e epub -x mv -v {} ~/DROPBOX/RESOURCES/BOOKS/EBOOKS"
         },
         {
           "key": "r",
@@ -243,7 +243,7 @@
           "key": "w",
           "label": "wash-dropbox",
           "type": "command",
-          "value": "fd -HI -t f '.DS_Store' ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -x rm"
+          "value": "/opt/homebrew/bin/fd -HI -t f '.DS_Store' ~/DROPBOX/RESOURCES/BOOKS ~/Downloads -x rm"
         }
       ],
       "key": "r",
