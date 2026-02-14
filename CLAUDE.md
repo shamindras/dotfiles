@@ -98,3 +98,19 @@ The install process (`install.conf.yaml`) follows this sequence:
 - Homebrew packages managed through Brewfile
 - Git submodules used for external dependencies
 - Shell scripts follow bash strict mode (`set -Eeuo pipefail`)
+
+## Git Workflow
+
+- **Use conventional commits**: `<type>(<scope>): <description>` format
+- **Scope = tool name**: Match the tool in `config/` directory (e.g., `(nvim)`, `(zsh)`, `(brew)`)
+- **Split commits by scope**: Default behavior is one commit per tool, even within shared files
+- Use `/commit` skill with flags: `--staged`, `--all`, `--draft`, `--amend`, `--all-and-push`, `--no-split`
+- Detailed conventions: `.claude/skills/git/workflow.md`
+- Full `/commit` documentation: `.claude/skills/git/commands/commit.md`
+
+### Examples
+```
+feat(ghostty): add terminal configuration
+refactor(nvim): update telescope keybindings
+chore(brew): update brewfile
+```
