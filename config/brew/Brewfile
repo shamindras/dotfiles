@@ -2,10 +2,10 @@ tap "felixkratz/formulae"
 tap "nikitabobko/tap"
 # Color management engine supporting ICC profiles
 brew "little-cms2"
-# Image format providing lossless and lossy compression for web images
-brew "webp"
 # New file format for still image compression
 brew "jpeg-xl"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
 # Codec library for encoding and decoding AV1 video streams
 brew "aom"
 # Next generation open source RPC library and framework
@@ -48,6 +48,8 @@ brew "direnv"
 brew "duf"
 # More intuitive version of du in rust
 brew "dust"
+# Perl lib for reading and writing EXIF metadata
+brew "exiftool"
 # Modern, maintained replacement for ls
 brew "eza"
 # Like neofetch, but much faster because written mostly in C
