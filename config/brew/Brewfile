@@ -152,6 +152,8 @@ brew "lua"
 brew "luacheck"
 # Package manager for the Lua programming language
 brew "luarocks"
+# Deep clean and optimize your Mac
+brew "mole"
 # NCurses Disk Usage
 brew "ncdu"
 # Ambitious Vim-fork focused on extensibility and agility
