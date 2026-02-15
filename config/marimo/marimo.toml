@@ -1,91 +1,94 @@
-[server]
-follow_symlink = false
-browser = "default"
-
-[runtime]
-auto_instantiate = true
-default_auto_download = []
-on_cell_change = "autorun"
-default_sql_output = "auto"
-watcher_on_save = "lazy"
-std_stream_max_bytes = 1000000
-output_max_bytes = 8000000
-default_csv_encoding = "utf-8"
-auto_reload = "autorun"
-reactive_tests = true
-
-[display]
-cell_output = "above"
-default_table_max_columns = 50
-code_editor_font_size = 22
-default_table_page_size = 10
-dataframes = "rich"
-theme = "light"
-reference_highlighting = true
-default_width = "full"
-
-[package_management]
-manager = "uv"
-
-[keymap]
-destructive_delete = true
-preset = "default"
-
-[keymap.overrides]
+[formatting]
+line_length = 79
 
 [ai]
-mode = "manual"
 rules = ""
 inline_tooltip = false
+mode = "manual"
 
-[ai.models]
-displayed_models = []
-custom_models = []
-edit_model = "anthropic/claude-opus-4-6"
-chat_model = "anthropic/claude-sonnet-4-5"
-
-[ai.open_ai]
+[ai.anthropic]
+api_key = ""
 
 [ai.custom_providers]
 
 [ai.google]
 
-[ai.anthropic]
-api_key = ""
+[ai.open_ai]
+
+[ai.models]
+custom_models = []
+chat_model = "anthropic/claude-sonnet-4-5"
+displayed_models = []
+edit_model = "anthropic/claude-opus-4-6"
+
+[server]
+follow_symlink = false
+browser = "default"
+
+[display]
+code_editor_font_size = 20
+default_table_page_size = 10
+default_table_max_columns = 50
+reference_highlighting = true
+dataframes = "rich"
+theme = "light"
+cell_output = "above"
+default_width = "full"
+
+[diagnostics]
+sql_linter = true
+
+[language_servers.pylsp]
+enable_pylint = false
+enable_ruff = true
+enable_pydocstyle = false
+enabled = false
+enable_pyflakes = false
+enable_flake8 = false
+enable_mypy = true
+
+[language_servers.ty]
+enabled = false
+
+[package_management]
+manager = "uv"
 
 [completion]
-activate_on_typing = true
 signature_hint_on_typing = true
+activate_on_typing = true
 copilot = "github"
 
-[snippets]
-include_default_snippets = true
-custom_paths = []
+[keymap]
+preset = "default"
+destructive_delete = true
 
-[experimental]
-external_agents = false
+[keymap.overrides]
+
+[snippets]
+custom_paths = []
+include_default_snippets = true
 
 [mcp]
 presets = []
 
 [mcp.mcpServers]
 
-[diagnostics]
-sql_linter = true
-
-[language_servers.pylsp]
-enable_flake8 = false
-enable_pyflakes = false
-enable_pylint = false
-enable_ruff = true
-enabled = false
-enable_pydocstyle = false
-enable_mypy = true
-
 [save]
 autosave_delay = 1000
 format_on_save = true
 autosave = "after_delay"
 
-[formatting]
-line_length = 79
+[runtime]
+on_cell_change = "autorun"
+std_stream_max_bytes = 1000000
+default_sql_output = "auto"
+auto_reload = "autorun"
+default_auto_download = []
+reactive_tests = true
+auto_instantiate = true
+output_max_bytes = 8000000
+default_csv_encoding = "utf-8"
+watcher_on_save = "lazy"
+
+[experimental]
+external_agents = false
