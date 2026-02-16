@@ -58,17 +58,12 @@ api.mapkey('gf', '#1Open link hints in new tab', function() {
 });
 
 // Move tab to start/end - use zh/zl to preserve marks (m key)
+// Uses repeat prefix (99) with remapped < and > for atomic, reliable movement
 api.mapkey('zh', '#3Move tab to beginning', function() {
-    // Move tab left repeatedly until it's at position 0
-    for (let i = 0; i < 100; i++) {
-        api.Normal.feedkeys('<<');
-    }
+    api.Normal.feedkeys('99<');
 });
 api.mapkey('zl', '#3Move tab to end', function() {
-    // Move tab right repeatedly until it's at the end
-    for (let i = 0; i < 100; i++) {
-        api.Normal.feedkeys('>>');
-    }
+    api.Normal.feedkeys('99>');
 });
 
 // First/last tab shortcuts (gh/gl)
