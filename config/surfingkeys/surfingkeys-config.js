@@ -121,7 +121,7 @@ api.mapkey('<Ctrl-t>', '#8Open thesaurus', function() {
 });
 
 // ============================================
-// YANK MARKDOWN LINK
+// YANK COMMANDS
 // ============================================
 
 // Helper function to create markdown link with two-stage title trimming
@@ -147,7 +147,7 @@ const createMarkdownLink = (text, url) => {
     return `[${trimmedText.trim()}](${url})`;
 };
 
-// Yank current page as markdown link: [title](url)
+// ym - Yank current page as markdown link: [title](url)
 api.mapkey('ym', '#7Copy current page as markdown link', function() {
     const title = document.title;
     const url = window.location.href;
@@ -156,8 +156,8 @@ api.mapkey('ym', '#7Copy current page as markdown link', function() {
     api.Front.showBanner(`Copied: ${markdown}`);
 });
 
-// Yank link as markdown via hints: [link text](url)
-api.mapkey('yp', '#7Copy link as markdown', function() {
+// ya - Yank anchor as markdown link via hints: [link text](url)
+api.mapkey('ya', '#7Yank anchor as markdown link', function() {
     api.Hints.create("", function(element) {
         let link, url, text;
 
@@ -184,6 +184,54 @@ api.mapkey('yp', '#7Copy link as markdown', function() {
         api.Clipboard.write(markdown);
         api.Front.showBanner(`Copied: ${markdown}`);
     });
+});
+
+// yf - Yank followed link URL to clipboard via hints
+api.mapkey('yf', '#7Yank followed link URL', function() {
+    api.Hints.create('*[href]', function(element) {
+        api.Clipboard.write(element.href);
+    });
+});
+
+// yp - Yank page form data as JSON
+api.mapkey('yp', '#7Yank page form data as JSON', function() {
+    var formData = {};
+    var inputs = document.querySelectorAll('input[name], select[name], textarea[name]');
+
+    inputs.forEach(function(el) {
+        var name = el.name;
+        if (!name) return;
+
+        if (el.type === 'checkbox') {
+            // Collect multiple checkboxes with same name into an array
+            if (formData.hasOwnProperty(name)) {
+                if (!Array.isArray(formData[name])) {
+                    formData[name] = [formData[name]];
+                }
+                if (el.checked) {
+                    formData[name].push(el.value);
+                }
+            } else {
+                formData[name] = el.checked ? el.value : null;
+            }
+        } else if (el.type === 'radio') {
+            // Only capture the selected radio in each group
+            if (el.checked) {
+                formData[name] = el.value;
+            } else if (!formData.hasOwnProperty(name)) {
+                formData[name] = null;
+            }
+        } else if (el.type === 'file') {
+            // Can't serialize file contents, just capture the filename
+            formData[name] = el.value || null;
+        } else {
+            formData[name] = el.value;
+        }
+    });
+
+    var json = JSON.stringify(formData, null, 2);
+    api.Clipboard.write(json);
+    api.Front.showBanner('Copied form data: ' + Object.keys(formData).length + ' field(s)');
 });
 
 // ============================================
