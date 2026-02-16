@@ -234,6 +234,22 @@ api.mapkey('yp', '#7Yank page form data as JSON', function() {
     api.Front.showBanner('Copied form data: ' + Object.keys(formData).length + ' field(s)');
 });
 
+// yM - Yank all tabs as markdown links (one per line, sorted by tab index)
+api.mapkey('yM', '#7Yank all tabs as markdown links', function() {
+    api.RUNTIME("getTabs", {}, function(response) {
+        var tabs = response.tabs;
+        var keys = Object.keys(tabs);
+        var lines = keys
+            .sort(function(a, b) { return tabs[a].index - tabs[b].index; })
+            .map(function(key) {
+                return createMarkdownLink(tabs[key].title || tabs[key].url, tabs[key].url);
+            });
+        var result = lines.join('\n');
+        api.Clipboard.write(result);
+        api.Front.showBanner('Copied ' + lines.length + ' tab(s) as markdown links\n' + result);
+    });
+});
+
 // ============================================
 // VIM-STYLE SCROLLING (from Foldex)
 // ============================================
