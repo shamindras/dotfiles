@@ -1,26 +1,14 @@
--- Appearance
-
 -- {{{ Boilerplate & Helpers
 
 local M = {}
 local wezterm = require('wezterm')
 
 ---@param arg { light: any, dark: any }
+---@return any
 local function depending_on_appearance(arg)
   local appearance = wezterm.gui.get_appearance()
-  -- Handle both string returns (older API) and boolean returns (newer API)
-  local is_dark = false
-  if type(appearance) == 'string' then
-    is_dark = appearance:find('Dark') ~= nil
-  else
-    is_dark = appearance == true
-  end
-
-  if is_dark then
-    return arg.dark
-  else
-    return arg.light
-  end
+  local is_dark = type(appearance) == 'string' and appearance:find('Dark') ~= nil or appearance == true
+  return is_dark and arg.dark or arg.light
 end
 
 -- ------------------------------------------------------------------------- }}}
@@ -71,6 +59,8 @@ local theme_library = {
 
 -- {{{ Main Setup Logic
 
+---@param config table
+---@return table
 function M.setup(config)
   -- Font Configuration
   local selected_font = font_library[active.font] or font_library['JetBrains']
