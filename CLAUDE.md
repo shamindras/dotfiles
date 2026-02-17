@@ -92,6 +92,7 @@ The install process (`install.conf.yaml`) follows this sequence:
 
 ## Development Guidelines
 
+- Some tool directories (e.g., `config/wezterm/`) contain local `CLAUDE.md` files with tool-specific architecture documentation
 - Configurations follow XDG specification strictly
 - Use existing patterns when adding new tool configs
 - All Lua configs should be formatted with stylua
