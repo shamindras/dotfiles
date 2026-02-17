@@ -27,9 +27,6 @@ function M.setup(config)
     },
   }
 
-  -- Pane behavior
-  config.pane_focus_follows_mouse = true
-
   return config
 end
 

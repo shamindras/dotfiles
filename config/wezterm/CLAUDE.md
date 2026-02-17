@@ -2,7 +2,10 @@
 
 ## Overview
 WezTerm terminal emulator config using Lua. Modular architecture with
-registry-based theme/font selection.
+registry-based theme/font selection. WezTerm serves as the GPU-accelerated
+renderer and input translator — all multiplexing (panes, windows, sessions)
+is handled by tmux. CMD shortcuts are intercepted by WezTerm and translated
+into tmux prefix sequences.
 
 Docs: https://wezfurlong.org/wezterm/config/files.html
 
@@ -12,9 +15,9 @@ Docs: https://wezfurlong.org/wezterm/config/files.html
 - `wezterm.lua` — Entry point. Chains module `.setup(config)` calls.
 - `utils/appearance.lua` — Fonts, themes, opacity, window decorations.
   Contains `active` registry table and `font_library`/`theme_library` lookups.
-- `utils/core.lua` — Shell, PATH (for direct command spawns), pane behavior.
-- `utils/keybindings.lua` — All key/mouse bindings. Contains vim-aware
-  `nav_key()` helper for Neovim-compatible pane navigation.
+- `utils/core.lua` — Shell, PATH (for direct command spawns).
+- `utils/keybindings.lua` — All key/mouse bindings. Uses `tmux()` and
+  `tmux_shift()` helpers to translate CMD shortcuts into tmux prefix sequences.
 
 ### Key Patterns
 - **Module pattern**: Each module exports `M.setup(config)`, mutates and
@@ -22,8 +25,10 @@ Docs: https://wezfurlong.org/wezterm/config/files.html
 - **Registry pattern** (appearance.lua): The `active` table is the single
   source of truth. Libraries below define options. To change theme/font,
   edit ONLY the `active` table.
-- **Vim-aware navigation**: `nav_key()` checks `IS_NVIM` user var to
-  decide whether to forward keys to Neovim or handle natively.
+- **tmux passthrough**: `tmux(key, tmux_key)` sends `C-a` (tmux prefix)
+  followed by `tmux_key` when `CMD+key` is pressed. `tmux_shift()` does
+  the same for `CMD+SHIFT+key`. WezTerm never manages panes or tabs —
+  tmux handles all multiplexing.
 - **Dark/light detection**: `depending_on_appearance()` handles both string
   and boolean API returns from `wezterm.gui.get_appearance()`.
 
