@@ -100,6 +100,16 @@ The install process (`install.conf.yaml`) follows this sequence:
 - Git submodules used for external dependencies
 - Shell scripts follow bash strict mode (`set -Eeuo pipefail`)
 
+## Workflow
+
+- **Task tracking** — Use the todo list (`TaskCreate` / `TaskUpdate` /
+  `TaskList`) for all multi-step operations, including planning. Show progress
+  to the user. Before marking a task complete, verify it works.
+- **Cleanup before merge** — Run `just clean` and remove any temporary files
+  created during Claude Code sessions (e.g., `/tmp` artifacts, stale files in
+  subdirectories) before final merges. After user corrections, record the
+  lesson in auto-memory for future sessions.
+
 ## Git Workflow
 
 - **Use conventional commits**: `<type>(<scope>): <description>` format

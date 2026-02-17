@@ -4,40 +4,47 @@ local M = {}
 local wezterm = require('wezterm')
 local act = wezterm.action
 
----@param pane table
----@return boolean
-local function is_vim(pane)
-  return pane:get_user_vars().IS_NVIM == 'true'
-end
-
-local direction_keys = {
-  h = 'Left',
-  j = 'Down',
-  k = 'Up',
-  l = 'Right',
-}
-
--- ------------------------------------------------------------------------- }}}
-
--- {{{ Vim-Aware Navigation
-
----@param key string
+--- Send CMD+key as tmux prefix (C-a) followed by tmux_key.
+--- WezTerm intercepts CMD before it reaches the terminal, translates
+--- it into the tmux prefix sequence so tmux handles the action.
+---@param key string  WezTerm key to bind (with CMD modifier)
+---@param tmux_key string  Key to send after the tmux prefix
 ---@return table
-local function nav_key(key)
+local function tmux(key, tmux_key)
   return {
     key = key,
-    mods = 'CTRL',
-    action = wezterm.action_callback(function(win, pane)
-      if is_vim(pane) then
-        win:perform_action({
-          SendKey = { key = key, mods = 'CTRL' },
-        }, pane)
-      else
-        win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
-      end
-    end),
+    mods = 'CMD',
+    action = act.Multiple({
+      act.SendKey({ mods = 'CTRL', key = 'a' }),
+      act.SendKey({ key = tmux_key }),
+    }),
   }
 end
+
+--- Same as tmux() but with CMD+SHIFT modifier.
+---@param key string  WezTerm key to bind (with CMD+SHIFT modifier)
+---@param tmux_key string  Key to send after the tmux prefix
+---@return table
+local function tmux_shift(key, tmux_key)
+  return {
+    key = key,
+    mods = 'CMD|SHIFT',
+    action = act.Multiple({
+      act.SendKey({ mods = 'CTRL', key = 'a' }),
+      act.SendKey({ key = tmux_key }),
+    }),
+  }
+end
+
+--- Open a new WezTerm window in the current pane's working directory.
+local spawn_window_cwd = wezterm.action_callback(function(window, pane)
+  local cwd_url = pane:get_current_working_dir()
+  local args = {}
+  if cwd_url then
+    args.cwd = cwd_url.file_path
+  end
+  window:perform_action(act.SpawnCommandInNewWindow(args), pane)
+end)
 
 -- ------------------------------------------------------------------------- }}}
 
@@ -55,105 +62,52 @@ function M.setup(config)
     },
   }
 
-  -- Keyboard shortcuts
+  -- stylua: ignore start
   config.keys = {
-    -- Pane navigation
-    nav_key('h'),
-    nav_key('j'),
-    nav_key('k'),
-    nav_key('l'),
-    -- disable alt-Enter for maximizing screen
-    {
+    -- Pane management
+    tmux('d', '|'),                -- CMD+D       = split right
+    tmux_shift('D', '-'),          -- CMD+Shift+D = split down
+    tmux('w', 'x'),                -- CMD+W       = close pane
+    tmux('m', 'z'),                -- CMD+M       = toggle zoom
+
+    -- Window management
+    tmux('t', 'c'),                -- CMD+T       = new window
+    tmux_shift('W', '&'),          -- CMD+Shift+W = close window
+    tmux_shift('H', 'p'),          -- CMD+Shift+H = previous window
+    tmux_shift('L', 'n'),          -- CMD+Shift+L = next window
+    tmux_shift('E', ','),          -- CMD+Shift+E = rename window
+    tmux('1', '1'),                -- CMD+1       = window 1
+    tmux('2', '2'),                -- CMD+2       = window 2
+    tmux('3', '3'),                -- CMD+3       = window 3
+    tmux('4', '4'),                -- CMD+4       = window 4
+    tmux('5', '5'),                -- CMD+5       = window 5
+    tmux('6', '6'),                -- CMD+6       = window 6
+    tmux('7', '7'),                -- CMD+7       = window 7
+    tmux('8', '8'),                -- CMD+8       = window 8
+    tmux('9', '9'),                -- CMD+9       = window 9
+
+    -- Session management
+    tmux('k', 's'),                -- CMD+K       = session picker
+    tmux('l', 'L'),                -- CMD+L       = last session
+    tmux('n', 'S'),                -- CMD+N       = new session
+
+    -- Copy mode
+    tmux('[', '['),                -- CMD+[       = enter copy mode
+
+    -- Utilities
+    tmux('g', 'g'),                -- CMD+G       = lazygit
+    tmux_shift('B', '!'),          -- CMD+Shift+B = break pane to window
+    tmux_shift('R', 'r'),          -- CMD+Shift+R = reload tmux config
+
+    -- WezTerm-native (not tmux passthrough)
+    { key = 'N', mods = 'CMD|SHIFT', action = spawn_window_cwd }, -- CMD+Shift+N = new window (same cwd)
+    {                              -- ALT+Enter   = disabled
       key = 'Enter',
       mods = 'ALT',
       action = act.DisableDefaultAssignment,
     },
-    -- Tab navigation
-    {
-      key = 'p',
-      mods = 'CMD',
-      action = act.ShowTabNavigator,
-    },
-    {
-      key = 'g',
-      mods = 'CMD',
-      action = act.SpawnCommandInNewTab({
-        args = { 'lazygit' },
-      }),
-    },
-
-    -- Split management
-    {
-      key = '\\',
-      mods = 'CMD|SHIFT',
-      action = act.SplitHorizontal({
-        domain = 'CurrentPaneDomain',
-      }),
-    },
-    {
-      key = '-',
-      mods = 'CMD|SHIFT',
-      action = act.SplitVertical({
-        domain = 'CurrentPaneDomain',
-      }),
-    },
-
-    -- Tab management
-    {
-      key = 'E',
-      mods = 'CMD|SHIFT',
-      action = act.PromptInputLine({
-        description = 'Enter new name for tab',
-        action = wezterm.action_callback(function(window, _, line)
-          if line then
-            window:active_tab():set_title(line)
-          end
-        end),
-      }),
-    },
-    {
-      key = 't',
-      mods = 'CMD',
-      action = act.SpawnTab('CurrentPaneDomain'),
-    },
-    {
-      key = 'w',
-      mods = 'CMD',
-      action = act.CloseCurrentPane({ confirm = false }),
-    },
-    {
-      key = 'w',
-      mods = 'CMD|SHIFT',
-      action = act.CloseCurrentTab({ confirm = true }),
-    },
-
-    -- Window management
-    {
-      key = 'm',
-      mods = 'CMD',
-      action = act.TogglePaneZoomState,
-    },
-    {
-      key = 'k',
-      mods = 'CMD',
-      action = act.Multiple({
-        act.ClearScrollback('ScrollbackAndViewport'),
-        act.SendKey({ key = 'L', mods = 'CTRL' }),
-      }),
-    },
-
-    -- Tab switching
-    {
-      key = '{',
-      mods = 'CMD|SHIFT',
-      action = act.ActivateTabRelative(-1),
-    },
-    {
-      key = '}',
-      mods = 'CMD|SHIFT',
-      action = act.ActivateTabRelative(1),
-    },
   }
+  -- stylua: ignore end
 
   return config
 end
