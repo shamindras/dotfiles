@@ -327,4 +327,4 @@ defaults write -app Skim AppleWindowTabbingMode never
 defaults write -app Preview AppleWindowTabbingMode never
 
 # Set lock screen message
-sudo /usr/libexec/PlistBuddy -c "Set :LoginwindowText 'If found, please call +1 (415) 937 3701' to return it." /Library/Preferences/com.apple.loginwindow.plist
+defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "If found, please call +61 417 222 107 to return it."
