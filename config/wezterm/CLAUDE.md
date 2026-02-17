@@ -12,9 +12,9 @@ Docs: https://wezfurlong.org/wezterm/config/files.html
 - `wezterm.lua` — Entry point. Chains module `.setup(config)` calls.
 - `utils/appearance.lua` — Fonts, themes, opacity, window decorations.
   Contains `active` registry table and `font_library`/`theme_library` lookups.
-- `utils/core.lua` — Shell, PATH, pane behavior.
+- `utils/core.lua` — Shell, PATH (for direct command spawns), pane behavior.
 - `utils/keybindings.lua` — All key/mouse bindings. Contains vim-aware
-  `split_nav()` helper for Neovim-compatible pane navigation.
+  `nav_key()` helper for Neovim-compatible pane navigation.
 
 ### Key Patterns
 - **Module pattern**: Each module exports `M.setup(config)`, mutates and
@@ -22,7 +22,7 @@ Docs: https://wezfurlong.org/wezterm/config/files.html
 - **Registry pattern** (appearance.lua): The `active` table is the single
   source of truth. Libraries below define options. To change theme/font,
   edit ONLY the `active` table.
-- **Vim-aware navigation**: `split_nav()` checks `IS_NVIM` user var to
+- **Vim-aware navigation**: `nav_key()` checks `IS_NVIM` user var to
   decide whether to forward keys to Neovim or handle natively.
 - **Dark/light detection**: `depending_on_appearance()` handles both string
   and boolean API returns from `wezterm.gui.get_appearance()`.
