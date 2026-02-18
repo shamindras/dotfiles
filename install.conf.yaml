@@ -17,6 +17,8 @@
     - "${XDG_STATE_HOME}"
     - "${XDG_RUNTIME_DIR}"
     - "${XDG_PROJECTS_DIR}"
+    - "${XDG_DATA_HOME}/tmux/plugins"
+    - "${XDG_DATA_HOME}/tmux/resurrect"
 
 # remove existing symlinks
 - clean:
@@ -65,6 +67,7 @@
     ${XDG_CONFIG_HOME}/tealdeer: config/tealdeer
     ${XDG_CONFIG_HOME}/task: config/task
     ${XDG_CONFIG_HOME}/tmux: config/tmux
+    ${XDG_CONFIG_HOME}/tmux/plugins/tpm: submods/tmux-plugins/tpm
     ${XDG_CONFIG_HOME}/wezterm: config/wezterm
     ${XDG_CONFIG_HOME}/wget: config/wget
     ${XDG_CONFIG_HOME}/yazi: config/yazi
@@ -134,6 +137,13 @@
 - shell:
     - command: npm install -g eslint_d prettier
       description: install eslint_d and prettier using npm
+
+# Install tmux plugins via TPM
+- shell:
+    - command: >-
+        [ -x "${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins" ] &&
+        "${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins" || true
+      description: Install tmux plugins via TPM
 
 # macOS default settings
 # - shell:
