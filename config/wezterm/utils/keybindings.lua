@@ -75,6 +75,8 @@ function M.setup(config)
     tmux_shift('W', '&'),          -- CMD+Shift+W = close window
     tmux('h', 'p'),                -- CMD+H       = previous window
     tmux('l', 'n'),                -- CMD+L       = next window
+    tmux_shift('H', '<'),          -- CMD+Shift+H = swap window left
+    tmux_shift('L', '>'),          -- CMD+Shift+L = swap window right
     tmux_shift('E', ','),          -- CMD+Shift+E = rename window
     tmux('1', '1'),                -- CMD+1       = window 1
     tmux('2', '2'),                -- CMD+2       = window 2
