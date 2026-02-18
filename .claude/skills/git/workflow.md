@@ -6,6 +6,15 @@
 - Format: `<type>/<short-kebab-desc>` (e.g. `feat/add-ghostty-config`, `fix/nvim-treesitter`).
 - Keep branch names short and descriptive.
 
+## Feature Branches in Plans
+
+When presenting a plan for user approval (via ExitPlanMode), always explicitly
+state the feature branch name that will be created from `main`. Use the
+standard branch naming format: `<type>/<short-kebab-desc>`.
+
+Example in plan file:
+> **Feature branch**: `refactor/tmux-config` (from `main`)
+
 ## Conventional Commits
 
 Format: `<type>(<scope>): <description>`
