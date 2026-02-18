@@ -63,8 +63,13 @@ local theme_library = {
 ---@return table
 function M.setup(config)
   -- Font Configuration
+  -- Use font_with_fallback so Nerd Font icons (tmux status bar, etc.) render
+  -- correctly even when the primary font (e.g. Victor Mono) has no NF glyphs.
   local selected_font = font_library[active.font] or font_library['JetBrains']
-  config.font = wezterm.font({ family = selected_font, weight = 'Regular' })
+  config.font = wezterm.font_with_fallback({
+    { family = selected_font, weight = 'Regular' },
+    { family = 'JetBrainsMono Nerd Font', weight = 'Regular' },
+  })
   config.font_size = active.size
 
   -- Color Scheme and Window Appearance

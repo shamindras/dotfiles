@@ -46,7 +46,6 @@ to `$XDG_DATA_HOME/tmux/plugins` — TPM installs all non-TPM plugins there.
 | `tmux-plugins/tmux-continuum` | Auto-save (15 min) + auto-restore |
 | `catppuccin/tmux#v2.1.3` | Catppuccin mocha theme (version-pinned) |
 | `wfxr/tmux-fzf-url` | Open URLs from scrollback via fzf |
-| `joshmedeski/tmux-nerd-font-window-name` | Auto nerd font icons per process |
 
 TPM itself is managed as a git submodule — do NOT declare it as `@plugin`.
 
@@ -98,14 +97,20 @@ for the full CMD mapping.
 
 - Flavor: `mocha`
 - Window style: rounded pills
-- Window text: `#{window_icon} #W` (nerd font icon + name)
+- Window text: icon from `#{pane_current_command}` (known processes) or `#W` fallback
 - Active window: highlighted + zoom indicator (󰊓) when zoomed
 - Status left: session name in rounded pill
 - Status right: current directory basename
 - Pane borders: magenta (active), brightblack (inactive)
 
-Optional per-process icon overrides: `config/tmux/tmux-nerd-font-window-name.yml`
-(not created yet — 174 built-in icons work out of the box).
+### Icon format (no plugin needed)
+Icons are embedded directly in `@catppuccin_window_text` via a nested conditional
+stored in the `@_window_icon` user variable (`theme.conf`). Evaluated at render
+time per window using `#{pane_current_command}`. Known processes show an icon
+only; unknown processes fall back to `#W` (the auto-renamed command name).
+
+To add a process: insert `#{?#{==:#{pane_current_command},NAME}, ICON,NEXT}`
+before the final fallback in the `@_window_icon` chain in `theme.conf`.
 
 ## Development Notes
 - Reload config: `prefix + r` (or `tmux source-file ~/.config/tmux/tmux.conf`)
