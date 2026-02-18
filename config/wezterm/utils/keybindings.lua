@@ -4,6 +4,9 @@ local M = {}
 local wezterm = require('wezterm')
 local act = wezterm.action
 
+--- tmux prefix key sent before every tmux_key. Change here to update all bindings.
+local TMUX_PREFIX = { mods = 'CTRL', key = 'a' }
+
 --- Send CMD+key as tmux prefix (C-a) followed by tmux_key.
 --- WezTerm intercepts CMD before it reaches the terminal, translates
 --- it into the tmux prefix sequence so tmux handles the action.
@@ -15,7 +18,7 @@ local function tmux(key, tmux_key)
     key = key,
     mods = 'CMD',
     action = act.Multiple({
-      act.SendKey({ mods = 'CTRL', key = 'a' }),
+      act.SendKey(TMUX_PREFIX),
       act.SendKey({ key = tmux_key }),
     }),
   }
@@ -30,7 +33,7 @@ local function tmux_shift(key, tmux_key)
     key = key,
     mods = 'CMD|SHIFT',
     action = act.Multiple({
-      act.SendKey({ mods = 'CTRL', key = 'a' }),
+      act.SendKey(TMUX_PREFIX),
       act.SendKey({ key = tmux_key }),
     }),
   }
