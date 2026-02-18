@@ -97,20 +97,23 @@ for the full CMD mapping.
 
 - Flavor: `mocha`
 - Window style: rounded pills
-- Window text: icon from `#{pane_current_command}` (known processes) or `#W` fallback
-- Active window: highlighted + zoom indicator (󰊓) when zoomed
+- Window text: `#W` (window name only — no process icons)
+- Active window: highlighted + `[Z]` text indicator when zoomed
 - Status left: session name in rounded pill
 - Status right: current directory basename
 - Pane borders: magenta (active), brightblack (inactive)
 
-### Icon format (no plugin needed)
-Icons are embedded directly in `@catppuccin_window_text` via a nested conditional
-stored in the `@_window_icon` user variable (`theme.conf`). Evaluated at render
-time per window using `#{pane_current_command}`. Known processes show an icon
-only; unknown processes fall back to `#W` (the auto-renamed command name).
+### Window naming and persistence
 
-To add a process: insert `#{?#{==:#{pane_current_command},NAME}, ICON,NEXT}`
-before the final fallback in the `@_window_icon` chain in `theme.conf`.
+`@catppuccin_window_text` and `@catppuccin_window_current_text` are both set
+to `#W` (the window name) in `theme.conf`. No process icons are used.
+
+`automatic-rename on` is the global default (options.conf), so new windows
+show the running command name until renamed. The `after-rename-window` hook
+sets `automatic-rename off` for the specific window on any explicit rename
+(`prefix+,`, `rename-window`, etc.), making the name persistent.
+
+Active windows append ` [Z]` when zoomed.
 
 ## Development Notes
 - Reload config: `prefix + r` (or `tmux source-file ~/.config/tmux/tmux.conf`)
