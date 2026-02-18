@@ -73,8 +73,8 @@ function M.setup(config)
     -- Window management
     tmux('t', 'c'),                -- CMD+T       = new window
     tmux_shift('W', '&'),          -- CMD+Shift+W = close window
-    tmux_shift('H', 'p'),          -- CMD+Shift+H = previous window
-    tmux_shift('L', 'n'),          -- CMD+Shift+L = next window
+    tmux('h', 'p'),                -- CMD+H       = previous window
+    tmux('l', 'n'),                -- CMD+L       = next window
     tmux_shift('E', ','),          -- CMD+Shift+E = rename window
     tmux('1', '1'),                -- CMD+1       = window 1
     tmux('2', '2'),                -- CMD+2       = window 2
@@ -88,7 +88,7 @@ function M.setup(config)
 
     -- Session management
     tmux('k', 's'),                -- CMD+K       = session picker
-    tmux('l', 'L'),                -- CMD+L       = last session
+    tmux('j', 'L'),                -- CMD+J       = last session
     tmux('n', 'S'),                -- CMD+N       = new session
 
     -- Copy mode
