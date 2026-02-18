@@ -41,3 +41,6 @@
 [submodule "submods/taskwarrior/taskwarrior-themes"]
 	path = submods/taskwarrior/taskwarrior-themes
 	url = git@github.com:jrcharney/taskwarrior-themes.git
+[submodule "submods/tmux-plugins/tpm"]
+	path = submods/tmux-plugins/tpm
+	url = https://github.com/tmux-plugins/tpm.git
