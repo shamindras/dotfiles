@@ -80,6 +80,11 @@ return {
     },
   },
   config = function()
-    require('smart-splits').setup()
+    require('smart-splits').setup({
+      -- Prevent multiplexer pane navigation when the tmux pane is zoomed.
+      -- Without this, a WinEnter event fired by the SIGWINCH on zoom causes
+      -- smart-splits to call select-pane, immediately stealing focus away.
+      disable_multiplexer_nav_when_zoomed = true,
+    })
   end,
 }
