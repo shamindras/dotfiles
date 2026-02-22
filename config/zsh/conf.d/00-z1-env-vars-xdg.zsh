@@ -25,6 +25,9 @@ export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
 # TODO: check this references a file, not a dir
 # export CONDARC="${CONDARC:-$XDG_CONFIG_HOME/conda/condarc}"
 
+# Dropbox
+export DROPBOX_DIR="$HOME/DROPBOX"
+
 # Julia
 # export JULIA_NUM_THREADS=16
 # export JULIA_DEPOT_PATH="${JULIA_DEPOT_PATH:-$XDG_DATA_HOME/julia}"
@@ -145,6 +148,6 @@ export CURL_HOME="${XDG_CONFIG_HOME}/curl"
 # export GIT_CONFIG="${XDG_CONFIG_HOME}/git/.gitconfig"
 
 ## zk - https://zk-org.github.io/zk/
-export ZK_NOTEBOOK_DIR="$HOME/DROPBOX/notes/zk"
+export ZK_NOTEBOOK_DIR="$DROPBOX_DIR/notes/zk"
 
 # endregion --------------------------------------------------------------------
