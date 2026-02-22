@@ -42,7 +42,7 @@ All scripts use:
 |--------|-------|
 | `nvim` | `nvim +'autocmd User VeryLazy ++once lua require(...pickers).picker_with_fd(Snacks.picker.files)'` |
 | `claude-term` | Vertical split: `claude` left (zoomed) + terminal right |
-| `yazi` | `z $WORK_DIR && y` (zoxide frecency + yazi) |
+| `yazi` | `tmux new-window ... yazi` (direct command for correct PTY sizing) |
 | `preview` | `quarto preview` (blog session only) |
 | `zk` | `kds` (daily session only — syncs templates + opens daily note) |
 | `newsboat` | `newsboat` (newsboat session only) |

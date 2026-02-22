@@ -15,9 +15,8 @@ tmux split-window -h -t "${SESSION}:claude-term" -c "${WORK_DIR}"
 tmux select-pane -t "${SESSION}:claude-term.1"
 tmux resize-pane -Z -t "${SESSION}:claude-term.1"
 
-# Window 3: yazi (use zoxide for frecency, then launch yazi)
-tmux new-window -t "${SESSION}" -n "yazi" -c "${WORK_DIR}"
-tmux send-keys -t "${SESSION}:yazi" "z ${WORK_DIR} && y" Enter
+# Window 3: yazi (direct command for correct PTY sizing)
+tmux new-window -t "${SESSION}" -n "yazi" -c "${WORK_DIR}" yazi
 
 # Focus on zk window
 tmux select-window -t "${SESSION}:zk"
