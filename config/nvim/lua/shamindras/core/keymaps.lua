@@ -52,7 +52,7 @@ local function rename_file()
 
   vim.cmd('edit ' .. vim.fn.fnameescape(new_name))
   vim.cmd('bdelete ' .. vim.fn.bufnr(old_name))
-  vim.notify('Renamed: ' .. old_name .. ' ¿ ' .. new_name)
+  vim.notify('Renamed: ' .. old_name .. ' ï¿½ ' .. new_name)
 end
 
 local function make_executable()
@@ -299,7 +299,14 @@ end, { desc = 'Previous fold (cycle)' })
 
 -- {{{ Macros
 
-keymap('n', 'Q', '@q', { desc = 'Execute macro q' })
+-- Dot-repeatable and count-aware macro replay (e.g. 10Q runs 10@q).
+keymap('n', 'Q', function()
+  _G.op_run_macro_q = function()
+    vim.fn.execute(vim.v.count1 .. '@q')
+  end
+  vim.o.operatorfunc = 'v:lua.op_run_macro_q'
+  return 'g@l'
+end, { expr = true, desc = 'Execute macro q' })
 keymap('v', 'Q', '<cmd>norm @q<cr>', { desc = 'Execute macro q on selection' })
 
 -- ------------------------------------------------------------------------- }}}
