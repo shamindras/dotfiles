@@ -6,7 +6,7 @@ WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/ss_personal_quarto_blog"
 
 # Window 1: nvim with Snacks picker
 tmux rename-window -t "${SESSION}:1" "nvim"
-tmux send-keys -t "${SESSION}:nvim" "nvim +'lua Snacks.picker.smart()'" Enter
+tmux send-keys -t "${SESSION}:nvim" "nvim +'lua vim.schedule(function() Snacks.picker.smart() end)'" Enter
 
 # Window 2: quarto preview server
 tmux new-window -t "${SESSION}" -n "preview" -c "${WORK_DIR}"
