@@ -100,6 +100,26 @@ The install process (`install.conf.yaml`) follows this sequence:
 - Git submodules used for external dependencies
 - Shell scripts follow bash strict mode (`set -Eeuo pipefail`)
 
+### Version verification for tool configs
+
+Before writing or modifying any tool configuration, **verify config field names
+and syntax against the currently installed version's documentation**. Do not
+rely on cached knowledge or plan-provided field names — tools rename fields
+across versions (e.g., sesh v2 changed `startup_script` → `startup_command`).
+
+1. **Check installed version**: `<tool> --version` or `brew info <tool>`
+2. **Verify against current docs**: fetch the tool's README, schema, or
+   `--help` output for the installed version
+3. **Validate after writing**: where possible, use the tool's own validation
+   (e.g., `sesh list -c --json`, `tmux show-options`, `nvim --headless`)
+
+### Tool-specific CLAUDE.md files
+
+Each `config/<tool>/CLAUDE.md` must include:
+- **Docs link**: URL to the tool's official documentation or GitHub repo
+- **Installed version**: output of `<tool> --version` at time of writing
+- Config file structure and key conventions
+
 ## Workflow
 
 - **Task tracking** — Use the todo list (`TaskCreate` / `TaskUpdate` /

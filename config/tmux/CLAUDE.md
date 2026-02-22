@@ -6,6 +6,7 @@ serves as the input layer — CMD shortcuts are translated into tmux prefix
 sequences via WezTerm's `tmux()` / `tmux_shift()` helpers.
 
 Docs: https://man7.org/linux/man-pages/man1/tmux.1.html
+Installed version: tmux 3.6a (verified 2026-02-22)
 
 ## File Structure
 

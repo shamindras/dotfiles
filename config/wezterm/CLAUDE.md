@@ -8,6 +8,7 @@ is handled by tmux. CMD shortcuts are intercepted by WezTerm and translated
 into tmux prefix sequences.
 
 Docs: https://wezfurlong.org/wezterm/config/files.html
+Installed version: wezterm 20240203-110809-5046fc22 (verified 2026-02-22)
 
 ## Architecture
 

@@ -7,6 +7,7 @@ resurrect/continuum: sesh handles intentional session creation with layouts,
 while resurrect/continuum handles crash recovery.
 
 Docs: https://github.com/joshmedeski/sesh
+Installed version: sesh 2.24.1 (verified 2026-02-22)
 
 ## Persistence Layers — No Conflict
 
