@@ -1,0 +1,29 @@
+[[session]]
+name = "codebox"
+path = "~/DROPBOX/REPOS/codebox"
+startup_script = "~/.config/sesh/scripts/codebox.sh"
+
+[[session]]
+name = "dotfiles"
+path = "~/DROPBOX/REPOS/dotfiles"
+startup_script = "~/.config/sesh/scripts/dotfiles.sh"
+
+[[session]]
+name = "ss_applications"
+path = "~/DROPBOX/REPOS/ss_applications"
+startup_script = "~/.config/sesh/scripts/ss-applications.sh"
+
+[[session]]
+name = "ss_personal_quarto_blog"
+path = "~/DROPBOX/REPOS/ss_personal_quarto_blog"
+startup_script = "~/.config/sesh/scripts/ss-personal-quarto-blog.sh"
+
+[[session]]
+name = "daily"
+path = "~/DROPBOX/notes/zk"
+startup_script = "~/.config/sesh/scripts/daily.sh"
+
+[[session]]
+name = "newsboat"
+path = "~"
+startup_script = "~/.config/sesh/scripts/newsboat.sh"
