@@ -5,7 +5,7 @@
 # -- feeds ---------------------------------------------------------------------
 
 auto-reload yes
-reload-time 120
+reload-time 3
 reload-threads 4
 download-retries 4
 download-timeout 10
