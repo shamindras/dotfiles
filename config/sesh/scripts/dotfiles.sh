@@ -6,9 +6,7 @@ WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/dotfiles"
 
 # Window 1: nvim with Snacks picker
 tmux rename-window -t "${SESSION}:1" "nvim"
-tmux send-keys -t "${SESSION}:nvim" "nvim" Enter
-sleep 1
-tmux send-keys -t "${SESSION}:nvim" Space Space
+tmux send-keys -t "${SESSION}:nvim" "nvim +'autocmd User VeryLazy ++once lua Snacks.picker.smart()'" Enter
 
 # Window 2: claude-term (split vertical — claude left, terminal right)
 tmux new-window -t "${SESSION}" -n "claude-term" -c "${WORK_DIR}"

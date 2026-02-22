@@ -40,7 +40,7 @@ All scripts use:
 
 | Window | Setup |
 |--------|-------|
-| `nvim` | `nvim` + sleep 1 + send `<leader><space>` (Snacks smart picker) |
+| `nvim` | `nvim +'autocmd User VeryLazy ++once lua Snacks.picker.smart()'` |
 | `claude-term` | Vertical split: `claude` left (zoomed) + terminal right |
 | `yazi` | `z $WORK_DIR && y` (zoxide frecency + yazi) |
 | `preview` | `quarto preview` (blog session only) |
