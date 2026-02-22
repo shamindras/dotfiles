@@ -22,6 +22,8 @@ function z1_aliases {
   alias bu='brew update && brew upgrade && brew cleanup'
   alias brewinfo='brew leaves | xargs brew desc --eval-all'
   alias c='clear'
+  alias cc='claude'
+  alias cr='claude --resume'
   alias cat='bat --paging=never'
   alias cd='z'
   alias cp='cp -r'
