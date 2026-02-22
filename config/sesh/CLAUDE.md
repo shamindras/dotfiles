@@ -23,7 +23,7 @@ resurrect tracks state. On reconnect, sesh just switches — no re-run.
 
 | File | Purpose |
 |------|---------|
-| `sesh.toml` | Session definitions (name, path, startup script) |
+| `sesh.toml` | Session definitions (name, path, startup_command) |
 | `scripts/*.sh` | Per-session startup scripts (window layouts) |
 | `CLAUDE.md` | This documentation file |
 
@@ -56,7 +56,7 @@ All scripts use:
 
 ## Adding a New Session
 
-1. Add a `[[session]]` block to `sesh.toml` with name, path, startup_script
+1. Add a `[[session]]` block to `sesh.toml` with name, path, startup_command
 2. Create matching script in `scripts/` (copy an existing one as template)
 3. `chmod +x` the new script
 4. Run `sesh connect <name>` to test
