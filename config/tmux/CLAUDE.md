@@ -78,6 +78,7 @@ to detect vim/nvim/fzf in the active pane:
 | `x` | Kill pane (no confirmation) |
 | `g` | Lazygit in new window |
 | `K` | Clear pane and scrollback |
+| `s` | Sesh session picker (fzf popup) |
 | `S` | New session |
 | `r` | Reload tmux config (with message) |
 | `v` | Enter copy mode |
