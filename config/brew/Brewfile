@@ -198,6 +198,8 @@ brew "ripgrep"
 brew "ripgrep-all"
 # Utility that provides fast incremental file transfer
 brew "rsync"
+# Smart session manager for the terminal
+brew "sesh"
 # 7-Zip is a file archiver with a high compression ratio
 brew "sevenzip"
 # Static analysis and lint tool, for (ba)sh scripts
