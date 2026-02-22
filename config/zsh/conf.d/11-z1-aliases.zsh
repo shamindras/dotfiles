@@ -28,30 +28,30 @@ function z1_aliases {
   alias cpi='cp -iv'
   alias da='deactivate;clear'
   alias df='df -kH'
-  alias dn='z ~/DROPBOX/REPOS/dotfiles;nvim;clear'
+  alias dn='z ~/DROPBOX/REPOS/dotfiles;tmux-resize;nvim;clear'
   alias dus='du -sckx * | sort -nr'
   alias er='espanso restart'
-  alias ghd='gh dash;clear;'
+  alias ghd='tmux-resize;gh dash;clear;'
   alias ghup='gh extension upgrade --all'
   alias kl='launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server'
   alias ls='eza --color=always --group-directories-first --icons'
   alias l='ls -la'
-  alias lg='lazygit;clear;'
+  alias lg='tmux-resize;lazygit;clear;'
   alias less='less -R'
   alias md='mkdir -p'
   alias man='batman'
-  alias n='nvim;clear'
-  alias nn='nvim .;clear'
-  alias nb='newsboat;clear;'
+  alias n='tmux-resize;nvim;clear'
+  alias nn='tmux-resize;nvim .;clear'
+  alias nb='tmux-resize;newsboat;clear;'
   alias paths='echo -e ${PATH//:/\\n}' # Echo all executable Paths
   alias rcp='rsync -ah --info=progress2'
   alias rmi='rm -i'
   alias rmf='rm -rf'
   alias rq='R -q --no-save'
   alias sc="source ${XDG_CONFIG_HOME}/zsh/.zshrc" # source ~/.zshrc
-  alias top='btop;clear;'
+  alias top='tmux-resize;btop;clear;'
   alias t='task' # taskwarrior
-  alias tt='taskwarrior-tui;clear'
+  alias tt='tmux-resize;taskwarrior-tui;clear'
   alias tree='eza --tree --all --group-directories-first -I ".git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache"'
   alias t1='tree --level=1'
   alias tl1='t1 --long'
@@ -76,11 +76,11 @@ function z1_aliases {
   alias yk="wash $ZK_NOTEBOOK_DIR;z $ZK_NOTEBOOK_DIR;y"
 
   # Search notes interactively
-  alias ks='k edit --interactive;clear'
+  alias ks='tmux-resize;k edit --interactive;clear'
 
   # Quick edit today's journal
-  alias kd='z $ZK_NOTEBOOK_DIR;k daily;clear'
-  alias kds='z $ZK_NOTEBOOK_DIR;k --sync-templates daily;clear'
+  alias kd='z $ZK_NOTEBOOK_DIR;tmux-resize;k daily;clear'
+  alias kds='z $ZK_NOTEBOOK_DIR;tmux-resize;k --sync-templates daily;clear'
 
   # Quick add idea
   alias kis='z $ZK_NOTEBOOK_DIR;ki --sync-templates' # calls the `ki` custom function
