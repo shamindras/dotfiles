@@ -17,7 +17,10 @@ stylua_config:
 
 update_brewfile:
 	@printf ">>> Creating brewfile...\n"
-	@brew bundle dump --describe --force --file=./config/brew/Brewfile
+	# Strip cargo from PATH so brew doesn't invoke the rustup shim, which
+	# errors in subprocesses where it can't resolve the default toolchain.
+	# Rust/cargo is managed separately via rustup, not the Brewfile.
+	@PATH="$(echo "$PATH" | tr ':' '\n' | grep -v cargo | tr '\n' ':')" brew bundle dump --describe --force --file=./config/brew/Brewfile
 	@printf ">>> Brewfile created at ./config/brew/Brewfile\n"
 
 update_submods:
