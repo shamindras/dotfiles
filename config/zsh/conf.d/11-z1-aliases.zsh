@@ -50,7 +50,6 @@ function z1_aliases {
   alias rmi='rm -i'
   alias rmf='rm -rf'
   alias rq='R -q --no-save'
-  alias sc="source ${XDG_CONFIG_HOME}/zsh/.zshrc" # source ~/.zshrc
   alias top='tmux-resize;btop;clear;'
   alias t='task' # taskwarrior
   alias tt='tmux-resize;taskwarrior-tui;clear'
