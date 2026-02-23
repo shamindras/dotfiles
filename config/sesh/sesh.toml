@@ -19,11 +19,11 @@ path = "~/DROPBOX/REPOS/ss_personal_quarto_blog"
 startup_command = "~/.config/sesh/scripts/ss-personal-quarto-blog.sh"
 
 [[session]]
-name = "daily"
+name = "zk"
 path = "~/DROPBOX/notes/zk"
-startup_command = "~/.config/sesh/scripts/daily.sh"
+startup_command = "~/.config/sesh/scripts/zk.sh"
 
 [[session]]
-name = "newsboat"
-path = "~"
-startup_command = "~/.config/sesh/scripts/newsboat.sh"
+name = "rss"
+path = "~/Downloads"
+startup_command = "~/.config/sesh/scripts/rss.sh"

@@ -4,19 +4,12 @@ set -Eeuo pipefail
 SESSION="dotfiles"
 WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/dotfiles"
 
-# Window 1: nvim with Snacks picker
-tmux rename-window -t "${SESSION}:1" "nvim"
-tmux send-keys -t "${SESSION}:nvim" "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.files)'" Enter
+# shellcheck source=helpers.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/helpers.sh"
 
-# Window 2: claude-term (split vertical — claude left, terminal right)
-tmux new-window -t "${SESSION}" -n "claude-term" -c "${WORK_DIR}"
-tmux send-keys -t "${SESSION}:claude-term" "claude" Enter
-tmux split-window -h -t "${SESSION}:claude-term" -c "${WORK_DIR}"
-tmux select-pane -t "${SESSION}:claude-term.1"
-tmux resize-pane -Z -t "${SESSION}:claude-term.1"
-
-# Window 3: yazi (direct command for correct PTY sizing)
-tmux new-window -t "${SESSION}" -n "yazi" -c "${WORK_DIR}" yazi
-
-# Focus on nvim window
-tmux select-window -t "${SESSION}:nvim"
+sesh_window_nvim   "${SESSION}" "${WORK_DIR}"   # Window 1
+sesh_window_claude "${SESSION}" "${WORK_DIR}"   # Window 2
+sesh_window_term   "${SESSION}" "${WORK_DIR}"   # Window 3
+sesh_window_yazi   "${SESSION}" "${WORK_DIR}"   # Window 4
+sesh_focus_window  "${SESSION}" "nvim"
