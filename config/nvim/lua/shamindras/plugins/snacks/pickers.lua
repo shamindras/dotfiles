@@ -18,7 +18,6 @@ M.fd_args = {
   'f',
   '--strip-cwd-prefix',
   '--hidden',
-  '--no-ignore-vcs',
   '--exclude',
   '.git',
   '--exclude',
@@ -39,8 +38,6 @@ M.ripgrep_args = {
   '--hidden',
   '--glob=!.git/*',
   '--glob=!node_modules/*',
-  '--no-ignore-vcs',
-  '--no-ignore-parent',
   '--follow',
 }
 
