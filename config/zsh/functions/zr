@@ -1,8 +1,8 @@
 #!/bin/zsh
 
-##? zr  - reload zsh config. Inside tmux, reloads all zsh panes
-##?       across every session/window. Outside tmux, reloads the
-##?       current shell.
+##? zr - reload zsh config. Inside tmux, reloads all zsh panes
+##?      across every session/window. Outside tmux, reloads the
+##?      current shell.
 ##?
 ##? usage:
 ##?   zr [-q | --quiet]
@@ -11,24 +11,26 @@
 ##?   -q, --quiet  suppress output
 
 zr() {
-	local quiet=false
-	[[ "$1" == "-q" || "$1" == "--quiet" ]] && quiet=true
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-	if [[ -n "$TMUX" ]]; then
-		local pane cmd count=0
-		tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} #{pane_current_command}' \
-			| while read pane cmd; do
-				if [[ $cmd == zsh ]]; then
-					tmux send-keys -t "$pane" "exec zsh" Enter
-					(( count++ ))
-					$quiet || echo "  🔄 $pane"
-				fi
-			done
-		$quiet || echo "✅ Reloaded $count zsh pane(s)"
-	else
-		$quiet || echo "🔄 Reloading shell..."
-		exec zsh
-	fi
+  local quiet=false
+  [[ "$1" == "-q" || "$1" == "--quiet" ]] && quiet=true
+
+  if [[ -n "$TMUX" ]]; then
+    local pane cmd count=0
+    tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} #{pane_current_command}' \
+      | while read pane cmd; do
+          if [[ $cmd == zsh ]]; then
+            tmux send-keys -t "$pane" "exec zsh" Enter
+            (( count++ ))
+            $quiet || echo "  🔄 $pane"
+          fi
+        done
+    $quiet || echo "✅ Reloaded $count zsh pane(s)"
+  else
+    $quiet || echo "🔄 Reloading shell..."
+    exec zsh
+  fi
 }
 
 # vim: ft=zsh

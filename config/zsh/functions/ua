@@ -1,76 +1,55 @@
-#!/usr/bin/env zsh
+#!/bin/zsh
 
-##? ua - uv venv activate
+##? ua - activate the nearest uv python virtual environment
 ##?
-##? DESCRIPTION:
-##?     Traverses up the directory tree from the current directory searching for
-##?     a valid uv Python virtual environment and activates it. A valid environment
-##?     is identified by the presence of both a 'uv.lock' file and a '.venv'
-##?     directory containing an activation script.
+##? usage:
+##?   ua
 ##?
-##? USAGE:
-##?     ua [-h|--help]
+##? behavior:
+##?   traverses up the directory tree from the current directory searching for
+##?   a valid uv python virtual environment (uv.lock + .venv/bin/activate).
+##?   if found, activates the virtual environment. Always returns to the
+##?   starting directory regardless of outcome.
 ##?
-##? OPTIONS:
-##?     -h, --help    Show this help documentation
-##?
-##? BEHAVIOR:
-##?     1. Starts from current directory
-##?     2. Checks each parent directory for uv.lock and .venv
-##?     3. If found, activates the virtual environment
-##?     4. Always returns to the starting directory regardless of outcome
-##?
-##? EXIT STATUS:
-##?     0 - Successfully found and activated a uv environment
-##?     1 - Failed to find a valid uv environment
-##?
-##? EXAMPLES:
-##?     # Activate nearest uv environment up the directory tree
-##?     $ ua
-##?
-##?     # Use from any subdirectory of a uv project
-##?     $ cd ~/projects/myproject/src/submodule
-##?     $ ua  # will find and activate ~/projects/myproject/.venv if valid
+##? examples:
+##?   ua                                     # activate nearest uv environment
+##?   cd ~/projects/myproject/src && ua      # finds ~/projects/myproject/.venv
 
 ua() {
-    # Show help if -h or --help flag
-    if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
-        grep "^##?" "${(%):-%x}" | cut -c 5-
-        return 0
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  local initial_dir=$PWD
+  local current_dir=$PWD
+  local found_env=false
+  local env_dir=""
+
+  while [[ $current_dir != "/" ]]; do
+    if [[ -f "$current_dir/uv.lock" ]] && [[ -d "$current_dir/.venv" ]]; then
+      if [[ -f "$current_dir/.venv/bin/activate" ]]; then
+        print "Found uv environment in: $current_dir"
+        env_dir=$current_dir
+        found_env=true
+        break
+      else
+        print "Warning: Found incomplete uv environment in $current_dir (.venv/bin/activate missing)"
+      fi
     fi
 
-    local initial_dir=$PWD
-    local current_dir=$PWD
-    local found_env=false
-    local env_dir=""
+    cd ..
+    current_dir=$PWD
+  done
 
-    while [[ $current_dir != "/" ]]; do
-        if [[ -f "$current_dir/uv.lock" ]] && [[ -d "$current_dir/.venv" ]]; then
-            if [[ -f "$current_dir/.venv/bin/activate" ]]; then
-                print "Found uv environment in: $current_dir"
-                env_dir=$current_dir
-                found_env=true
-                break
-            else
-                print "Warning: Found incomplete uv environment in $current_dir (.venv/bin/activate missing)"
-            fi
-        fi
+  # Return to initial directory regardless of success
+  cd "$initial_dir" || return
 
-        cd ..
-        current_dir=$PWD
-    done
-
-    # Return to initial directory regardless of success
-    cd $initial_dir
-
-    # If environment was found, activate it from the initial directory
-    if $found_env; then
-        source "$env_dir/.venv/bin/activate"
-        return 0
-    else
-        print "Error: No valid uv environment found in parent directories"
-        return 1
-    fi
+  # If environment was found, activate it from the initial directory
+  if $found_env; then
+    source "$env_dir/.venv/bin/activate"
+    return 0
+  else
+    print "Error: No valid uv environment found in parent directories"
+    return 1
+  fi
 }
 
 # vim: ft=zsh

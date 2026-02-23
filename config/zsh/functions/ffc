@@ -1,53 +1,43 @@
 #!/bin/zsh
 
-##? ffc  - fetch system settings using fastfetch, output and copy to clipboard
+##? ffc - fetch system settings using fastfetch, output and copy to clipboard
 ##?
 ##? usage:
-##?   ffc [--details] [--help]
+##?   ffc [--details]
 ##?
 ##? options:
-##?   --details  Wrap clipboard output in GitHub-flavored markdown details/summary tags
-##?   --help     Show this help message
+##?   --details  wrap clipboard output in GitHub-flavored markdown details/summary tags
 
 ffc() {
-    local wrap_details=false
-    local output=""
-    local clipboard_output=""
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-    # Show help if --help flag
-    if [[ "$1" == "--help" ]]; then
-        grep "^##?" "${(%):-%x}" | cut -c 5-
-        return 0
-    fi
+  local wrap_details=false
+  local output=""
+  local clipboard_output=""
 
-    # Parse arguments
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            --details)
-                wrap_details=true
-                shift
-                ;;
-            --help)
-                # Already handled above
-                shift
-                ;;
-            *)
-                echo "Unknown option: $1"
-                return 1
-                ;;
-        esac
-    done
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --details)
+        wrap_details=true
+        shift
+        ;;
+      *)
+        echo "Unknown option: $1"
+        return 1
+        ;;
+    esac
+  done
 
-    # Capture the fastfetch output
-    output=$(tac <(fastfetch --logo none) | sed "1,2d" | tac | sed '/^[[:space:]]*$/d')
-    
-    # Prepare clipboard content
-    if $wrap_details; then
-        clipboard_output="<details>\n<summary>System Details</summary>\n\n\`\`\`\n${output}\n\`\`\`\n\n</details>\n"
-        echo "$output" | tee >(echo "$clipboard_output" | pbcopy)
-    else
-        echo "$output" | tee >(pbcopy)
-    fi
+  # Capture the fastfetch output
+  output=$(tac <(fastfetch --logo none) | sed "1,2d" | tac | sed '/^[[:space:]]*$/d')
+
+  # Prepare clipboard content
+  if $wrap_details; then
+    clipboard_output="<details>\n<summary>System Details</summary>\n\n\`\`\`\n${output}\n\`\`\`\n\n</details>\n"
+    echo "$output" | tee >(echo "$clipboard_output" | pbcopy)
+  else
+    echo "$output" | tee >(pbcopy)
+  fi
 }
 
 # vim: ft=zsh

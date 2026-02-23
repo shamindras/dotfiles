@@ -1,17 +1,18 @@
 #!/bin/zsh
 
-# Start broot and execute the command it produces
-# This wrapper function allows broot to affect the parent shell's state (e.g., cd)
-# by executing commands in the current shell rather than a subshell.
-# The function creates a temporary file where broot writes shell commands,
-# then evaluates those commands in the current shell context.
-# Usage: br [broot-options] [path]
-# Examples:
-#   br                    # Start broot in current directory
-#   br ~/projects         # Start broot in ~/projects
-#   br -h                 # Show broot help
+##? br - start broot and execute the command it produces
+##?
+##? usage:
+##?   br [broot-options] [path]
+##?
+##? examples:
+##?   br                    # start broot in current directory
+##?   br ~/projects         # start broot in ~/projects
+##?   br -h                 # show broot help
 
 br() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
   local cmd cmd_file code
 
   cmd_file=$(mktemp)
@@ -26,3 +27,5 @@ br() {
     return "$code"
   fi
 }
+
+# vim: ft=zsh

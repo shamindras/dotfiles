@@ -5,19 +5,20 @@
 ##? usage:
 ##?   up [<num>]
 
-# Adapted from mattmc3's `zephyr` zsh config
-# source: https://github.com/mattmc3/zshrc1/blob/ca6cbeb2c3e58f193f952f88f50b5b6836ebe240/.zephyr1#L343-L355
 up() {
-    local parents="${1:-1}"
-    if [[ ! "$parents" -gt 0 ]]; then
-        echo >&2 "usage: up [<num>]"
-        return 1
-    fi
-    local dotdots=".."
-    while (( --parents )); do
-        dotdots+="/.."
-    done
-    cd "$dotdots"
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  local parents="${1:-1}"
+  if [[ ! "$parents" -gt 0 ]]; then
+    echo >&2 "usage: up [<num>]"
+    return 1
+  fi
+
+  local dotdots=".."
+  while (( --parents )); do
+    dotdots+="/.."
+  done
+  cd "$dotdots" || return
 }
 
 # vim: ft=zsh

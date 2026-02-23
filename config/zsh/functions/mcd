@@ -1,9 +1,14 @@
 #!/bin/zsh
 
-# create a new directory, and cd into it using zoxide
-# source: https://stackoverflow.com/a/74904174/4687531
-mcd (){
-    mkdir -p -- "$1" && z "$1"
+##? mcd - create a new directory and cd into it using zoxide
+##?
+##? usage:
+##?   mcd <dir>
+
+mcd() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  mkdir -p -- "$1" && z "$1"
 }
 
 # vim: ft=zsh

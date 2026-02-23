@@ -1,22 +1,26 @@
 #!/bin/zsh
 
-##? y  - shell wrapper that provides the ability to change the current working 
-##?      directory when exiting Yazi.
+##? y - shell wrapper that provides the ability to change the current working
+##?     directory when exiting yazi.
 ##?
 ##? usage:
 ##?   y
 
 y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	tmux-resize
-	yazi "$@" --cwd-file="$tmp";
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-  # clear screen after quitting yazi
-  clear 
+  local tmp cwd
+  tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+
+  tmux-resize
+  yazi "$@" --cwd-file="$tmp"
+
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+
+  clear
 }
 
 # vim: ft=zsh

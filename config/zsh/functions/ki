@@ -1,28 +1,31 @@
 #!/bin/zsh
 
-# Create new idea note with interactive title prompt
-# Prompts user for a title and creates a new note in the ideas directory
-# Validates that title is not empty or only whitespace
-# Usage: ki [--sync-templates]
-# Examples:
-#   ki                      # Create idea (no sync)
-#   ki --sync-templates     # Sync templates, then create idea
+##? ki - create a new zk idea note with interactive title prompt
+##?
+##? usage:
+##?   ki [--sync-templates]
+##?
+##? options:
+##?   --sync-templates  sync templates before creating note
+##?
+##? examples:
+##?   ki                      # create idea (no sync)
+##?   ki --sync-templates     # sync templates, then create idea
 
 ki() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
   local sync_flag=""
 
-  # Check if --sync-templates flag is provided
   if [[ "$1" == "--sync-templates" ]]; then
     sync_flag="--sync-templates"
   fi
 
   vared -p "Idea title: " -c idea_title
 
-  # Trim whitespace and convert to lowercase
   idea_title="${idea_title:l}"
   idea_title="${idea_title## ##}"
 
-  # Check if title is not empty after trimming
   if [[ -n "$idea_title" ]]; then
     k $sync_flag new ideas --title "$idea_title"
   else
@@ -31,3 +34,5 @@ ki() {
 
   unset idea_title
 }
+
+# vim: ft=zsh

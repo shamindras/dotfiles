@@ -1,18 +1,20 @@
 #!/bin/zsh
 
-##? brew_rebuild  - rebuild cache for various brew packages
+##? brew_rebuild - rebuild cache for various brew packages
 ##?
 ##? usage:
 ##?   brew_rebuild
 
-brew_rebuild() { 
-	printf ">>> updating bat cache...\n"
-	bat cache --build
-	printf ">>> bat cache updated...\n"
-	printf "\n"
-	printf ">>> updating tldr cache...\n"
-	tldr --update
-	printf ">>> tldr cache updated...\n"
+brew_rebuild() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  printf ">>> updating bat cache...\n"
+  bat cache --build
+  printf ">>> bat cache updated...\n"
+  printf "\n"
+  printf ">>> updating tldr cache...\n"
+  tldr --update
+  printf ">>> tldr cache updated...\n"
 }
 
 # vim: ft=zsh
