@@ -9,16 +9,29 @@ while resurrect/continuum handles crash recovery.
 Docs: https://github.com/joshmedeski/sesh
 Installed version: sesh 2.24.1 (verified 2026-02-22)
 
-## Persistence Layers — No Conflict
+## Persistence Layers
 
-| Tool | Responsibility | When it runs |
-|------|---------------|--------------|
-| sesh | Create sessions with predefined window layouts | `sesh connect` for **new** sessions only |
-| resurrect | Snapshot all session/window/pane state to disk | Every 2 min (continuum) or `prefix+Ctrl-s` |
+| Tool | Owns | When it runs |
+|------|------|--------------|
+| sesh | **New** session creation (layouts from `startup_command`) | `sesh connect` when no matching session exists |
+| resurrect | **Existing** session snapshots (window/pane state to disk) | Every 2 min (continuum) or `prefix+Ctrl-s` |
 | continuum | Auto-trigger resurrect saves; auto-restore on tmux start | Server start + periodic |
 
-Startup scripts only run when sesh creates a NEW session. After that,
-resurrect tracks state. On reconnect, sesh just switches — no re-run.
+### Interaction
+
+Startup scripts only run when sesh creates a **new** session. After that,
+resurrect owns state: continuum snapshots the session periodically, and
+auto-restores it on the next cold start (`tmux kill-server` → reopen
+terminal). On reconnect to a live session, sesh just switches — no re-run.
+
+**Bug scenario:** if a startup script is broken, sesh creates a malformed
+session → resurrect faithfully snapshots it → continuum auto-restores the
+broken state on every cold start, preventing sesh from ever recreating it.
+
+**Recovery:** use `sesh-reset <name>` (zsh function) to break the cycle:
+1. Kills the tmux session
+2. Removes session entries from the resurrect save file
+3. Reconnects via `sesh connect` (creates fresh from `startup_command`)
 
 ## File Structure
 
@@ -78,7 +91,7 @@ All scripts use:
 | `term` | `sesh_window_term` — plain terminal |
 | `yazi` | `sesh_window_yazi` — direct command for correct PTY sizing |
 | `preview` | `quarto preview` (blog session only, inline) |
-| `zk` | `kds` (zk session only — syncs templates + opens daily note, inline) |
+| `zk` | Explicit cd + rsync + `zk daily` (zk session only, inline — avoids alias race) |
 | `newsboat` | `newsboat` (rss session only, inline) |
 
 ## tmux / WezTerm Integration
