@@ -1,0 +1,50 @@
+#!/bin/zsh
+
+##? sesh-reset - force-recreate a sesh-managed tmux session from scratch
+##?
+##? Kills the existing tmux session (if any), removes its entries from
+##? the tmux-resurrect save file (so continuum won't auto-restore stale
+##? state), and reconnects via `sesh connect` to create a fresh session
+##? from the startup_command defined in sesh.toml.
+##?
+##? usage:
+##?   sesh-reset <session-name>
+##?
+##? examples:
+##?   sesh-reset zk          # recreate zk session from sesh.toml
+##?   sesh-reset dotfiles    # recreate dotfiles session
+
+sesh-reset() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  local session="${1:?session name required}"
+
+  # 1. Kill the existing tmux session (ignore error if it doesn't exist)
+  tmux kill-session -t "$session" 2>/dev/null || true
+
+  # 2. Remove session from the resurrect save file so continuum won't
+  #    auto-restore the stale state on next cold start.
+  local resurrect_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tmux/resurrect"
+  local last_save="${resurrect_dir}/last"
+
+  if [[ -L "$last_save" ]]; then
+    local save_file
+    save_file="$(readlink "$last_save")"
+    # Resolve relative symlink
+    [[ "$save_file" != /* ]] && save_file="${resurrect_dir}/${save_file}"
+
+    if [[ -f "$save_file" ]]; then
+      # Resurrect lines are tab-delimited: <type>\t<session_name>\t...
+      # Remove all lines where the second field matches the session name.
+      local tmp="${save_file}.tmp.$$"
+      awk -F'\t' -v s="$session" '$2 != s' "$save_file" > "$tmp" \
+        && mv "$tmp" "$save_file"
+      echo "Pruned '$session' from resurrect save: ${save_file##*/}"
+    fi
+  fi
+
+  # 3. Reconnect via sesh to create a fresh session from sesh.toml
+  sesh connect "$session"
+}
+
+# vim: ft=zsh
