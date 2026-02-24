@@ -77,12 +77,19 @@ to detect vim/nvim/fzf in the active pane:
 | `-` | Split pane vertically (preserves cwd) |
 | `c` | New window (preserves cwd) |
 | `x` | Kill pane (no confirmation) |
-| `g` | Lazygit in new window |
+| `a` | Last window (toggle) |
+| `E` | Equalize pane sizes |
+| `b` | Claude Code in right split (40% width) |
 | `K` | Clear pane and scrollback |
 | `s` | Sesh session picker (fzf popup) |
 | `S` | New session |
+| `X` | Kill session (with confirmation) |
 | `r` | Reload tmux config (with message) |
 | `v` | Enter copy mode |
+| `M-h/j/k/l` | Vi-style pane resize (repeatable, 5-unit) |
+| `P` | Popup shell (80x80%) |
+| `g` | Lazygit popup (100x100%) |
+| `F` | Yazi in new window (popup unsupported — tmux#4329) |
 
 ### Copy mode
 - `prefix + v` enters copy mode
@@ -91,7 +98,11 @@ to detect vim/nvim/fzf in the active pane:
 - Mouse drag auto-copies (via tmux-yank)
 
 ### WezTerm CMD shortcut integration
-WezTerm intercepts CMD+key and sends `C-a` + tmux_key.
+WezTerm intercepts CMD+key and sends `C-a` + tmux_key. Three modifier layers:
+- **CMD** (L0): pane/window actions
+- **CMD+SHIFT** (L1): modify/destructive/create variants
+- **CMD+CTRL** (L2): session-scope operations
+
 See `config/wezterm/CLAUDE.md` and `config/wezterm/utils/keybindings.lua`
 for the full CMD mapping.
 
