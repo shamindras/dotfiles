@@ -135,7 +135,8 @@ Each `config/<tool>/CLAUDE.md` must include:
 - **Use conventional commits**: `<type>(<scope>): <description>` format
 - **Scope = tool name**: Match the tool in `config/` directory (e.g., `(nvim)`, `(zsh)`, `(brew)`)
 - **Split commits by scope**: Default behavior is one commit per tool, even within shared files
-- Use `/commit` skill with flags: `--staged`, `--all`, `--draft`, `--amend`, `--all-and-push`, `--no-split`
+- **Branch awareness**: Claude proactively suggests feature branches for non-trivial work on `main`
+- Use `/commit` skill with flags: `--staged`, `--all`, `--draft`, `--amend`, `--all-and-push`, `--no-split`, `--emoji`, `--land`, `--land-main`
 - Detailed conventions: `.claude/skills/git/workflow.md`
 - Full `/commit` documentation: `.claude/skills/git/commands/commit.md`
 
