@@ -326,5 +326,8 @@ defaults write -g NSWindowShouldDragOnGesture -bool true
 defaults write -app Skim AppleWindowTabbingMode never
 defaults write -app Preview AppleWindowTabbingMode never
 
+# Auto-hide native menu bar (for SketchyBar)
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
+
 # Set lock screen message
 defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "If found, please call +61 417 222 107 to return it."
