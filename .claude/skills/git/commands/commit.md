@@ -1,5 +1,5 @@
 ---
-description: "Commit changes. Flags: --staged, --all, --draft, --amend, --all-and-push, --no-split, --help"
+description: "Commit changes. Flags: --staged, --all, --draft, --amend, --all-and-push, --no-split, --emoji, --land, --land-main, --help"
 ---
 
 Follow these steps to commit the user's changes. Read `.claude/skills/git/workflow.md` first for conventions.
@@ -10,13 +10,16 @@ Scan `$ARGUMENTS` for the following flags:
 
 | Flag | Effect |
 |------|--------|
-| `--staged` | Only commit what's already staged; skip staging questions |
+| `--staged` | Only commit what's already staged |
 | `--all` | Stage all tracked changes, then commit |
-| `--draft` | Dry run — draft message, show preview, stop before committing |
-| `--amend` | Amend previous commit instead of creating a new one |
-| `--all-and-push` | Stage all, commit, push. No confirmation. Pause if on `main`. |
-| `--no-split` | Skip smart grouping/split analysis |
-| `--help` | List all flags and stop |
+| `--draft` | Dry run — show preview, stop before committing |
+| `--amend` | Amend previous commit |
+| `--all-and-push` | Stage all, commit, push (no confirmation) |
+| `--no-split` | Skip scope-based split analysis |
+| `--emoji` | Prefix description with type-mapped emoji |
+| `--land` | After committing: push, PR, merge, clean up |
+| `--land-main` | Shortcut for `--land` targeting `main` |
+| `--help` | List flags and stop |
 
 **Mutual exclusions** — error if combined:
 
@@ -24,27 +27,56 @@ Scan `$ARGUMENTS` for the following flags:
 - `--staged` + `--all-and-push`
 - `--amend` + `--all-and-push`
 - `--draft` + `--all-and-push`
+- `--land` + `--draft`
+- `--land` + `--amend`
+- `--land` + `--all-and-push`
+- `--land` + `--land-main`
+- `--land-main` + `--draft`
+- `--land-main` + `--amend`
+- `--land-main` + `--all-and-push`
 
 If an unknown `--flag` is present, warn the user and list valid flags.
 
-If `--help` is present, display the flag table above and **stop** — do not continue the workflow.
+**Load subskills based on active flags:**
+- Any of `--staged`/`--all`/`--all-and-push`/`--amend`/`--draft`:
+  read `.claude/skills/git/flags.md`
+- `--emoji`: read `.claude/skills/git/emoji.md`
+- `--land` or `--land-main`: read `.claude/skills/git/land.md`
+- `--help`: display flag table and **stop**
+- `--no-split`: handled inline (skip step 5)
+
+Apply overrides from subskill files to the relevant steps below.
 
 ## 2. Check branch
 
 Run `git branch --show-current`.
 
-- If on `main`, warn the user and offer to create a feature branch (`<type>/<short-desc>`).
-- If the user explicitly said to commit on `main`, skip branching but follow all commit conventions.
-- **`--all-and-push` on `main`**: pause and ask for confirmation before proceeding. Never auto-push to `main`.
+If detached HEAD, warn and **stop**.
+
+### On a feature branch
+Proceed without interruption.
+
+### On `main` — assess before deciding
+1. Run `git status --short` and `git diff --stat` to gauge scope.
+2. **Trivial** (single-file typo, one-line tweak, docs-only): note the
+   branch, proceed — "On `main`. Small fix — proceeding."
+3. **Non-trivial**: proactively propose a feature branch before staging —
+   "On `main` and these changes look non-trivial. Suggest creating
+   `<type>/<short-desc>` first. Create it, or proceed on `main`?"
+4. User explicitly said commit on `main` → skip suggestion.
+5. `--all-and-push` on `main` → pause and confirm. Never auto-push.
+6. `--land`/`--land-main` on `main` → hard error, **stop**.
+
+### Non-trivial heuristic
+Any of: 3+ files, new file/directory, diff > ~30 lines, multiple scopes,
+or type would be `feat`/`refactor`. When in doubt, propose the branch.
 
 ## 3. Determine what to commit
 
-| Flag | Behavior |
-|------|----------|
-| `--staged` | Use only what's already in the index. If nothing is staged, warn and stop. |
-| `--all` / `--all-and-push` | All tracked, modified files. Run `git status --short` to identify them. |
-| `--amend` | Show the previous commit (`git log -1 --format="%h %s"`) plus any newly staged changes. |
-| _(default)_ | Run `git status --short` and `git diff --staged --stat`. If nothing is staged, show status and ask what to stage. |
+Run `git status --short` and `git diff --staged --stat`. If nothing is
+staged, show status and ask what to stage.
+
+**Flag overrides**: see `flags.md` §--staged, §--all, §--all-and-push, §--amend.
 
 ## 4. Diff preview
 
@@ -57,7 +89,11 @@ Always show a diff preview before drafting the commit message.
 
 ## 5. Smart split analysis (scope-based)
 
-**Skip this step if `--no-split` is set.**
+**Skip if `--no-split` is set.**
+
+**Default: always split by scope.** Only consolidate into a single commit
+when the user explicitly requests it (via `--no-split` or direct instruction).
+Never preemptively suggest combining scopes.
 
 ### Dotfiles convention: split by scope (default)
 
@@ -83,10 +119,9 @@ Always show a diff preview before drafting the commit message.
       - config/brew/Brewfile (version bump)
    ```
 
-4. **Exceptions** — keep together only if:
-   - Changes are truly atomic (adding new tool = Brewfile + config + install step)
-   - User explicitly requests combining scopes
-   - Using `--no-split` flag
+4. **Exceptions** — keep together ONLY if:
+   - User explicitly requests it (`--no-split` or direct instruction)
+   - Changes are truly atomic AND user confirms (never assume)
 
 5. **Verify with user before proceeding**
 
@@ -97,29 +132,29 @@ For each commit (or single commit), draft a conventional commit message:
 - Use the type selection heuristic from `workflow.md`.
 - Format: `<type>(<scope>): <description>` (≤72 chars, imperative, lowercase, no period).
 - Add a body if the change needs explanation (wrap at 79 chars).
-- **`--amend`**: show the previous commit message for reference alongside the new draft.
+
+**Flag overrides**: see `flags.md` §--amend; see `emoji.md` §Step override.
 
 ## 7. Confirm with user
 
-- **`--all-and-push`**: skip confirmation (but `main` branch protection from step 2 still applies).
-- **`--draft`**: show the drafted message and stop here. Print: "This is a draft — no commit was made."
-- **All others**: show the proposed commit message and files to be staged/committed. **Wait for explicit user approval before committing.**
+Show the proposed commit message and files to be staged/committed.
+**Wait for explicit user approval before committing.**
+
+**Flag overrides**: see `flags.md` §--all-and-push, §--draft.
 
 ## 8. Commit
 
-| Flag | Staging behavior |
-|------|-----------------|
-| `--staged` | No new staging — commit the index as-is |
-| `--all` / `--all-and-push` | Stage tracked files by name (`git add <file> ...` — never `git add -A`) |
-| `--amend` | Use `git commit --amend` |
-| _(default)_ | Stage the discussed/approved files by name |
+Stage the discussed/approved files by name, then commit using a HEREDOC
+for the message to preserve formatting.
 
-Commit using a HEREDOC for the message to preserve formatting.
+**Flag overrides**: see `flags.md` §--staged, §--all, §--all-and-push, §--amend.
 
 ## 9. Post-commit
 
 - Run `git log --oneline -3` to confirm the result.
-- **`--all-and-push`**: also run `git push` (or `git push -u origin <branch>` if no upstream is set). Never force-push.
+- If `--land` or `--land-main` is active, proceed to land workflow (see `land.md`).
+
+**Flag overrides**: see `flags.md` §--all-and-push; see `land.md`.
 
 ## Important
 
