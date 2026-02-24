@@ -80,6 +80,7 @@ function M.setup(config)
   config.macos_window_background_blur = active.blur
   config.window_decorations = 'RESIZE'
   config.window_close_confirmation = 'NeverPrompt'
+  config.adjust_window_size_when_changing_font_size = false
   config.native_macos_fullscreen_mode = true
 
   -- Tab Bar and Layout
