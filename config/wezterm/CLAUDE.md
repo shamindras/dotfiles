@@ -28,8 +28,9 @@ Installed version: wezterm 20240203-110809-5046fc22 (verified 2026-02-22)
   edit ONLY the `active` table.
 - **tmux passthrough**: `tmux(key, tmux_key)` sends `C-a` (tmux prefix)
   followed by `tmux_key` when `CMD+key` is pressed. `tmux_shift()` does
-  the same for `CMD+SHIFT+key`. WezTerm never manages panes or tabs —
-  tmux handles all multiplexing.
+  the same for `CMD+SHIFT+key`. `tmux_ctrl()` does the same for
+  `CMD+CTRL+key`. WezTerm never manages panes or tabs — tmux handles
+  all multiplexing.
 - **Dark/light detection**: `depending_on_appearance()` handles both string
   and boolean API returns from `wezterm.gui.get_appearance()`.
 
@@ -108,7 +109,8 @@ Rules:
 #### Other conventions
 - Formatting: stylua (2-space indent, single quotes)
 - Tab bar: intentionally disabled
-- Modifier convention: CMD for primary actions, CMD+SHIFT for secondary
+- Modifier convention: CMD (L0) for pane/window actions, CMD+SHIFT (L1) for
+  modify/destructive/create variants, CMD+CTRL (L2) for session-scope operations
 
 ## Development Notes
 - Changes apply on save (no restart needed)

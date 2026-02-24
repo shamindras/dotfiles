@@ -39,6 +39,21 @@ local function tmux_shift(key, tmux_key)
   }
 end
 
+--- Same as tmux() but with CMD+CTRL modifier (session-scope layer).
+---@param key string  WezTerm key to bind (with CMD+CTRL modifier)
+---@param tmux_key string  Key to send after the tmux prefix
+---@return table
+local function tmux_ctrl(key, tmux_key)
+  return {
+    key = key,
+    mods = 'CMD|CTRL',
+    action = act.Multiple({
+      act.SendKey(TMUX_PREFIX),
+      act.SendKey({ key = tmux_key }),
+    }),
+  }
+end
+
 --- Open a new WezTerm window in the current pane's working directory.
 local spawn_window_cwd = wezterm.action_callback(function(window, pane)
   local cwd_url = pane:get_current_working_dir()
@@ -72,6 +87,47 @@ function M.setup(config)
     tmux_shift('D', '-'),          -- CMD+Shift+D = split down
     tmux('w', 'x'),                -- CMD+W       = close pane
     tmux('m', 'z'),                -- CMD+M       = toggle zoom
+    tmux(';', ';'),                -- CMD+;       = last pane
+    {                              -- CMD+O       = rotate panes
+      key = 'o', mods = 'CMD',
+      action = act.Multiple({
+        act.SendKey(TMUX_PREFIX),
+        act.SendKey({ mods = 'CTRL', key = 'o' }),
+      }),
+    },
+    tmux('e', 'E'),                -- CMD+E       = equalize panes
+    tmux_shift('B', '!'),          -- CMD+Shift+B = break pane to window
+    tmux_shift('C', 'b'),         -- CMD+Shift+C = Claude Code split
+
+    -- Pane resize (sends prefix + M-Arrow)
+    {                              -- CMD+Shift+Left  = resize left 5
+      key = 'LeftArrow', mods = 'CMD|SHIFT',
+      action = act.Multiple({
+        act.SendKey(TMUX_PREFIX),
+        act.SendKey({ mods = 'ALT', key = 'LeftArrow' }),
+      }),
+    },
+    {                              -- CMD+Shift+Right = resize right 5
+      key = 'RightArrow', mods = 'CMD|SHIFT',
+      action = act.Multiple({
+        act.SendKey(TMUX_PREFIX),
+        act.SendKey({ mods = 'ALT', key = 'RightArrow' }),
+      }),
+    },
+    {                              -- CMD+Shift+Up    = resize up 5
+      key = 'UpArrow', mods = 'CMD|SHIFT',
+      action = act.Multiple({
+        act.SendKey(TMUX_PREFIX),
+        act.SendKey({ mods = 'ALT', key = 'UpArrow' }),
+      }),
+    },
+    {                              -- CMD+Shift+Down  = resize down 5
+      key = 'DownArrow', mods = 'CMD|SHIFT',
+      action = act.Multiple({
+        act.SendKey(TMUX_PREFIX),
+        act.SendKey({ mods = 'ALT', key = 'DownArrow' }),
+      }),
+    },
 
     -- Window management
     tmux('t', 'c'),                -- CMD+T       = new window
@@ -81,6 +137,7 @@ function M.setup(config)
     tmux_shift('H', '<'),          -- CMD+Shift+H = swap window left
     tmux_shift('L', '>'),          -- CMD+Shift+L = swap window right
     tmux_shift('E', ','),          -- CMD+Shift+E = rename window
+    tmux('0', 'a'),                -- CMD+0       = last window
     tmux('1', '1'),                -- CMD+1       = window 1
     tmux('2', '2'),                -- CMD+2       = window 2
     tmux('3', '3'),                -- CMD+3       = window 3
@@ -96,13 +153,21 @@ function M.setup(config)
     tmux('s', 'w'),                -- CMD+S       = session/window tree
     tmux('j', 'L'),                -- CMD+J       = last session
     tmux('n', 'S'),                -- CMD+N       = new session
+    tmux_ctrl('h', '('),           -- CMD+Ctrl+H  = previous session
+    tmux_ctrl('l', ')'),           -- CMD+Ctrl+L  = next session
+    tmux_ctrl('e', '$'),           -- CMD+Ctrl+E  = rename session
+    tmux_ctrl('w', 'X'),           -- CMD+Ctrl+W  = kill session
 
     -- Copy mode
     tmux('[', '['),                -- CMD+[       = enter copy mode
 
+    -- Popup tools
+    tmux('p', 'P'),                -- CMD+P       = popup shell
+    tmux('g', 'g'),                -- CMD+G       = lazygit popup
+    tmux('y', 'F'),                -- CMD+Y       = yazi popup
+
     -- Utilities
-    tmux('g', 'g'),                -- CMD+G       = lazygit
-    tmux_shift('B', '!'),          -- CMD+Shift+B = break pane to window
+    tmux('u', 'u'),                -- CMD+U       = fzf-url picker
     tmux_shift('R', 'r'),          -- CMD+Shift+R = reload tmux config
 
     -- WezTerm-native (not tmux passthrough)
