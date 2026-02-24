@@ -408,3 +408,8 @@ run = "layout floating"
 [[on-window-detected]]
 if.app-id = "com.cisco.anyconnect.gui"
 run = "layout floating"
+
+# espanso
+[[on-window-detected]]
+if.app-id = "com.federicoterzi.espanso"
+run = "layout floating"
