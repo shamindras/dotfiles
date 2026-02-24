@@ -254,6 +254,8 @@ brew "zk"
 brew "zoxide"
 # A window border system for macOS
 brew "felixkratz/formulae/borders"
+# Custom macOS status bar
+brew "felixkratz/formulae/sketchybar"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -304,8 +306,6 @@ cask "google-drive"
 cask "inkscape"
 # Download manager
 cask "jdownloader"
-# Menu bar manager
-cask "jordanbaird-ice"
 # Programming language for technical computing
 cask "julia-app"
 # Keyboard customiser
