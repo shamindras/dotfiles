@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Catppuccin Mocha palette — ARGB hex for SketchyBar
-export BAR_COLOR=0xe01e1e2e # Base at ~88% opacity (frosted glass with blur)
+export BAR_COLOR=0x00000000 # Fully transparent (blur shows through)
 
 # Base
 export BASE=0xff1e1e2e
