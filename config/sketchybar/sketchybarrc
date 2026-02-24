@@ -5,25 +5,32 @@ ITEM_DIR="$CONFIG_DIR/items"
 
 source "$CONFIG_DIR/colors.sh"
 
+# Pill dimensions
+PILL_HEIGHT=24
+PILL_RADIUS=12
+PILL_BORDER_WIDTH=2
+
 ##### Bar Appearance #####
 sketchybar --bar \
-  height=37 \
+  height=30 \
   color="$BAR_COLOR" \
   shadow=off \
   position=top \
-  sticky=off \
+  sticky=on \
   padding_right=10 \
   padding_left=10 \
-  topmost=window
+  topmost=on \
+  y_offset=0 \
+  blur_radius=20
 
 ##### Default Values #####
 sketchybar --default \
-  icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
   icon.color="$TEXT" \
-  label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  label.font="JetBrainsMono Nerd Font:Bold:13.0" \
   label.color="$TEXT" \
   background.color="$BAR_COLOR" \
-  background.height=30 \
+  background.height=22 \
   padding_left=5 \
   padding_right=5 \
   label.padding_left=4 \
@@ -31,12 +38,32 @@ sketchybar --default \
   icon.padding_left=4 \
   icon.padding_right=4
 
-##### Items #####
+##### Left Items #####
 source "$ITEM_DIR/workspace.sh"
 source "$ITEM_DIR/front_app.sh"
+
+##### Right Items #####
 source "$ITEM_DIR/clock.sh"
 source "$ITEM_DIR/battery.sh"
 source "$ITEM_DIR/wifi.sh"
+source "$ITEM_DIR/volume.sh"
+
+##### Bracket Pills #####
+sketchybar --add bracket left_pill workspace \
+  --set left_pill \
+  background.color="$PILL_BG" \
+  background.height="$PILL_HEIGHT" \
+  background.corner_radius="$PILL_RADIUS" \
+  background.border_width="$PILL_BORDER_WIDTH" \
+  background.border_color="$PILL_BORDER"
+
+sketchybar --add bracket right_pill volume wifi battery clock \
+  --set right_pill \
+  background.color="$PILL_BG" \
+  background.height="$PILL_HEIGHT" \
+  background.corner_radius="$PILL_RADIUS" \
+  background.border_width="$PILL_BORDER_WIDTH" \
+  background.border_color="$PILL_BORDER"
 
 ##### Force Initial Update #####
 sketchybar --update

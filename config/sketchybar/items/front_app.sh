@@ -3,7 +3,6 @@
 sketchybar --add item front_app left \
   --set front_app \
   icon.drawing=off \
-  label.color="$TEXT" \
-  label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  label.drawing=off \
   script="$PLUGIN_DIR/front_app.sh" \
   --subscribe front_app front_app_switched

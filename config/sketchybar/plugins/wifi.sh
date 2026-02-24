@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-SSID="$(networksetup -getairportnetwork en0 | sed 's/Current Wi-Fi Network: //')"
+SSID="$(
+  system_profiler SPAirPortDataType 2>/dev/null |
+    awk '/Current Network Information:/{getline; gsub(/^[[:space:]]+|:[[:space:]]*$/, ""); print; exit}'
+)"
 
-if [ "$SSID" = "You are not associated with an AirPort network." ]; then
-  sketchybar --set wifi label="󰤭 Disconnected"
+if [ -z "$SSID" ]; then
+  sketchybar --set wifi label="󰤭"
 else
-  sketchybar --set wifi label="󰤨 $SSID"
+  sketchybar --set wifi label="󰤨"
 fi
