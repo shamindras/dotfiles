@@ -62,6 +62,7 @@
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/rstudio: config/rstudio
     ${XDG_CONFIG_HOME}/sesh: config/sesh
+    ${XDG_CONFIG_HOME}/sketchybar: config/sketchybar
     ${XDG_CONFIG_HOME}/starship: config/starship
     ${XDG_CONFIG_HOME}/surfingkeys: config/surfingkeys
     ${XDG_CONFIG_HOME}/stylua: config/stylua
@@ -83,6 +84,14 @@
     ${HOME}/Library/Application Support/espanso: config/espanso
     ${HOME}/Library/Application Support/Code/User/keybindings.json: config/vscode/keybindings.json
     ${HOME}/Library/Application Support/Code/User/settings.json: config/vscode/settings.json
+
+# Make sketchybar plugins executable
+- shell:
+    - command: chmod -R +x ${XDG_CONFIG_HOME}/sketchybar/plugins/
+      description: Make sketchybar plugins executable
+      stdin: ''
+      stdout: true
+      stderr: true
 
 # Install homebrew
 - shell:
