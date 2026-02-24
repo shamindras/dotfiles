@@ -20,7 +20,7 @@ sesh_window_yazi   "${SESSION}" "${WORK_DIR}"   # Window 4
 # works even if the pane's shell hasn't finished loading .zshrc (cold-start
 # race when `sesh connect zk` is run from a fresh terminal with no tmux server).
 tmux send-keys -l -t "${SESSION}:zk" \
-  "cd '${WORK_DIR}' && tmux resize-window -a && rsync -au --delete ~/.config/zk/templates/ '${WORK_DIR}/.zk/templates/' 2>/dev/null; zk daily"
+  "cd '${WORK_DIR}' && rsync -au --delete ~/.config/zk/templates/ '${WORK_DIR}/.zk/templates/' 2>/dev/null; zk daily"
 tmux send-keys -t "${SESSION}:zk" Enter
 
 sesh_focus_window "${SESSION}" "zk"
