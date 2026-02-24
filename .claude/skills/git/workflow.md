@@ -6,6 +6,16 @@
 - Format: `<type>/<short-kebab-desc>` (e.g. `feat/add-ghostty-config`, `fix/nvim-treesitter`).
 - Keep branch names short and descriptive.
 
+## Proactive Branch Awareness
+
+During `/commit`, Claude applies judgment about the current branch:
+- **On a feature branch**: proceed without interruption.
+- **On `main` with trivial changes**: note the branch, proceed.
+- **On `main` with non-trivial changes**: proactively suggest creating a
+  feature branch before committing (soft suggestion, user can override).
+
+Goal: keep `main` clean by default without adding friction to quick fixes.
+
 ## Feature Branches in Plans
 
 When presenting a plan for user approval (via ExitPlanMode), always explicitly
