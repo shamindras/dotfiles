@@ -6,6 +6,8 @@ sketchybar --add item workspace left \
   --set workspace \
   icon.drawing=off \
   label.color="$MAUVE" \
-  label.font="JetBrainsMono Nerd Font:Bold:16.0" \
+  label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  padding_left=5 \
+  padding_right=5 \
   script="$PLUGIN_DIR/workspace.sh" \
   --subscribe workspace aerospace_workspace_change
