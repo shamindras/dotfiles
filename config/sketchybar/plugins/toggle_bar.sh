@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Toggle between sketchybar and native macOS menu bar.
 # When sketchybar is visible  → hide it, show native menu bar.
 # When sketchybar is hidden   → show it, hide native menu bar.
 
-HIDDEN="$(sketchybar --query bar | python3 -c "import sys,json; print(json.load(sys.stdin)['hidden'])")"
+HIDDEN="$(sketchybar --query bar | jq -r '.hidden')"
 
 if [ "$HIDDEN" = "off" ]; then
   # Hide sketchybar, show native menu bar

@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2034
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+# shellcheck disable=SC2034
 ITEM_DIR="$CONFIG_DIR/items"
 
+# shellcheck disable=SC1091
 source "$CONFIG_DIR/colors.sh"
 
 # Pill dimensions
@@ -39,13 +42,19 @@ sketchybar --default \
   icon.padding_right=4
 
 ##### Left Items #####
+# shellcheck disable=SC1091
 source "$ITEM_DIR/workspace.sh"
+# shellcheck disable=SC1091
 source "$ITEM_DIR/front_app.sh"
 
 ##### Right Items #####
+# shellcheck disable=SC1091
 source "$ITEM_DIR/clock.sh"
+# shellcheck disable=SC1091
 source "$ITEM_DIR/battery.sh"
+# shellcheck disable=SC1091
 source "$ITEM_DIR/wifi.sh"
+# shellcheck disable=SC1091
 source "$ITEM_DIR/volume.sh"
 
 ##### Bracket Pills #####

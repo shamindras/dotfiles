@@ -33,10 +33,13 @@ config/sketchybar/
 - Plugins define *how* to update (the script that runs on events/timers)
 - Colors use Catppuccin Mocha palette in ARGB hex format (`0xAARRGGBB`)
 - Font: JetBrains Mono Nerd Font (consistent with terminal configs)
-- Bar uses frosted glass look (`blur_radius=20`, semi-opaque Base color)
+- Bar uses transparent background with `blur_radius=20` for frosted glass effect
 - `sticky=on` + `topmost=on` keeps bar visible on all workspaces
 - **Bracket pills** group items into rounded pill-shaped backgrounds
   - `left_pill`: wraps workspace label
   - `right_pill`: wraps volume, wifi, battery, clock
-- **Toggle** (`Alt+Shift+.`): switches between sketchybar and native menu bar
+- **Toggle** (`Alt+Shift+.`): keybinding-driven script that switches between
+  sketchybar and native menu bar (not event-subscribed)
 - Workspace updates via Aerospace's `exec-on-workspace-change` event
+- Plugin scripts (standalone) must include `set -Eeuo pipefail` (repo convention)
+- Item scripts are sourced into `sketchybarrc` — do **not** add strict mode

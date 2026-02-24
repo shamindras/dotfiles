@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 SSID="$(
   system_profiler SPAirPortDataType 2>/dev/null |
