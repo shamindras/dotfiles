@@ -16,20 +16,19 @@ after-login-command = []
 
 # janky borders
 # https://github.com/FelixKratz/JankyBorders#bootstrap-with-aerospace
-after-startup-command = ['exec-and-forget borders']
+after-startup-command = ['exec-and-forget borders', 'exec-and-forget sketchybar']
 
 # Run Sketchybar together with AeroSpace ----
 # source: https://nikitabobko.github.io/AeroSpace/goodness#show-aerospace-workspaces-in-sketchybar
 # sketchbar has a built-in detection of already running process,
 # so it won't be run twice on AeroSpace restart
-# after-startup-command = ['exec-and-forget sketchybar']
 
 # Notify Sketchybar about workspace change
-# exec-on-workspace-change = [
-#   '/bin/bash',
-#   '-c',
-#   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
-# ]
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -75,7 +74,7 @@ inner.horizontal = 2
 inner.vertical = 2
 outer.left = 2
 outer.bottom = 2
-outer.top = 1
+outer.top = 10
 outer.right = 2
 
 # 'main' binding mode declaration
