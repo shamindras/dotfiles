@@ -80,7 +80,7 @@ All scripts use:
 | ss_applications | nvim | claude | term | yazi | — | nvim |
 | ss_personal_quarto_blog | nvim | claude | term | yazi | preview | nvim |
 | zk | zk | claude | term | yazi | — | zk |
-| rss | newsboat | term | — | — | — | *(implicit)* |
+| rss     | newsboat | term | yazi | —  | —  | newsboat     |
 
 ### Common Window Patterns
 

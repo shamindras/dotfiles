@@ -14,3 +14,8 @@ tmux send-keys -t "${SESSION}:newsboat" "newsboat" Enter
 
 # Window 2: term
 sesh_window_term "${SESSION}" "${WORK_DIR}"
+
+# Window 3: yazi
+sesh_window_yazi "${SESSION}" "${WORK_DIR}"
+
+sesh_focus_window "${SESSION}" "newsboat"
