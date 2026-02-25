@@ -46,19 +46,21 @@ sketchybar --default \
 
 ##### Left Items #####
 # shellcheck disable=SC1091
-source "$ITEM_DIR/workspace.sh"
-# shellcheck disable=SC1091
 source "$ITEM_DIR/front_app.sh"
 
 ##### Right Items #####
+# Items are added right-to-left: first sourced = rightmost in pill.
+# Desired order (left to right): workspace | wifi | volume | battery | clock
 # shellcheck disable=SC1091
 source "$ITEM_DIR/clock.sh"
 # shellcheck disable=SC1091
 source "$ITEM_DIR/battery.sh"
 # shellcheck disable=SC1091
+source "$ITEM_DIR/volume.sh"
+# shellcheck disable=SC1091
 source "$ITEM_DIR/wifi.sh"
 # shellcheck disable=SC1091
-source "$ITEM_DIR/volume.sh"
+source "$ITEM_DIR/workspace.sh"
 
 ##### Bracket Pills #####
 sketchybar --add bracket left_pill workspace \
@@ -69,7 +71,7 @@ sketchybar --add bracket left_pill workspace \
   background.border_width="$PILL_BORDER_WIDTH" \
   background.border_color="$PILL_BORDER"
 
-sketchybar --add bracket right_pill volume wifi battery clock \
+sketchybar --add bracket right_pill wifi volume battery clock \
   --set right_pill \
   background.color="$PILL_BG" \
   background.height="$PILL_HEIGHT" \

@@ -2,7 +2,9 @@
 
 sketchybar --add item battery right \
   --set battery \
-  icon.drawing=off \
+  icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
+  icon.color="$TEXT" \
+  icon.padding_right=2 \
   label.color="$TEXT" \
   padding_left=2 \
   padding_right=2 \

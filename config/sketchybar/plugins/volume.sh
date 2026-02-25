@@ -10,11 +10,14 @@ COLOR_YELLOW=0xfff9e2af
 COLOR_RED=0xfff38ba8
 
 if [ "$MUTED" = "true" ] || [ "$VOLUME" -eq 0 ]; then
-  sketchybar --set volume label="󰝟" label.color="$COLOR_YELLOW"
-elif [ "$VOLUME" -le 33 ]; then
-  sketchybar --set volume label="󰕿 ${VOLUME}%" label.color="$COLOR_TEXT"
-elif [ "$VOLUME" -lt 75 ]; then
-  sketchybar --set volume label="󰖀 ${VOLUME}%" label.color="$COLOR_TEXT"
+  sketchybar --set volume icon="󰖁" icon.color="$COLOR_YELLOW" label.drawing=off
 else
-  sketchybar --set volume label="󰕾 ${VOLUME}%" label.color="$COLOR_RED"
+  if [ "$VOLUME" -le 33 ]; then
+    ICON="󰕿" COLOR="$COLOR_TEXT"
+  elif [ "$VOLUME" -lt 60 ]; then
+    ICON="󰖀" COLOR="$COLOR_TEXT"
+  else
+    ICON="󰕾" COLOR="$COLOR_RED"
+  fi
+  sketchybar --set volume icon="$ICON" icon.color="$COLOR" label="${VOLUME}%" label.color="$COLOR" label.drawing=on
 fi
