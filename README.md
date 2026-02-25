@@ -67,6 +67,10 @@ make dotbot_install
 **NOTE:** The above `make dotbot_install` command is just a wrapper for
 `./install`, if you prefer to run this command directly from your terminal.
 
+**macOS defaults:** `./install` applies macOS system defaults
+(`scripts/setup-macos`). This step requires administrator privileges and
+some changes need a logout or reboot to take effect.
+
 ## Inspiration
 
 These dotfiles have been mainly inspired by the following people. I thank them
