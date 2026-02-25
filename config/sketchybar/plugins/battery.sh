@@ -12,20 +12,20 @@ COLOR_GREEN=0xffa6e3a1
 COLOR_YELLOW=0xfff9e2af
 COLOR_RED=0xfff38ba8
 
-if [ "$CHARGING" -gt 0 ]; then
-  ICON="󰂄"
-  if [ "$PCT_NUM" -ge 100 ]; then
-    COLOR="$COLOR_GREEN"
-  else
-    COLOR="$COLOR_YELLOW"
-  fi
+# Color by percentage regardless of charging state
+if [ "$PCT_NUM" -ge 95 ]; then
+  COLOR="$COLOR_GREEN"
+elif [ "$PCT_NUM" -le 20 ]; then
+  COLOR="$COLOR_RED"
 else
-  ICON="󰁹"
-  if [ "$PCT_NUM" -le 20 ]; then
-    COLOR="$COLOR_RED"
-  else
-    COLOR="$COLOR_TEXT"
-  fi
+  COLOR="$COLOR_TEXT"
 fi
 
-sketchybar --set battery label="$ICON ${PERCENTAGE}" label.color="$COLOR"
+# Lightning bolt indicates charging, battery icon otherwise
+if [ "$CHARGING" -gt 0 ]; then
+  ICON="󱐋"
+else
+  ICON="󰁹"
+fi
+
+sketchybar --set battery icon="$ICON" icon.color="$COLOR" label="${PERCENTAGE}" label.color="$COLOR"

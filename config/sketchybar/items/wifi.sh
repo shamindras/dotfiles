@@ -2,8 +2,10 @@
 
 sketchybar --add item wifi right \
   --set wifi \
-  icon.drawing=off \
-  label.color="$TEXT" \
+  icon.font="JetBrainsMono Nerd Font:Bold:16.0" \
+  icon.color="$TEXT" \
+  icon.padding_right=2 \
+  label.drawing=off \
   padding_left=2 \
   padding_right=2 \
   update_freq=30 \

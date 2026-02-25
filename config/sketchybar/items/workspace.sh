@@ -2,7 +2,7 @@
 
 sketchybar --add event aerospace_workspace_change
 
-sketchybar --add item workspace left \
+sketchybar --add item workspace right \
   --set workspace \
   icon.drawing=off \
   label.color="$MAUVE" \
