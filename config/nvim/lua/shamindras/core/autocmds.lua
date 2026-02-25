@@ -53,6 +53,12 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   command = "execute 'silent !aerospace reload-config'",
 })
 
+-- borders config
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = { 'bordersrc' },
+  command = "execute 'silent !brew services restart borders'",
+})
+
 -- resize splits if window got resized
 local resize_window_group = vim.api.nvim_create_augroup('resize_window', { clear = true })
 vim.api.nvim_create_autocmd({ 'VimResized' }, {
