@@ -108,9 +108,7 @@ Rules:
 - Sections should follow a logical order: Boilerplate → Config → Logic → Export
 
 #### Markdown files
-- Keep tables column-aligned with consistent padding so they are readable
-  in plain text (not just rendered HTML). Use dashed separator rows that
-  match column widths.
+- See project root `CLAUDE.md` § "Markdown files".
 
 #### Other conventions
 - Formatting: stylua (2-space indent, single quotes)
