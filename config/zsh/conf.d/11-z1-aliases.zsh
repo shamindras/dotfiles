@@ -50,6 +50,7 @@ function z1_aliases {
   alias rmi='rm -i'
   alias rmf='rm -rf'
   alias rq='R -q --no-save'
+  alias bt='btm;clear;'
   alias top='tmux-resize;btop;clear;'
   alias t='task' # taskwarrior
   alias tt='tmux-resize;taskwarrior-tui;clear'
