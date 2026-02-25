@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Launch btm in tmux popup and auto-sort by memory (descending).
+# Captures the popup pane ID, schedules 'm' keypress after btm initializes.
+PANE=$(tmux display-message -p "#{pane_id}")
+(sleep 0.2; tmux send-keys -t "$PANE" m) &
+exec btm

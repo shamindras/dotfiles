@@ -165,6 +165,7 @@ function M.setup(config)
     tmux('p', 'P'),                -- CMD+P       = popup shell
     tmux('g', 'g'),                -- CMD+G       = lazygit popup
     tmux('y', 'F'),                -- CMD+Y       = yazi popup
+    tmux('b', 'B'),                -- CMD+B       = btm popup
 
     -- Utilities
     tmux('u', 'u'),                -- CMD+U       = fzf-url picker
