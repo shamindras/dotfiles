@@ -153,8 +153,8 @@ function M.setup(config)
     tmux('s', 'w'),                -- CMD+S       = session/window tree
     tmux('j', 'L'),                -- CMD+J       = last session
     tmux('n', 'S'),                -- CMD+N       = new session
-    tmux_ctrl('h', '('),           -- CMD+Ctrl+H  = previous session
-    tmux_ctrl('l', ')'),           -- CMD+Ctrl+L  = next session
+    tmux_ctrl('h', ')'),           -- CMD+Ctrl+H  = previous session
+    tmux_ctrl('l', '('),           -- CMD+Ctrl+L  = next session
     tmux_ctrl('e', '$'),           -- CMD+Ctrl+E  = rename session
     tmux_ctrl('w', 'X'),           -- CMD+Ctrl+W  = kill session
 
