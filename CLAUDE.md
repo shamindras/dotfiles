@@ -100,6 +100,11 @@ The install process (`install.conf.yaml`) follows this sequence:
 - Git submodules used for external dependencies
 - Shell scripts follow bash strict mode (`set -Eeuo pipefail`)
 
+### Design principles
+
+- **Idempotent on existing machine**: scripts/configs safe to re-run
+- **Reproducible on new machine**: fresh install reaches same state
+
 ### Version verification for tool configs
 
 Before writing or modifying any tool configuration, **verify config field names
