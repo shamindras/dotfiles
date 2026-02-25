@@ -71,6 +71,10 @@ to detect vim/nvim/fzf in the active pane:
 
 ### Custom bindings (after prefix)
 
+Update both this table and
+[`config/wezterm/keybindings-reference.md`](../wezterm/keybindings-reference.md)
+when bindings change in `keybindings.conf`.
+
 | Key | Action |
 |-----|--------|
 | `\|` | Split pane horizontally (preserves cwd) |
@@ -103,8 +107,8 @@ WezTerm intercepts CMD+key and sends `C-a` + tmux_key. Three modifier layers:
 - **CMD+SHIFT** (L1): modify/destructive/create variants
 - **CMD+CTRL** (L2): session-scope operations
 
-See `config/wezterm/CLAUDE.md` and `config/wezterm/utils/keybindings.lua`
-for the full CMD mapping.
+See [`config/wezterm/keybindings-reference.md`](../wezterm/keybindings-reference.md)
+for the full CMD → tmux mapping. Update it when either side changes.
 
 ## Theme (Catppuccin v2 Mocha)
 
@@ -127,6 +131,13 @@ sets `automatic-rename off` for the specific window on any explicit rename
 (`prefix+,`, `rename-window`, etc.), making the name persistent.
 
 Active windows append ` [Z]` when zoomed.
+
+## Conventions
+
+### Markdown files
+- Keep tables column-aligned with consistent padding so they are readable
+  in plain text (not just rendered HTML). Use dashed separator rows that
+  match column widths.
 
 ## Development Notes
 - Reload config: `prefix + r` (or `tmux source-file ~/.config/tmux/tmux.conf`)
