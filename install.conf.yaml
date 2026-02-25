@@ -156,6 +156,6 @@
       description: Install tmux plugins via TPM
 
 # macOS default settings
-# - shell:
-#     - command: ./scripts/setup-macos
-#       description: Set macOS default settings
+- shell:
+    - command: ./scripts/setup-macos
+      description: Set macOS default settings
