@@ -58,8 +58,8 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 | `CMD+S`         | `w`      | Session/window tree |
 | `CMD+J`         | `L`      | Last session        |
 | `CMD+N`         | `S`      | New session         |
-| `CMD+CTRL+H`    | `(`      | Previous session    |
-| `CMD+CTRL+L`    | `)`      | Next session        |
+| `CMD+CTRL+H`    | `)`      | Previous session    |
+| `CMD+CTRL+L`    | `(`      | Next session        |
 | `CMD+CTRL+E`    | `$`      | Rename session      |
 | `CMD+CTRL+W`    | `X`      | Kill session        |
 
