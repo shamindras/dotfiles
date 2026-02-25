@@ -71,6 +71,7 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 | `CMD+P`         | `P`      | Popup shell        |
 | `CMD+G`         | `g`      | Lazygit popup      |
 | `CMD+Y`         | `F`      | Yazi popup         |
+| `CMD+B`         | `B`      | Btm popup          |
 | `CMD+U`         | `u`      | fzf-url picker     |
 | `CMD+SHIFT+R`   | `r`      | Reload tmux config |
 

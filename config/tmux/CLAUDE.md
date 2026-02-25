@@ -94,6 +94,7 @@ when bindings change in `keybindings.conf`.
 | `P` | Popup shell (80x80%) |
 | `g` | Lazygit popup (100x100%) |
 | `F` | Yazi in new window (popup unsupported — tmux#4329) |
+| `B` | Btm popup (100x100%) |
 
 ### Copy mode
 - `prefix + v` enters copy mode
