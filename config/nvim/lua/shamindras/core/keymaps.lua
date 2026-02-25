@@ -299,21 +299,8 @@ end, { desc = 'Previous fold (cycle)' })
 
 -- {{{ Macros
 
--- Dot-repeatable and count-aware macro replay (e.g. 10Q runs 10@q).
-keymap('n', 'Q', function()
-  local count = vim.v.count1
-  _G.op_run_macro_q = function()
-    vim.cmd('normal! ' .. count .. '@q')
-    -- g@ resets cursor after operatorfunc returns; preserve the macro's
-    -- final position (e.g. a trailing j to advance to the next line).
-    local pos = vim.api.nvim_win_get_cursor(0)
-    vim.schedule(function()
-      pcall(vim.api.nvim_win_set_cursor, 0, pos)
-    end)
-  end
-  vim.o.operatorfunc = 'v:lua.op_run_macro_q'
-  return 'g@l'
-end, { expr = true, desc = 'Execute macro q' })
+-- Count-aware macro replay (e.g. 10Q runs 10@q).
+keymap('n', 'Q', '@q', { desc = 'Execute macro q' })
 keymap('v', 'Q', '<cmd>norm @q<cr>', { desc = 'Execute macro q on selection' })
 
 -- ------------------------------------------------------------------------- }}}
