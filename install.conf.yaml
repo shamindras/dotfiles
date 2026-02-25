@@ -42,6 +42,7 @@
     ${XDG_CONFIG_HOME}/bat: config/bat
     ${XDG_CONFIG_HOME}/borders: config/borders
     ${XDG_CONFIG_HOME}/bin: config/bin
+    ${XDG_CONFIG_HOME}/bottom: config/bottom
     ${XDG_CONFIG_HOME}/btop: config/btop
     ${CURL_HOME}/.curlrc: config/curl/curlrc
     ${XDG_CONFIG_HOME}/delta: config/delta
