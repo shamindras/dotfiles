@@ -11,7 +11,7 @@ source "$CONFIG_DIR/colors.sh"
 # Pill dimensions
 PILL_HEIGHT=24
 PILL_RADIUS=12
-PILL_BORDER_WIDTH=2
+PILL_BORDER_WIDTH=3
 
 ##### Bar Appearance #####
 sketchybar --bar \
@@ -38,6 +38,9 @@ sketchybar --default \
   padding_right=5 \
   label.padding_left=4 \
   label.padding_right=4 \
+  label.shadow.drawing=on \
+  label.shadow.color=0x80000000 \
+  label.shadow.distance=1 \
   icon.padding_left=4 \
   icon.padding_right=4
 
