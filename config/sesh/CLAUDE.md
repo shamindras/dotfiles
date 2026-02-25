@@ -101,6 +101,13 @@ All scripts use:
   `ctrl-x` zoxide, `ctrl-d` kill session
 - CMD+K already sends `C-a s` via WezTerm — no WezTerm changes needed
 
+## Conventions
+
+### Markdown files
+- Keep tables column-aligned with consistent padding so they are readable
+  in plain text (not just rendered HTML). Use dashed separator rows that
+  match column widths.
+
 ## Adding a New Session
 
 1. Add a `[[session]]` block to `sesh.toml` with name, path, startup_command
