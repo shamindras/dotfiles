@@ -1,0 +1,58 @@
+# =============================================================================
+# bottom (btm) configuration
+# Docs: https://clementtsang.github.io/bottom/stable/
+# =============================================================================
+
+# =============================================================================
+# [flags] — Runtime behavior defaults
+# =============================================================================
+[flags]
+rate = 2000                      # 2s refresh (matches btop update_ms)
+temperature_type = "c"           # Celsius
+process_memory_as_value = true   # Absolute bytes (btop proc_mem_bytes)
+default_widget_type = "proc"     # Keyboard focus starts on processes
+battery = true                   # Show battery in header
+enable_cache_memory = true       # Show cache/buffer memory stats
+disable_gpu = true               # Not relevant on macOS without NVIDIA
+process_command = true           # Show full command path (like btop)
+
+# =============================================================================
+# [processes] — Column selection and order
+# =============================================================================
+[processes]
+columns = ["pid", "name", "user", "mem%", "cpu%", "read", "write", "state"]
+
+# =============================================================================
+# [styles] — Linkarzu theme (mapped from linkarzu-btop.theme)
+#
+# Palette reference:
+#   BG:        #0D1116    FG:        #ebfafa    Highlight: #37f499
+#   Selected:  #987afb    Inactive:  #a5afc2    Divider:   #141b22
+#   CPU:       #987afb    Memory:    #37f499    Network:   #04d1f9
+#   Process:   #19dfcf    Proc misc: #949ae5    Meter BG:  #141b22
+#
+# To swap themes: replace all hex values below. Catppuccin Mocha is a
+# drop-in alternative — see https://github.com/catppuccin/bottom
+# =============================================================================
+
+# --- Table headers -----------------------------------------------------------
+[styles.tables]
+headers = { color = "#04d1f9", bold = true }
+
+# --- Widget chrome (borders, titles, text) -----------------------------------
+[styles.widgets]
+border_color = "#141b22"
+selected_border_color = "#987afb"
+widget_title = { color = "#ebfafa" }
+text = { color = "#ebfafa" }
+selected_text = { color = "#ebfafa", bg_color = "#987afb" }
+disabled_text = { color = "#a5afc2" }
+
+# =============================================================================
+# Layout — Processes only (full screen)
+# =============================================================================
+
+[[row]]
+  [[row.child]]
+    type = "proc"
+    default = true
