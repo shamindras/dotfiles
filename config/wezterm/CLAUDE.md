@@ -30,7 +30,8 @@ Installed version: wezterm 20240203-110809-5046fc22 (verified 2026-02-22)
   followed by `tmux_key` when `CMD+key` is pressed. `tmux_shift()` does
   the same for `CMD+SHIFT+key`. `tmux_ctrl()` does the same for
   `CMD+CTRL+key`. WezTerm never manages panes or tabs — tmux handles
-  all multiplexing.
+  all multiplexing. Full binding reference: [`keybindings-reference.md`](keybindings-reference.md)
+  — update it whenever bindings change in `utils/keybindings.lua`.
 - **Dark/light detection**: `depending_on_appearance()` handles both string
   and boolean API returns from `wezterm.gui.get_appearance()`.
 
@@ -105,6 +106,11 @@ Rules:
   (73-char dashed line before `}}}`)
 - Every open must have a matching close
 - Sections should follow a logical order: Boilerplate → Config → Logic → Export
+
+#### Markdown files
+- Keep tables column-aligned with consistent padding so they are readable
+  in plain text (not just rendered HTML). Use dashed separator rows that
+  match column widths.
 
 #### Other conventions
 - Formatting: stylua (2-space indent, single quotes)
