@@ -113,6 +113,11 @@ across versions (e.g., sesh v2 changed `startup_script` → `startup_command`).
 3. **Validate after writing**: where possible, use the tool's own validation
    (e.g., `sesh list -c --json`, `tmux show-options`, `nvim --headless`)
 
+### Markdown files
+- Keep tables column-aligned with consistent padding so they are readable
+  in plain text (not just rendered HTML). Use dashed separator rows that
+  match column widths.
+
 ### Tool-specific CLAUDE.md files
 
 Each `config/<tool>/CLAUDE.md` must include:

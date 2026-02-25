@@ -135,9 +135,7 @@ Active windows append ` [Z]` when zoomed.
 ## Conventions
 
 ### Markdown files
-- Keep tables column-aligned with consistent padding so they are readable
-  in plain text (not just rendered HTML). Use dashed separator rows that
-  match column widths.
+- See project root `CLAUDE.md` § "Markdown files".
 
 ## Development Notes
 - Reload config: `prefix + r` (or `tmux source-file ~/.config/tmux/tmux.conf`)
