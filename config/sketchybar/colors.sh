@@ -27,5 +27,5 @@ export BLUE=0xff89b4fa
 export LAVENDER=0xffb4befe
 
 # Pill backgrounds
-export PILL_BG=0x40313244     # Surface0 at 25% opacity
-export PILL_BORDER=0x30cdd6f4 # Text at 19% opacity
+export PILL_BG=0x80313244     # Surface0 at 50% opacity
+export PILL_BORDER=0x40cba6f7 # Mauve at 25% opacity
