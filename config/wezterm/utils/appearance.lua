@@ -21,7 +21,7 @@ end
 local active = {
   font    = 'Victor',
   theme   = 'nightfox',
-  size    = 18,
+  size    = 16,
   opacity = 0.90,
   blur    = 4,
   padding = { left = 0, right = 0, top = 0, bottom = 0 },
@@ -35,6 +35,7 @@ local font_library = {
   InputMono    = 'Input Mono',
   Iosevka      = 'Iosevka Nerd Font Mono',
   JetBrains    = 'JetBrainsMono Nerd Font',
+  Lilex        = 'Lilex Nerd Font Mono',
   Maple        = 'Maple Mono',
   MonaspiceAr  = 'MonaspiceAr Nerd Font',
   MonaspiceNe  = 'MonaspiceNe Nerd Font',
