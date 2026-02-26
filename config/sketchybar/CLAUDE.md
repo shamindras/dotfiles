@@ -29,9 +29,6 @@ config/sketchybar/
 
 ## Conventions
 
-### Markdown files
-- See project root `CLAUDE.md` § "Markdown files".
-
 ### General
 - Items define *what* to show (position, font, colors, subscriptions)
 - Plugins define *how* to update (the script that runs on events/timers)

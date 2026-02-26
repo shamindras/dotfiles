@@ -133,11 +133,6 @@ sets `automatic-rename off` for the specific window on any explicit rename
 
 Active windows append ` [Z]` when zoomed.
 
-## Conventions
-
-### Markdown files
-- See project root `CLAUDE.md` § "Markdown files".
-
 ## Development Notes
 - Reload config: `prefix + r` (or `tmux source-file ~/.config/tmux/tmux.conf`)
 - Debug options: `tmux show-options -g` / `tmux show-options -s`
