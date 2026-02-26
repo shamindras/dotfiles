@@ -101,11 +101,6 @@ All scripts use:
   `ctrl-x` zoxide, `ctrl-d` kill session
 - CMD+K already sends `C-a s` via WezTerm — no WezTerm changes needed
 
-## Conventions
-
-### Markdown files
-- See project root `CLAUDE.md` § "Markdown files".
-
 ## Adding a New Session
 
 1. Add a `[[session]]` block to `sesh.toml` with name, path, startup_command

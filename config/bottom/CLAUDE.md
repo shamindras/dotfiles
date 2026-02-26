@@ -50,10 +50,6 @@ https://github.com/catppuccin/bottom.
 | `d+d`      | Kill selected process      |
 | `?`        | Help menu                  |
 
-## Conventions
-
-- See project root `CLAUDE.md` § "Markdown files".
-
 ## Development Notes
 
 - Validate config: `btm --config ~/.config/bottom/bottom.toml`
