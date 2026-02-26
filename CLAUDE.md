@@ -92,13 +92,29 @@ The install process (`install.conf.yaml`) follows this sequence:
 
 ## Development Guidelines
 
-- Some tool directories (e.g., `config/wezterm/`) contain local `CLAUDE.md` files with tool-specific architecture documentation
+- Every `config/<tool>/` directory has a `CLAUDE.md` with tool-specific docs
 - Configurations follow XDG specification strictly
 - Use existing patterns when adding new tool configs
 - All Lua configs should be formatted with stylua
 - Homebrew packages managed through Brewfile
 - Git submodules used for external dependencies
 - Shell scripts follow bash strict mode (`set -Eeuo pipefail`)
+
+### Shared conventions for tool configs
+
+**Lua configs** (wezterm, nvim, sketchybar): formatted with stylua (2-space
+indent, single quotes). Use Neovim fold markers. Full conventions in
+`.claude/conventions/lua.md`.
+
+**Shell scripts**: standalone scripts use `set -Eeuo pipefail`. Scripts
+sourced by parent processes (e.g., sketchybar items) do NOT add strict mode.
+
+**Theme**: most tools use Catppuccin Mocha. ARGB hex format (`0xAARRGGBB`).
+Canonical palette: `config/sketchybar/colors.sh`.
+
+**Cross-tool keybinding updates**: when changing bindings in wezterm or tmux,
+update both `config/wezterm/keybindings-reference.md` and the relevant
+CLAUDE.md binding tables.
 
 ### Design principles
 
@@ -129,6 +145,9 @@ Each `config/<tool>/CLAUDE.md` must include:
 - **Docs link**: URL to the tool's official documentation or GitHub repo
 - **Installed version**: output of `<tool> --version` at time of writing
 - Config file structure and key conventions
+
+Files should contain ONLY tool-specific information. Shared conventions
+are in root CLAUDE.md and `.claude/conventions/` — do not duplicate them.
 
 ## Workflow
 
