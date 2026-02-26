@@ -95,35 +95,9 @@ Always show a diff preview before drafting the commit message.
 when the user explicitly requests it (via `--no-split` or direct instruction).
 Never preemptively suggest combining scopes.
 
-### Dotfiles convention: split by scope (default)
-
-1. **Identify scopes for all changes:**
-   - For tool-specific files (e.g., `config/nvim/*`), scope is obvious: `(nvim)`
-   - For shared files (Brewfile, install.conf.yaml, CLAUDE.md, justfile), analyze each hunk to determine which tool/scope it relates to
-   - For multi-tool hunks, either split the hunk or ask user which scope to use
-
-2. **Group changes by scope:**
-   - Organize all hunks (across all files) by their identified scope
-   - Each scope becomes a proposed commit
-
-3. **Present grouping to user:**
-   ```
-   Proposed commits:
-
-   1. feat(nvim): add telescope fuzzy finder
-      - config/brew/Brewfile (telescope dependencies)
-      - config/nvim/lua/plugins/telescope.lua (new file)
-      - install.conf.yaml (nvim setup changes)
-
-   2. chore(brew): update ripgrep to latest
-      - config/brew/Brewfile (version bump)
-   ```
-
-4. **Exceptions** — keep together ONLY if:
-   - User explicitly requests it (`--no-split` or direct instruction)
-   - Changes are truly atomic AND user confirms (never assume)
-
-5. **Verify with user before proceeding**
+Apply the splitting rules from the "Commit Splitting" section in
+`.claude/skills/git/workflow.md`. Use the scopes defined there to identify,
+group, and present the proposed commits to the user before proceeding.
 
 ## 6. Draft message
 
