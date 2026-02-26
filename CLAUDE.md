@@ -149,6 +149,11 @@ Each `config/<tool>/CLAUDE.md` must include:
 Files should contain ONLY tool-specific information. Shared conventions
 are in root CLAUDE.md and `.claude/conventions/` — do not duplicate them.
 
+**Keep CLAUDE.md in sync**: when modifying a tool's config, update its
+`config/<tool>/CLAUDE.md` to reflect the change (new settings, changed
+keybindings, updated aliases, etc.). Add this as a task when planning
+multi-step work.
+
 ## Workflow
 
 - **Task tracking** — Use the todo list (`TaskCreate` / `TaskUpdate` /
