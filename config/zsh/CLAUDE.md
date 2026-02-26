@@ -76,7 +76,7 @@ gh, npm, node, ruby, cargo, tmux. All tools use proper XDG base directories.
 | --------- | ------------------------------------------------ |
 | Navigation | `cd=z`, `..=z ..`, `dots`, `reps`, `conf`      |
 | System    | `c=clear+tmux`, `b=bat`, `l=ls -la`, `tree`     |
-| Dev       | `n=nvim`, `lg=lazygit`, `ghd=gh dash`           |
+| Dev       | `n=nvim`, `lg=lazygit`, `ghd=gh dash`, `cl=clear+claude`, `clr=clear+claude --resume` |
 | Zk        | `kd=daily`, `kis=idea`, `ks=search`             |
 | Suffix    | `.pdf→Skim`, `.jpg→Preview`, `.mp4→VLC`         |
 | Global    | `H=head`, `L=bat`, `G=rg`, `C=pbcopy`, `J=jq`  |
