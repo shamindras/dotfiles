@@ -17,16 +17,20 @@ zr() {
   [[ "$1" == "-q" || "$1" == "--quiet" ]] && quiet=true
 
   if [[ -n "$TMUX" ]]; then
-    local pane cmd count=0
-    tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} #{pane_current_command}' \
-      | while read pane cmd; do
-          if [[ $cmd == zsh ]]; then
-            tmux send-keys -t "$pane" "exec zsh" Enter
-            (( count++ ))
-            $quiet || echo "  🔄 $pane"
-          fi
-        done
-    $quiet || echo "✅ Reloaded $count zsh pane(s)"
+    local current_pane pane cmd count=0
+    current_pane=$(tmux display-message -p '#{session_name}:#{window_index}.#{pane_index}')
+
+    # Process substitution (not a pipe) so count stays in the current shell
+    while read pane cmd; do
+      if [[ $cmd == zsh && $pane != "$current_pane" ]]; then
+        tmux send-keys -t "$pane" "exec zsh" Enter
+        (( count++ ))
+        $quiet || echo "  🔄 $pane"
+      fi
+    done < <(tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} #{pane_current_command}')
+
+    $quiet || echo "✅ Reloaded $count remote pane(s), reloading current..."
+    exec zsh
   else
     $quiet || echo "🔄 Reloading shell..."
     exec zsh
