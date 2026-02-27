@@ -56,16 +56,17 @@ config/nvim/
 
 ### Keymap Organization
 
-| Prefix       | Scope                                          |
-| ------------ | ---------------------------------------------- |
-| `<leader>b`  | Buffer ops (format, yank, write)               |
-| `<leader>f`  | File ops (rename, explorer, config browser)    |
-| `<leader>s`  | Search (grep, diagnostics, help, keymaps)      |
-| `<leader>l`  | Lazy manager (menu, update, profile, sync)     |
-| `<leader>w`  | Window (split, equalize, maximize, swap)       |
-| `<leader>k`  | Zettelkasten (daily, idea, search, backlinks)  |
-| `<leader>t`  | Toggle (line numbers, spell check, theme)      |
-| `<leader>g`  | Go/navigation (link opening)                   |
+| Prefix       | Scope                                             |
+| ------------ | ------------------------------------------------- |
+| `<leader>b`  | Buffer ops (format, yank, write)                  |
+| `<leader>f`  | File ops (rename, explorer, config browser, lint) |
+| `<leader>g`  | Go/navigation (link opening)                      |
+| `<leader>k`  | Zettelkasten (daily, idea, search, backlinks)     |
+| `<leader>l`  | Lazy manager (menu, update, profile, sync)        |
+| `<leader>n`  | Number ops (increment, decrement)                 |
+| `<leader>s`  | Search (grep, diagnostics, help, keymaps, notifs) |
+| `<leader>t`  | Toggle (line numbers, spell check, theme)         |
+| `<leader>w`  | Window (split, equalize, maximize, swap)          |
 
 ### Plugin Categories
 

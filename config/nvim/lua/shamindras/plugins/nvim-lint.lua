@@ -97,8 +97,8 @@ return {
     })
 
     -- Optional: Add keymapping for manual linting
-    vim.keymap.set('n', '<leader>nl', function()
+    vim.keymap.set('n', '<leader>fl', function()
       require('lint').try_lint()
-    end, { desc = 'Trigger linting for current file' })
+    end, { desc = '[f]ile [l]int (trigger)' })
   end,
 }
