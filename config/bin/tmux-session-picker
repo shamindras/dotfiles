@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# fzf-based tmux session switcher.
+# Lists all sessions except the current one, sorted by most-recently-attached.
+cur=$(tmux display-message -p '#S')
+
+sel=$(
+  tmux list-sessions -F '#{session_last_attached} #{session_name}' \
+    | awk -v c="$cur" '$2 != c' \
+    | sort -rn \
+    | cut -d' ' -f2- \
+    | fzf --exact --no-sort \
+        --prompt='⇋ ' \
+        --reverse \
+        --border \
+        --border-label=' switch session '
+) || exit 0
+
+[ -n "$sel" ] && tmux switch-client -t "$sel"

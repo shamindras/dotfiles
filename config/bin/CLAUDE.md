@@ -7,8 +7,9 @@
 
 | File        | Purpose                                     |
 | ----------- | ------------------------------------------- |
-| `btm-popup` | Opens bottom (btm) monitor in popup terminal|
-| `gc`        | Git-related utility script                  |
+| `btm-popup`            | Opens bottom (btm) monitor in popup terminal  |
+| `gc`                   | Git-related utility script                     |
+| `tmux-session-picker`  | fzf-based tmux session switcher (exact match)  |
 
 ## Development Notes
 
