@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SESSION="ss_applications"
-WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/ss_applications"
+SESSION="play"
+WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/codebox"
 
 # shellcheck source=helpers.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
