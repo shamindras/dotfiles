@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SESSION="ss_personal_quarto_blog"
+SESSION="blog"
 WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/ss_personal_quarto_blog"
 
 # shellcheck source=helpers.sh

@@ -78,9 +78,9 @@ All scripts use:
 | dotfiles | nvim | claude | term | yazi | — | nvim |
 | codebox | nvim | claude | term | yazi | — | nvim |
 | ss_applications | nvim | claude | term | yazi | — | nvim |
-| ss_personal_quarto_blog | nvim | claude | term | yazi | preview | nvim |
-| zk | zk | claude | term | yazi | — | zk |
-| rss     | newsboat | term | yazi | —  | —  | newsboat     |
+| blog    | nvim | claude | term | yazi | preview | nvim |
+| notes   | zk   | claude | term | yazi | —       | zk   |
+| feed    | newsboat | term | yazi | —  | —       | newsboat |
 
 ### Common Window Patterns
 
@@ -90,9 +90,9 @@ All scripts use:
 | `claude` | `sesh_window_claude` — single pane running `claude` |
 | `term` | `sesh_window_term` — plain terminal |
 | `yazi` | `sesh_window_yazi` — direct command for correct PTY sizing |
-| `preview` | `quarto preview` (blog session only, inline) |
-| `zk` | Explicit cd + rsync + `zk daily` (zk session only, inline — avoids alias race) |
-| `newsboat` | `newsboat` (rss session only, inline) |
+| `preview` | `quarto preview` (`blog` session only, inline) |
+| `zk` | Explicit cd + rsync + `zk daily` (notes session only, inline — avoids alias race) |
+| `newsboat` | `newsboat` (feed session only, inline) |
 
 ## tmux / WezTerm Integration
 

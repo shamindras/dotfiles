@@ -30,7 +30,7 @@ color theme.
 ## Cross-Tool References
 
 - Opens links in **firefox**
-- sesh session "rss" runs newsboat in window 1
+- sesh session "feed" runs newsboat in window 1
 
 ## Development Notes
 

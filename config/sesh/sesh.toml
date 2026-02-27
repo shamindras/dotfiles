@@ -14,16 +14,16 @@ path = "~/DROPBOX/REPOS/ss_applications"
 startup_command = "~/.config/sesh/scripts/ss-applications.sh"
 
 [[session]]
-name = "ss_personal_quarto_blog"
+name = "blog"
 path = "~/DROPBOX/REPOS/ss_personal_quarto_blog"
-startup_command = "~/.config/sesh/scripts/ss-personal-quarto-blog.sh"
+startup_command = "~/.config/sesh/scripts/blog.sh"
 
 [[session]]
-name = "zk"
+name = "notes"
 path = "~/DROPBOX/notes/zk"
-startup_command = "~/.config/sesh/scripts/zk.sh"
+startup_command = "~/.config/sesh/scripts/notes.sh"
 
 [[session]]
-name = "rss"
+name = "feed"
 path = "~/Downloads"
-startup_command = "~/.config/sesh/scripts/rss.sh"
+startup_command = "~/.config/sesh/scripts/feed.sh"
