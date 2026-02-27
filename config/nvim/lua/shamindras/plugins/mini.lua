@@ -228,6 +228,7 @@ table.insert(M, {
         { mode = 'n', keys = '<leader>g', desc = '+[g]o/navigate' },
         { mode = 'n', keys = '<leader>i', desc = '+[i]nsert' },
         { mode = 'n', keys = '<leader>l', desc = '+[l]azy' },
+        { mode = 'n', keys = '<leader>n', desc = '+[n]umber' },
         { mode = 'v', keys = '<leader>p', desc = '+[p]aste (register-aware)' },
         { mode = 'n', keys = '<leader>q', desc = '+[q]uit' },
         { mode = 'n', keys = '<leader>t', desc = '+[t]oggle' },

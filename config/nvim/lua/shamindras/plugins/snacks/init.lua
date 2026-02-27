@@ -10,7 +10,7 @@ return {
     { '<leader>,', desc = '[F]ind [B]uffers (Ivy Layout)' },
     { '<leader>/', desc = '[F]ind [G]rep' },
     { '<leader>:', desc = '[C]ommand [H]istory' },
-    { '<leader>n', desc = '[N]otification [H]istory' },
+    { '<leader>sn', desc = '[s]earch [n]otification history' },
     { '<leader>e', desc = '[F]ile [E]xplorer' },
     { '<leader>ff', desc = '[F]ind [F]iles' },
     { '<leader>fb', desc = '[F]ind [B]uffers (Ivy Layout)' },

@@ -23,6 +23,13 @@ keymap('n', '<leader>bw', '<cmd>wall!<cr>', { desc = '[b]uffer [w]rite all' })
 
 -- ------------------------------------------------------------------------- }}}
 
+-- {{{ [n]umber Operations
+
+keymap({ 'n', 'v' }, '<leader>na', '<C-a>', { desc = '[n]umber [a]dd (increment)' })
+keymap({ 'n', 'v' }, '<leader>nx', '<C-x>', { desc = '[n]umber subtrac[x]t (decrement)' })
+
+-- ------------------------------------------------------------------------- }}}
+
 -- {{{ [d]elete to Black Hole
 
 keymap({ 'n', 'v' }, '<leader>d', '"_d', { desc = '[d]elete to black hole' })
