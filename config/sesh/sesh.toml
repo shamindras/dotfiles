@@ -4,9 +4,9 @@ path = "~/DROPBOX/REPOS/codebox"
 startup_command = "~/.config/sesh/scripts/play.sh"
 
 [[session]]
-name = "dotfiles"
+name = "dots"
 path = "~/DROPBOX/REPOS/dotfiles"
-startup_command = "~/.config/sesh/scripts/dotfiles.sh"
+startup_command = "~/.config/sesh/scripts/dots.sh"
 
 [[session]]
 name = "career"
