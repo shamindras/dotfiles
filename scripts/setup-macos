@@ -321,6 +321,15 @@ defaults write -g NSWindowShouldDragOnGesture -bool true
 defaults write -app Skim AppleWindowTabbingMode never
 defaults write -app Preview AppleWindowTabbingMode never
 
+# Hide Skim document toolbar by default (toggle back with Cmd+Opt+T)
+defaults write net.sourceforge.skim-app.skim \
+  "NSToolbar Configuration SKDocumentToolbar" \
+  -dict \
+  "TB Display Mode" -int 1 \
+  "TB Icon Size Mode" -int 1 \
+  "TB Is Shown" -bool false \
+  "TB Size Mode" -int 1
+
 # Auto-hide native menu bar (for SketchyBar)
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
 
