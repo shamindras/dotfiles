@@ -12,7 +12,7 @@
 ##?
 ##? examples:
 ##?   sesh-reset notes        # recreate notes session from sesh.toml
-##?   sesh-reset dotfiles    # recreate dotfiles session
+##?   sesh-reset dots         # recreate dots session
 
 sesh-reset() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
