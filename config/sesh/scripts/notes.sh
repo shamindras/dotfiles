@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SESSION="zk"
+SESSION="notes"
 WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/notes/zk"
 
 # shellcheck source=helpers.sh

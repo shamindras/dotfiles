@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SESSION="rss"
+SESSION="feed"
 WORK_DIR="$HOME/Downloads"
 
 # shellcheck source=helpers.sh

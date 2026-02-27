@@ -11,7 +11,7 @@
 ##?   sesh-reset <session-name>
 ##?
 ##? examples:
-##?   sesh-reset zk          # recreate zk session from sesh.toml
+##?   sesh-reset notes        # recreate notes session from sesh.toml
 ##?   sesh-reset dotfiles    # recreate dotfiles session
 
 sesh-reset() {
