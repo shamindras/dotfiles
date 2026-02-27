@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SESSION="dotfiles"
+SESSION="dots"
 WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/dotfiles"
 
 # shellcheck source=helpers.sh
