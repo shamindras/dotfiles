@@ -76,8 +76,8 @@ All scripts use:
 | Session | W1 | W2 | W3 | W4 | W5 | Focus |
 |---------|----|----|----|----|----|----|
 | dotfiles | nvim | claude | term | yazi | — | nvim |
-| codebox | nvim | claude | term | yazi | — | nvim |
-| ss_applications | nvim | claude | term | yazi | — | nvim |
+| play    | nvim | claude | term | yazi | — | nvim |
+| career  | nvim | claude | term | yazi | — | nvim |
 | blog    | nvim | claude | term | yazi | preview | nvim |
 | notes   | zk   | claude | term | yazi | —       | zk   |
 | feed    | newsboat | term | yazi | —  | —       | newsboat |

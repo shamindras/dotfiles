@@ -1,7 +1,7 @@
 [[session]]
 name = "play"
 path = "~/DROPBOX/REPOS/codebox"
-startup_command = "~/.config/sesh/scripts/codebox.sh"
+startup_command = "~/.config/sesh/scripts/play.sh"
 
 [[session]]
 name = "dotfiles"
@@ -11,7 +11,7 @@ startup_command = "~/.config/sesh/scripts/dotfiles.sh"
 [[session]]
 name = "career"
 path = "~/DROPBOX/REPOS/ss_applications"
-startup_command = "~/.config/sesh/scripts/ss-applications.sh"
+startup_command = "~/.config/sesh/scripts/career.sh"
 
 [[session]]
 name = "blog"
