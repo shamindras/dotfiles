@@ -86,6 +86,7 @@ when bindings change in `keybindings.conf`.
 | `b` | Claude Code in right split (40% width) |
 | `K` | Clear pane and scrollback |
 | `s` | Sesh session picker (fzf popup) |
+| `w` | Session quick-switcher (fzf popup) |
 | `S` | New session |
 | `X` | Kill session (with confirmation) |
 | `r` | Reload tmux config (with message) |
