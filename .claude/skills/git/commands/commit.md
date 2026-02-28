@@ -65,7 +65,10 @@ Proceed without interruption.
    `<type>/<short-desc>` first. Create it, or proceed on `main`?"
 4. User explicitly said commit on `main` → skip suggestion.
 5. `--all-and-push` on `main` → pause and confirm. Never auto-push.
-6. `--land`/`--land-main` on `main` → hard error, **stop**.
+6. `--land`/`--land-main` on `main` → hard error. Offer to create a
+   feature branch (`<type>/<short-desc>`) and move unpushed commits
+   there (via `git checkout -b <branch>` + reset `main`). If user
+   accepts, proceed with the land workflow from the new branch.
 
 ### Non-trivial heuristic
 Any of: 3+ files, new file/directory, diff > ~30 lines, multiple scopes,

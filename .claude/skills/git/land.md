@@ -53,5 +53,7 @@ and begin here directly.
 
 ## Step overrides
 
-- **Step 2**: `--land`/`--land-main` on `main` = hard error, stop.
+- **Step 2**: `--land`/`--land-main` on `main` = hard error. Offer to
+  create a feature branch and move unpushed commits there. If accepted,
+  proceed with land workflow from the new branch.
 - **Step 9**: After post-commit, proceed to 10a–10e above.
