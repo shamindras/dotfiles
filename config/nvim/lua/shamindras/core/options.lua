@@ -54,7 +54,7 @@ o.undofile = true
 
 -- misc
 o.joinspaces = false -- don't use 2 spaces when joining sentences
-o.scrolloff = 2 -- Minimal number of screen lines to keep above and below the cursor.
+o.scrolloff = 1 -- Minimal number of screen lines to keep above and below the cursor.
 o.mouse = 'a' -- enable mouse mode, useful for resizing splits for example.
 
 -- Sync clipboard between OS and Neovim.
