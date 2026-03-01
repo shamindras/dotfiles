@@ -389,7 +389,12 @@ api.addSearchAlias('de', 'dictionary', 'https://www.onelook.com/?w=', 's', 'http
 
     return results;
 });
-api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=');
+api.addSearchAlias('z', 'amazon-au', 'https://www.amazon.com.au/s/?field-keywords=', 's', 'https://completion.amazon.com.au/api/2017/suggestions?mid=A39IBJ37TRP1C6&alias=aps&prefix=', function(response) {
+    var res = JSON.parse(response.text);
+    return res.suggestions.map(function(item) {
+        return item.value;
+    });
+});
 api.addSearchAlias('e', 'homebrew', 'https://www.google.com/search?btnI&q=site:formulae.brew.sh+', 's', 'https://www.google.com/complete/search?client=chrome&q=site:formulae.brew.sh+', function(response) {
     var res = JSON.parse(response.text);
     return res[1];
