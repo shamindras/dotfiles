@@ -230,75 +230,107 @@ end, { expr = true, desc = 'Exit insert (smart cursor)' })
 
 -- {{{ Folding
 
-keymap('n', 'zv', 'zMzvzz', { desc = 'Focus current fold' })
-
-keymap('n', 'zj', function()
-  -- Check if there are any folds in the buffer
-  local has_folds = false
-  for i = 1, vim.fn.line('$') do
-    if vim.fn.foldlevel(i) > 0 then
-      has_folds = true
-      break
+-- Collect top-level fold start lines (where foldlevel transitions from 0 to >0)
+local function get_fold_starts()
+  local starts = {}
+  local last_line = vim.fn.line('$')
+  for i = 1, last_line do
+    if vim.fn.foldlevel(i) > 0 and (i == 1 or vim.fn.foldlevel(i - 1) == 0) then
+      table.insert(starts, i)
     end
   end
+  return starts
+end
 
-  if not has_folds then
-    vim.notify('No folds in buffer', vim.log.levels.INFO)
+keymap('n', 'zv', function()
+  if vim.fn.foldlevel('.') == 0 then
+    -- Not on a fold — move to nearest fold (prefer next like zj)
+    local starts = get_fold_starts()
+    if #starts == 0 then
+      vim.notify('No folds in buffer', vim.log.levels.INFO)
+      return
+    end
+    local cur = vim.fn.line('.')
+    local target
+    for _, start in ipairs(starts) do
+      if start > cur then
+        target = start
+        break
+      end
+    end
+    if not target then
+      target = starts[1]
+    end
+    vim.api.nvim_win_set_cursor(0, { target, 0 })
+    vim.cmd('normal! zMzvzz')
     return
   end
 
-  -- Close current fold if we're on one
+  -- On a fold — toggle
+  if vim.fn.foldclosed('.') == -1 then
+    vim.cmd('normal! zc')
+  else
+    vim.cmd('normal! zOzz')
+  end
+end, { desc = 'Toggle fold / focus nearest' })
+
+keymap('n', 'zj', function()
+  local starts = get_fold_starts()
+  if #starts == 0 then
+    vim.notify('No folds in buffer', vim.log.levels.INFO)
+    return
+  end
+  if #starts == 1 then
+    vim.notify('Only fold in buffer', vim.log.levels.INFO)
+    return
+  end
+
+  -- Close current fold if open
   if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
     vim.cmd('normal! zc')
   end
 
-  local current_line = vim.fn.line('.')
-  vim.cmd('silent! normal! zj')
-
-  -- If we didn't move, we're at the last fold - cycle to first
-  if vim.fn.line('.') == current_line then
-    vim.cmd('normal! gg')
-    vim.cmd('silent! normal! zj')
+  local cur = vim.fn.line('.')
+  for _, start in ipairs(starts) do
+    if start > cur then
+      vim.api.nvim_win_set_cursor(0, { start, 0 })
+      vim.cmd('normal! zOzz')
+      return
+    end
   end
 
+  -- Cycle to first fold
+  vim.api.nvim_win_set_cursor(0, { starts[1], 0 })
   vim.cmd('normal! zOzz')
 end, { desc = 'Next fold (cycle)' })
 
 keymap('n', 'zk', function()
-  -- Check if there are any folds in the buffer
-  local has_folds = false
-  for i = 1, vim.fn.line('$') do
-    if vim.fn.foldlevel(i) > 0 then
-      has_folds = true
-      break
-    end
-  end
-
-  if not has_folds then
+  local starts = get_fold_starts()
+  if #starts == 0 then
     vim.notify('No folds in buffer', vim.log.levels.INFO)
     return
   end
+  if #starts == 1 then
+    vim.notify('Only fold in buffer', vim.log.levels.INFO)
+    return
+  end
 
-  -- Close current fold if we're on one
+  -- Close current fold if open
   if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
     vim.cmd('normal! zc')
   end
 
-  local current_line = vim.fn.line('.')
-  vim.cmd('silent! normal! zk')
-
-  -- If we didn't move, we're at the first fold - cycle to last
-  if vim.fn.line('.') == current_line then
-    vim.cmd('normal! G')
-    vim.cmd('silent! normal! zk')
+  local cur = vim.fn.line('.')
+  for i = #starts, 1, -1 do
+    if starts[i] < cur then
+      vim.api.nvim_win_set_cursor(0, { starts[i], 0 })
+      vim.cmd('normal! zOzz')
+      return
+    end
   end
 
-  -- Jump to start of fold
-  local fold_start = vim.fn.foldclosed('.')
-  if fold_start ~= -1 then
-    vim.api.nvim_win_set_cursor(0, { fold_start, 0 })
-  end
-
+  -- Cycle to last fold
+  vim.api.nvim_win_set_cursor(0, { starts[#starts], 0 })
   vim.cmd('normal! zOzz')
 end, { desc = 'Previous fold (cycle)' })
 
