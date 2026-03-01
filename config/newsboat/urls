@@ -23,6 +23,6 @@ https://sebastianraschka.com/rss_feed.xml "~Sebastian Raschka"
 # mathematics
 # https://terrytao.wordpress.com/feed/ science math "~Terry Tao's blog"
 # https://www.quantamagazine.org/feed/ science math "~Quanta Magazine"
-# https://mathvoices.ams.org/featurecolumn/feed science math "~AMS Feature Column"
-# https://gregorygundersen.com/feed.xml math "~Greg Gunderson"
+https://mathvoices.ams.org/featurecolumn/feed science math "~AMS Feature Column"
+https://gregorygundersen.com/feed.xml math "~Greg Gunderson"
 # https://almostsuremath.com/feed science math "~Almost Sure (George Lowther)"
