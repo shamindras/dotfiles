@@ -21,7 +21,7 @@ config/nvim/
 │   └── markdown.lua                  # Buffer-local zk keymaps for .md files
 ├── lua/shamindras/
 │   ├── core/
-│   │   ├── options.lua               # Editor settings (tabs, UI, search, undo)
+│   │   ├── options.lua               # Editor settings (12 fold sections)
 │   │   ├── keymaps.lua               # ~330 lines of leader-based keymaps
 │   │   ├── autocmds.lua              # ~164 lines (lint, format, tool restarts)
 │   │   └── lazy-bootstrap.lua        # Auto-downloads lazy.nvim if missing
@@ -90,6 +90,9 @@ config/nvim/
 
 ## Development Notes
 
+- **options.lua API convention**: use `o` (`vim.o`) for scalar options, `opt`
+  (`vim.opt`) only for table-valued assignments (`listchars`, `fillchars`) or
+  `:append()`/`:remove()` methods, and `vim.g` directly for global variables
 - Format on save via conform.nvim (skips files >100KB)
 - Lint debounce: 100ms on BufWritePost/InsertLeave
 - Reload config: `:source $MYVIMRC` or `<leader>xb` (source current file)
