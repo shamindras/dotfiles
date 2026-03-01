@@ -8,5 +8,6 @@ sketchybar --add item wifi right \
   label.drawing=off \
   padding_left=2 \
   padding_right=2 \
-  update_freq=30 \
-  script="$PLUGIN_DIR/wifi.sh"
+  update_freq=5 \
+  script="$PLUGIN_DIR/wifi.sh" \
+  --subscribe wifi wifi_change

@@ -5,21 +5,17 @@ COLOR_TEXT=0xffcdd6f4
 COLOR_YELLOW=0xfff9e2af
 COLOR_RED=0xfff38ba8
 
-AIRPORT_INFO="$(system_profiler SPAirPortDataType 2>/dev/null)"
+# Fast connectivity check (~5ms) — skip heavy system_profiler when disconnected
+WIFI_IP="$(ipconfig getifaddr en0 2>/dev/null || true)"
 
-SSID="$(
-  echo "$AIRPORT_INFO" |
-    awk '/Current Network Information:/{getline; gsub(/^[[:space:]]+|:[[:space:]]*$/, ""); print; exit}'
-)"
-
-if [ -z "$SSID" ]; then
+if [ -z "$WIFI_IP" ]; then
   sketchybar --set wifi icon="󰤭" icon.color="$COLOR_RED"
   exit 0
 fi
 
-# Extract RSSI (dBm) from "Signal / Noise: -XX dBm / -YY dBm"
+# Connected — use system_profiler for RSSI (runs async, ~3s but doesn't block bar)
 RSSI="$(
-  echo "$AIRPORT_INFO" |
+  system_profiler SPAirPortDataType 2>/dev/null |
     awk '/Current Network Information:/{found=1} found && /Signal \/ Noise:/{gsub(/[^0-9-]/, " "); split($0,a); print a[1]; exit}'
 )"
 
