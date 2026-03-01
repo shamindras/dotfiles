@@ -306,9 +306,14 @@ api.addSearchAlias('k', 'duckduckgo', 'https://duckduckgo.com/?q=', 's', 'https:
     });
 });
 api.addSearchAlias('l', 'libgen', 'https://libgen.li/index.php?columns%5B%5D=t&columns%5B%5D=a&columns%5B%5D=s&columns%5B%5D=y&columns%5B%5D=p&columns%5B%5D=i&objects%5B%5D=f&objects%5B%5D=e&objects%5B%5D=s&objects%5B%5D=a&objects%5B%5D=p&objects%5B%5D=w&topics%5B%5D=l&res=100&filesuns=all&curtab=f&order=year&ordermode=desc&req=');
-api.addSearchAlias('m', 'google-maps', 'https://www.google.com/maps?q=');
+api.addSearchAlias('m', 'google-maps', 'https://www.google.com/maps?q=', 's', 'https://www.google.com/complete/search?client=chrome&q=', function(response) {
+    var res = JSON.parse(response.text);
+    return res[1];
+});
 api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.li/search?index=&page=1&sort=newest&content=book_nonfiction&content=book_fiction&content=book_unknown&ext=pdf&ext=epub&lang=en&display=list_compact&q=');
-api.addSearchAlias('s', 'softarchive', 'https://softarchive.download/search?scope=title&category=5&q=');
+api.addSearchAlias('s', 'softarchive', 'https://softarchive.download/search?scope=title&category=5&q=', 's', 'https://softarchive.download/ajax/getSearchKeywords.ajax.php?q=', function(response) {
+    return JSON.parse(response.text);
+});
 api.addSearchAlias('w', 'wikipedia', 'https://www.wikipedia.org/w/index.php?title=Special:Search&search=', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
     var res = JSON.parse(response.text);
     return res[1];
