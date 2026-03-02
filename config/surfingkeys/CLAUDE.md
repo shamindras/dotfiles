@@ -17,6 +17,19 @@
 - **Link hints**: Ctrl-F for safe mode on macOS
 - **Rich hints**: 100ms delay for multi-key sequences
 
+## Video Site Key Unmapping
+
+A `baseVideoUnmapKeys` constant (`['f', 'm']`) defines common keys unmapped
+on all video sites so native player shortcuts work. Sites with extra player
+keys spread the base and append their own:
+
+| Key set                                    | Keys                    | Sites                                                                                         |
+| ------------------------------------------ | ----------------------- | --------------------------------------------------------------------------------------------- |
+| `baseVideoUnmapKeys`                           | `['f', 'm']`              | Netflix, Amazon, Prime Video, HiAnime, AniCrush, Peacock, Paramount+, Dailymotion, iView ABC |
+| `[...baseVideoUnmapKeys, 't', 'c']`           | `['f', 'm', 't', 'c']`   | YouTube                                                                                       |
+| `[...baseVideoUnmapKeys, 't', 'c', 'w']`     | `['f', 'm', 't', 'c', 'w']` | Bilibili                                                                                   |
+| `[...baseVideoUnmapKeys, 'c', 'j', 'k']`     | `['f', 'm', 'c', 'j', 'k']` | Crunchyroll                                                                                |
+
 ## Development Notes
 
 - JavaScript config; Vimium-compatible mappings for consistency

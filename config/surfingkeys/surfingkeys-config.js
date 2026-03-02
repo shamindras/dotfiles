@@ -480,61 +480,67 @@ settings.blocklistPattern = /localhost:888[89]|localhost:8890|multiplexer-prod\.
 
 // ========== VIDEO SITES ==========
 
+// Common keys to unmap on video sites so native player shortcuts work
+// (f = fullscreen, m = mute). Sites extend this with player-specific keys.
+const baseVideoUnmapKeys = ['f', 'm'];
+
 // YouTube - Unmap keys on entire domain
-['f', 'm', 't', 'c'].forEach(key => {
+[...baseVideoUnmapKeys, 't', 'c'].forEach(key => {
     api.unmap(key, /youtube\.com/);
 });
 
 // Netflix - domain-wide (SPA site)
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /netflix\.com/);
 });
 
 // Amazon Video - domain-wide for /gp/video section
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /amazon\.com/);
 });
 
 // Prime Video - domain-wide
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /primevideo\.com/);
 });
 
 // Crunchyroll - domain-wide (handles both main and static domains)
-['f', 'm', 'c', 'j', 'k'].forEach(key => {
+[...baseVideoUnmapKeys, 'c', 'j', 'k'].forEach(key => {
     api.unmap(key, /crunchyroll\.com/);
 });
 
 // HiAnime - domain-wide
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /hianime\.to/);
 });
 
 // AniCrush - domain-wide
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /anicrush\.to/);
 });
 
-// Bilibili - domain-wide
-api.unmap('f', /bilibili\.com/);
+// Bilibili - domain-wide (w = web fullscreen)
+[...baseVideoUnmapKeys, 't', 'c', 'w'].forEach(key => {
+    api.unmap(key, /bilibili\.com/);
+});
 
 // Peacock - domain-wide
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /peacocktv\.com/);
 });
 
 // Paramount+ - domain-wide
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /paramountplus\.com/);
 });
 
 // Dailymotion - domain-wide
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /dailymotion\.com/);
 });
 
 // iView ABC - domain-wide
-['f', 'm'].forEach(key => {
+baseVideoUnmapKeys.forEach(key => {
     api.unmap(key, /iview\.abc\.net\.au/);
 });
 
