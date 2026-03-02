@@ -71,6 +71,11 @@ end)
 ---@param config table
 ---@return table
 function M.setup(config)
+  -- When tmux enables mouse reporting (`set -g mouse on`), WezTerm forwards
+  -- all mouse events to the application. This setting tells WezTerm to keep
+  -- CMD-modified mouse events local so CMD+Click URL opening works in tmux.
+  config.bypass_mouse_reporting_modifiers = 'CMD'
+
   -- Mouse bindings
   config.mouse_bindings = {
     {
