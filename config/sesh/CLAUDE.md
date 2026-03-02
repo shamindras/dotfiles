@@ -44,14 +44,16 @@ broken state on every cold start, preventing sesh from ever recreating it.
 
 ## Helper Library (`scripts/helpers.sh`)
 
-Sourceable library providing DRY window-creation functions. Every function
-takes `session` and `work_dir` as positional args (except `sesh_focus_window`
-which takes `session` and `window_name`).
+Sourceable library providing DRY window-creation functions. Most functions
+take `session` and `work_dir` as positional args. Exceptions:
+`sesh_window_nvim_smart` takes `session`, `target_dir`, `window_name`;
+`sesh_focus_window` takes `session` and `window_name`.
 
 | Function | What it does |
 |----------|-------------|
-| `sesh_window_nvim` | Rename window 1 to "nvim", launch nvim with Snacks file picker |
-| `sesh_window_claude` | New window "claude", run `claude` (single pane) |
+| `sesh_window_claude` | Rename window 1 to "claude", run `claude` (inherits cwd from sesh.toml path) |
+| `sesh_window_nvim` | New window "nvim", launch nvim with Snacks file picker |
+| `sesh_window_nvim_smart` | New window with custom name, launch nvim with Snacks smart picker targeting a directory |
 | `sesh_window_term` | New window "term", plain shell |
 | `sesh_window_yazi` | New window "yazi", run yazi as direct command (PTY sizing) |
 | `sesh_focus_window` | Select/focus a named window |
@@ -69,30 +71,31 @@ All scripts use:
 - `set -Eeuo pipefail` strict mode
 - `SESSION` var matching the session name in `sesh.toml`
 - `WORK_DIR` with `${DROPBOX_DIR:-$HOME/DROPBOX}` fallback
-- `tmux rename-window` for window 1, `tmux new-window` for subsequent windows
+- `sesh_window_claude` renames window 1, all other windows use `tmux new-window`
 
 ### Window Layout by Session
 
-| Session | W1 | W2 | W3 | W4 | W5 | Focus |
-|---------|----|----|----|----|----|----|
-| dots     | nvim | claude | term | yazi | — | nvim |
-| play    | nvim | claude | term | yazi | — | nvim |
-| career  | nvim | claude | term | yazi | — | nvim |
-| blog    | nvim | claude | term | yazi | preview | nvim |
-| notes   | zk   | claude | term | yazi | —       | zk   |
-| feed    | newsboat | term | yazi | —  | —       | newsboat |
+| Session  | W1       | W2      | W3      | W4   | W5   | Focus    |
+|----------|----------|---------|---------|------|------|----------|
+| dots     | claude   | nvim    | term    | yazi | —    | nvim     |
+| play     | claude   | nvim    | term    | yazi | —    | nvim     |
+| career   | claude   | nvim    | term    | yazi | —    | nvim     |
+| blog     | claude   | nvim    | preview | term | yazi | nvim     |
+| notes    | claude   | journal | ideas   | term | yazi | journal  |
+| feed     | newsboat | term    | yazi    | —    | —    | newsboat |
 
 ### Common Window Patterns
 
-| Window | Setup |
-|--------|-------|
-| `nvim` | `sesh_window_nvim` — nvim with Snacks file picker |
-| `claude` | `sesh_window_claude` — single pane running `claude` |
-| `term` | `sesh_window_term` — plain terminal |
-| `yazi` | `sesh_window_yazi` — direct command for correct PTY sizing |
-| `preview` | `quarto preview` (`blog` session only, inline) |
-| `zk` | Explicit cd + rsync + `zk daily` (notes session only, inline — avoids alias race) |
-| `newsboat` | `newsboat` (feed session only, inline) |
+| Window     | Setup |
+|------------|-------|
+| `claude`   | `sesh_window_claude` — renames window 1, runs `claude` |
+| `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker |
+| `ideas`    | `sesh_window_nvim_smart` — nvim with Snacks smart picker (`notes` session only) |
+| `term`     | `sesh_window_term` — plain terminal |
+| `yazi`     | `sesh_window_yazi` — direct command for correct PTY sizing |
+| `preview`  | `quarto preview` (`blog` session only, inline) |
+| `journal`  | Explicit cd + rsync + `zk daily` (`notes` session only, inline — avoids alias race) |
+| `newsboat` | `newsboat` (`feed` session only, inline) |
 
 ## tmux / WezTerm Integration
 

@@ -2,20 +2,29 @@
 # Shared helper functions for sesh startup scripts.
 # Source this file — do not execute directly.
 
-# Window: nvim with Snacks file picker (renames window 1)
+# Window: claude (renames window 1 — inherits cwd from sesh.toml path)
+sesh_window_claude() {
+  local session="$1" work_dir="$2"
+  tmux rename-window -t "${session}:1" "claude"
+  tmux send-keys -t "${session}:claude" "claude" Enter
+}
+
+# Window: nvim with Snacks file picker (creates new window)
 sesh_window_nvim() {
   local session="$1" work_dir="$2"
-  tmux rename-window -t "${session}:1" "nvim"
+  tmux new-window -a -t "${session}:\$" -n "nvim" -c "${work_dir}"
   tmux send-keys -l -t "${session}:nvim" \
     "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.files)'"
   tmux send-keys -t "${session}:nvim" Enter
 }
 
-# Window: claude (single pane)
-sesh_window_claude() {
-  local session="$1" work_dir="$2"
-  tmux new-window -a -t "${session}:\$" -n "claude" -c "${work_dir}"
-  tmux send-keys -t "${session}:claude" "claude" Enter
+# Window: nvim with Snacks smart picker targeting a specific directory
+sesh_window_nvim_smart() {
+  local session="$1" target_dir="$2" window_name="$3"
+  tmux new-window -a -t "${session}:\$" -n "${window_name}" -c "${target_dir}"
+  tmux send-keys -l -t "${session}:${window_name}" \
+    "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.smart, {cwd = \"${target_dir}\"})'"
+  tmux send-keys -t "${session}:${window_name}" Enter
 }
 
 # Window: plain terminal
