@@ -59,6 +59,12 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   command = "execute 'silent !brew services restart borders'",
 })
 
+-- sketchybar config
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = { 'sketchybarrc', '*/sketchybar/colors.sh', '*/sketchybar/items/*.sh' },
+  command = "execute 'silent !sketchybar --reload'",
+})
+
 -- resize splits if window got resized
 local resize_window_group = vim.api.nvim_create_augroup('resize_window', { clear = true })
 vim.api.nvim_create_autocmd({ 'VimResized' }, {
