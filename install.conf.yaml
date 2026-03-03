@@ -108,6 +108,13 @@
 - brewfile:
     - config/brew/Brewfile
 
+# Start borders and sketchybar as brew services (launchd: RunAtLoad + KeepAlive)
+- shell:
+    - command: brew services start borders
+      description: Start borders as a brew service
+    - command: brew services start sketchybar
+      description: Start sketchybar as a brew service
+
 # rust + cargo
 - shell:
     - command: ./scripts/setup-upgrade-rust-cargo
