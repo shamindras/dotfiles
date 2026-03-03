@@ -44,3 +44,22 @@ config/sketchybar/
 - Workspace updates via Aerospace's `exec-on-workspace-change` event
 - Plugin scripts (standalone) must include `set -Eeuo pipefail` (repo convention)
 - Item scripts are sourced into `sketchybarrc` — do **not** add strict mode
+
+## Service Management
+
+Sketchybar runs as a **brew service** via launchd (`RunAtLoad` + `KeepAlive`),
+not via AeroSpace's `exec-and-forget`. This ensures reliable startup at login
+and automatic restart on crash.
+
+| Command                          | Effect                              |
+| -------------------------------- | ----------------------------------- |
+| `brew services start sketchybar` | Register + start the launchd agent  |
+| `brew services stop sketchybar`  | Stop + unregister the launchd agent |
+| `brew services info sketchybar`  | Show running/loaded status          |
+| `sketchybar --reload`            | Reload config (process must be up)  |
+
+- **Log paths**: `~/Library/Logs/Homebrew/sketchybar/`
+- **Plist**: `~/Library/LaunchAgents/homebrew.mxcl.sketchybar.plist`
+- **Brewfile**: `restart_service: :changed` restarts the service on formula upgrade
+- **Nvim autocmd**: saving `sketchybarrc`, `colors.sh`, or `items/*.sh` triggers
+  `sketchybar --reload` via `BufWritePost` in `config/nvim/lua/shamindras/core/autocmds.lua`
