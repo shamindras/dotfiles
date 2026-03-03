@@ -12,16 +12,9 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-# after-startup-command = []
-
-# janky borders
-# https://github.com/FelixKratz/JankyBorders#bootstrap-with-aerospace
-after-startup-command = ['exec-and-forget borders', 'exec-and-forget sketchybar']
-
-# Run Sketchybar together with AeroSpace ----
-# source: https://nikitabobko.github.io/AeroSpace/goodness#show-aerospace-workspaces-in-sketchybar
-# sketchbar has a built-in detection of already running process,
-# so it won't be run twice on AeroSpace restart
+# borders and sketchybar are managed via brew services (launchd),
+# so they start reliably at login independent of AeroSpace.
+after-startup-command = []
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = [

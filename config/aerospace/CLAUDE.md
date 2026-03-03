@@ -20,8 +20,9 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **Gaps**: per-monitor outer top gap — 0 for built-in, 30px for external
   (leaves room for sketchybar)
 - **Mouse**: follows focus on monitor change, `move-mouse window-lazy-center`
-- **Startup**: launches `borders` and `sketchybar`, registers workspace-change
-  trigger for sketchybar
+- **Startup**: `after-startup-command` is empty — `borders` and `sketchybar`
+  are managed as brew services (launchd). AeroSpace only registers the
+  workspace-change trigger for sketchybar via `exec-on-workspace-change`
 - **App routing**: `on-window-detected` maps 40+ apps to workspaces (1-9, A-Z)
   by `app-id`; system utils float
 - **Keybindings**: Alt+hjkl (focus), Alt+Shift+hjkl (move), Alt+number/letter
