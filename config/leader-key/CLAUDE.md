@@ -23,7 +23,7 @@ action groups for opening/quitting apps, running commands, and quick URLs.
   aerospace workspace navigation
 - **Utility commands**: brew upgrade (`--greedy-auto-updates`), move-files,
   restart-leaderkey, trash-empty, toggle-mute, wash-dropbox
-- **URLs**: Claude, personal repos (codebox, dotfiles), homepage, neovim config
+- **URLs**: Claude, Google Keep, personal repos (codebox, dotfiles), homepage, neovim config
 - **Action types**: `url`, `application`, `command`, `group` (container)
 
 ## Cross-Tool References
