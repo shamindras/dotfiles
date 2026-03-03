@@ -308,6 +308,12 @@
           "value": "open -na 'Firefox' --args -private-window 'https://youtube.com'"
         },
         {
+          "key": "k",
+          "label": "google-keep",
+          "type": "url",
+          "value": "https://keep.google.com/u/0/"
+        },
+        {
           "key": "n",
           "label": "neovim-config",
           "type": "url",
