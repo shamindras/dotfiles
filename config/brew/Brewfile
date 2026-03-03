@@ -327,8 +327,6 @@ cask "r-app"
 cask "raycast"
 # Data science software focusing on R and Python
 cask "rstudio"
-# Mathematics software system
-cask "sage"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
 # Tool for sending personal documents to Kindles from Macs
