@@ -24,10 +24,10 @@ brew "atuin"
 brew "bat"
 # Bash scripts that integrate bat with various command-line tools
 brew "bat-extras"
-# New way to see and navigate directory trees
-brew "broot"
 # Yet another cross-platform graphical process/system monitor
 brew "bottom"
+# New way to see and navigate directory trees
+brew "broot"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Core application library for C
@@ -42,10 +42,10 @@ brew "commitizen"
 brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
-# Good-lookin' diffs with diff-highlight and more
-brew "diff-so-fancy"
 # Load/unload environment variables based on $PWD
 brew "direnv"
+# Embeddable SQL OLAP Database Management System
+brew "duckdb"
 # Disk Usage/Free Utility - a better 'df' alternative
 brew "duf"
 # More intuitive version of du in rust
@@ -122,8 +122,6 @@ brew "gobject-introspection"
 brew "graphviz"
 # Tool for glamorous shell scripts
 brew "gum"
-# Improved top (interactive process viewer)
-brew "htop"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
 # Spell checker and morphological analyzer
@@ -156,8 +154,6 @@ brew "luacheck"
 brew "luarocks"
 # Deep clean and optimize your Mac
 brew "mole"
-# NCurses Disk Usage
-brew "ncdu"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # RSS/Atom feed reader for text terminals
@@ -186,6 +182,8 @@ brew "pinentry-mac"
 brew "qt@5"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler-qt5"
+# Pre-commit re-implemented in Rust
+brew "prek"
 # Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
 brew "prettier"
 # Prettier daemon
@@ -202,8 +200,6 @@ brew "ripgrep-all"
 brew "rsync"
 # Smart session manager for the terminal
 brew "sesh"
-# 7-Zip is a file archiver with a high compression ratio
-brew "sevenzip"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Bash syntax highlighter that encourages/fixes variables quoting
@@ -255,9 +251,9 @@ brew "zk"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # A window border system for macOS
-brew "felixkratz/formulae/borders", restart_service: :changed
-# Custom macOS status bar
-brew "felixkratz/formulae/sketchybar", restart_service: :changed
+brew "felixkratz/formulae/borders"
+# Custom macOS statusbar with shell plugin, interaction and graph support
+brew "felixkratz/formulae/sketchybar"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -266,8 +262,6 @@ cask "1password-cli"
 cask "nikitabobko/tap/aerospace"
 # GPU-accelerated terminal emulator
 cask "alacritty"
-# Application launcher and productivity software
-cask "alfred"
 # E-books management software
 cask "calibre"
 # Terminal-based AI coding assistant
@@ -288,6 +282,7 @@ cask "font-hasklug-nerd-font"
 cask "font-input"
 cask "font-iosevka-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
+cask "font-lilex-nerd-font"
 cask "font-maple-mono"
 cask "font-monaspice-nerd-font"
 cask "font-monoid"
@@ -308,8 +303,6 @@ cask "google-drive"
 cask "inkscape"
 # Download manager
 cask "jdownloader"
-# Programming language for technical computing
-cask "julia-app"
 # Keyboard customiser
 cask "karabiner-elements"
 # Application launcher
