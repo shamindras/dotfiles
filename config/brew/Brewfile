@@ -255,9 +255,9 @@ brew "zk"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # A window border system for macOS
-brew "felixkratz/formulae/borders"
+brew "felixkratz/formulae/borders", restart_service: :changed
 # Custom macOS status bar
-brew "felixkratz/formulae/sketchybar"
+brew "felixkratz/formulae/sketchybar", restart_service: :changed
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
