@@ -213,7 +213,7 @@
           "key": "b",
           "label": "brew-upgrade",
           "type": "command",
-          "value": "/Applications/WezTerm.app/Contents/MacOS/wezterm start -- /bin/zsh -c '/opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade && /opt/homebrew/bin/brew cleanup; printf \"\\n===[ BREW UPDATE END ]===\\n\"; printf \"\\nPress any key to close this window...\"; read -k 1 -s'"
+          "value": "/Applications/WezTerm.app/Contents/MacOS/wezterm start -- /bin/zsh -c '/opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade --greedy-auto-updates && /opt/homebrew/bin/brew cleanup; printf \"\\n===[ BREW UPDATE END ]===\\n\"; printf \"\\nPress any key to close this window...\"; read -k 1 -s'"
         },
         {
           "key": "m",
