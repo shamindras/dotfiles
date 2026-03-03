@@ -154,8 +154,8 @@ function M.setup(config)
     tmux('9', '9'),                -- CMD+9       = window 9
 
     -- Session management
-    tmux('k', 's'),                -- CMD+K       = sesh picker
-    tmux('s', 'w'),                -- CMD+S       = session/window tree
+    tmux_shift('K', 's'),          -- CMD+Shift+K = sesh picker
+    tmux('k', 'w'),                -- CMD+K       = session/window tree
     tmux('j', 'L'),                -- CMD+J       = last session
     tmux('n', 'S'),                -- CMD+N       = new session
     tmux_ctrl('h', ')'),           -- CMD+Ctrl+H  = previous session

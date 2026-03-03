@@ -96,10 +96,10 @@ All scripts use:
 
 ## tmux / WezTerm Integration
 
-- `prefix+s` (or CMD+K via WezTerm) opens sesh fzf picker popup
+- `prefix+s` (or CMD+Shift+K via WezTerm) opens sesh fzf picker popup
 - Filter keys in picker: `ctrl-a` all, `ctrl-t` tmux, `ctrl-g` config,
   `ctrl-x` zoxide, `ctrl-d` kill session
-- CMD+K already sends `C-a s` via WezTerm — no WezTerm changes needed
+- CMD+Shift+K sends `C-a s` via WezTerm; CMD+K sends `C-a w` (session/window tree)
 
 ## Adding a New Session
 
