@@ -56,7 +56,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 -- leader-key config
 vim.api.nvim_create_autocmd('BufWritePost', {
   pattern = { '*/leader-key/config.json' },
-  command = "execute 'silent !killall \"Leader Key\" 2>/dev/null; sleep 0.5; open -a \"Leader Key\"'",
+  command = 'execute \'silent !killall "Leader Key" 2>/dev/null; sleep 0.5; open -a "Leader Key"\'',
 })
 
 -- borders config
