@@ -3,10 +3,18 @@ parent: base
 
 matches:
   # For example (Australian/UK)
-  - trigger: ";ega"
+  - trigger: ";ee"
     replace: ", e.g. "
 
   # For example (USA)
-  - trigger: ";egu"
+  - trigger: ";eu"
     replace: ", e.g., "
+
+  # That is (Australian/UK)
+  - trigger: ";ii"
+    replace: ", i.e. "
+
+  # That is (USA)
+  - trigger: ";iu"
+    replace: ", i.e., "
 
