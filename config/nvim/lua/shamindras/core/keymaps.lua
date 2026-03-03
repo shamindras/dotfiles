@@ -23,13 +23,6 @@ keymap('n', '<leader>bw', '<cmd>wall!<cr>', { desc = '[b]uffer [w]rite all' })
 
 -- ------------------------------------------------------------------------- }}}
 
--- {{{ [n]umber Operations
-
-keymap({ 'n', 'v' }, '<leader>na', '<C-a>', { desc = '[n]umber [a]dd (increment)' })
-keymap({ 'n', 'v' }, '<leader>nx', '<C-x>', { desc = '[n]umber subtrac[x]t (decrement)' })
-
--- ------------------------------------------------------------------------- }}}
-
 -- {{{ [d]elete to Black Hole
 
 keymap({ 'n', 'v' }, '<leader>d', '"_d', { desc = '[d]elete to black hole' })
@@ -120,6 +113,13 @@ keymap('n', '<leader>ls', '<cmd>Lazy sync<cr>', { desc = '[l]azy [s]ync' })
 
 -- ------------------------------------------------------------------------- }}}
 
+-- {{{ [n]umber Operations
+
+keymap({ 'n', 'v' }, '<leader>na', '<C-a>', { desc = '[n]umber [a]dd (increment)' })
+keymap({ 'n', 'v' }, '<leader>nx', '<C-x>', { desc = '[n]umber subtrac[x]t (decrement)' })
+
+-- ------------------------------------------------------------------------- }}}
+
 -- {{{ [p]aste (Register-Aware)
 
 keymap('v', '<leader>p', '"_dP', { desc = '[p]aste (preserve register)' })
@@ -130,6 +130,14 @@ keymap('v', '<leader>p', '"_dP', { desc = '[p]aste (preserve register)' })
 
 keymap('n', '<leader>qa', '<cmd>qall!<cr>', { desc = '[q]uit [a]ll (force, no save)' })
 keymap('n', '<leader>qs', '<cmd>wqall!<cr>', { desc = '[q]uit [s]ave all and exit' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ [s]earch/Replace Operations
+
+keymap('n', '<leader>sr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {
+  desc = '[s]earch [r]eplace word under cursor',
+})
 
 -- ------------------------------------------------------------------------- }}}
 
@@ -193,7 +201,7 @@ keymap('n', '<leader>wx', '<cmd>close<CR>', { desc = '[w]indow close [x]' })
 -- {{{ E[x]ecute Operations
 
 keymap('n', '<leader>xl', '<cmd>.lua<CR>', { desc = 'e[x]ecute [l]ine (Lua)' })
-keymap('v', '<leader>xv', '<cmd>.lua<CR>', { desc = 'e[x]ecute [v]isual (Lua)' })
+keymap('v', '<leader>xv', ':lua<CR>', { desc = 'e[x]ecute [v]isual (Lua)' })
 keymap(
   'n',
   '<leader>xb',
@@ -220,7 +228,7 @@ keymap('n', 'C', '"_C', { desc = 'Change to EOL (no copy)' })
 keymap('v', '>', '>gv^', { desc = 'Indent right (stay in visual)' })
 keymap('v', '<', '<gv^', { desc = 'Indent left (stay in visual)' })
 
-keymap('n', '<C-c>', 'ciW', { desc = 'Change in WORD' })
+keymap('n', '<C-c>', '"_ciW', { desc = 'Change in WORD (no copy)' })
 
 keymap('i', '<Esc>', function()
   return vim.fn.col('.') == 1 and '<Esc>' or '<Esc>l'

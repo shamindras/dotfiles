@@ -22,7 +22,7 @@ config/nvim/
 ├── lua/shamindras/
 │   ├── core/
 │   │   ├── options.lua               # Editor settings (12 fold sections)
-│   │   ├── keymaps.lua               # ~330 lines of leader-based keymaps
+│   │   ├── keymaps.lua               # ~370 lines of leader-based keymaps
 │   │   ├── autocmds.lua              # ~164 lines (lint, format, tool restarts)
 │   │   └── lazy-bootstrap.lua        # Auto-downloads lazy.nvim if missing
 │   └── plugins/
@@ -64,7 +64,7 @@ config/nvim/
 | `<leader>k`  | Zettelkasten (daily, idea, search, backlinks)     |
 | `<leader>l`  | Lazy manager (menu, update, profile, sync)        |
 | `<leader>n`  | Number ops (increment, decrement)                 |
-| `<leader>s`  | Search (grep, diagnostics, help, keymaps, notifs) |
+| `<leader>s`  | Search/replace (grep, diagnostics, replace word)  |
 | `<leader>t`  | Toggle (line numbers, spell check, theme)         |
 | `<leader>w`  | Window (split, equalize, maximize, swap)          |
 
