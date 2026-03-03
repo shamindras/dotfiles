@@ -116,6 +116,19 @@ Canonical palette: `config/sketchybar/colors.sh`.
 update both `config/wezterm/keybindings-reference.md` and the relevant
 CLAUDE.md binding tables.
 
+**Tool reload after config changes**: some tools require a reload when
+their config is modified outside nvim (nvim has BufWritePost autocmds for
+these, but Claude Code edits bypass them). After modifying these configs,
+run the corresponding command:
+
+| Tool        | Config file pattern                          | Reload command                                                      |
+| ----------- | -------------------------------------------- | ------------------------------------------------------------------- |
+| aerospace   | `aerospace.toml`                             | `aerospace reload-config`                                           |
+| borders     | `bordersrc`                                  | `brew services restart borders`                                     |
+| leader-key  | `leader-key/config.json`                     | `killall 'Leader Key' 2>/dev/null; sleep 0.5; open -a 'Leader Key'` |
+| sketchybar  | `sketchybarrc`, `colors.sh`, `items/*.sh`    | `sketchybar --reload`                                               |
+| yazi        | `yazi.toml`                                  | `yazi --clear-cache`                                                |
+
 ### Design principles
 
 - **Idempotent on existing machine**: scripts/configs safe to re-run
