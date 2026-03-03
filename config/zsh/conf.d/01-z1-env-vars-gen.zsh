@@ -39,6 +39,7 @@ if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   fi
   export HOMEBREW_NO_ANALYTICS=1
   export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+  export HOMEBREW_UPGRADE_GREEDY=1
   export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar";
   export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX";
   export MANPATH="$HOMEBREW_PREFIX/share/man${MANPATH+:$MANPATH}:";
