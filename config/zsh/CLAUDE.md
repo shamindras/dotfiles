@@ -76,10 +76,19 @@ gh, npm, node, ruby, cargo, tmux. All tools use proper XDG base directories.
 | --------- | ------------------------------------------------ |
 | Navigation | `cd=z`, `..=z ..`, `dots`, `reps`, `conf`      |
 | System    | `c=clear+tmux`, `b=bat`, `l=ls -la`, `tree`     |
+| Brew      | `bu=update+upgrade(greedy-auto-updates)+cleanup` |
 | Dev       | `n=nvim`, `lg=lazygit`, `ghd=gh dash`, `cl=clear+claude`, `clr=clear+claude --resume` |
 | Zk        | `kd=daily`, `kis=idea`, `ks=search`             |
 | Suffix    | `.pdf→Skim`, `.jpg→Preview`, `.mp4→VLC`         |
 | Global    | `H=head`, `L=bat`, `G=rg`, `C=pbcopy`, `J=jq`  |
+
+## Homebrew Env Vars (in `01-z1-env-vars-gen.zsh`)
+
+| Variable                   | Value                  | Effect                                     |
+| -------------------------- | ---------------------- | ------------------------------------------ |
+| `HOMEBREW_NO_ANALYTICS`    | `1`                    | Disable analytics                          |
+| `HOMEBREW_CASK_OPTS`       | `--appdir=/Applications` | Default cask install location            |
+| `HOMEBREW_UPGRADE_GREEDY`  | `1`                    | `brew upgrade` includes auto-updating casks |
 
 ## Cross-Tool Integration
 
