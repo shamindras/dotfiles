@@ -54,8 +54,8 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 
 | WezTerm key     | tmux key | Action              |
 | --------------- | -------- | ------------------- |
-| `CMD+K`         | `s`      | Sesh picker         |
-| `CMD+S`         | `w`      | Session quick-switcher |
+| `CMD+K`         | `w`      | Session/window tree |
+| `CMD+SHIFT+K`   | `s`      | Sesh picker         |
 | `CMD+J`         | `L`      | Last session        |
 | `CMD+N`         | `S`      | New session         |
 | `CMD+CTRL+H`    | `)`      | Previous session    |
