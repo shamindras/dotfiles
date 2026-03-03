@@ -45,15 +45,13 @@ broken state on every cold start, preventing sesh from ever recreating it.
 ## Helper Library (`scripts/helpers.sh`)
 
 Sourceable library providing DRY window-creation functions. Most functions
-take `session` and `work_dir` as positional args. Exceptions:
-`sesh_window_nvim_smart` takes `session`, `target_dir`, `window_name`;
+take `session` and `work_dir` as positional args. Exception:
 `sesh_focus_window` takes `session` and `window_name`.
 
 | Function | What it does |
 |----------|-------------|
 | `sesh_window_claude` | Rename window 1 to "claude", run `claude` (inherits cwd from sesh.toml path) |
 | `sesh_window_nvim` | New window "nvim", launch nvim with Snacks file picker |
-| `sesh_window_nvim_smart` | New window with custom name, launch nvim with Snacks smart picker targeting a directory |
 | `sesh_window_term` | New window "term", plain shell |
 | `sesh_window_yazi` | New window "yazi", run yazi as direct command (PTY sizing) |
 | `sesh_focus_window` | Select/focus a named window |
@@ -77,11 +75,11 @@ All scripts use:
 
 | Session  | W1       | W2      | W3      | W4   | W5   | Focus    |
 |----------|----------|---------|---------|------|------|----------|
-| dots     | claude   | nvim    | term    | yazi | —    | nvim     |
+| dots     | claude   | nvim    | term    | yazi | —    | claude   |
 | play     | claude   | nvim    | term    | yazi | —    | nvim     |
 | career   | claude   | nvim    | term    | yazi | —    | nvim     |
 | blog     | claude   | nvim    | preview | term | yazi | nvim     |
-| notes    | claude   | journal | ideas   | term | yazi | journal  |
+| notes    | claude   | journal | nvim    | term | yazi | journal  |
 | feed     | newsboat | term    | yazi    | —    | —    | newsboat |
 
 ### Common Window Patterns
@@ -90,7 +88,6 @@ All scripts use:
 |------------|-------|
 | `claude`   | `sesh_window_claude` — renames window 1, runs `claude` |
 | `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker |
-| `ideas`    | `sesh_window_nvim_smart` — nvim with Snacks smart picker (`notes` session only) |
 | `term`     | `sesh_window_term` — plain terminal |
 | `yazi`     | `sesh_window_yazi` — direct command for correct PTY sizing |
 | `preview`  | `quarto preview` (`blog` session only, inline) |
