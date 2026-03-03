@@ -85,6 +85,7 @@ config/nvim/
 | yazi       | Autocmd: clear-cache on yazi.toml save                 |
 | lazygit    | Snacks.lazygit() via `<leader>lg`                      |
 | borders    | Autocmd: restart service on bordersrc save             |
+| sketchybar | Autocmd: reload on sketchybarrc/colors/items save      |
 | zk         | zk-nvim with LSP attach on .md files in notebook       |
 | fd/rg      | Custom args in snacks/pickers.lua (exclude .git, submods) |
 
