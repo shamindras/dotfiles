@@ -34,5 +34,7 @@ action groups for opening/quitting apps, running commands, and quick URLs.
 
 ## Development Notes
 
-- Reload: custom `r` (restart-leaderkey) command kills and relaunches app
+- Reload: custom `r r` (restart-leaderkey) command kills and relaunches app
+- Nvim autocmd in `config/nvim/lua/shamindras/core/autocmds.lua` restarts
+  the app on save of `leader-key/config.json`
 - Config is JSON — validated by app on load
