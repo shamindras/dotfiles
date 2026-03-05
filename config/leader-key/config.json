@@ -216,6 +216,12 @@
           "value": "/Applications/WezTerm.app/Contents/MacOS/wezterm start -- /bin/zsh -c '/opt/homebrew/bin/brew update && /opt/homebrew/bin/brew upgrade --greedy-auto-updates && /opt/homebrew/bin/brew cleanup; printf \"\\n===[ BREW UPDATE END ]===\\n\"; printf \"\\nPress any key to close this window...\"; read -k 1 -s'"
         },
         {
+          "key": "c",
+          "label": "close-notifications",
+          "type": "command",
+          "value": "~/.config/bin/close-notifications"
+        },
+        {
           "key": "m",
           "label": "move-files",
           "type": "command",

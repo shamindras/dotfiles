@@ -21,8 +21,9 @@ action groups for opening/quitting apps, running commands, and quick URLs.
   spotify, vscode, etc.)
 - **Application quitting**: sophisticated quit with sleep delays and
   aerospace workspace navigation
-- **Utility commands**: brew upgrade (`--greedy-auto-updates`), move-files,
-  restart-leaderkey, trash-empty, toggle-mute, wash-dropbox
+- **Utility commands**: brew upgrade (`--greedy-auto-updates`),
+  close-notifications, move-files, restart-leaderkey, trash-empty,
+  toggle-mute, wash-dropbox
 - **URLs**: Claude, Google Keep, personal repos (codebox, dotfiles), homepage, neovim config
 - **Action types**: `url`, `application`, `command`, `group` (container)
 
