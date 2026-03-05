@@ -86,7 +86,7 @@ All scripts use:
 
 | Window     | Setup |
 |------------|-------|
-| `claude`   | `sesh_window_claude` — renames window 1, runs `claude` |
+| `claude`   | `sesh_window_claude` — renames window 1, clears + runs `claude` |
 | `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker |
 | `term`     | `sesh_window_term` — plain terminal |
 | `yazi`     | `sesh_window_yazi` — direct command for correct PTY sizing |
@@ -100,6 +100,50 @@ All scripts use:
 - Filter keys in picker: `ctrl-a` all, `ctrl-t` tmux, `ctrl-g` config,
   `ctrl-x` zoxide, `ctrl-d` kill session
 - CMD+Shift+K sends `C-a s` via WezTerm; CMD+K sends `C-a w` (session/window tree)
+
+## Workflow Guide (tldr)
+
+Sesh is the **single source of truth** for session creation.
+Resurrect/continuum is a background safety net, not part of the normal workflow.
+
+### Computer restart / cold start
+
+Continuum auto-restore is OFF. Sesh recreates sessions fresh from sesh.toml.
+
+```
+sesh-reset --common         # notes, dots, play, blog, feed
+sesh-reset --all            # common + career
+```
+
+Or connect one at a time: `sesh connect notes`, or use `prefix+s` picker.
+
+### Reset a broken session
+
+```
+sesh-reset notes            # kill + prune resurrect + recreate from sesh.toml
+sesh-reset notes feed       # multiple sessions
+```
+
+### Closed WezTerm but tmux is still running
+
+tmux runs as a server independent of WezTerm. Just reopen WezTerm and run:
+```
+tmux attach                 # reattach to last session
+```
+All sessions and processes are still alive — no sesh-reset needed.
+
+### Day-to-day
+
+- Switch sessions: `prefix+s` (or `CMD+Shift+K`)
+- Connect to config session: `sesh connect <name>`
+
+### About resurrect/continuum
+
+Continuum auto-saves every 2 min (keeps 10 snapshots). This is a background
+safety net. Since auto-restore is OFF, snapshots are not used on cold start.
+After a restart, continuum will overwrite the `last` snapshot within ~2 min
+with the current (empty) state, so manual `prefix+Ctrl-r` is unreliable.
+Stick with `sesh-reset` for all recovery.
 
 ## Adding a New Session
 
