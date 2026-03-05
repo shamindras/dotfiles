@@ -68,7 +68,6 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 | WezTerm key     | tmux key | Action             |
 | --------------- | -------- | ------------------ |
 | `CMD+[`         | `[`      | Enter copy mode    |
-| `CMD+P`         | `P`      | Popup shell        |
 | `CMD+G`         | `g`      | Lazygit popup      |
 | `CMD+Y`         | `F`      | Yazi popup         |
 | `CMD+B`         | `B`      | Btm popup          |
