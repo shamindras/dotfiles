@@ -19,6 +19,7 @@
 | `setup-dropbox`           | Dropbox installation and setup       |
 | `setup-upgrade-homebrew`  | Homebrew installation/upgrade        |
 | `setup-upgrade-rust-cargo`| Rust toolchain management            |
+| `setup-firefox`           | Firefox user.js and userChrome.css   |
 | `setup-zk`               | Zettelkasten (zk) setup             |
 
 ## setup-macos
