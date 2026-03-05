@@ -104,5 +104,7 @@ config/nvim/
 - **Treesitter parsers**: `build = ':TSUpdate'` is intentionally removed from
   the treesitter spec to prevent a race with `ensure_installed` on cold start
   (both download parsers simultaneously, racing on shared tarball files in
-  `~/.cache/nvim/`). `ensure_installed` + `auto_install = true` handle parser
-  management. Run `:TSUpdate` manually after `:Lazy update` when needed.
+  `~/.cache/nvim/`). `auto_install` is also set to `false` to prevent a
+  second race with `ensure_installed` when opening files. `ensure_installed`
+  is the sole parser manager. Run `:TSInstall <lang>` for unlisted languages,
+  `:TSUpdate` after `:Lazy update`.
