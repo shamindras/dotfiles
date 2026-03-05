@@ -2,7 +2,6 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
-    build = ':TSUpdate',
   },
   {
     'MeanderingProgrammer/treesitter-modules.nvim',

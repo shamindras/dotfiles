@@ -101,3 +101,8 @@ config/nvim/
 - Check LSP: `:LspInfo` — check Mason: `:Mason`
 - Profile startup: `<leader>lp`
 - View keymaps: `<leader>sk`
+- **Treesitter parsers**: `build = ':TSUpdate'` is intentionally removed from
+  the treesitter spec to prevent a race with `ensure_installed` on cold start
+  (both download parsers simultaneously, racing on shared tarball files in
+  `~/.cache/nvim/`). `ensure_installed` + `auto_install = true` handle parser
+  management. Run `:TSUpdate` manually after `:Lazy update` when needed.
