@@ -69,8 +69,10 @@ sesh-reset() {
     local sess_path="${info%%	*}"
     local startup="${info#*	}"
 
-    # Create detached tmux session
-    tmux new-session -d -s "$session" -c "$sess_path"
+    # Create detached tmux session (with current terminal dimensions
+    # so nvim and TUI apps start at the correct size, not 80x24)
+    tmux new-session -d -s "$session" -c "$sess_path" \
+      -x "$(tput cols)" -y "$(tput lines)"
 
     # Run startup script (expands ~ in path)
     if [[ -n "$startup" ]]; then
