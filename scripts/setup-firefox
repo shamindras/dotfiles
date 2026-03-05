@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+# setup-firefox — sync user.js and userChrome.css into the Firefox profile
+#
+# Firefox's macOS sandbox blocks reading from symlinked paths, so we rsync
+# files from config/firefox/ into the profile directory.
+#
+# Usage: ./scripts/setup-firefox
+
+DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+FIREFOX_SRC="${DOTFILES_DIR}/config/firefox"
+FIREFOX_APP="/Applications/Firefox.app"
+PROFILES_INI="${HOME}/Library/Application Support/Firefox/profiles.ini"
+
+# 1. Check if Firefox is installed
+if [[ ! -d "${FIREFOX_APP}" ]]; then
+  echo "[INFO] Firefox.app not found, skipping Firefox setup."
+  exit 0
+fi
+
+# 2. Check if Firefox has been launched (profiles.ini exists)
+if [[ ! -f "${PROFILES_INI}" ]]; then
+  echo "[INFO] Firefox profiles.ini not found — launch Firefox once first."
+  exit 0
+fi
+
+# 3. Find the default profile directory from profiles.ini
+#    Primary: [Install*] section's Default= key
+#    Fallback: [Profile*] section with Default=1
+find_default_profile() {
+  local profiles_dir
+  profiles_dir="$(dirname "${PROFILES_INI}")"
+
+  local profile_path=""
+  local is_relative=""
+
+  # Try [Install*] section first (Firefox's install-specific default)
+  local install_default
+  install_default=$(
+    sed 's/\r$//' "${PROFILES_INI}" |
+      awk '/^\[Install/ { in_install=1; next }
+           /^\[/         { in_install=0; next }
+           in_install && /^Default=/ { sub(/^Default=/, ""); print; exit }'
+  )
+
+  if [[ -n "${install_default}" ]]; then
+    # [Install*] Default is always relative to the Firefox directory
+    profile_path="${profiles_dir}/${install_default}"
+    if [[ -d "${profile_path}" ]]; then
+      echo "${profile_path}"
+      return 0
+    fi
+  fi
+
+  # Fallback: [Profile*] section with Default=1
+  local fallback_path
+  local fallback_relative
+  read -r fallback_path fallback_relative < <(
+    sed 's/\r$//' "${PROFILES_INI}" |
+      awk '
+        /^\[Profile/ { in_profile=1; path=""; rel=""; def=0; next }
+        /^\[/         { if (in_profile && def) { print path, rel; exit }; in_profile=0; next }
+        in_profile && /^Path=/       { sub(/^Path=/, ""); path=$0 }
+        in_profile && /^IsRelative=/ { sub(/^IsRelative=/, ""); rel=$0 }
+        in_profile && /^Default=1/   { def=1 }
+        END { if (in_profile && def) print path, rel }
+      '
+  )
+
+  if [[ -n "${fallback_path}" ]]; then
+    if [[ "${fallback_relative}" == "1" ]]; then
+      profile_path="${profiles_dir}/${fallback_path}"
+    else
+      profile_path="${fallback_path}"
+    fi
+    if [[ -d "${profile_path}" ]]; then
+      echo "${profile_path}"
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+PROFILE_DIR=$(find_default_profile) || {
+  echo "[ERROR] Could not determine default Firefox profile directory."
+  exit 1
+}
+
+echo "[INFO] Firefox profile: ${PROFILE_DIR}"
+
+# 4. Rsync user.js into the profile
+rsync -av --checksum "${FIREFOX_SRC}/user.js" "${PROFILE_DIR}/user.js"
+
+# 5. Rsync chrome/ directory (creates it if needed)
+rsync -av --checksum "${FIREFOX_SRC}/chrome/" "${PROFILE_DIR}/chrome/"
+
+echo "[SUCCESS] Firefox config synced. Restart Firefox for changes to take effect."

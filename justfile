@@ -2,7 +2,7 @@ _default:
 	@just --choose
 
 # NOTE: we don't include update submods here
-all: clean stylua_config update_brewfile
+all: clean stylua_config update_brewfile firefox_sync
 
 clean:
 	@printf ">>> Begin cleaning directories...\n"
@@ -22,6 +22,11 @@ update_brewfile:
 	# Rust/cargo is managed separately via rustup, not the Brewfile.
 	@PATH="$(echo "$PATH" | tr ':' '\n' | grep -v cargo | tr '\n' ':')" brew bundle dump --describe --force --file=./config/brew/Brewfile
 	@printf ">>> Brewfile created at ./config/brew/Brewfile\n"
+
+firefox_sync:
+	@printf ">>> Syncing Firefox config to profile...\n"
+	@./scripts/setup-firefox
+	@printf ">>> Firefox sync complete. Restart Firefox for changes.\n"
 
 update_submods:
 	@printf ">>> Update all submods...\n"

@@ -1,0 +1,35 @@
+/* userChrome.css — hide unwanted Firefox context menu items
+ *
+ * Source of truth: config/firefox/chrome/userChrome.css in dotfiles repo.
+ *
+ * Prerequisites (set in user.js):
+ *   toolkit.legacyUserProfileCustomizations.stylesheets = true
+ *   widget.macos.native-context-menus = false
+ *
+ * To apply changes: run `just firefox_sync`, then restart Firefox.
+ */
+
+/* "Send Link..." */
+#context-sendlink {
+  display: none !important;
+}
+
+/* "Email Image..." */
+#context-sendimage {
+  display: none !important;
+}
+
+/* "Set Image as Desktop Background" */
+#context-setDesktopBackground {
+  display: none !important;
+}
+
+/* "Inspect Accessibility" */
+#context-inspect-a11y {
+  display: none !important;
+}
+
+/* "Print..." (context menu only — Cmd+P still works) */
+#context-print-selection {
+  display: none !important;
+}
