@@ -92,7 +92,6 @@ when bindings change in `keybindings.conf`.
 | `r` | Reload tmux config (with message) |
 | `v` | Enter copy mode |
 | `M-h/j/k/l` | Vi-style pane resize (repeatable, 5-unit) |
-| `P` | Popup shell (80x80%) |
 | `g` | Lazygit popup (100x100%) |
 | `F` | Yazi in new window (popup unsupported — tmux#4329) |
 | `B` | Btm popup (100x100%) |
