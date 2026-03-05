@@ -29,9 +29,11 @@ session → resurrect faithfully snapshots it → continuum auto-restores the
 broken state on every cold start, preventing sesh from ever recreating it.
 
 **Recovery:** use `sesh-reset <name>` (zsh function) to break the cycle:
-1. Kills the tmux session
+1. Kills the tmux session(s)
 2. Removes session entries from the resurrect save file
-3. Reconnects via `sesh connect` (creates fresh from `startup_command`)
+3. Creates detached tmux sessions + runs startup scripts (bypasses `sesh connect`
+   to avoid blocking on attach)
+4. Attaches/switches to the first session
 
 ## File Structure
 

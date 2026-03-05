@@ -4,8 +4,7 @@
 ##?
 ##? Kills existing tmux sessions, removes their entries from the
 ##? tmux-resurrect save file (so continuum won't auto-restore stale
-##? state), and reconnects via `sesh connect` to create fresh sessions
-##? from the startup_command defined in sesh.toml.
+##? state), and recreates fresh sessions from sesh.toml startup scripts.
 ##?
 ##? usage:
 ##?   sesh-reset <session-name> [<session-name> ...]
@@ -26,8 +25,8 @@
 sesh-reset() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-  # --- Inner function: reset a single session ---
-  _sesh_reset_one() {
+  # --- Inner function: kill session + prune resurrect ---
+  _sesh_kill_and_prune() {
     local session="$1"
 
     # 1. Kill the existing tmux session (ignore error if it doesn't exist)
@@ -53,9 +52,33 @@ sesh-reset() {
         echo "Pruned '$session' from resurrect save: ${save_file##*/}"
       fi
     fi
+  }
 
-    # 3. Reconnect via sesh to create a fresh session from sesh.toml
-    sesh connect "$session"
+  # --- Inner function: create session detached + run startup script ---
+  _sesh_create_detached() {
+    local session="$1"
+    local info
+    info="$(sesh list -c --json | jq -r --arg s "$session" \
+      '.[] | select(.Name == $s) | "\(.Path)\t\(.StartupCommand)"')"
+
+    if [[ -z "$info" ]]; then
+      echo "sesh-reset: '$session' not found in sesh config" >&2
+      return 1
+    fi
+
+    local path="${info%%	*}"
+    local startup="${info#*	}"
+
+    # Create detached tmux session
+    tmux new-session -d -s "$session" -c "$path"
+
+    # Run startup script (expands ~ in path)
+    if [[ -n "$startup" ]]; then
+      startup="${startup/#\~/$HOME}"
+      bash "$startup"
+    fi
+
+    echo "Created '$session'"
   }
 
   # --- Parse arguments ---
@@ -78,12 +101,26 @@ sesh-reset() {
   esac
 
   echo "Resetting ${#sessions} session(s): ${sessions[*]}"
+
+  # Phase 1: Kill all sessions + prune resurrect
   local s
   for s in "${sessions[@]}"; do
-    _sesh_reset_one "$s"
+    _sesh_kill_and_prune "$s"
   done
 
-  unfunction _sesh_reset_one 2>/dev/null
+  # Phase 2: Recreate all sessions (detached — no blocking)
+  for s in "${sessions[@]}"; do
+    _sesh_create_detached "$s"
+  done
+
+  # Phase 3: Attach/switch to the first session
+  if [[ -n "$TMUX" ]]; then
+    tmux switch-client -t "${sessions[1]}"
+  else
+    tmux attach-session -t "${sessions[1]}"
+  fi
+
+  unfunction _sesh_kill_and_prune _sesh_create_detached 2>/dev/null
 }
 
 # vim: ft=zsh
