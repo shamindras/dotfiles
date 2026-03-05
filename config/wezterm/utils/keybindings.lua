@@ -167,7 +167,6 @@ function M.setup(config)
     tmux('[', '['),                -- CMD+[       = enter copy mode
 
     -- Popup tools
-    tmux('p', 'P'),                -- CMD+P       = popup shell
     tmux('g', 'g'),                -- CMD+G       = lazygit popup
     tmux('y', 'F'),                -- CMD+Y       = yazi popup
     tmux('b', 'B'),                -- CMD+B       = btm popup
