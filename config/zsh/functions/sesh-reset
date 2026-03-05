@@ -1,50 +1,89 @@
 #!/bin/zsh
 
-##? sesh-reset - force-recreate a sesh-managed tmux session from scratch
+##? sesh-reset - force-recreate sesh-managed tmux sessions from scratch
 ##?
-##? Kills the existing tmux session (if any), removes its entries from
-##? the tmux-resurrect save file (so continuum won't auto-restore stale
-##? state), and reconnects via `sesh connect` to create a fresh session
+##? Kills existing tmux sessions, removes their entries from the
+##? tmux-resurrect save file (so continuum won't auto-restore stale
+##? state), and reconnects via `sesh connect` to create fresh sessions
 ##? from the startup_command defined in sesh.toml.
 ##?
 ##? usage:
-##?   sesh-reset <session-name>
+##?   sesh-reset <session-name> [<session-name> ...]
+##?   sesh-reset --all
+##?   sesh-reset --common
+##?
+##? options:
+##?   --all       Reset common sessions + career
+##?   --common    Reset predefined set: notes dots play blog feed
+##?   -h, --help  Show this help
 ##?
 ##? examples:
-##?   sesh-reset notes        # recreate notes session from sesh.toml
-##?   sesh-reset dots         # recreate dots session
+##?   sesh-reset notes              # recreate notes session
+##?   sesh-reset notes feed dots    # recreate multiple sessions
+##?   sesh-reset --common           # recreate notes, dots, play, blog, feed
+##?   sesh-reset --all              # recreate common + career
 
 sesh-reset() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-  local session="${1:?session name required}"
+  # --- Inner function: reset a single session ---
+  _sesh_reset_one() {
+    local session="$1"
 
-  # 1. Kill the existing tmux session (ignore error if it doesn't exist)
-  tmux kill-session -t "$session" 2>/dev/null || true
+    # 1. Kill the existing tmux session (ignore error if it doesn't exist)
+    tmux kill-session -t "$session" 2>/dev/null || true
 
-  # 2. Remove session from the resurrect save file so continuum won't
-  #    auto-restore the stale state on next cold start.
-  local resurrect_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tmux/resurrect"
-  local last_save="${resurrect_dir}/last"
+    # 2. Remove session from the resurrect save file so continuum won't
+    #    auto-restore the stale state on next cold start.
+    local resurrect_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tmux/resurrect"
+    local last_save="${resurrect_dir}/last"
 
-  if [[ -L "$last_save" ]]; then
-    local save_file
-    save_file="$(readlink "$last_save")"
-    # Resolve relative symlink
-    [[ "$save_file" != /* ]] && save_file="${resurrect_dir}/${save_file}"
+    if [[ -L "$last_save" ]]; then
+      local save_file
+      save_file="$(readlink "$last_save")"
+      # Resolve relative symlink
+      [[ "$save_file" != /* ]] && save_file="${resurrect_dir}/${save_file}"
 
-    if [[ -f "$save_file" ]]; then
-      # Resurrect lines are tab-delimited: <type>\t<session_name>\t...
-      # Remove all lines where the second field matches the session name.
-      local tmp="${save_file}.tmp.$$"
-      awk -F'\t' -v s="$session" '$2 != s' "$save_file" > "$tmp" \
-        && mv "$tmp" "$save_file"
-      echo "Pruned '$session' from resurrect save: ${save_file##*/}"
+      if [[ -f "$save_file" ]]; then
+        # Resurrect lines are tab-delimited: <type>\t<session_name>\t...
+        # Remove all lines where the second field matches the session name.
+        local tmp="${save_file}.tmp.$$"
+        awk -F'\t' -v s="$session" '$2 != s' "$save_file" > "$tmp" \
+          && mv "$tmp" "$save_file"
+        echo "Pruned '$session' from resurrect save: ${save_file##*/}"
+      fi
     fi
-  fi
 
-  # 3. Reconnect via sesh to create a fresh session from sesh.toml
-  sesh connect "$session"
+    # 3. Reconnect via sesh to create a fresh session from sesh.toml
+    sesh connect "$session"
+  }
+
+  # --- Parse arguments ---
+  local -a sessions=()
+
+  case "$1" in
+    --all)
+      sessions=(notes dots play blog feed career)
+      ;;
+    --common)
+      sessions=(notes dots play blog feed)
+      ;;
+    "")
+      echo "sesh-reset: session name required (use -h for help)" >&2
+      return 1
+      ;;
+    *)
+      sessions=("$@")
+      ;;
+  esac
+
+  echo "Resetting ${#sessions} session(s): ${sessions[*]}"
+  local s
+  for s in "${sessions[@]}"; do
+    _sesh_reset_one "$s"
+  done
+
+  unfunction _sesh_reset_one 2>/dev/null
 }
 
 # vim: ft=zsh
