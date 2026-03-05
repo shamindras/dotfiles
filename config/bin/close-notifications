@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Close all macOS Notification Center notifications via accessibility API.
+# Opens the Notification Center panel (via Clock menu-bar click), walks
+# every element inside the scroll area, and performs "Clear All" or "Close"
+# actions on each notification group.
+#
+# Requires: System Settings > Privacy & Security > Accessibility enabled
+# for the app executing this script (e.g., Leader Key).
+
+osascript <<'APPLESCRIPT'
+tell application "System Events"
+    try
+        -- Open Notification Center by clicking the Clock in the menu bar
+        tell process "ControlCenter"
+            set clockItem to (first menu bar item of menu bar 1 whose description is "Clock")
+            perform action "AXPress" of clockItem
+        end tell
+
+        delay 0.5
+
+        tell process "NotificationCenter"
+            set winList to every window
+            if (count of winList) = 0 then return
+
+            -- Walk all elements inside the Notification Center window.
+            -- On macOS 26 (Tahoe) notification groups carry actions like
+            -- "Clear All" and "Close" directly on their AXGroup elements.
+            set allElems to entire contents of (item 1 of winList)
+            repeat with elem in allElems
+                try
+                    set elemActions to every action of elem
+                    -- Prefer "Clear All" first (dismisses grouped notifications),
+                    -- then fall back to "Close" (individual notifications).
+                    repeat with act in elemActions
+                        set actDesc to description of act
+                        if actDesc is "Clear All" then
+                            perform act
+                        else if actDesc is "Close" then
+                            perform act
+                        end if
+                    end repeat
+                end try
+            end repeat
+        end tell
+
+        delay 0.3
+
+        -- Close the Notification Center panel
+        tell process "ControlCenter"
+            set clockItem to (first menu bar item of menu bar 1 whose description is "Clock")
+            perform action "AXPress" of clockItem
+        end tell
+    end try
+end tell
+APPLESCRIPT
