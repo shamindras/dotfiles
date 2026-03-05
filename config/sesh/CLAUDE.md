@@ -50,7 +50,7 @@ take `session` and `work_dir` as positional args. Exception:
 
 | Function | What it does |
 |----------|-------------|
-| `sesh_window_claude` | Rename window 1 to "claude", run `claude` (inherits cwd from sesh.toml path) |
+| `sesh_window_claude` | Rename window 1 to "claude", clear screen + run `claude` (inherits cwd from sesh.toml path) |
 | `sesh_window_nvim` | New window "nvim", launch nvim with Snacks file picker |
 | `sesh_window_term` | New window "term", plain shell |
 | `sesh_window_yazi` | New window "yazi", run yazi as direct command (PTY sizing) |

@@ -6,7 +6,7 @@
 sesh_window_claude() {
   local session="$1" work_dir="$2"
   tmux rename-window -t "${session}:1" "claude"
-  tmux send-keys -t "${session}:claude" "claude" Enter
+  tmux send-keys -t "${session}:claude" "clear && claude" Enter
 }
 
 # Window: nvim with Snacks file picker (creates new window)
