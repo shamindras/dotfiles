@@ -66,11 +66,11 @@ sesh-reset() {
       return 1
     fi
 
-    local path="${info%%	*}"
+    local sess_path="${info%%	*}"
     local startup="${info#*	}"
 
     # Create detached tmux session
-    tmux new-session -d -s "$session" -c "$path"
+    tmux new-session -d -s "$session" -c "$sess_path"
 
     # Run startup script (expands ~ in path)
     if [[ -n "$startup" ]]; then
