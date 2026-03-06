@@ -161,6 +161,11 @@
     - command: npm install -g eslint_d prettier
       description: install eslint_d and prettier using npm
 
+# Pre-install treesitter parsers from ensure_installed (prevents race)
+- shell:
+    - command: ./scripts/setup-nvim-treesitter
+      description: Pre-install treesitter parsers
+
 # Install tmux plugins via TPM
 - shell:
     - command: >-
