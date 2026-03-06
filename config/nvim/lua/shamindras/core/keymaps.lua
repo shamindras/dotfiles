@@ -14,7 +14,18 @@ end
 
 -- {{{ [b]uffer Operations
 
-keymap({ 'i', 'x', 'n', 's' }, '<C-s>', "<cmd>w<cr><esc><cmd>echo 'Saved ' . @%<cr>", { desc = 'Save file' })
+-- Width-adaptive save: echo in wide windows, notify (auto-clears 1s) in narrow
+keymap({ 'i', 'x', 'n', 's' }, '<C-s>', function()
+  vim.cmd('silent w')
+  vim.cmd('stopinsert')
+  local msg = 'Saved ' .. vim.fn.expand('%')
+  if #msg < vim.o.columns then
+    vim.cmd('echo ' .. vim.fn.string(msg))
+  else
+    vim.notify(msg, vim.log.levels.INFO)
+    vim.defer_fn(function() require('mini.notify').clear() end, 1000)
+  end
+end, { desc = 'Save file' })
 keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = '[b]uffer [b]ack (alternate)' })
 keymap('n', '<leader>by', '<cmd>%y+<CR>', { desc = '[b]uffer [y]ank all' })
 keymap('n', '<leader>bl', '<cmd>%d _<CR>', { desc = '[b]uffer c[l]ear (no copy)' })
