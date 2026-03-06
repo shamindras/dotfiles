@@ -21,6 +21,7 @@
 | `setup-upgrade-rust-cargo`| Rust toolchain management            |
 | `setup-firefox`           | Firefox user.js and userChrome.css   |
 | `setup-zk`               | Zettelkasten (zk) setup             |
+| `setup-nvim-treesitter`  | Install/update treesitter parsers (`--status` for read-only table) |
 
 ## setup-macos
 

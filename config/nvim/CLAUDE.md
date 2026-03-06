@@ -101,10 +101,23 @@ config/nvim/
 - Check LSP: `:LspInfo` — check Mason: `:Mason`
 - Profile startup: `<leader>lp`
 - View keymaps: `<leader>sk`
-- **Treesitter parsers**: `build = ':TSUpdate'` is intentionally removed from
-  the treesitter spec to prevent a race with `ensure_installed` on cold start
-  (both download parsers simultaneously, racing on shared tarball files in
-  `~/.cache/nvim/`). `auto_install` is also set to `false` to prevent a
-  second race with `ensure_installed` when opening files. `ensure_installed`
-  is the sole parser manager. Run `:TSInstall <lang>` for unlisted languages,
-  `:TSUpdate` after `:Lazy update`.
+- **Treesitter parsers**: nvim 0.11+ bundles parsers for c, lua, markdown,
+  markdown_inline, query, vim, vimdoc. `ensure_installed` lists only
+  non-bundled parsers (bash, python, etc.). `auto_install` is disabled and
+  `build = ':TSUpdate'` is removed to prevent races when multiple nvim
+  instances start simultaneously (e.g., `sesh-reset --common`). Parsers are
+  managed by `scripts/setup-nvim-treesitter` (run during `./install` and via
+  justfile). Requires `tree-sitter-cli` (`brew install tree-sitter-cli`) for
+  compilation. Compiled `.so` files live in
+  `~/.local/share/nvim/site/parser/`, revision tracking in
+  `~/.local/share/nvim/site/parser-info/<lang>.revision`.
+  - **Default mode**: `./scripts/setup-nvim-treesitter` — installs missing
+    parsers and updates outdated ones (compares installed vs wanted revision)
+  - **Status mode**: `./scripts/setup-nvim-treesitter --status` — read-only
+    table showing parser status, revisions, file sizes, modified dates
+  - **Justfile**: `just treesitter_update` (install+update, then status),
+    `just treesitter_status` (status only)
+  - **Add a parser**: add to `ensure_installed` in `treesitter.lua`, then
+    `just treesitter_update`
+  - **Manual testing**: `:InspectTree` (AST), `:Inspect` (highlight groups),
+    `:checkhealth nvim-treesitter`
