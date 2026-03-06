@@ -230,6 +230,8 @@ brew "tealdeer"
 brew "tmux"
 # Incremental parsing library
 brew "tree-sitter"
+# Parser generator tool
+brew "tree-sitter-cli"
 # Command-line unarchiving tools supporting multiple formats
 brew "unar"
 # Extremely fast Python package installer and resolver, written in Rust
