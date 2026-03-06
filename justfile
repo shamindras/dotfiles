@@ -31,7 +31,7 @@ firefox_sync:
 # Update nvim-treesitter plugin + install/update parsers, then show status
 treesitter_sync:
 	@printf "🔄 Updating nvim-treesitter plugin...\n"
-	@nvim --headless +'Lazy update nvim-treesitter' +'qa' 2>/dev/null || true
+	@nvim --headless -c 'lua require("lazy").update({plugins={"nvim-treesitter"}, wait=true})' -c 'qa' 2>/dev/null || true
 	@printf "✅ Plugin updated!\n"
 	@just treesitter_update
 
