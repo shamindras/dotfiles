@@ -2,7 +2,7 @@ _default:
 	@just --choose
 
 # NOTE: we don't include update submods here
-all: clean stylua_config update_brewfile firefox_sync
+all: clean stylua_config update_brewfile firefox_sync treesitter_update
 
 clean:
 	@printf ">>> Begin cleaning directories...\n"
@@ -27,6 +27,16 @@ firefox_sync:
 	@printf ">>> Syncing Firefox config to profile...\n"
 	@./scripts/setup-firefox
 	@printf ">>> Firefox sync complete. Restart Firefox for changes.\n"
+
+# Install missing + update outdated treesitter parsers, then show status
+treesitter_update:
+	@./scripts/setup-nvim-treesitter
+	@printf "\n"
+	@./scripts/setup-nvim-treesitter --status
+
+# Show treesitter parser status (read-only)
+treesitter_status:
+	@./scripts/setup-nvim-treesitter --status
 
 update_submods:
 	@printf ">>> Update all submods...\n"
