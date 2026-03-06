@@ -1,0 +1,235 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Install missing + update outdated treesitter parsers (default), or show
+# parser status (--status).  Reads the parser list from treesitter.lua
+# (single source of truth).  Runs each install/update serially in headless
+# nvim to prevent races when multiple nvim instances start simultaneously
+# (e.g., sesh-reset --common).
+#
+# Usage:
+#   ./scripts/setup-nvim-treesitter           # install missing + update outdated
+#   ./scripts/setup-nvim-treesitter --status   # show parser status table (read-only)
+#
+# Requires: nvim
+# Requires for install/update: tree-sitter-cli (brew install tree-sitter-cli)
+
+MODE="install"
+if [[ "${1:-}" == "--status" ]]; then
+  MODE="status"
+fi
+
+command -v nvim &>/dev/null || { echo "[SKIP] nvim not found"; exit 0; }
+
+# ── Parser directory ────────────────────────────────────────────────────
+PARSER_DIR="$(nvim --headless \
+  +'lua io.write(require("nvim-treesitter.config").get_install_dir("parser"))' \
+  +'qa' 2>/dev/null)"
+
+if [[ -z "$PARSER_DIR" ]]; then
+  echo "[ERROR] Could not determine parser install dir"
+  exit 1
+fi
+
+PARSER_INFO_DIR="${HOME}/.local/share/nvim/site/parser-info"
+
+# ── Gather revision data via a single headless nvim call ────────────────
+# Output: one line per parser: <lang> <installed_rev|MISSING> <wanted_rev>
+REVISION_DATA="$(nvim --headless +'lua
+  local specs = dofile(vim.fn.stdpath("config") .. "/lua/shamindras/plugins/treesitter.lua")
+  local parsers_mod = require("nvim-treesitter.parsers")
+  local info_dir = vim.fn.expand("~/.local/share/nvim/site/parser-info")
+  local parser_dir = require("nvim-treesitter.config").get_install_dir("parser")
+  local langs = {}
+  for _, s in ipairs(specs) do
+    if s.opts and s.opts.ensure_installed then
+      for _, p in ipairs(s.opts.ensure_installed) do
+        langs[#langs + 1] = p
+      end
+    end
+  end
+  for _, lang in ipairs(langs) do
+    local wanted = "UNKNOWN"
+    local pinfo = parsers_mod[lang]
+    if pinfo and pinfo.install_info and pinfo.install_info.revision then
+      wanted = pinfo.install_info.revision
+    end
+    local installed = "MISSING"
+    local so_path = parser_dir .. "/" .. lang .. ".so"
+    local so_file = io.open(so_path, "r")
+    if so_file then
+      so_file:close()
+      local rev_path = info_dir .. "/" .. lang .. ".revision"
+      local rev_file = io.open(rev_path, "r")
+      if rev_file then
+        installed = rev_file:read("*a"):gsub("%s+$", "")
+        rev_file:close()
+      else
+        installed = "NO_REV"
+      end
+    end
+    io.write(lang .. " " .. installed .. " " .. wanted .. "\n")
+  end
+' +'qa' 2>/dev/null)"
+
+if [[ -z "$REVISION_DATA" ]]; then
+  echo "No parsers in ensure_installed — nothing to do"
+  exit 0
+fi
+
+# Parse into arrays
+declare -a LANGS=() INSTALLED_REVS=() WANTED_REVS=()
+while IFS=' ' read -r lang inst want; do
+  LANGS+=("$lang")
+  INSTALLED_REVS+=("$inst")
+  WANTED_REVS+=("$want")
+done <<< "$REVISION_DATA"
+
+TOTAL=${#LANGS[@]}
+
+# ── STATUS mode ─────────────────────────────────────────────────────────
+# Helper: print a row with fixed-width columns using tabs for alignment.
+# Emoji characters confuse printf %-Ns (byte vs display width), so we
+# build each status string to a fixed display width manually.
+print_row() {
+  printf "  %-18s %-24s %-12s %-12s %-10s %s\n" "$1" "$2" "$3" "$4" "$5" "$6"
+}
+
+if [[ "$MODE" == "status" ]]; then
+  printf "\n🌳 Treesitter Parser Status\n"
+  printf "  ═════════════════════════════════════════════════════════════════════════════════════\n"
+  print_row "Parser" "Status" "Installed" "Wanted" "Size" "Modified"
+  print_row "----------------" "----------------------" "----------" "----------" "--------" "----------"
+
+  count_ok=0 count_update=0 count_missing=0
+
+  for i in "${!LANGS[@]}"; do
+    lang="${LANGS[$i]}"
+    inst="${INSTALLED_REVS[$i]}"
+    want="${WANTED_REVS[$i]}"
+
+    if [[ "$inst" == "MISSING" ]]; then
+      # ❌ is 1 emoji (2 display cols) + space + "missing" (7) = 10 display cols
+      # Pad to ~20 display cols with trailing spaces
+      status="❌ missing          "
+      inst_display="—"
+      size_display="—"
+      mod_display="—"
+      count_missing=$((count_missing + 1))
+    else
+      so_path="${PARSER_DIR}/${lang}.so"
+      # File size (human-readable)
+      size_bytes=$(stat -f %z "$so_path" 2>/dev/null || echo 0)
+      if (( size_bytes >= 1048576 )); then
+        size_display="$(awk "BEGIN {printf \"%.1f MB\", $size_bytes/1048576}")"
+      else
+        size_display="$(awk "BEGIN {printf \"%.0f KB\", $size_bytes/1024}")"
+      fi
+      # Modified date
+      mod_epoch=$(stat -f %m "$so_path" 2>/dev/null || echo 0)
+      mod_display=$(date -r "$mod_epoch" "+%Y-%m-%d" 2>/dev/null || echo "—")
+
+      if [[ "$inst" == "$want" ]]; then
+        # ✅ is 1 emoji (2 display cols) + space + "up to date" (10) = 13 display cols
+        status="✅ up to date       "
+        count_ok=$((count_ok + 1))
+      else
+        # ⚠️ is 1 emoji (2 display cols) + space + "update available" (16) = 19 display cols
+        status="⚠️  update available "
+        count_update=$((count_update + 1))
+      fi
+      inst_display="${inst:0:8}"
+    fi
+
+    want_display="${want:0:8}"
+    [[ "$want" == "UNKNOWN" ]] && want_display="—"
+
+    printf "  %-18s %s %-12s %-12s %-10s %s\n" \
+      "$lang" "$status" "$inst_display" "$want_display" "$size_display" "$mod_display"
+  done
+
+  printf "  ═════════════════════════════════════════════════════════════════════════════════════\n"
+  parser_list=$(printf "%s" "${LANGS[*]}" | tr ' ' ', ')
+  printf "  ensure_installed (%d): %s\n" "$TOTAL" "$parser_list"
+  printf "\n  📊 Summary: %d up to date, %d update available, %d missing\n\n" \
+    "$count_ok" "$count_update" "$count_missing"
+  exit 0
+fi
+
+# ── INSTALL + UPDATE mode (default) ────────────────────────────────────
+command -v tree-sitter &>/dev/null || { echo "[SKIP] tree-sitter CLI not found (brew install tree-sitter-cli)"; exit 0; }
+
+count_installed=0 count_updated=0 count_skipped=0
+
+printf "\n🌳 Treesitter parser install + update (%d parsers)\n" "$TOTAL"
+printf "═══════════════════════════════════════════════════\n"
+
+for i in "${!LANGS[@]}"; do
+  lang="${LANGS[$i]}"
+  inst="${INSTALLED_REVS[$i]}"
+  want="${WANTED_REVS[$i]}"
+  parser_so="${PARSER_DIR}/${lang}.so"
+
+  if [[ "$inst" == "MISSING" ]]; then
+    printf "  ⬇️  %s: installing...\n" "$lang"
+    nvim --headless +"TSInstall ${lang}" \
+      +'lua vim.defer_fn(function() vim.cmd("qa") end, 60000)' \
+      2>/dev/null &
+    nvim_pid=$!
+
+    waited=0
+    while [[ ! -f "$parser_so" ]] && (( waited < 60 )); do
+      sleep 1
+      waited=$((waited + 1))
+    done
+    kill "$nvim_pid" 2>/dev/null
+    wait "$nvim_pid" 2>/dev/null || true
+
+    if [[ -f "$parser_so" ]]; then
+      printf "  ✅ %s: installed (%ds)\n" "$lang" "$waited"
+      count_installed=$((count_installed + 1))
+    else
+      printf "  ⚠️  %s: WARNING — may not have compiled (non-fatal)\n" "$lang"
+    fi
+  elif [[ "$inst" != "$want" ]]; then
+    printf "  🔄 %s: updating...\n" "$lang"
+    nvim --headless +"TSUpdate ${lang}" \
+      +'lua vim.defer_fn(function() vim.cmd("qa") end, 60000)' \
+      2>/dev/null &
+    nvim_pid=$!
+
+    # Wait for the revision file to update (max 60s)
+    waited=0
+    while (( waited < 60 )); do
+      sleep 1
+      waited=$((waited + 1))
+      rev_file="${PARSER_INFO_DIR}/${lang}.revision"
+      if [[ -f "$rev_file" ]]; then
+        current_rev=$(cat "$rev_file" 2>/dev/null | tr -d '[:space:]')
+        if [[ "$current_rev" == "$want" ]]; then
+          break
+        fi
+      fi
+    done
+    kill "$nvim_pid" 2>/dev/null
+    wait "$nvim_pid" 2>/dev/null || true
+
+    printf "  ✅ %s: updated (%ds)\n" "$lang" "$waited"
+    count_updated=$((count_updated + 1))
+  else
+    printf "  ✅ %s: up to date\n" "$lang"
+    count_skipped=$((count_skipped + 1))
+  fi
+done
+
+# ── Cache cleanup ───────────────────────────────────────────────────────
+CACHE_DIR="${HOME}/.cache/nvim"
+find "$CACHE_DIR" -maxdepth 1 -name 'tree-sitter-*-tmp' -type d \
+  -exec rm -rf {} + 2>/dev/null || true
+find "$CACHE_DIR" -maxdepth 1 -name 'tree-sitter-*' -type d \
+  -exec rm -rf {} + 2>/dev/null || true
+find "$CACHE_DIR" -maxdepth 1 -name 'tree-sitter-*.tar.gz' -type f \
+  -exec rm -f {} + 2>/dev/null || true
+
+printf "\n✅ Summary: %d installed, %d updated, %d up to date\n\n" \
+  "$count_installed" "$count_updated" "$count_skipped"
