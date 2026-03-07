@@ -2,9 +2,9 @@
 set -Eeuo pipefail
 
 # Close all macOS Notification Center notifications via accessibility API.
-# Opens the Notification Center panel (via Clock menu-bar click), walks
-# every element inside the scroll area, and performs "Clear All" or "Close"
-# actions on each notification group.
+# Opens the Notification Center panel (via Clock menu-bar click), then
+# repeatedly re-scans and performs "Clear All" on each notification group.
+# Re-scanning after each clear avoids stale element references.
 #
 # Requires: System Settings > Privacy & Security > Accessibility enabled
 # for the app executing this script (e.g., Leader Key).
@@ -24,28 +24,31 @@ tell application "System Events"
             set winList to every window
             if (count of winList) = 0 then return
 
-            -- Walk all elements inside the Notification Center window.
-            -- On macOS 26 (Tahoe) notification groups carry actions like
-            -- "Clear All" and "Close" directly on their AXGroup elements.
-            set allElems to entire contents of (item 1 of winList)
-            repeat with elem in allElems
-                try
-                    set elemActions to every action of elem
-                    -- Prefer "Clear All" first (dismisses grouped notifications),
-                    -- then fall back to "Close" (individual notifications).
-                    repeat with act in elemActions
-                        set actDesc to description of act
-                        if actDesc is "Clear All" then
-                            perform act
-                        else if actDesc is "Close" then
-                            perform act
-                        end if
-                    end repeat
-                end try
+            -- Outer loop: re-scan the element tree after each successful
+            -- "Clear All" to avoid stale references from UI mutation.
+            repeat
+                set cleared to false
+                set allElems to entire contents of (item 1 of winList)
+                repeat with elem in allElems
+                    try
+                        set elemActions to every action of elem
+                        repeat with act in elemActions
+                            set actDesc to description of act
+                            if actDesc is "Clear All" then
+                                perform act
+                                set cleared to true
+                                exit repeat
+                            end if
+                        end repeat
+                    end try
+                    if cleared then exit repeat
+                end repeat
+                if not cleared then exit repeat
+                delay 0.3
             end repeat
         end tell
 
-        delay 0.3
+        delay 0.5
 
         -- Close the Notification Center panel
         tell process "ControlCenter"
