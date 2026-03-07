@@ -14,7 +14,11 @@ sesh_window_claude "${SESSION}" "${WORK_DIR}"   # Window 1
 # Window 2: journal (defer send-keys until all windows exist)
 tmux new-window -a -t "${SESSION}:\$" -n "journal" -c "${WORK_DIR}"
 
-sesh_window_nvim   "${SESSION}" "${IDEAS_DIR}"              # Window 3
+# Window 3: ideas (nvim with file picker in ideas dir)
+tmux new-window -a -t "${SESSION}:\$" -n "ideas" -c "${IDEAS_DIR}"
+tmux send-keys -l -t "${SESSION}:ideas" \
+  "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.files)'"
+tmux send-keys -t "${SESSION}:ideas" Enter
 sesh_window_term   "${SESSION}" "${WORK_DIR}"   # Window 4
 sesh_window_yazi   "${SESSION}" "${WORK_DIR}"   # Window 5
 
