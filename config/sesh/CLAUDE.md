@@ -81,7 +81,7 @@ All scripts use:
 | play     | claude   | nvim    | term (uv venv) | yazi | —    | claude   |
 | career   | claude   | nvim    | term    | yazi | —    | nvim     |
 | blog     | claude   | nvim    | preview | term | yazi | nvim     |
-| notes    | claude   | journal | nvim    | term | yazi | journal  |
+| notes    | claude   | journal | ideas   | term | yazi | journal  |
 | feed     | newsboat | term    | yazi    | —    | —    | newsboat |
 
 ### Common Window Patterns
