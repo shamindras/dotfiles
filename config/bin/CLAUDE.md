@@ -8,7 +8,7 @@
 | File        | Purpose                                     |
 | ----------- | ------------------------------------------- |
 | `btm-popup`            | Opens bottom (btm) monitor in popup terminal  |
-| `close-notifications`  | Dismisses all macOS Notification Center alerts |
+| `close-notifications`  | Dismisses all macOS Notification Center alerts (grouped and individual) |
 | `gc`                   | Git-related utility script                     |
 | `tmux-session-picker`  | fzf-based tmux session switcher (exact match)  |
 

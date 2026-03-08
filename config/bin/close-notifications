@@ -3,7 +3,8 @@ set -Eeuo pipefail
 
 # Close all macOS Notification Center notifications via accessibility API.
 # Opens the Notification Center panel (via Clock menu-bar click), then
-# repeatedly re-scans and performs "Clear All" on each notification group.
+# repeatedly re-scans and performs "Clear All" on each notification group
+# or "Close" on individual notifications (e.g., macOS Software Update).
 # Re-scanning after each clear avoids stale element references.
 #
 # Requires: System Settings > Privacy & Security > Accessibility enabled
@@ -25,16 +26,16 @@ tell application "System Events"
             if (count of winList) = 0 then return
 
             -- Outer loop: re-scan the element tree after each successful
-            -- "Clear All" to avoid stale references from UI mutation.
+            -- action to avoid stale references from UI mutation.
             repeat
                 set cleared to false
                 set allElems to entire contents of (item 1 of winList)
+
+                -- Pass 1: prefer "Clear All" (dismisses entire group)
                 repeat with elem in allElems
                     try
-                        set elemActions to every action of elem
-                        repeat with act in elemActions
-                            set actDesc to description of act
-                            if actDesc is "Clear All" then
+                        repeat with act in (every action of elem)
+                            if description of act is "Clear All" then
                                 perform act
                                 set cleared to true
                                 exit repeat
@@ -43,6 +44,23 @@ tell application "System Events"
                     end try
                     if cleared then exit repeat
                 end repeat
+
+                -- Pass 2: fallback to "Close" (individual notifications)
+                if not cleared then
+                    repeat with elem in allElems
+                        try
+                            repeat with act in (every action of elem)
+                                if description of act is "Close" then
+                                    perform act
+                                    set cleared to true
+                                    exit repeat
+                                end if
+                            end repeat
+                        end try
+                        if cleared then exit repeat
+                    end repeat
+                end if
+
                 if not cleared then exit repeat
                 delay 0.3
             end repeat
