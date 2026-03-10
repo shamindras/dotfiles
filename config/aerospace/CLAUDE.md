@@ -32,7 +32,8 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 
 - **sketchybar**: workspace display, top gap accommodation
 - **borders**: window border rendering, launched on startup
-- **wezterm/ghostty**: assigned to workspace T
+- **wezterm**: assigned to workspace W
+- **ghostty**: assigned to workspace T
 - **vscode**: assigned to workspace V
 
 ## Development Notes
