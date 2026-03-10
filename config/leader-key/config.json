@@ -128,7 +128,7 @@
           "key": "a",
           "label": "djview",
           "type": "command",
-          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
+          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
         },
         {
           "key": "b",
@@ -140,13 +140,13 @@
           "key": "d",
           "label": "preview",
           "type": "command",
-          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
+          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
         },
         {
           "key": "e",
           "label": "finder",
           "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
+          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
         },
         {
           "key": "g",
@@ -176,19 +176,19 @@
           "key": "p",
           "label": "skim",
           "type": "command",
-          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
+          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
         },
         {
           "key": "t",
           "label": "ghostty",
           "type": "command",
-          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && if pgrep -x \"wezterm-gui\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && if pgrep -x \"wezterm-gui\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
         },
         {
           "key": "v",
           "label": "vscode",
           "type": "command",
-          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'"
+          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
         },
         {
           "key": "w",
