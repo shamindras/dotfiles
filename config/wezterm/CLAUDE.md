@@ -43,6 +43,19 @@ Installed version: wezterm 20240203-110809-5046fc22 (verified 2026-02-22)
 - Modifier convention: CMD (L0) for pane/window actions, CMD+SHIFT (L1) for
   modify/destructive/create variants, CMD+CTRL (L2) for session-scope operations
 
+## Workspace Assignment
+
+WezTerm is assigned to **workspace W** in aerospace (`aerospace.toml`
+`on-window-detected` rule). Ghostty remains on workspace T.
+
+If changing the workspace letter, update these locations to stay in sync:
+- `config/aerospace/aerospace.toml`: `move-node-to-workspace W` rule for
+  `com.github.wez.wezterm`
+- `config/leader-key/config.json`: 5 non-terminal quit targets (DJView,
+  Preview, Finder, Skim, VSCode) that navigate to workspace W after quitting
+- `config/leader-key/config.json`: quit-Ghostty conditional — navigates to
+  WezTerm's workspace when WezTerm is running
+
 ## Development Notes
 - Changes apply on save (no restart needed)
 - Debug with `wezterm.log_info()`, view in debug overlay (CTRL+SHIFT+L)
