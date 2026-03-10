@@ -6,7 +6,7 @@
 ## Overview
 
 Ghostty is a GPU-accelerated terminal emulator. Minimal config — used
-alongside wezterm, assigned to workspace T in aerospace.
+alongside wezterm (workspace W), assigned to workspace T in aerospace.
 
 ## File Structure
 
