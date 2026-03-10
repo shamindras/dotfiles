@@ -33,6 +33,21 @@ action groups for opening/quitting apps, running commands, and quick URLs.
 - Launches **wezterm**, **ghostty**, **lazygit**
 - Uses system `fd` for file operations
 
+## Quit Workspace Defaults
+
+The quit group navigates to a default workspace after quitting each app:
+
+- **Terminal-default (W)**: DJView, Preview, Finder, Skim, VSCode — after
+  quitting, navigate to workspace W (WezTerm)
+- **Browser-default (B)**: 1Password, Firefox, Signal, Books, Spotify,
+  NordVPN, JDownloader — after quitting, navigate to workspace B
+- **Terminal conditionals**: quit-Ghostty checks if WezTerm is running → W,
+  else B. Quit-WezTerm checks if Ghostty is running → T, else B
+
+If WezTerm's workspace changes, update the terminal-default targets and the
+quit-Ghostty conditional. See `config/wezterm/CLAUDE.md` for the source of
+truth on the workspace letter.
+
 ## Development Notes
 
 - Reload: custom `r r` (restart-leaderkey) command kills and relaunches app
