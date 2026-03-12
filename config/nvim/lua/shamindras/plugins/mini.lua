@@ -147,25 +147,70 @@ table.insert(M, {
       return '%2l:%-2v'
     end
 
-    local function git_branch()
+    -- {{{ Git branch caching and highlight
+
+    local cached_branch = ''
+
+    local function refresh_git_branch()
       local branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
       if vim.v.shell_error == 0 and branch ~= '' then
-        return '󰊢 ' .. branch
+        cached_branch = branch
+      else
+        cached_branch = ''
       end
-      return ''
     end
+
+    -- Refresh on buffer/directory changes instead of every render
+    local git_augroup = vim.api.nvim_create_augroup('MiniStatuslineGitBranch', { clear = true })
+    vim.api.nvim_create_autocmd({ 'BufEnter', 'FocusGained', 'DirChanged' }, {
+      group = git_augroup,
+      callback = refresh_git_branch,
+    })
+
+    -- Initial fetch
+    refresh_git_branch()
+
+    -- Define red highlight for main/master branches
+    local function set_git_main_highlight()
+      local devinfo_hl = vim.api.nvim_get_hl(0, { name = 'MiniStatuslineDevinfo', link = false })
+      vim.api.nvim_set_hl(0, 'MiniStatuslineGitMainBranch', {
+        fg = vim.api.nvim_get_hl(0, { name = 'DiagnosticError', link = false }).fg,
+        bg = devinfo_hl.bg,
+        bold = true,
+      })
+    end
+
+    set_git_main_highlight()
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = git_augroup,
+      callback = set_git_main_highlight,
+    })
+
+    --- Return git branch display string and highlight group
+    local function git_info()
+      if cached_branch == '' then
+        return '', 'MiniStatuslineDevinfo'
+      end
+      local text = '󰘬 ' .. cached_branch
+      if cached_branch == 'main' or cached_branch == 'master' then
+        return text, 'MiniStatuslineGitMainBranch'
+      end
+      return text, 'MiniStatuslineDevinfo'
+    end
+
+    -- }}}
 
     ---@diagnostic disable-next-line: duplicate-set-field
     statusline.active = function()
       local mode, mode_hl = statusline.section_mode({ trunc_width = 120 })
-      local git = git_branch()
+      local git, git_hl = git_info()
       local filename = statusline.section_filename({ trunc_width = 140 })
       local fileinfo = statusline.section_fileinfo({ trunc_width = 120 })
       local location = statusline.section_location({ trunc_width = 75 })
 
       return statusline.combine_groups({
         { hl = mode_hl, strings = { mode } },
-        { hl = 'MiniStatuslineDevinfo', strings = { git } },
+        { hl = git_hl, strings = { git } },
         '%<',
         { hl = 'MiniStatuslineFilename', strings = { filename } },
         '%=',
