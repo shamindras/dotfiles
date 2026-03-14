@@ -45,6 +45,8 @@ If an unknown `--flag` is present, warn the user and list valid flags.
 - `--help`: display flag table and **stop**
 - `--no-split`: handled inline (skip step 5)
 
+If `.claude/skills/git/blog-overrides.md` exists, read it and apply its overrides.
+
 Apply overrides from subskill files to the relevant steps below.
 
 ## 2. Check branch
