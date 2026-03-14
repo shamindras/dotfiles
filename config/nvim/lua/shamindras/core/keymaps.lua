@@ -23,7 +23,9 @@ keymap({ 'i', 'x', 'n', 's' }, '<C-s>', function()
     vim.cmd('echo ' .. vim.fn.string(msg))
   else
     vim.notify(msg, vim.log.levels.INFO)
-    vim.defer_fn(function() require('mini.notify').clear() end, 1000)
+    vim.defer_fn(function()
+      require('mini.notify').clear()
+    end, 1000)
   end
 end, { desc = 'Save file' })
 keymap('n', '<leader>bb', '<cmd>e #<cr>', { desc = '[b]uffer [b]ack (alternate)' })
