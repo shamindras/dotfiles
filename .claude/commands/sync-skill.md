@@ -1,0 +1,1 @@
+../skills/meta/commands/sync-skill.md
