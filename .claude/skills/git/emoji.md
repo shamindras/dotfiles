@@ -6,8 +6,10 @@ Format: `<type>(<scope>): <emoji> <description>`
 
 ## Mapping
 
+<!-- REPO-SPECIFIC: emoji-table-header -->
 | Type       | Emoji | Example                                      |
 |------------|-------|----------------------------------------------|
+<!-- END REPO-SPECIFIC -->
 <!-- REPO-SPECIFIC: emoji-examples -->
 | `feat`     | ✨    | `feat(nvim): ✨ add telescope fuzzy finder`   |
 | `fix`      | 🐛    | `fix(tmux): 🐛 correct session handling`      |
