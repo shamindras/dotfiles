@@ -177,19 +177,27 @@ multi-step work.
   subdirectories) before final merges. After user corrections, record the
   lesson in auto-memory for future sessions.
 
+## Branch-First Rule
+
+**Before any non-trivial work — plans, implementations, or commits — check and
+declare the branch.**
+
+- **Plan mode**: The plan file MUST include a `**Feature branch**: \`<type>/<desc>\`
+  (from \`main\`)` line near the top, before implementation steps. If the plan omits
+  this, add it before calling ExitPlanMode.
+- **Implementation mode**: Before editing any file, run `git branch --show-current`.
+  If on `main` and the work is non-trivial (3+ files, new file, multi-scope, or
+  `feat`/`refactor` type), create or propose a feature branch **before** touching
+  code. Do not defer to commit time.
+- **Trivial exception**: Single-file typo fixes, one-line tweaks, or docs-only
+  changes may proceed on `main` without a branch.
+- **Branch format**: `<type>/<short-kebab-desc>` (e.g. `feat/add-ghostty-config`,
+  `fix/nvim-treesitter`).
+
+This rule takes priority over any skill-level branch check. The `/commit` skill
+has its own branch check at step 2, but that is a safety net, not the primary gate.
+
 ## Git Workflow
 
-- **Use conventional commits**: `<type>(<scope>): <description>` format
-- **Scope = tool name**: Match the tool in `config/` directory (e.g., `(nvim)`, `(zsh)`, `(brew)`)
-- **Split commits by scope**: Default behavior is one commit per tool, even within shared files
-- **Branch awareness**: Claude proactively suggests feature branches for non-trivial work on `main`
-- Use `/commit` skill with flags: `--staged`, `--all`, `--draft`, `--amend`, `--all-and-push`, `--no-split`, `--emoji`, `--land`, `--land-main`
-- Detailed conventions: `.claude/skills/git/workflow.md`
-- Full `/commit` documentation: `.claude/skills/git/commands/commit.md`
-
-### Examples
-```
-feat(ghostty): add terminal configuration
-refactor(nvim): update telescope keybindings
-chore(brew): update brewfile
-```
+Conventional commits via `/commit`. See `.claude/skills/git/workflow.md`
+for types, scopes, and flags. Skill sync via `/sync-skill <name> --from <repo>`.

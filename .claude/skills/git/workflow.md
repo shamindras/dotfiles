@@ -3,7 +3,9 @@
 ## Branching
 
 - Always branch from `main`.
+<!-- REPO-SPECIFIC: branching-examples -->
 - Format: `<type>/<short-kebab-desc>` (e.g. `feat/add-ghostty-config`, `fix/nvim-treesitter`).
+<!-- END REPO-SPECIFIC -->
 - Keep branch names short and descriptive.
 
 ## Proactive Branch Awareness
@@ -18,12 +20,17 @@ Goal: keep `main` clean by default without adding friction to quick fixes.
 
 ## Feature Branches in Plans
 
-When presenting a plan for user approval (via ExitPlanMode), always explicitly
-state the feature branch name that will be created from `main`. Use the
-standard branch naming format: `<type>/<short-kebab-desc>`.
+**REQUIRED**: When presenting a plan for user approval (via ExitPlanMode), the
+plan file MUST include the feature branch name near the top. This is non-negotiable
+— plans without an explicit branch declaration are incomplete.
 
-Example in plan file:
+Format:
+
+Place this immediately after the Context section, before implementation steps.
+
+<!-- REPO-SPECIFIC: plan-example -->
 > **Feature branch**: `refactor/tmux-config` (from `main`)
+<!-- END REPO-SPECIFIC -->
 
 ## Conventional Commits
 
@@ -41,11 +48,13 @@ Primary (used most often):
 
 | Type | When to use |
 |------|-------------|
+<!-- REPO-SPECIFIC: types -->
 | `feat` | New config, tool, script, or feature |
 | `fix` | Broken config, wrong setting, runtime error fixed |
 | `refactor` | Restructured existing config, no behavior change |
 | `docs` | README, CLAUDE.md, skill files, comments-only changes |
 | `chore` | Deps, lockfile, Brewfile, tooling, submodules |
+<!-- END REPO-SPECIFIC -->
 
 Others (use when they clearly apply):
 
@@ -57,16 +66,21 @@ Others (use when they clearly apply):
 
 ### Type Selection Heuristic
 
+<!-- REPO-SPECIFIC: type-heuristic-1 -->
 1. Does the diff add a **new** config/tool/capability? → `feat`
+<!-- END REPO-SPECIFIC -->
 2. Does it **fix** something that was broken? → `fix`
 3. Does it **move/rename/restructure** without changing behavior? → `refactor`
 4. Is it **only** documentation or comments? → `docs`
+<!-- REPO-SPECIFIC: type-heuristic-5 -->
 5. Is it tooling, deps, Brewfile, or submodules? → `chore`
+<!-- END REPO-SPECIFIC -->
 6. Does it add/update **tests**? → `test`
 7. None of the above? Re-read the diff — one of the above almost always fits.
 
 ### Scopes
 
+<!-- REPO-SPECIFIC: scopes -->
 **By tool** (corresponds to `config/<tool>/` directories):
 - `(nvim)` — Neovim configuration
 - `(zsh)` — ZSH shell configuration
@@ -91,7 +105,9 @@ Others (use when they clearly apply):
 - `(scripts)` — Setup/utility scripts
 - `(claude)` — Claude Code settings
 - `(docs)` — Documentation (CLAUDE.md, README.md)
+<!-- END REPO-SPECIFIC -->
 
+<!-- REPO-SPECIFIC: splitting -->
 ## Commit Splitting (Dotfiles Convention)
 
 ### Scope-based splitting (default)
@@ -141,6 +157,7 @@ Proposed commits:
 2. feat(fd): add fd file finder
    - config/brew/Brewfile (fd entry)
 ```
+<!-- END REPO-SPECIFIC -->
 
 ## Attribution
 
@@ -155,6 +172,7 @@ Proposed commits:
 - Reference files with repo-relative paths (e.g. `git diff -- config/nvim/init.lua`,
   not `git diff -- /Users/.../dotfiles/config/nvim/init.lua`).
 
+<!-- REPO-SPECIFIC: examples -->
 ## Examples
 
 Single-line:
@@ -179,3 +197,4 @@ refactor(leader-key): improve shortcuts and modernize file ops
 Reorganize shortcuts into logical groups and update file operations
 to use modern commands. No behavior change to existing shortcuts.
 ```
+<!-- END REPO-SPECIFIC -->

@@ -8,6 +8,7 @@ Format: `<type>(<scope>): <emoji> <description>`
 
 | Type       | Emoji | Example                                      |
 |------------|-------|----------------------------------------------|
+<!-- REPO-SPECIFIC: emoji-examples -->
 | `feat`     | ✨    | `feat(nvim): ✨ add telescope fuzzy finder`   |
 | `fix`      | 🐛    | `fix(tmux): 🐛 correct session handling`      |
 | `refactor` | ♻️     | `refactor(zsh): ♻️ extract helper functions`   |
@@ -16,6 +17,7 @@ Format: `<type>(<scope>): <emoji> <description>`
 | `test`     | ✅    | `test(nvim): ✅ add plugin tests`              |
 | `style`    | 🎨    | `style(lua): 🎨 reformat with stylua`         |
 | `ci`       | 👷    | `ci(github): 👷 add lint workflow`             |
+<!-- END REPO-SPECIFIC -->
 
 ## Rules
 
