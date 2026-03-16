@@ -201,7 +201,7 @@
     "vim.useSystemClipboard": true,
     "vim.useCtrlKeys": true,
     "editor.formatOnSave": true,
-    "editor.minimap.autohide": true,
+    "editor.minimap.autohide": "mouseover",
     "editor.minimap.enabled": false,
     "workbench.colorTheme": "Eldritch",
     "editor.lineNumbers": "relative",
