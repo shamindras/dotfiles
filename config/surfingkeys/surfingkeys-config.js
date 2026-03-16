@@ -645,6 +645,9 @@ api.unmap('p', /containerstore\.com/);
     api.unmap(key, /localhost:2718/);
 });
 
+// shamindras.com - unmap f so native link hints don't interfere
+api.unmap('f', /shamindras\.com/);
+
 // ============================================
 // THEME: TOMORROW NIGHT (Foldex-style)
 // ============================================
