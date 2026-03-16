@@ -30,6 +30,20 @@ keys spread the base and append their own:
 | `[...baseVideoUnmapKeys, 't', 'c', 'w']`     | `['f', 'm', 't', 'c', 'w']` | Bilibili                                                                                   |
 | `[...baseVideoUnmapKeys, 'c', 'j', 'k']`     | `['f', 'm', 'c', 'j', 'k']` | Crunchyroll                                                                                |
 
+## Site-Specific Key Unmapping (Non-Video)
+
+| Site               | Keys unmapped   | Section          |
+| ------------------ | --------------- | ---------------- |
+| `mail.google.com`  | `a,b,c,e,f,g,j,k,m,r,v,x,X,/` | Google Services |
+| `docs.google.com`  | `p,m,/`         | Google Services  |
+| `calendar.google.com` | `d,m`        | Google Services  |
+| `drive.google.com` | `/`             | Google Services  |
+| `duckduckgo.com`   | `/`             | Other Sites      |
+| `containerstore.com` | `p`           | Other Sites      |
+| `walmart.wd5.myworkdayjobs.com` | `b,m,p` | Other Sites |
+| `localhost:2718`    | `a,m`           | Other Sites      |
+| `shamindras.com`   | `f`             | Other Sites      |
+
 ## Development Notes
 
 - JavaScript config; Vimium-compatible mappings for consistency
