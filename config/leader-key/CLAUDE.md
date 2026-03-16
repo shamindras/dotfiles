@@ -40,7 +40,7 @@ The quit group navigates to a default workspace after quitting each app:
 
 - **Terminal-default (W)**: DJView, Preview, Finder, Skim — after
   quitting, navigate to workspace W (WezTerm)
-- **VSCode-default (K)**: VSCode — after quitting, navigate to workspace K
+- **VSCode-default (S)**: VSCode — after quitting, navigate to workspace S
 - **Browser-default (B)**: 1Password, Firefox, Signal, Books, Spotify,
   NordVPN, VLC, JDownloader — after quitting, navigate to workspace B
 - **Terminal conditionals**: quit-Ghostty checks if WezTerm is running → W,
@@ -49,6 +49,35 @@ The quit group navigates to a default workspace after quitting each app:
 If WezTerm's workspace changes, update the terminal-default targets and the
 quit-Ghostty conditional. See `config/wezterm/CLAUDE.md` for the source of
 truth on the workspace letter.
+
+## Workspace Alignment
+
+Leader-key open/quit keys must match the app's aerospace workspace letter.
+This table is the source of truth for the mapping:
+
+| App         | Leader key (`o`/`q`) | Aerospace workspace | Mnemonic            |
+| ----------- | -------------------- | ------------------- | ------------------- |
+| 1password   | `1`                  | `1`                 | **1**password       |
+| djview      | `a`                  | `A`                 | **A**rchive         |
+| firefox     | `b`                  | `B`                 | **B**rowser         |
+| preview     | `d`                  | `D`                 | p**D**f             |
+| finder      | `e`                  | `E`                 | **E**xplorer        |
+| signal      | `g`                  | `G`                 | si**G**nal          |
+| books       | `i`                  | `I`                 | **i**Books          |
+| spotify     | `m`                  | `M`                 | **M**usic           |
+| nordvpn     | `n`                  | `N`                 | **N**ordVPN         |
+| skim        | `p`                  | `P`                 | **P**df             |
+| vscode      | `s`                  | `S`                 | V**S**Code / editor |
+| ghostty     | `t`                  | `T`                 | **T**erminal        |
+| vlc         | `v`                  | `V`                 | **V**LC             |
+| wezterm     | `w`                  | `W`                 | **W**ezterm         |
+| jdownloader | `x`                  | `X`                 | e**X**tract         |
+
+**When changing a workspace letter** in `config/aerospace/aerospace.toml`,
+update both the open and quit entries here, including the fallback workspace
+in the quit command string. See `config/aerospace/CLAUDE.md` § "Reserved
+Alt Keys" before choosing a new letter — some `alt-` keys are reserved for
+navigation/modes and cannot be used as workspace shortcuts.
 
 ## Development Notes
 
