@@ -94,10 +94,16 @@
           "value": "/Applications/Ghostty.app"
         },
         {
-          "key": "v",
+          "key": "k",
           "label": "vscode",
           "type": "application",
           "value": "/Applications/Visual Studio Code.app"
+        },
+        {
+          "key": "v",
+          "label": "vlc",
+          "type": "application",
+          "value": "/Applications/VLC.app"
         },
         {
           "key": "w",
@@ -185,10 +191,16 @@
           "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && if pgrep -x \"wezterm-gui\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
         },
         {
-          "key": "v",
+          "key": "k",
           "label": "vscode",
           "type": "command",
-          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
+          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace K'"
+        },
+        {
+          "key": "v",
+          "label": "vlc",
+          "type": "command",
+          "value": "osascript -e 'quit app \"VLC\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
         },
         {
           "key": "w",
@@ -284,6 +296,12 @@
     {
       "actions": [
         {
+          "key": "b",
+          "label": "blog",
+          "type": "url",
+          "value": "https://www.shamindras.com/posts"
+        },
+        {
           "key": "c",
           "label": "codebox",
           "type": "url",
@@ -324,6 +342,12 @@
           "label": "neovim-config",
           "type": "url",
           "value": "https://github.com/shamindras/dotfiles/tree/main/config/nvim"
+        },
+        {
+          "key": "q",
+          "label": "quarto-blog",
+          "type": "url",
+          "value": "https://github.com/shamindras/ss_personal_quarto_blog"
         }
       ],
       "key": "u",
