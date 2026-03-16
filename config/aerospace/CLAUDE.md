@@ -34,7 +34,8 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **borders**: window border rendering, launched on startup
 - **wezterm**: assigned to workspace W
 - **ghostty**: assigned to workspace T
-- **vscode**: assigned to workspace V
+- **vscode**: assigned to workspace K
+- **vlc**: assigned to workspace V
 
 ## Development Notes
 
