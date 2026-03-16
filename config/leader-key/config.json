@@ -94,7 +94,7 @@
           "value": "/Applications/Ghostty.app"
         },
         {
-          "key": "k",
+          "key": "s",
           "label": "vscode",
           "type": "application",
           "value": "/Applications/Visual Studio Code.app"
@@ -191,10 +191,10 @@
           "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && if pgrep -x \"wezterm-gui\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
         },
         {
-          "key": "k",
+          "key": "s",
           "label": "vscode",
           "type": "command",
-          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace K'"
+          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace S'"
         },
         {
           "key": "v",
