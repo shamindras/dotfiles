@@ -237,10 +237,10 @@ run = "move-node-to-workspace 2"
 if.app-id = "org.jdownloader.launcher"
 run = "move-node-to-workspace X"
 
-# VLC player
+# [V]LC player
 [[on-window-detected]]
 if.app-id = "org.videolan.vlc"
-run = "move-node-to-workspace 4"
+run = "move-node-to-workspace V"
 
 # Facetime
 [[on-window-detected]]
@@ -342,10 +342,10 @@ run = "move-node-to-workspace W"
 if.app-id = "com.mitchellh.ghostty"
 run = "move-node-to-workspace T"
 
-# [V]scode
+# VS[K]ode
 [[on-window-detected]]
 if.app-id = "com.microsoft.VSCode"
-run = "move-node-to-workspace V"
+run = "move-node-to-workspace K"
 
 # [Z]en browser
 [[on-window-detected]]
