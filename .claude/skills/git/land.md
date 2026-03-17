@@ -45,11 +45,12 @@ and begin here directly.
 
 ## 10e. Local cleanup
 
-1. `git checkout <base>`.
-2. `git pull origin <base>`.
-3. `git branch -d <feature-branch>` (safe delete).
-4. `git log --oneline -3`.
-5. Print: `"Landed <branch> into <base>: <hash> <subject>"`.
+`gh pr merge --rebase --delete-branch` (step 10d) already checks out the
+base branch, pulls, and deletes the local feature branch. Do **not** re-run
+those commands manually.
+
+1. `git log --oneline -3` — confirm the landed commits.
+2. Print: `"Landed <branch> into <base>: <hash> <subject>"`.
 
 ## Step overrides
 
