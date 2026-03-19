@@ -16,7 +16,7 @@ action groups for opening/quitting apps, running commands, and quick URLs.
 
 ## Key Settings
 
-- **Action groups**: `claude`, `open`, `quit`, `run`, `search-raycast`, `urls`
+- **Action groups**: `claude`, `github`, `open`, `quit`, `run`, `search-raycast`, `urls`
 - **Application launching**: 14 macOS apps (1password, firefox, signal,
   spotify, vlc, vscode, etc.)
 - **Application quitting**: sophisticated quit with sleep delays and
@@ -24,8 +24,9 @@ action groups for opening/quitting apps, running commands, and quick URLs.
 - **Utility commands**: brew upgrade (`--greedy-auto-updates`),
   close-notifications, move-files, restart-leaderkey, trash-empty,
   toggle-mute, wash-dropbox
-- **URLs**: Claude, Google Keep, personal repos (codebox, dotfiles), homepage,
-  neovim config, blog, quarto-blog
+- **GitHub URLs** (`g`): personal repos (codebox, dotfiles, quarto-blog),
+  GitHub profile, neovim config
+- **URLs** (`u`): blog, homepage, Google Keep, YouTube incognito
 - **Action types**: `url`, `application`, `command`, `group` (container)
 
 ## Cross-Tool References

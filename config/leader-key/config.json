@@ -297,9 +297,9 @@
       "actions": [
         {
           "key": "b",
-          "label": "blog",
+          "label": "quarto-blog",
           "type": "url",
-          "value": "https://www.shamindras.com/posts"
+          "value": "https://github.com/shamindras/ss_personal_quarto_blog"
         },
         {
           "key": "c",
@@ -320,6 +320,25 @@
           "value": "https://github.com/shamindras"
         },
         {
+          "key": "n",
+          "label": "neovim-config",
+          "type": "url",
+          "value": "https://github.com/shamindras/dotfiles/tree/main/config/nvim"
+        }
+      ],
+      "key": "g",
+      "label": "github",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "b",
+          "label": "blog",
+          "type": "url",
+          "value": "https://www.shamindras.com/posts"
+        },
+        {
           "key": "h",
           "label": "homepage",
           "type": "url",
@@ -336,18 +355,6 @@
           "label": "google-keep",
           "type": "url",
           "value": "https://keep.google.com/u/0/"
-        },
-        {
-          "key": "n",
-          "label": "neovim-config",
-          "type": "url",
-          "value": "https://github.com/shamindras/dotfiles/tree/main/config/nvim"
-        },
-        {
-          "key": "q",
-          "label": "quarto-blog",
-          "type": "url",
-          "value": "https://github.com/shamindras/ss_personal_quarto_blog"
         }
       ],
       "key": "u",
