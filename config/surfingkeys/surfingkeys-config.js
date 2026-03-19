@@ -310,7 +310,7 @@ api.addSearchAlias('m', 'google-maps', 'https://www.google.com/maps?q=', 's', 'h
     var res = JSON.parse(response.text);
     return res[1];
 });
-api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.li/search?index=&page=1&sort=newest&content=book_nonfiction&content=book_fiction&content=book_unknown&ext=pdf&ext=epub&lang=en&display=list_compact&q=');
+api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.gl/search?index=&page=1&sort=newest&content=book_nonfiction&content=book_fiction&content=book_unknown&ext=pdf&ext=epub&lang=en&display=list_compact&q=');
 api.addSearchAlias('s', 'softarchive', 'https://softarchive.download/search?scope=title&category=5&q=', 's', 'https://softarchive.download/ajax/getSearchKeywords.ajax.php?q=', function(response) {
     return JSON.parse(response.text);
 });
