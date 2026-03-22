@@ -19,7 +19,7 @@ function z1_aliases {
   alias asr='aerospace reload-config;clear;'
   alias asf='(killall AeroSpace || true) && open -a AeroSpace;clear;' # [a]eroSpace [f]orced [r]estart
   alias b='bat'
-  alias bu='brew update && brew upgrade --greedy-auto-updates && brew cleanup'
+  alias bu='brew update && brew upgrade --greedy && brew cleanup'
   alias brewinfo='brew leaves | xargs brew desc --eval-all'
   alias c='clear; [[ -n $TMUX ]] && tmux clear-history || true'
   alias cl='clear;claude'

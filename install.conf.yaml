@@ -101,7 +101,7 @@
 
 # run brew update, upgrade, clean up
 - shell:
-    - command: brew update && brew upgrade --greedy-auto-updates && brew cleanup
+    - command: brew update && brew upgrade --greedy && brew cleanup
       description: Running brew update/upgrade/cleanup
 
 # Install brew packages

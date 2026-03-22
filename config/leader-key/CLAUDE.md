@@ -21,7 +21,7 @@ action groups for opening/quitting apps, running commands, and quick URLs.
   spotify, vlc, vscode, etc.)
 - **Application quitting**: sophisticated quit with sleep delays and
   aerospace workspace navigation
-- **Utility commands**: brew upgrade (`--greedy-auto-updates`),
+- **Utility commands**: brew upgrade (`--greedy`),
   close-notifications, move-files, restart-leaderkey, trash-empty,
   toggle-mute, wash-dropbox
 - **GitHub URLs** (`g`): personal repos (codebox, dotfiles, quarto-blog),

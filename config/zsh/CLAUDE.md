@@ -84,11 +84,13 @@ gh, npm, node, ruby, cargo, tmux. All tools use proper XDG base directories.
 
 ## Homebrew Env Vars (in `01-z1-env-vars-gen.zsh`)
 
-| Variable                   | Value                  | Effect                                     |
-| -------------------------- | ---------------------- | ------------------------------------------ |
-| `HOMEBREW_NO_ANALYTICS`    | `1`                    | Disable analytics                          |
-| `HOMEBREW_CASK_OPTS`       | `--appdir=/Applications` | Default cask install location            |
-| `HOMEBREW_UPGRADE_GREEDY`  | `1`                    | `brew upgrade` includes auto-updating casks |
+| Variable                   | Value                    | Effect                                     |
+| -------------------------- | ------------------------ | ------------------------------------------ |
+| `HOMEBREW_NO_ANALYTICS`    | `1`                      | Disable analytics                          |
+| `HOMEBREW_CASK_OPTS`       | `--appdir=/Applications` | Default cask install location              |
+| `HOMEBREW_UPGRADE_GREEDY`  | `1`                      | `brew upgrade` includes auto-updating casks |
+| `HOMEBREW_NO_ENV_HINTS`    | `1`                      | Suppress "Hide these hints" boilerplate    |
+| `HOMEBREW_AUTOREMOVE`      | `1`                      | Auto-remove orphaned deps on upgrade       |
 
 ## Cross-Tool Integration
 
