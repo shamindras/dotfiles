@@ -22,15 +22,14 @@ skipped by plain `brew upgrade`. Three mechanisms ensure they get upgraded:
 
 | Context               | Mechanism                                                    |
 | --------------------- | ------------------------------------------------------------ |
-| `./install` (dotbot)  | `brew upgrade --greedy-auto-updates` in `install.conf.yaml`  |
-| `bu` alias            | `brew upgrade --greedy-auto-updates` in alias definition     |
-| Leader Key `r b`      | `brew upgrade --greedy-auto-updates` in `leader-key/config.json` |
-| Manual `brew upgrade` | `HOMEBREW_UPGRADE_GREEDY=1` env var (full greedy)            |
+| `./install` (dotbot)  | `brew upgrade --greedy` in `install.conf.yaml`        |
+| `bu` alias            | `brew upgrade --greedy` in alias definition              |
+| Leader Key `r b`      | `brew upgrade --greedy` in `leader-key/config.json`   |
+| Manual `brew upgrade` | `HOMEBREW_UPGRADE_GREEDY=1` env var (full greedy)     |
 
-- `--greedy-auto-updates` upgrades `auto_updates true` casks but leaves
-  `version :latest` casks alone (more precise than `--greedy`)
-- `HOMEBREW_UPGRADE_GREEDY=1` maps to full `--greedy` (both `auto_updates`
-  and `:latest`) — no env var exists for just `--greedy-auto-updates`
+- `--greedy` upgrades both `auto_updates true` and `version :latest` casks
+- `HOMEBREW_UPGRADE_GREEDY=1` maps to full `--greedy` — the explicit flag
+  is kept in dotbot and leader-key as a belt-and-suspenders safeguard
 - The dotbot `./install` script runs under bash and does NOT source zsh
   config, so the explicit flag is needed there
 
