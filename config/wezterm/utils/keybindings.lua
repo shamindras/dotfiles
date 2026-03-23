@@ -54,6 +54,28 @@ local function tmux_ctrl(key, tmux_key)
   }
 end
 
+--- Send CMD+key (or CMD+SHIFT/CMD+CTRL) as tmux prefix + table_key + action_key.
+--- Used for tmux key-table bindings (two-key sequences after prefix).
+---@param key string  WezTerm key to bind
+---@param mods string  WezTerm modifier(s) (e.g. 'CMD', 'CMD|SHIFT', 'CMD|CTRL')
+---@param table_key string  Key that activates the tmux key table
+---@param action_key string  Key within the table
+---@return table
+local function tmux_table(key, mods, table_key, action_key)
+  return {
+    key = key,
+    mods = mods,
+    action = wezterm.action_callback(function(window, pane)
+      window:perform_action(act.Multiple({
+        act.SendKey(TMUX_PREFIX),
+        act.SendKey({ key = table_key }),
+      }), pane)
+      wezterm.sleep_ms(10)
+      window:perform_action(act.SendKey({ key = action_key }), pane)
+    end),
+  }
+end
+
 --- Open a new WezTerm window in the current pane's working directory.
 local spawn_window_cwd = wezterm.action_callback(function(window, pane)
   local cwd_url = pane:get_current_working_dir()
@@ -102,7 +124,7 @@ function M.setup(config)
     },
     tmux('e', 'E'),                -- CMD+E       = equalize panes
     tmux_shift('B', '!'),          -- CMD+Shift+B = break pane to window
-    tmux_shift('C', 'b'),         -- CMD+Shift+C = Claude Code split
+    tmux_table('c', 'CMD|SHIFT', 'O', 'c'), -- CMD+Shift+C = Claude Code split
 
     -- Pane resize (sends prefix + M-Arrow)
     {                              -- CMD+Shift+Left  = resize left 5
@@ -153,27 +175,25 @@ function M.setup(config)
     tmux('8', '8'),                -- CMD+8       = window 8
     tmux('9', '9'),                -- CMD+9       = window 9
 
-    -- Session management
-    tmux_shift('K', 's'),          -- CMD+Shift+K = sesh picker
-    tmux('k', 'w'),                -- CMD+K       = session/window tree
-    tmux('j', 'L'),                -- CMD+J       = last session
-    tmux('n', 'S'),                -- CMD+N       = new session
-    tmux_ctrl('h', ')'),           -- CMD+Ctrl+H  = previous session
-    tmux_ctrl('l', '('),           -- CMD+Ctrl+L  = next session
-    tmux_ctrl('e', '$'),           -- CMD+Ctrl+E  = rename session
-    tmux_ctrl('w', 'X'),           -- CMD+Ctrl+W  = kill session
+    -- Session management — N (Navigate) key table
+    tmux_table('k', 'CMD|SHIFT', 'N', 's'),   -- CMD+Shift+K = sesh picker
+    tmux_table('k', 'CMD', 'N', 'w'),         -- CMD+K       = session/window tree
+    tmux_table('j', 'CMD', 'N', 'j'),         -- CMD+J       = last session
+    tmux_table('n', 'CMD', 'N', 'n'),         -- CMD+N       = new session
+    tmux_table('h', 'CMD|CTRL', 'N', 'h'),    -- CMD+Ctrl+H  = previous session
+    tmux_table('l', 'CMD|CTRL', 'N', 'l'),    -- CMD+Ctrl+L  = next session
+    tmux_table('e', 'CMD|CTRL', 'N', 'e'),    -- CMD+Ctrl+E  = rename session
+    tmux_table('w', 'CMD|CTRL', 'N', 'k'),    -- CMD+Ctrl+W  = kill session
 
     -- Copy mode
     tmux('[', '['),                -- CMD+[       = enter copy mode
 
-    -- Popup tools
-    tmux('g', 'g'),                -- CMD+G       = lazygit popup
-    tmux('y', 'F'),                -- CMD+Y       = yazi popup
-    tmux('i', 'T'),                -- CMD+I       = items (taskwarrior-tui)
-    tmux('b', 'B'),                -- CMD+B       = btm popup
-
-    -- Utilities
-    tmux('u', 'u'),                -- CMD+U       = fzf-url picker
+    -- Tool launchers — O (Open) key table
+    tmux_table('g', 'CMD', 'O', 'g'),         -- CMD+G       = lazygit popup
+    tmux_table('y', 'CMD', 'O', 'y'),         -- CMD+Y       = yazi
+    tmux_table('i', 'CMD', 'O', 'i'),         -- CMD+I       = items (taskwarrior-tui)
+    tmux_table('b', 'CMD', 'O', 'b'),         -- CMD+B       = btm
+    tmux_table('u', 'CMD', 'O', 'u'),         -- CMD+U       = fzf-url picker
     tmux_shift('R', 'r'),          -- CMD+Shift+R = reload tmux config
 
     -- WezTerm-native (not tmux passthrough)

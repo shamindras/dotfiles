@@ -11,7 +11,8 @@ change.
 | L1    | CMD+SHIFT   | Modify / destructive / create |
 | L2    | CMD+CTRL    | Session scope                 |
 
-All tmux bindings send prefix `C-a` followed by the tmux key.
+All tmux bindings send prefix `C-a` followed by the tmux key. Key-table
+bindings send prefix + table key + action key (e.g., `C-a O g` for lazygit).
 
 ## Pane Management
 
@@ -25,7 +26,6 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 | `CMD+O`         | `C-o`    | Rotate panes         |
 | `CMD+E`         | `E`      | Equalize panes       |
 | `CMD+SHIFT+B`   | `!`      | Break pane to window |
-| `CMD+SHIFT+C`   | `b`      | Claude Code split    |
 
 ## Pane Resize
 
@@ -40,7 +40,7 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 
 | WezTerm key     | tmux key | Action            |
 | --------------- | -------- | ----------------- |
-| `CMD+T`         | `c`      | New window        |
+| `CMD+T`         | `c`      | New window (after current) |
 | `CMD+SHIFT+W`   | `&`      | Close window      |
 | `CMD+H`         | `p`      | Previous window   |
 | `CMD+L`         | `n`      | Next window       |
@@ -50,30 +50,36 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 | `CMD+0`         | `a`      | Last window       |
 | `CMD+1-9`       | `1-9`    | Window by number  |
 
-## Session Management
+## Session Management — N (Navigate) key table
 
 | WezTerm key     | tmux key | Action              |
 | --------------- | -------- | ------------------- |
-| `CMD+K`         | `w`      | Session/window tree |
-| `CMD+SHIFT+K`   | `s`      | Sesh picker         |
-| `CMD+J`         | `L`      | Last session        |
-| `CMD+N`         | `S`      | New session         |
-| `CMD+CTRL+H`    | `)`      | Previous session    |
-| `CMD+CTRL+L`    | `(`      | Next session        |
-| `CMD+CTRL+E`    | `$`      | Rename session      |
-| `CMD+CTRL+W`    | `X`      | Kill session        |
+| `CMD+K`         | `N w`    | Session/window tree |
+| `CMD+SHIFT+K`   | `N s`    | Sesh picker         |
+| `CMD+J`         | `N j`    | Last session        |
+| `CMD+N`         | `N n`    | New session         |
+| `CMD+CTRL+H`    | `N h`    | Previous session    |
+| `CMD+CTRL+L`    | `N l`    | Next session        |
+| `CMD+CTRL+E`    | `N e`    | Rename session      |
+| `CMD+CTRL+W`    | `N k`    | Kill session        |
 
-## Copy Mode & Tools
+## Tool Launchers — O (Open) key table
 
 | WezTerm key     | tmux key | Action                  |
 | --------------- | -------- | ----------------------- |
-| `CMD+[`         | `[`      | Enter copy mode         |
-| `CMD+G`         | `g`      | Lazygit popup           |
-| `CMD+Y`         | `F`      | Yazi popup              |
-| `CMD+I`         | `T`      | Items (taskwarrior-tui) |
-| `CMD+B`         | `B`      | Btm popup               |
-| `CMD+U`         | `u`      | fzf-url picker          |
-| `CMD+SHIFT+R`   | `r`      | Reload tmux config      |
+| `CMD+G`         | `O g`    | Lazygit popup           |
+| `CMD+Y`         | `O y`    | Yazi                    |
+| `CMD+I`         | `O i`    | Items (taskwarrior-tui) |
+| `CMD+B`         | `O b`    | Btm                     |
+| `CMD+SHIFT+C`   | `O c`    | Claude Code split       |
+| `CMD+U`         | `O u`    | fzf-url picker          |
+
+## Copy Mode & Utilities
+
+| WezTerm key     | tmux key | Action             |
+| --------------- | -------- | ------------------ |
+| `CMD+[`         | `[`      | Enter copy mode    |
+| `CMD+SHIFT+R`   | `r`      | Reload tmux config |
 
 ## WezTerm-native (no tmux passthrough)
 
