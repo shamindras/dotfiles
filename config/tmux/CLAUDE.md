@@ -69,33 +69,54 @@ to detect vim/nvim/fzf in the active pane:
 - Regex handles `.nvim`, NixOS `-wrapped` binaries
 - Neovim side handled by `smart-splits.nvim` (`config/nvim/lua/shamindras/plugins/smart-splits.lua`)
 
-### Custom bindings (after prefix)
+### Single-key bindings (after prefix)
 
 Update both this table and
 [`config/wezterm/keybindings-reference.md`](../wezterm/keybindings-reference.md)
 when bindings change in `keybindings.conf`.
 
-| Key | Action |
-|-----|--------|
-| `\|` | Split pane horizontally (preserves cwd) |
-| `-` | Split pane vertically (preserves cwd) |
-| `c` | New window (preserves cwd) |
-| `x` | Kill pane (no confirmation) |
-| `a` | Last window (toggle) |
-| `E` | Equalize pane sizes |
-| `b` | Claude Code in right split (40% width) |
-| `K` | Clear pane and scrollback |
-| `s` | Sesh session picker (fzf popup) |
-| `w` | Session quick-switcher (fzf popup) |
-| `S` | New session |
-| `X` | Kill session (with confirmation) |
-| `r` | Reload tmux config (with message) |
-| `v` | Enter copy mode |
+| Key          | Action                                    |
+|--------------|-------------------------------------------|
+| `\|`         | Split pane horizontally (preserves cwd)   |
+| `-`          | Split pane vertically (preserves cwd)     |
+| `c`          | New window after current (preserves cwd)  |
+| `x`          | Kill pane (no confirmation)               |
+| `a`          | Last window (toggle)                      |
+| `,`          | Rename window                             |
+| `<` / `>`    | Swap window left/right                    |
+| `K`          | Clear pane and scrollback                 |
+| `r`          | Reload tmux config (with message)         |
+| `v`          | Enter copy mode                           |
 | `M-h/j/k/l` | Vi-style pane resize (repeatable, 5-unit) |
-| `g` | Lazygit popup (100x100%) |
-| `F` | Yazi in new window (popup unsupported — tmux#4329) |
-| `T` | Items window: switch to existing or create new with taskwarrior-tui |
-| `B` | Btm popup (100x100%) |
+
+### Key tables
+
+Tool launchers and session management use tmux key tables — two-key
+sequences after prefix. This avoids colliding with tmux built-in defaults.
+
+**O (Open) — tool launchers** (`prefix + O + <key>`):
+
+| Key | Action                                                     |
+|-----|------------------------------------------------------------|
+| `g` | Lazygit popup (100x100%)                                   |
+| `y` | Yazi in new window after current                           |
+| `i` | Items: switch to existing or create after current (tw-tui) |
+| `b` | Btm in new window after current                            |
+| `c` | Claude Code in right split (40% width)                     |
+| `u` | fzf-url picker                                             |
+
+**N (Navigate) — session management** (`prefix + N + <key>`):
+
+| Key | Action                          |
+|-----|---------------------------------|
+| `s` | Sesh session picker (fzf popup) |
+| `w` | Session/window tree (fzf popup) |
+| `n` | New session                     |
+| `k` | Kill session (with confirmation)|
+| `j` | Last session (toggle)           |
+| `h` | Previous session                |
+| `l` | Next session                    |
+| `e` | Rename session                  |
 
 ### Copy mode
 - `prefix + v` enters copy mode
@@ -104,7 +125,9 @@ when bindings change in `keybindings.conf`.
 - Mouse drag auto-copies (via tmux-yank)
 
 ### WezTerm CMD shortcut integration
-WezTerm intercepts CMD+key and sends `C-a` + tmux_key. Three modifier layers:
+WezTerm intercepts CMD+key and sends tmux prefix sequences. Single-key
+bindings send `C-a` + key. Key-table bindings send `C-a` + table key +
+action key (e.g., `C-a O g` for lazygit). Three modifier layers:
 - **CMD** (L0): pane/window actions
 - **CMD+SHIFT** (L1): modify/destructive/create variants
 - **CMD+CTRL** (L2): session-scope operations
