@@ -1,0 +1,81 @@
+# Catppuccin Mocha theme for Taskwarrior
+# https://github.com/catppuccin/catppuccin
+#
+# Palette (256-color approximations):
+#   Base     #1e1e2e → color235    Mauve    #cba6f7 → color183
+#   Surface0 #313244 → color237    Red      #f38ba8 → color211
+#   Surface1 #45475a → color239    Peach    #fab387 → color216
+#   Overlay0 #6c7086 → color243    Yellow   #f9e2af → color223
+#   Subtext0 #a6adc8 → color146    Green    #a6e3a1 → color151
+#   Text     #cdd6f4 → color189    Teal     #94e2d5 → color116
+#   Lavender #b4befe → color147    Blue     #89b4fa → color111
+
+# General decoration
+color.label=color189
+color.label.sort=color189
+color.alternate=on color237
+color.header=bold color147
+color.footnote=color116
+color.warning=color235 on color223
+color.error=color235 on color211
+color.debug=color116
+
+# Task state
+color.completed=color243
+color.deleted=color239
+color.active=bold color151
+color.recurring=color116
+color.scheduled=color189
+color.until=color189
+color.blocked=color243
+color.blocking=bold color183
+
+# Project
+color.project.none=
+
+# Priority
+color.uda.priority.H=bold color211
+color.uda.priority.M=bold color223
+color.uda.priority.L=bold color111
+
+# Tags
+color.tag.next=bold color216
+color.tag.none=
+color.tagged=color111
+
+# Due
+color.due=color223
+color.due.today=bold color216
+color.overdue=bold color211
+
+# Report: burndown
+color.burndown.done=color235 on color151
+color.burndown.pending=color235 on color211
+color.burndown.started=color235 on color223
+
+# Report: history
+color.history.add=color235 on color151
+color.history.delete=color235 on color211
+color.history.done=color235 on color116
+
+# Report: summary
+color.summary.background=on color235
+color.summary.bar=color235 on color151
+
+# Command: calendar
+color.calendar.due=color235 on color223
+color.calendar.due.today=color235 on color216
+color.calendar.holiday=color235 on color183
+color.calendar.overdue=color235 on color211
+color.calendar.today=color235 on color111
+color.calendar.weekend=on color237
+color.calendar.weeknumber=color147
+
+# Command: sync
+color.sync.added=color151
+color.sync.changed=color216
+color.sync.rejected=color211
+
+# Command: undo
+color.undo.after=color151
+color.undo.before=color211
