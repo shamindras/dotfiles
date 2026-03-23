@@ -65,14 +65,15 @@ All tmux bindings send prefix `C-a` followed by the tmux key.
 
 ## Copy Mode & Tools
 
-| WezTerm key     | tmux key | Action             |
-| --------------- | -------- | ------------------ |
-| `CMD+[`         | `[`      | Enter copy mode    |
-| `CMD+G`         | `g`      | Lazygit popup      |
-| `CMD+Y`         | `F`      | Yazi popup         |
-| `CMD+B`         | `B`      | Btm popup          |
-| `CMD+U`         | `u`      | fzf-url picker     |
-| `CMD+SHIFT+R`   | `r`      | Reload tmux config |
+| WezTerm key     | tmux key | Action                  |
+| --------------- | -------- | ----------------------- |
+| `CMD+[`         | `[`      | Enter copy mode         |
+| `CMD+G`         | `g`      | Lazygit popup           |
+| `CMD+Y`         | `F`      | Yazi popup              |
+| `CMD+I`         | `T`      | Items (taskwarrior-tui) |
+| `CMD+B`         | `B`      | Btm popup               |
+| `CMD+U`         | `u`      | fzf-url picker          |
+| `CMD+SHIFT+R`   | `r`      | Reload tmux config      |
 
 ## WezTerm-native (no tmux passthrough)
 
