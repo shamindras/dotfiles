@@ -9,7 +9,12 @@
 tmux-resize() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-  [[ -n "$TMUX" ]] && tmux resize-window -a
+  if [[ -n "$TMUX" ]]; then
+    tmux resize-window -a
+    # resize-window disables auto-resize; re-enable so future font-size
+    # changes (Cmd+=/Cmd+-) still trigger SIGWINCH in the pane.
+    tmux setw window-size latest
+  fi
 }
 
 # vim: ft=zsh
