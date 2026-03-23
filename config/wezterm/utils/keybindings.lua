@@ -169,6 +169,7 @@ function M.setup(config)
     -- Popup tools
     tmux('g', 'g'),                -- CMD+G       = lazygit popup
     tmux('y', 'F'),                -- CMD+Y       = yazi popup
+    tmux('i', 'T'),                -- CMD+I       = items (taskwarrior-tui)
     tmux('b', 'B'),                -- CMD+B       = btm popup
 
     -- Utilities

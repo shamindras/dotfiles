@@ -94,6 +94,7 @@ when bindings change in `keybindings.conf`.
 | `M-h/j/k/l` | Vi-style pane resize (repeatable, 5-unit) |
 | `g` | Lazygit popup (100x100%) |
 | `F` | Yazi in new window (popup unsupported — tmux#4329) |
+| `T` | Items window: switch to existing or create new with taskwarrior-tui |
 | `B` | Btm popup (100x100%) |
 
 ### Copy mode
