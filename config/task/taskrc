@@ -63,13 +63,14 @@ include ~/.config/task/themes/catppuccin-mocha.theme
 uda.taskwarrior-tui.style.context.active=black on rgb343
 uda.taskwarrior-tui.style.report.selection=black on rgb343
 
-# Shortcut scripts (keys 1-9 for quick-tagging in TUI)
-uda.taskwarrior-tui.shortcuts.1=~/.config/task/scripts/tui/tag.sh ai
-uda.taskwarrior-tui.shortcuts.2=~/.config/task/scripts/tui/tag.sh math
-uda.taskwarrior-tui.shortcuts.3=~/.config/task/scripts/tui/tag.sh statml
-uda.taskwarrior-tui.shortcuts.4=~/.config/task/scripts/tui/tag.sh coding
-uda.taskwarrior-tui.shortcuts.5=~/.config/task/scripts/tui/tag.sh writing
-uda.taskwarrior-tui.shortcuts.6=~/.config/task/scripts/tui/tag.sh reading
-uda.taskwarrior-tui.shortcuts.7=~/.config/task/scripts/tui/tag.sh calls
-uda.taskwarrior-tui.shortcuts.8=~/.config/task/scripts/tui/tag.sh emails
-uda.taskwarrior-tui.shortcuts.9=~/.config/task/scripts/tui/tag.sh quick
+# Shortcut scripts (keys 1-8 toggle tags, key 9 toggles context)
+# Key → Action (help menu shows generic labels; comments are the reference)
+uda.taskwarrior-tui.shortcuts.1=~/.config/task/scripts/tui/tag.sh errands            # +errands
+uda.taskwarrior-tui.shortcuts.2=~/.config/task/scripts/tui/tag.sh coding             # +coding
+uda.taskwarrior-tui.shortcuts.3=~/.config/task/scripts/tui/tag.sh calls              # +calls
+uda.taskwarrior-tui.shortcuts.4=~/.config/task/scripts/tui/tag.sh emails             # +emails
+uda.taskwarrior-tui.shortcuts.5=~/.config/task/scripts/tui/tag.sh blog               # +blog
+uda.taskwarrior-tui.shortcuts.6=~/.config/task/scripts/tui/tag.sh reading            # +reading
+uda.taskwarrior-tui.shortcuts.7=~/.config/task/scripts/tui/tag.sh ai                 # +ai
+uda.taskwarrior-tui.shortcuts.8=~/.config/task/scripts/tui/tag.sh math               # +math
+uda.taskwarrior-tui.shortcuts.9=~/.config/task/scripts/tui/context-toggle.sh         # context ↔ none

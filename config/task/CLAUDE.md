@@ -11,7 +11,8 @@
 | --------------------------- | -------------------------------------------------- |
 | `taskrc`                    | Main config (contexts, aliases, display, TUI keys) |
 | `themes/catppuccin-mocha.theme` | Catppuccin Mocha color theme (256-color)       |
-| `scripts/tui/tag.sh`       | Quick-tag script for TUI shortcut keys 1-9         |
+| `scripts/tui/tag.sh`            | Toggle-tag script for TUI shortcut keys 1-8    |
+| `scripts/tui/context-toggle.sh` | Toggle context ↔ none for TUI shortcut key 9   |
 
 ## Contexts (6)
 
@@ -26,35 +27,37 @@ All contexts have both `.read` (filter view) and `.write` (auto-tag new tasks) f
 | `blog`     | `+blog`    | Blog writing and updates          |
 | `errands`  | `+errands` | Out and about: shopping, pickups  |
 
-## Tags (9, flat, combinable)
+## Tags (8 with shortcuts, +statml manual)
 
-| Tag        | Typical contexts | Purpose                |
-| ---------- | ---------------- | ---------------------- |
-| `+ai`      | study            | AI/ML domain           |
-| `+math`    | study            | Mathematics            |
-| `+statml`  | study            | Statistical ML         |
-| `+coding`  | work, study      | Programming tasks      |
-| `+writing` | work, study      | Docs, papers, prose    |
-| `+reading` | work, study      | Papers, books          |
-| `+calls`   | home, work       | Phone calls            |
-| `+emails`  | home, work       | Emails to handle       |
-| `+quick`   | any              | Can be done in <15 min |
+| Tag         | Typical contexts | Purpose                |
+| ----------- | ---------------- | ---------------------- |
+| `+errands`  | errands          | Shopping, pickups      |
+| `+coding`   | work, study      | Programming tasks      |
+| `+calls`    | home, work       | Phone calls            |
+| `+emails`   | home, work       | Emails to handle       |
+| `+blog`     | blog             | Blog writing, updates  |
+| `+reading`  | work, study      | Papers, books          |
+| `+ai`       | study            | AI/ML domain           |
+| `+math`     | study            | Mathematics            |
+| `+statml`   | study            | Statistical ML (no shortcut, use `m` → `+statml`) |
 
-## TUI Shortcut Keys (quick-tag)
+## TUI Shortcut Keys
 
-All shortcuts call `scripts/tui/tag.sh` with a tag argument.
+Keys 1-8 toggle tags on/off (`scripts/tui/tag.sh`).
+Key 9 toggles context between current and none (`scripts/tui/context-toggle.sh`).
+Previous context is persisted in `~/.local/state/task/prev-context`.
 
-| Key | Tag        |
-| --- | ---------- |
-| 1   | `+ai`      |
-| 2   | `+math`    |
-| 3   | `+statml`  |
-| 4   | `+coding`  |
-| 5   | `+writing` |
-| 6   | `+reading` |
-| 7   | `+calls`   |
-| 8   | `+emails`  |
-| 9   | `+quick`   |
+| Key | Action                   |
+| --- | ------------------------ |
+| 1   | toggle `+errands`        |
+| 2   | toggle `+coding`         |
+| 3   | toggle `+calls`          |
+| 4   | toggle `+emails`         |
+| 5   | toggle `+blog`           |
+| 6   | toggle `+reading`        |
+| 7   | toggle `+ai`             |
+| 8   | toggle `+math`           |
+| 9   | toggle context ↔ none    |
 
 ## Key Design Decisions
 
