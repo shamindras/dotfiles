@@ -73,7 +73,7 @@ All scripts use:
 - `set -Eeuo pipefail` strict mode
 - `SESSION` var matching the session name in `sesh.toml`
 - `WORK_DIR` with `${DROPBOX_DIR:-$HOME/DROPBOX}` fallback
-- `sesh_window_items` or `sesh_window_claude` renames window 1, all other windows use `tmux new-window`
+- `sesh_window_claude` renames window 1, all other windows use `tmux new-window` or inline rename
 
 ### Window Layout by Session
 
@@ -83,7 +83,7 @@ All scripts use:
 | play     | claude   | nvim    | term (uv venv) | yazi | —  | —    | claude   |
 | career   | claude   | nvim    | term    | yazi   | —      | —    | nvim     |
 | blog     | claude   | nvim    | preview | term   | yazi   | —    | nvim     |
-| notes    | items    | journal | ideas   | term   | claude | yazi | journal  |
+| notes    | journal  | ideas   | claude  | term   | yazi   | —    | journal  |
 | feed     | newsboat | term    | yazi    | —      | —      | —    | newsboat |
 
 ### Common Window Patterns
