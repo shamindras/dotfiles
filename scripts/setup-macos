@@ -321,6 +321,9 @@ defaults write -g NSWindowShouldDragOnGesture -bool true
 defaults write -app Skim AppleWindowTabbingMode never
 defaults write -app Preview AppleWindowTabbingMode never
 
+# TextEdit: open a new blank document instead of the file picker dialog
+defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile -bool false
+
 # Hide Skim document toolbar by default (toggle back with Cmd+Opt+T)
 defaults write net.sourceforge.skim-app.skim \
   "NSToolbar Configuration SKDocumentToolbar" \

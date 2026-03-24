@@ -94,6 +94,12 @@
           "value": "/Applications/Ghostty.app"
         },
         {
+          "key": "q",
+          "label": "textedit",
+          "type": "application",
+          "value": "/System/Applications/TextEdit.app"
+        },
+        {
           "key": "s",
           "label": "vscode",
           "type": "application",
@@ -189,6 +195,12 @@
           "label": "ghostty",
           "type": "command",
           "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && if pgrep -x \"wezterm-gui\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+        },
+        {
+          "key": "q",
+          "label": "textedit",
+          "type": "command",
+          "value": "osascript -e 'quit app \"TextEdit\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
         },
         {
           "key": "s",
