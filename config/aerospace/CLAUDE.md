@@ -36,7 +36,7 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **ghostty**: assigned to workspace T
 - **vscode**: assigned to workspace S
 - **vlc**: assigned to workspace V
-- **slack**: assigned to workspace Y (parked, currently unused)
+- **textedit**: assigned to workspace Q
 
 ## Reserved Alt Keys (Non-Workspace)
 

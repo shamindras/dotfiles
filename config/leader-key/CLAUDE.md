@@ -39,7 +39,7 @@ action groups for opening/quitting apps, running commands, and quick URLs.
 
 The quit group navigates to a default workspace after quitting each app:
 
-- **Terminal-default (W)**: DJView, Preview, Finder, Skim — after
+- **Terminal-default (W)**: DJView, Preview, Finder, Skim, TextEdit — after
   quitting, navigate to workspace W (WezTerm)
 - **VSCode-default (S)**: VSCode — after quitting, navigate to workspace S
 - **Browser-default (B)**: 1Password, Firefox, Signal, Books, Spotify,
@@ -68,6 +68,7 @@ This table is the source of truth for the mapping:
 | spotify     | `m`                  | `M`                 | **M**usic           |
 | nordvpn     | `n`                  | `N`                 | **N**ordVPN         |
 | skim        | `p`                  | `P`                 | **P**df             |
+| textedit    | `q`                  | `Q`                 | **Q**uill           |
 | vscode      | `s`                  | `S`                 | V**S**Code / editor |
 | ghostty     | `t`                  | `T`                 | **T**erminal        |
 | vlc         | `v`                  | `V`                 | **V**LC             |

@@ -304,10 +304,10 @@ run = "move-node-to-workspace G"
 if.app-id = "com.apple.iBooksX"
 run = "move-node-to-workspace I"
 
-# Si[G]nal
+# [Q]uill - TextEdit
 [[on-window-detected]]
 if.app-id = "com.apple.TextEdit"
-run = "move-node-to-workspace I"
+run = "move-node-to-workspace Q"
 
 # RStudi[o]
 [[on-window-detected]]
@@ -328,11 +328,6 @@ run = "move-node-to-workspace P"
 [[on-window-detected]]
 if.app-id = "com.spotify.client"
 run = "move-node-to-workspace M"
-
-# Slack (parked at [Y])
-[[on-window-detected]]
-if.app-id = "com.tinyspeck.slackmacgap"
-run = "move-node-to-workspace Y"
 
 # [T]erminal
 [[on-window-detected]]
