@@ -50,6 +50,7 @@ o.inccommand = 'split' -- Preview substitutions live, as you type!
 
 o.updatetime = 250 -- Decrease update time
 o.timeoutlen = 300 -- Decrease mapped sequence wait time
+o.ttimeoutlen = 5 -- Fast key code sequences (e.g. Esc)
 
 -- }}}
 
