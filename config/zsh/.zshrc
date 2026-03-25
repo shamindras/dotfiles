@@ -110,7 +110,7 @@ z1_completions
 # z1_brew_app_starship
 z1_brew_app_zoxide
 z1_brew_app_fzf
-# z1_brew_app_atuin
+z1_brew_app_atuin
 
 # Aliases ----
 z1_aliases

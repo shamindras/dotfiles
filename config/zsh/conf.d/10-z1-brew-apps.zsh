@@ -51,7 +51,9 @@ function z1_brew_app_fzf {
 # Atuin
 # source: https://docs.atuin.sh/guide/installation/#installing-the-shell-plugin
 function z1_brew_app_atuin {
-  eval "$(atuin init zsh)"
+  # Cache atuin shell integration for 20 hours (via __memoize_cmd).
+  # --disable-up-arrow: keep zsh history-search-backward on up arrow
+  __memoize_cmd 'atuin_init.zsh' atuin init zsh --disable-up-arrow
 }
 
 # endregion --------------------------------------------------------------------
