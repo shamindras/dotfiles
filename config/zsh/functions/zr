@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? zr - reload zsh config. Inside tmux, reloads all zsh panes
 ##?      across every session/window. Outside tmux, reloads the
 ##?      current shell.

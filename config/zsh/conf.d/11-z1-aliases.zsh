@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 # ------------------------------------------------------------------------------
 # region: aliases
 # ------------------------------------------------------------------------------
@@ -55,7 +53,7 @@ function z1_aliases {
   alias tl2='t2 --long'
   alias t3='tree --level=3'
   alias tl3='t3 --long'
-  alias tzsh="hyperfine --warmup=20 '/usr/bin/time zsh -i -c true'"
+  alias tzsh="hyperfine --warmup=20 '/usr/bin/time zsh -i -c true 2>/dev/null'"
   alias uac="ua;clear" # run `ua` function and clear screen
 
   # wash hidden files in downloads and refs, change into directory and launch yazi
@@ -159,3 +157,5 @@ function z1_global_aliases {
   alias -g C="| pbcopy"
 }
 # endregion --------------------------------------------------------------------
+
+# vim: ft=zsh

@@ -4,10 +4,10 @@
 
 Modular zsh config with custom "Z1" framework. Numbered `conf.d/` files ensure
 deterministic load order. Custom plugin system (git-based, no external manager).
-19 autoloaded functions in `functions/`.
+18 autoloaded functions in `functions/`.
 
 - **Docs**: https://zsh.sourceforge.io/Doc/
-- **Installed version**: zsh 5.9 (verified 2026-02-26)
+- **Installed version**: zsh 5.9 (system `/bin/zsh`, verified 2026-03-25)
 
 ## Architecture
 
@@ -15,24 +15,24 @@ deterministic load order. Custom plugin system (git-based, no external manager).
 
 ```
 config/zsh/
-├── .zshenv                           # Sets ZDOTDIR only (direct assignment)
+├── .zshenv                           # ZDOTDIR + XDG exports + dir creation
 ├── .zshrc                            # Entry point: Z1 init + sources conf.d/*
 ├── completions/                      # Custom _toolname completion files (.gitkeep)
 ├── conf.d/                           # Modular configs (sourced alphabetically)
 │   ├── 00-z1-env-vars-xdg.zsh       # XDG paths for tools (~95 lines)
 │   ├── 01-z1-env-vars-gen.zsh       # General env vars, PATH, Homebrew
 │   ├── 02-z1-funcdir.zsh            # Autoload function directory
-│   ├── 03-z1-colorize.zsh           # dircolors, man pager colors, __memoize_cmd
+│   ├── 03-z1-memoize.zsh            # __memoize_cmd (caches command output 20h)
 │   ├── 04-z1-directory.zsh          # Directory options, pushd stack
-│   ├── 05-z1-editor.zsh             # Vi keybindings, smart-enter widget
+│   ├── 05-z1-editor.zsh             # Vi keybindings, smart-enter, zsh-no-ps2
 │   ├── 06-z1-history.zsh            # History: 100k entries, no share
 │   ├── 07-z1-utility.zsh            # Misc options, bracketed paste
 │   ├── 08-z1-plugins.zsh            # Custom plugin manager (clone/update/compile)
 │   ├── 09-z1-completions.zsh        # Completion system, 50+ zstyle rules
-│   ├── 10-z1-brew-apps.zsh          # zoxide, fzf (cached via __memoize_cmd)
+│   ├── 10-z1-brew-apps.zsh          # zoxide, fzf, atuin (cached via __memoize_cmd)
 │   ├── 11-z1-aliases.zsh            # 90+ aliases (regular, suffix, global)
 │   └── 12-z1-prompt.zsh             # Simple vcs_info prompt
-└── functions/                        # Autoloaded functions (19 files)
+└── functions/                        # Autoloaded functions (18 files)
     ├── smart-enter                   # ZLE widget: git status + eza on empty Return
     ├── k, ki                         # Zettelkasten (zk) wrappers
     ├── y                             # Yazi wrapper (preserves cwd)
@@ -49,7 +49,7 @@ config/zsh/
 
 ### Loading Order
 
-1. `.zshenv` — sets `ZDOTDIR`
+1. `.zshenv` — sets `ZDOTDIR`, exports XDG variables, creates XDG directories
 2. `.zshrc` — initializes Z1 framework, defines `z1_confd`
 3. `z1_confd` — sources all `conf.d/*.zsh` in alphabetical order
 4. Function calls in sequence: funcdir → directory → vi_keybindings →
@@ -60,13 +60,15 @@ config/zsh/
 `NN-z1-*.zsh` — numbered prefix for deterministic order. Each file defines
 one or more `z1_*` functions called by `.zshrc`.
 
-### Key Patterns
+### File Conventions
 
+- **No shebangs**: sourced files and autoloaded functions do not have `#!/bin/zsh`
+  (they are never executed directly). Each file ends with `# vim: ft=zsh`.
 - **Emulate -L zsh**: functions use `emulate -L zsh` to isolate option changes
 - **Lazy autoload**: functions in `fpath` not loaded until called
 - **Background compinit**: `.zcompdump.zwc` compiled async (`&!`)
 - **Memoization**: `__memoize_cmd` caches command output for 20 hours
-  (used for dircolors, fzf init, zoxide init)
+  (used for fzf init, zoxide init, atuin init)
 - **No plugin manager**: custom `plugin-clone/update/compile` functions
 - **No .zwc pre-compilation**: tested and found negligible benefit (~1ms)
   for these small config files; the fork overhead outweighed savings
@@ -78,6 +80,8 @@ one or more `z1_*` functions called by `.zshrc`.
   (preserves IDE terminal overrides like VS Code)
 - HISTFILE set at **top level** of `06-z1-history.zsh` (outside function body)
   so it's active before any function runs
+- **ZDOTDIR** in `.zshenv` uses bare assignment (no `export`) per romkatv's
+  advice — zsh reads it internally, child processes re-source `.zshenv`
 
 ### Function Docstring Convention
 
@@ -102,9 +106,21 @@ ZLE widgets (e.g., `smart-enter`) omit `-h` handling since they operate on
 
 ## XDG Integration
 
+XDG base directory variables are exported in `.zshenv` so they're available
+to all zsh invocations (interactive, scripts, cron, `zsh -c`).
+
 `00-z1-env-vars-xdg.zsh` sets XDG paths for tools including bat, zoxide,
 gh, npm, node, cargo, tmux, ipython, python. All tools use proper XDG base
 directories. HISTFILE uses `XDG_STATE_HOME/zsh/history`.
+
+## Editor & Keybindings (`05-z1-editor.zsh`)
+
+- Vi mode (`bindkey -v`) with emacs-style Ctrl-A/E for line navigation
+- `smart-enter`: empty Return → git status + eza; non-empty → execute
+- `zsh-no-ps2`: validates syntax before execution; incomplete commands get
+  a newline in the edit buffer instead of the confusing PS2 `>` prompt.
+  Chained with smart-enter via `zstyle ':zsh-no-ps2:' accept-line smart-enter`.
+  Source: https://github.com/romkatv/zsh-no-ps2
 
 ## Alias Categories
 
@@ -143,8 +159,8 @@ directories. HISTFILE uses `XDG_STATE_HOME/zsh/history`.
 ## Development Notes
 
 - Reload: `zr` function (tmux-aware, refreshes all panes)
-- Profile startup: uncomment `zmodload zsh/zprof` in `.zshrc`
-- Measure: `time zsh -i -c exit` (~20ms typical)
+- Profile startup: `ZSH_PROFILE=1 zsh`
+- Measure: `time zsh -i -c exit` (~24ms typical)
 - Functions support `-h`/`--help` (grep `##?` lines for docs)
 - History: 20k in-memory, 100k on-disk, no cross-session sharing
 - FZF theme: Catppuccin Mocha (aligned with project-wide theme)

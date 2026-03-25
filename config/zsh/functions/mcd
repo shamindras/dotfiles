@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? mcd - create a new directory and cd into it using zoxide
 ##?
 ##? usage:

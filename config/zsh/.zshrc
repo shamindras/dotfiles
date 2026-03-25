@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 # shfmt:disable
 
 # Profile startup with: ZSH_PROFILE=1 zsh
@@ -11,31 +9,6 @@ printf '\33c\e[3J'
 
 # Based on the .zshrc1 config
 # source: https://github.com/mattmc3/zshrc1
-
-# ------------------------------------------------------------------------------
-# region: Basic XDG variable setup
-# source: https://github.com/mattmc3/zdotdir/blob/main/.zshenv
-# Adapted from: https://gist.github.com/roalcantara/107ba66dfa3b9d023ac9329e639bc58c#correlations
-# ------------------------------------------------------------------------------
-
-# XDG path specifications
-export XDG_BIN_HOME=$HOME/.local/bin
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
-export XDG_STATE_HOME=$HOME/.local/state
-export XDG_RUNTIME_DIR=$HOME/.xdg
-export XDG_PROJECTS_DIR=$HOME/Projects
-
-# Ensure XDG directories exist.
-() {
-  local zdir
-  for zdir in $@; do
-    [[ -d "${(P)zdir}" ]] || mkdir -p -- "${(P)zdir}"
-  done
-} XDG_{BIN,CONFIG,CACHE,DATA,STATE}_HOME XDG_{RUNTIME,PROJECTS}_DIR
-
-# endregion --------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
 # region: Init z1

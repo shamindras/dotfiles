@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? k - wrapper for zk (zettelkasten) with optional template sync
 ##?
 ##? usage:

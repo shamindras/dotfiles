@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 # ------------------------------------------------------------------------------
 # region: Setup editor and keybinds
 # ------------------------------------------------------------------------------
@@ -42,11 +40,50 @@ function z1_vi_style_keybindings {
   bindkey '^A' beginning-of-line
   bindkey '^E' end-of-line
 
-  # Smart-enter: git status + eza on empty Return
+  # Register smart-enter as a ZLE widget (used by zsh-no-ps2 below).
   zle -N smart-enter
-  bindkey '^M' smart-enter
+
+  # PS2 prevention: validate command syntax before execution.
+  # On incomplete input, inserts a newline into the edit buffer instead of
+  # dropping to the confusing PS2 secondary prompt.
+  # source: https://github.com/romkatv/zsh-no-ps2
+  function zsh-no-ps2 {
+    setopt local_options no_err_return no_err_exit
+    () {
+      () {
+        builtin emulate -L zsh -o extended_glob
+        [[ $1 == (|*[^\\])(\\\\)#\\ ]]
+      } "$1" && builtin return 1
+      if [[ -v functions[-zsh-no-ps2-test] ]]; then
+        builtin unfunction -- -zsh-no-ps2-test
+      fi
+      functions[-zsh-no-ps2-test]="$1" 2>/dev/null              || builtin return 1
+      [[ -v functions[-zsh-no-ps2-test] ]]                      || builtin return 1
+      builtin unfunction -- -zsh-no-ps2-test
+      functions[-zsh-no-ps2-test]="$1"$'\ndo\ndone' 2>/dev/null || builtin return 0
+      [[ -v functions[-zsh-no-ps2-test] ]]                      || builtin return 0
+      builtin unfunction -- -zsh-no-ps2-test
+      builtin return 1
+    } "$PREBUFFER$BUFFER"
+    if (( $? )); then
+      builtin zle self-insert-unmeta
+    else
+      builtin local w
+      builtin zstyle -s :zsh-no-ps2: accept-line w || w=accept-line
+      if [[ -n $w ]]; then
+        builtin zle -- "$w"
+      fi
+    fi
+  }
+
+  # Chain zsh-no-ps2 with smart-enter: valid commands go to smart-enter,
+  # incomplete commands get a newline in the buffer instead of PS2.
+  zstyle ':zsh-no-ps2:' accept-line smart-enter
+  zle -N .zsh-no-ps2 zsh-no-ps2
+  bindkey '^J' .zsh-no-ps2
+  bindkey '^M' .zsh-no-ps2
 }
 
 # endregion --------------------------------------------------------------------
 
-# vim: ft=zsh 
+# vim: ft=zsh

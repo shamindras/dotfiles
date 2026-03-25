@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 # ------------------------------------------------------------------------------
 # region: Set apps to use XDG basedir spec.
 # XDG basedir support outlined here:
@@ -97,3 +95,5 @@ export CURL_HOME="$XDG_CONFIG_HOME/curl"
 export ZK_NOTEBOOK_DIR="$DROPBOX_DIR/notes/zk"
 
 # endregion --------------------------------------------------------------------
+
+# vim: ft=zsh

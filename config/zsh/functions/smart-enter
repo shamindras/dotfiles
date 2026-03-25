@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? smart-enter - ZLE widget: run default commands on empty input, accept line otherwise
 ##?
 ##? On empty input + Return:

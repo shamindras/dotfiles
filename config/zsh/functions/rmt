@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? rmt - move a file or directory to macOS Trash directory
 ##?
 ##? usage:

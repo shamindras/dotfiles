@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? convcomm - write a conventional commit message with interactive prompts
 ##?
 ##? usage:

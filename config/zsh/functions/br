@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? br - start broot and execute the command it produces
 ##?
 ##? usage:
