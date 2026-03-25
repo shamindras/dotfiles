@@ -4,13 +4,12 @@ include = [
     "taplo.toml",
     ".stylua.toml",
     "stylua.toml",
-    "**/alacritty.toml",
     "**/config.toml",
     "**/starship.toml",
     "**/yazi.toml",
     "**/theme.toml",
 ]
-exclude = ["config/yazi/themes/**", "config/alacritty/themes/**", "submods/**"]
+exclude = ["config/yazi/themes/**", "submods/**"]
 
 [rule.formatting]
 align_entries = true

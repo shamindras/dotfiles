@@ -70,7 +70,7 @@ just all              # Run clean, stylua_config, and update_brewfile
 Major categories of tools configured:
 - **Shells**: zsh with extensive customization
 - **Editors**: neovim, vscode configurations
-- **Terminals**: alacritty, ghostty, wezterm
+- **Terminals**: ghostty, wezterm
 - **Development**: git, gh, lazygit, tmux
 - **System**: aerospace (window manager), karabiner (keyboard)
 - **CLI Tools**: bat, ripgrep, yazi, starship, atuin
