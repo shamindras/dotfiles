@@ -1,10 +1,10 @@
 [submodule "submods/dotbot"]
-	path = submods/dotbot
+	path = submods/core/dotbot
 	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
 [submodule "submods/dotbot-plugins/dotbot-brew"]
-	path = submods/dotbot-plugins/dotbot-brew
+	path = submods/core/dotbot-brew
 	url = git@github.com:d12frosted/dotbot-brew.git
 [submodule "submods/tmux-plugins/tpm"]
-	path = submods/tmux-plugins/tpm
+	path = submods/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm.git
