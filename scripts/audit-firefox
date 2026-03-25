@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+# audit-firefox — check that our defined prefs match live Firefox state
+#
+# For each pref in user.js + policies.json, checks whether Firefox has it
+# with the expected value. Simple diff against what we've defined.
+#
+# Usage: ./scripts/audit-firefox
+
+DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+FIREFOX_SRC="${DOTFILES_DIR}/config/firefox"
+FIREFOX_APP="/Applications/Firefox.app"
+PROFILES_INI="${HOME}/Library/Application Support/Firefox/profiles.ini"
+CLAUDE_MD="${FIREFOX_SRC}/CLAUDE.md"
+
+issues=0
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+find_default_profile() {
+  local profiles_dir
+  profiles_dir="$(dirname "${PROFILES_INI}")"
+
+  local install_default
+  install_default=$(
+    sed 's/\r$//' "${PROFILES_INI}" |
+      awk '/^\[Install/ { in_install=1; next }
+           /^\[/         { in_install=0; next }
+           in_install && /^Default=/ { sub(/^Default=/, ""); print; exit }'
+  )
+
+  if [[ -n "${install_default}" ]]; then
+    local profile_path="${profiles_dir}/${install_default}"
+    if [[ -d "${profile_path}" ]]; then
+      echo "${profile_path}"
+      return 0
+    fi
+  fi
+
+  local fallback_path fallback_relative
+  read -r fallback_path fallback_relative < <(
+    sed 's/\r$//' "${PROFILES_INI}" |
+      awk '
+        /^\[Profile/ { in_profile=1; path=""; rel=""; def=0; next }
+        /^\[/         { if (in_profile && def) { print path, rel; exit }; in_profile=0; next }
+        in_profile && /^Path=/       { sub(/^Path=/, ""); path=$0 }
+        in_profile && /^IsRelative=/ { sub(/^IsRelative=/, ""); rel=$0 }
+        in_profile && /^Default=1/   { def=1 }
+        END { if (in_profile && def) print path, rel }
+      '
+  )
+
+  if [[ -n "${fallback_path}" ]]; then
+    local profile_path
+    if [[ "${fallback_relative}" == "1" ]]; then
+      profile_path="${profiles_dir}/${fallback_path}"
+    else
+      profile_path="${fallback_path}"
+    fi
+    if [[ -d "${profile_path}" ]]; then
+      echo "${profile_path}"
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+# Extract "pref_name<TAB>value" pairs from a user.js / prefs.js file
+extract_pref_pairs() {
+  grep -E '^\s*user_pref\(' "$1" |
+    sed 's/^[[:space:]]*user_pref("//;s/"[[:space:]]*,[[:space:]]*/\t/;s/);[[:space:]]*$//' |
+    sort -t$'\t' -k1,1
+}
+
+# ---------------------------------------------------------------------------
+# Checks
+# ---------------------------------------------------------------------------
+
+# 1. Firefox installed?
+if [[ ! -d "${FIREFOX_APP}" ]]; then
+  echo "[SKIP] Firefox.app not found."
+  exit 0
+fi
+
+# 2. Version check
+installed_version=$(defaults read "${FIREFOX_APP}/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "unknown")
+claude_version=""
+if [[ -f "${CLAUDE_MD}" ]]; then
+  claude_version=$(grep -oE 'Firefox [0-9]+\.[0-9]+' "${CLAUDE_MD}" | head -1 | sed 's/Firefox //')
+fi
+
+if [[ -n "${claude_version}" && "${installed_version}" != "${claude_version}" ]]; then
+  echo "[WARN] Firefox version mismatch: installed ${installed_version}, CLAUDE.md says ${claude_version}"
+  ((issues++))
+else
+  echo "[OK]   Firefox version: ${installed_version} (matches CLAUDE.md)"
+fi
+
+# 3. Validate policies.json
+policies_file="${FIREFOX_SRC}/policies.json"
+if [[ -f "${policies_file}" ]]; then
+  if command -v jq &>/dev/null && jq . "${policies_file}" >/dev/null 2>&1; then
+    echo "[OK]   policies.json: valid JSON"
+  else
+    echo "[FAIL] policies.json: invalid JSON"
+    ((issues++))
+  fi
+fi
+
+# 4. Check if policies.json is deployed and up to date
+deployed_policies="${FIREFOX_APP}/Contents/Resources/distribution/policies.json"
+if [[ -f "${policies_file}" ]]; then
+  if [[ -f "${deployed_policies}" ]]; then
+    if diff -q "${policies_file}" "${deployed_policies}" >/dev/null 2>&1; then
+      echo "[OK]   policies.json deployed and up to date"
+    else
+      echo "[WARN] policies.json OUT OF DATE — run: just firefox_sync"
+      ((issues++))
+    fi
+  else
+    echo "[WARN] policies.json NOT deployed — run: just firefox_sync"
+    ((issues++))
+  fi
+fi
+
+# 5. Profile check
+if [[ ! -f "${PROFILES_INI}" ]]; then
+  echo "[SKIP] Firefox profiles.ini not found — launch Firefox once first."
+  exit 0
+fi
+
+PROFILE_DIR=$(find_default_profile) || {
+  echo "[FAIL] Could not determine default Firefox profile directory."
+  exit 1
+}
+
+prefs_js="${PROFILE_DIR}/prefs.js"
+if [[ ! -f "${prefs_js}" ]]; then
+  echo "[SKIP] No prefs.js in profile — launch Firefox once first."
+  exit 0
+fi
+
+# 6. Compare our defined prefs against live Firefox state
+#    For each pref in user.js, check if prefs.js has it with the same value.
+#    Prefs in policies.json are enforced at the policy layer and may not
+#    appear in prefs.js, so we only diff user.js prefs.
+
+# Build associative arrays: pref_name -> expected_value
+declare -A expected
+while IFS=$'\t' read -r name value; do
+  expected["${name}"]="${value}"
+done < <(extract_pref_pairs "${FIREFOX_SRC}/user.js")
+
+declare -A live
+while IFS=$'\t' read -r name value; do
+  live["${name}"]="${value}"
+done < <(extract_pref_pairs "${prefs_js}")
+
+managed_count=${#expected[@]}
+echo "[INFO] Managed prefs in user.js: ${managed_count}"
+
+mismatched=()
+missing=()
+
+for name in $(echo "${!expected[@]}" | tr ' ' '\n' | sort); do
+  exp="${expected[${name}]}"
+  if [[ -v "live[${name}]" ]]; then
+    actual="${live[${name}]}"
+    if [[ "${exp}" != "${actual}" ]]; then
+      mismatched+=("${name}: expected ${exp}, got ${actual}")
+    fi
+  else
+    missing+=("${name}")
+  fi
+done
+
+if [[ ${#mismatched[@]} -gt 0 ]]; then
+  echo "[WARN] Value mismatches (${#mismatched[@]}):"
+  for m in "${mismatched[@]}"; do
+    echo "  ${m}"
+  done
+  ((issues++))
+else
+  echo "[OK]   All applied prefs have expected values"
+fi
+
+if [[ ${#missing[@]} -gt 0 ]]; then
+  echo "[INFO] Not yet in prefs.js (${#missing[@]}) — restart Firefox to apply:"
+  for m in "${missing[@]}"; do
+    echo "  ${m}"
+  done
+fi
+
+# 7. Summary
+echo ""
+if [[ ${issues} -gt 0 ]]; then
+  echo "[RESULT] ${issues} issue(s) found. Review warnings above."
+  exit 1
+else
+  echo "[RESULT] All checks passed."
+  exit 0
+fi

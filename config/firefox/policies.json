@@ -1,0 +1,65 @@
+{
+  "policies": {
+    "DisableFirefoxStudies": true,
+    "DisableTelemetry": true,
+    "DisablePocket": true,
+    "PasswordManagerEnabled": false,
+
+    "GenerativeAI": {
+      "Enabled": false,
+      "Locked": true
+    },
+
+    "NewTabPage": {
+      "URL": "https://example.com/"
+    },
+
+    "FirefoxHome": {
+      "Search": true,
+      "TopSites": false,
+      "SponsoredTopSites": false,
+      "Highlights": false,
+      "Pocket": false,
+      "SponsoredPocket": false,
+      "Snippets": false,
+      "Locked": true
+    },
+
+    "UserMessaging": {
+      "WhatsNew": false,
+      "ExtensionRecommendations": false,
+      "FeatureRecommendations": false,
+      "UrlbarInterventions": false,
+      "SkipOnboarding": true,
+      "MoreFromMozilla": false,
+      "Locked": true
+    },
+
+    "Preferences": {
+      "browser.ai.control.default":               { "Value": "blocked", "Status": "locked" },
+      "browser.ai.control.sidebarChatbot":         { "Value": "blocked", "Status": "locked" },
+      "browser.ai.control.linkPreviewKeyPoints":   { "Value": "blocked", "Status": "locked" },
+      "browser.ai.control.smartTabGroups":         { "Value": "blocked", "Status": "locked" },
+      "browser.ai.control.translations":           { "Value": "blocked", "Status": "locked" },
+      "browser.ai.control.pdfjsAltText":           { "Value": "blocked", "Status": "locked" },
+      "browser.ml.enable":                         { "Value": false, "Status": "locked" },
+      "browser.ml.chat.enabled":                   { "Value": false, "Status": "locked" },
+      "browser.ml.chat.hideLocalhost":             { "Value": false, "Status": "locked" },
+      "browser.ml.chat.menu":                      { "Value": false, "Status": "locked" },
+      "browser.ml.chat.page":                      { "Value": false, "Status": "locked" },
+      "browser.ml.chat.page.footerBadge":          { "Value": false, "Status": "locked" },
+      "browser.ml.chat.page.menuBadge":            { "Value": false, "Status": "locked" },
+      "browser.ml.chat.shortcuts":                 { "Value": false, "Status": "locked" },
+      "browser.ml.chat.shortcuts.custom":          { "Value": false, "Status": "locked" },
+      "browser.ml.chat.sidebar":                   { "Value": false, "Status": "locked" },
+      "browser.ml.checkForMemory":                 { "Value": false, "Status": "locked" },
+      "browser.ml.linkPreview.blockListEnabled":   { "Value": false, "Status": "locked" },
+      "browser.ml.linkPreview.collapsed":          { "Value": true,  "Status": "locked" },
+      "browser.ml.linkPreview.longPress":          { "Value": false, "Status": "locked" },
+      "extensions.ml.enabled":                     { "Value": false, "Status": "locked" },
+      "nimbus.rollouts.enabled":                   { "Value": false, "Status": "locked" },
+      "app.normandy.enabled":                      { "Value": false, "Status": "locked" },
+      "app.normandy.api_url":                      { "Value": "",    "Status": "locked" }
+    }
+  }
+}
