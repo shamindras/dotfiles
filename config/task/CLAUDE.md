@@ -3,7 +3,7 @@
 - **Taskwarrior docs**: https://taskwarrior.org/docs/
 - **taskwarrior-tui docs**: https://github.com/kdheepak/taskwarrior-tui
 - **Taskwarrior version**: task 3.4.2 (verified 2026-03-23)
-- **taskwarrior-tui version**: 0.26.5 (verified 2026-03-23)
+- **taskwarrior-tui version**: 0.26.7 (verified 2026-03-25)
 
 ## File Structure
 
