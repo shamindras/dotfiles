@@ -4,8 +4,6 @@ tap "nikitabobko/tap"
 brew "little-cms2"
 # New file format for still image compression
 brew "jpeg-xl"
-# Image format providing lossless and lossy compression for web images
-brew "webp"
 # Codec library for encoding and decoding AV1 video streams
 brew "aom"
 # Next generation open source RPC library and framework
@@ -66,6 +64,8 @@ brew "unixodbc"
 brew "freetds"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
 # Geometry Engine
 brew "geos"
 # International domain name library (IDNA2008, Punycode and TR46)
@@ -264,8 +264,6 @@ cask "1password"
 cask "1password-cli"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace"
-# GPU-accelerated terminal emulator
-cask "alacritty"
 # E-books management software
 cask "calibre"
 # Terminal-based AI coding assistant

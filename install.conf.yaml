@@ -36,7 +36,6 @@
 - link:
     # XDG_CONFIG_HOME configs
     ${HOME}/.zshenv: config/zsh/.zshenv
-    ${XDG_CONFIG_HOME}/alacritty: config/alacritty
     ${XDG_CONFIG_HOME}/aerospace: config/aerospace
     ${XDG_CONFIG_HOME}/atuin: config/atuin
     ${XDG_CONFIG_HOME}/bat: config/bat

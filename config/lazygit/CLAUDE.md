@@ -34,7 +34,16 @@ custom commands for commitizen and branch pruning.
 
 - Uses **nvim** as editor
 - Uses **delta** for diff display
-- Launched from **alacritty** (Cmd+G), **leader-key**, tmux (`prefix+g`)
+- Launched from **leader-key**, tmux (`prefix+g`)
+
+## Theme Management
+
+lazygit uses inline hex colors in `config.yml` under `gui.theme`. No
+external theme files or import system.
+
+- **Change theme**: replace hex values under `gui.theme` in `config.yml`
+- Theme palettes for popular schemes (Tokyo Night, Catppuccin, etc.) are
+  published in their respective repos as lazygit YAML snippets
 
 ## Development Notes
 
