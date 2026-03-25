@@ -99,10 +99,11 @@ sequences after prefix. This avoids colliding with tmux built-in defaults.
 | Key | Action                                                     |
 |-----|------------------------------------------------------------|
 | `g` | Lazygit popup (100x100%)                                   |
-| `y` | Yazi in new window after current                           |
+| `y` | Yazi window (incrementing: yazi, yazi-1, yazi-2…)          |
 | `i` | Items: switch to existing or create after current (tw-tui) |
 | `b` | Btm in new window after current                            |
-| `c` | Claude Code in right split (40% width)                     |
+| `C` | Claude Code window (incrementing: claude, claude-1…)       |
+| `c` | Claude Code in right split (50% width)                     |
 | `u` | fzf-url picker                                             |
 
 **N (Navigate) — session management** (`prefix + N + <key>`):
