@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? sesh-reset - force-recreate sesh-managed tmux sessions from scratch
 ##?
 ##? Kills existing tmux sessions, removes their entries from the

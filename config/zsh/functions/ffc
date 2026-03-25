@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? ffc - fetch system settings using fastfetch, output and copy to clipboard
 ##?
 ##? usage:

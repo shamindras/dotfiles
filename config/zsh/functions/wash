@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? wash - clean up DS_Store, swap files, and backup files
 ##?
 ##? usage:

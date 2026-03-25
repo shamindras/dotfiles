@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? y - shell wrapper that provides the ability to change the current working
 ##?     directory when exiting yazi.
 ##?

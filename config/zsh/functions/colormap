@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? colormap - print a quick terminal colormap (256 colors)
 ##?
 ##? usage:

@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? tmux-resize - ensure tmux window has correct dimensions before
 ##?               launching a fullscreen TUI app. No-op outside tmux.
 ##?

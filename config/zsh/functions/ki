@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 ##? ki - create a new zk idea note with interactive title prompt
 ##?
 ##? usage:
