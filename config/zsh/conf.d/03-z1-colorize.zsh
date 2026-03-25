@@ -4,16 +4,21 @@
 # region: z1_colorize: Add color to your terminal
 # ------------------------------------------------------------------------------
 
+# __memoize_cmd: Evaluate a command, cache its output, and use its cache for 20 hours.
+function __memoize_cmd {
+  emulate -L zsh; setopt local_options $__z1_opts
+  local memofile=$__zsh_cache_dir/memoized/$1; shift
+  local -a cached=($memofile(Nmh-20))
+  if ! (( $#cached )); then
+    mkdir -p ${memofile:h}
+    "$@" >| $memofile
+  fi
+  source $memofile
+}
+
 function z1_colorize {
   # Built-in zsh colors
   autoload -Uz colors && colors
-
-  # colormap: Print a quick colormap.
-  function colormap {
-    for i in {0..255}; do
-      print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}
-    done
-  }
 
   # Show man pages in color.
   export LESS_TERMCAP_mb=$'\e[01;34m'      # mb:=start blink-mode (bold,blue)
@@ -23,18 +28,6 @@ function z1_colorize {
   export LESS_TERMCAP_se=$'\e[0m'          # se:=end standout-mode
   export LESS_TERMCAP_ue=$'\e[0m'          # ue:=end underline-mode
   export LESS_TERMCAP_me=$'\e[0m'          # me:=end modes
-
-  # __memoize_cmd: Evaluate a command, cache its output, and use its cache for 20 hours.
-  function __memoize_cmd {
-    emulate -L zsh; setopt local_options $__z1_opts
-    local memofile=$__zsh_cache_dir/memoized/$1; shift
-    local -a cached=($memofile(Nmh-20))
-    if ! (( $#cached )); then
-      mkdir -p ${memofile:h}
-      "$@" >| $memofile
-    fi
-    source $memofile
-  }
 
   # Set colors for grep and ls command using dircolors if available.
   alias grep="${aliases[grep]:-grep} --color=auto"
@@ -53,4 +46,4 @@ function z1_colorize {
 
 # endregion --------------------------------------------------------------------
 
-# vim: ft=zsh 
+# vim: ft=zsh

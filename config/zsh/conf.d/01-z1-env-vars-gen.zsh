@@ -50,10 +50,10 @@ if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   export HELPDIR="$HOMEBREW_PREFIX/share/zsh/help"
 fi
 
-# Ghostty - terminal color fix
-# source: https://vninja.net/2024/12/28/ghostty-workaround-for-missing-or-unsuitable-terminal-xterm-ghostty/
+# Ghostty terminal — override TERM until ghostty terminfo is installed system-wide.
+# Remove this block once `infocmp xterm-ghostty` succeeds.
 if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
-    export TERM=xterm-256color
+  export TERM=xterm-256color
 fi
 
 # Set $PATH.
@@ -61,14 +61,13 @@ fi
 # Ensure path arrays do not contain duplicates.
 typeset -gU path
 
-# TODO: add pyenv, conda, and python path below
 path=(
   # Rust CLI Utils
   $CARGO_HOME/bin(N)
 
   # Pyenv CLI utils
   $PYENV_ROOT/bin(N)
-  $PYENV_ROOT/shims
+  $PYENV_ROOT/shims(N)
 
   # core
   $HOME/{,s}bin(N)
@@ -81,8 +80,6 @@ path=(
   $HOMEBREW_PREFIX/opt/go/libexec/bin(N)
   $HOMEBREW_PREFIX/opt/ruby/bin(N)
   $HOMEBREW_PREFIX/share/npm/bin(N)
-  $HOMEBREW_PREFIX/anaconda3/bin(N)
-
   # firefox
   # Adapted from: https://stackoverflow.com/a/62203162/4687531
   /Applications/Firefox.app/Contents/MacOS
