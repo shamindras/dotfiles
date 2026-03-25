@@ -41,3 +41,13 @@ git submodule update --init --recursive "${DOTBOT_DIR}"
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" \
   --plugin-dir "${DOTBOT_PLUGIN_DIR}/dotbot-brew" \
   -c "${DOTBOT_CONFIG_FILE}"
+
+# ------------------------------------------------------------------------------
+# Post-install reminders
+# ------------------------------------------------------------------------------
+
+echo ""
+echo "=== Firefox Post-Install Reminder ==="
+echo "Some extensions need manual setup after Firefox Sync."
+echo "See: config/firefox/post-install-checklist.md"
+echo ""

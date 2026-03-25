@@ -68,6 +68,16 @@
 | Context Menu Cleanup | Remove 9 bloat items via about:config                |
 | userChrome.css       | Enable legacy stylesheet loading                     |
 
+## Post-install checklist
+
+`post-install-checklist.md` lists all user-installed Firefox extensions and
+their sync method. Extensions using `storage.local` need manual configuration
+on a new machine. The `./install` script prints a reminder pointing to this
+file after dotbot completes.
+
+**Keep in sync**: when adding, removing, or changing Firefox extension
+settings, update `post-install-checklist.md` to reflect the change.
+
 ## Development notes
 
 - Firefox's macOS sandbox blocks symlinks — files are **copied** (rsync)
