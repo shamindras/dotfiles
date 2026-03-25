@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+##? smart-enter - ZLE widget: run default commands on empty input, accept line otherwise
+##?
+##? On empty input + Return:
+##?   - If inside a git repo: run `git status -sb`, then `eza`
+##?   - Otherwise: run `eza`
+##? On non-empty input: normal command execution (accept-line)
+##?
+##? usage:
+##?   bindkey '^M' smart-enter  # bound in 05-z1-editor.zsh
+
+smart-enter() {
+  if [[ -z "$BUFFER" ]]; then
+    BUFFER=""
+    zle accept-line
+    if command git rev-parse --is-inside-work-tree &>/dev/null; then
+      git status -sb
+    fi
+    eza --color=always --group-directories-first --icons --git-ignore
+  else
+    zle accept-line
+  fi
+}
+
+# vim: ft=zsh

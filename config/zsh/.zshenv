@@ -6,4 +6,4 @@
 # Although this breaks XDG specification for `.zshenv` only, it results
 # in a more robust `zsh` config setup overall.
 # source: https://www.reddit.com/r/zsh/comments/qtehjs/comment/hkkpzyi/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-ZDOTDIR=${ZDOTDIR:-$HOME/.config/zsh}
+ZDOTDIR=$HOME/.config/zsh

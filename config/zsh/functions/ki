@@ -21,6 +21,7 @@ ki() {
     sync_flag="--sync-templates"
   fi
 
+  local idea_title
   vared -p "Idea title: " -c idea_title
 
   idea_title="${idea_title:l}"

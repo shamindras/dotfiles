@@ -8,7 +8,7 @@
 rmt() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-  mv -f "$1" "${HOME}/.Trash"
+  mv -f "$@" "${HOME}/.Trash"
 }
 
 # vim: ft=zsh

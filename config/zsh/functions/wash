@@ -39,6 +39,7 @@ wash() {
   # Default to current dir
   [[ ${#target_dirs[@]} -eq 0 ]] && target_dirs=(".")
 
+  local dir
   for dir in "${target_dirs[@]}"; do
     (
       local abs_path

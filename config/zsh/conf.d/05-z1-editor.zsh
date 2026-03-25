@@ -25,13 +25,6 @@ function z1_vi_style_keybindings {
   bindkey "\eOC" forward-char
   bindkey "\eOD" backward-char
 
-  # CTRL-R to search through history
-  # bindkey '^R' history-incremental-search-backward
-  # CTRL-S to search forward in history
-  # bindkey '^S' history-incremental-search-forward
-  # Accept the presented search result
-  # bindkey '^Y' accept-search
-
   # Use the arrow keys to search forward/backward through the history,
   # using the first word of what's typed in as search word
   bindkey '^[[A' history-search-backward
@@ -48,6 +41,10 @@ function z1_vi_style_keybindings {
   # Some emacs keybindings
   bindkey '^A' beginning-of-line
   bindkey '^E' end-of-line
+
+  # Smart-enter: git status + eza on empty Return
+  zle -N smart-enter
+  bindkey '^M' smart-enter
 }
 
 # endregion --------------------------------------------------------------------

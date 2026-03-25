@@ -2,8 +2,8 @@
 
 # shfmt:disable
 
-# Uncomment the following for profiling, must be at the top of `zshrc`
-# zmodload zsh/zprof
+# Profile startup with: ZSH_PROFILE=1 zsh
+[[ -n "$ZSH_PROFILE" ]] && zmodload zsh/zprof
 
 # clear the "Last login" message for new tabs in terminal --------
 # source: https://stackoverflow.com/a/69915614/4687531
@@ -19,13 +19,13 @@ printf '\33c\e[3J'
 # ------------------------------------------------------------------------------
 
 # XDG path specifications
-export XDG_BIN_HOME=${XDG_BIN_HOME:-$HOME/.local/bin}
-export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
-export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
-export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
-export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-$HOME/.xdg}
-export XDG_PROJECTS_DIR=${XDG_PROJECTS_DIR:-$HOME/Projects}
+export XDG_BIN_HOME=$HOME/.local/bin
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_STATE_HOME=$HOME/.local/state
+export XDG_RUNTIME_DIR=$HOME/.xdg
+export XDG_PROJECTS_DIR=$HOME/Projects
 
 # Ensure XDG directories exist.
 () {
@@ -110,7 +110,7 @@ z1_completions
 # z1_brew_app_starship
 z1_brew_app_zoxide
 z1_brew_app_fzf
-# z1_brew_app_atuin
+z1_brew_app_atuin
 
 # Aliases ----
 z1_aliases
@@ -120,7 +120,7 @@ z1_global_aliases
 # Command Prompt ----
 z1_simple_prompt
 
-# Uncomment the following for profiling, must be at the bottom of `zshrc`
-# zprof
+
+[[ -n "$ZSH_PROFILE" ]] && zprof
 
 # vim: ft=zsh
