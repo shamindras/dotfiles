@@ -95,6 +95,9 @@ config/nvim/
 - **options.lua API convention**: use `o` (`vim.o`) for scalar options, `opt`
   (`vim.opt`) only for table-valued assignments (`listchars`, `fillchars`) or
   `:append()`/`:remove()` methods, and `vim.g` directly for global variables
+- **Timing chain**: `ttimeoutlen=5` (key code sequences) + tmux `escape-time 0`
+  + Ghostty atomic key codes = instant Esc-to-Normal. Do not increase
+  `ttimeoutlen` above ~10ms or Esc will feel laggy.
 - Format on save via conform.nvim (skips files >100KB)
 - Lint debounce: 100ms on BufWritePost/InsertLeave
 - Reload config: `:source $MYVIMRC` or `<leader>xb` (source current file)
