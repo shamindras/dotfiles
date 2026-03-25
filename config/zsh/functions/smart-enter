@@ -1,8 +1,6 @@
-##? smart-enter - ZLE widget: run default commands on empty input, accept line otherwise
+##? smart-enter - ZLE widget: run eza on empty input, accept line otherwise
 ##?
-##? On empty input + Return:
-##?   - If inside a git repo: run `git status -sb`, then `eza`
-##?   - Otherwise: run `eza`
+##? On empty input + Return: run eza (like `l` alias)
 ##? On non-empty input: normal command execution (accept-line)
 ##?
 ##? usage:
@@ -10,15 +8,9 @@
 
 smart-enter() {
   if [[ -z "$BUFFER" ]]; then
-    BUFFER=""
-    zle accept-line
-    if command git rev-parse --is-inside-work-tree &>/dev/null; then
-      git status -sb
-    fi
-    eza --color=always --group-directories-first --icons --git-ignore
-  else
-    zle accept-line
+    BUFFER="l"
   fi
+  zle accept-line
 }
 
 # vim: ft=zsh
