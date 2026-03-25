@@ -41,6 +41,10 @@ function z1_vi_style_keybindings {
   # Some emacs keybindings
   bindkey '^A' beginning-of-line
   bindkey '^E' end-of-line
+
+  # Smart-enter: git status + eza on empty Return
+  zle -N smart-enter
+  bindkey '^M' smart-enter
 }
 
 # endregion --------------------------------------------------------------------
