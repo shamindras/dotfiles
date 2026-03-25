@@ -60,6 +60,7 @@
     ${XDG_CONFIG_HOME}/npm: config/npm
     ${XDG_CONFIG_HOME}/nvim: config/nvim
     ${XDG_CONFIG_HOME}/parallel: config/parallel
+    ${XDG_CONFIG_HOME}/python: config/python
     ${XDG_CONFIG_HOME}/ripgrep: config/ripgrep
     ${XDG_CONFIG_HOME}/rstudio: config/rstudio
     ${XDG_CONFIG_HOME}/sesh: config/sesh

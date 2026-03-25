@@ -1,0 +1,34 @@
+# XDG-compliant Python REPL history
+# Redirects ~/.python_history to $XDG_STATE_HOME/python_history
+# source: https://github.com/b3nj5m1n/xdg-ninja/issues/289#issuecomment-1666024202
+
+
+def is_vanilla() -> bool:
+    import sys
+
+    return not hasattr(__builtins__, "__IPYTHON__") and "bpython" not in sys.argv[0]
+
+
+def setup_history():
+    import os
+    import atexit
+    import readline
+    from pathlib import Path
+
+    if state_home := os.environ.get("XDG_STATE_HOME"):
+        state_home = Path(state_home)
+    else:
+        state_home = Path.home() / ".local" / "state"
+
+    history: Path = state_home / "python_history"
+
+    if not history.exists():
+        history.parent.mkdir(parents=True, exist_ok=True)
+        history.touch()
+
+    readline.read_history_file(str(history))
+    atexit.register(readline.write_history_file, str(history))
+
+
+if is_vanilla():
+    setup_history()
