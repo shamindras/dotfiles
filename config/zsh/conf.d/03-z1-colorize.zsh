@@ -13,7 +13,7 @@ function __memoize_cmd {
     mkdir -p ${memofile:h}
     "$@" >| $memofile
   fi
-  source $memofile
+  source $memofile || true
 }
 
 function z1_colorize {
