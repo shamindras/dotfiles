@@ -120,6 +120,21 @@ z1_global_aliases
 # Command Prompt ----
 z1_simple_prompt
 
+# Pre-compile zsh config and function files to .zwc bytecode in the
+# background. zsh automatically loads .zwc files (when adjacent to
+# source) instead of re-parsing text, speeding up future startups.
+# zrecompile -pq only recompiles when the source has changed.
+# The &! disowns the background job so it doesn't block startup.
+{
+  autoload -Uz zrecompile
+  local f
+  for f in $__zsh_config_dir/conf.d/*.zsh(N) $Z1_FUNCTION_DIR/*(N); do
+    zrecompile -pq "$f"
+  done
+  zrecompile -pq "$__zsh_config_dir/.zshrc"
+  zrecompile -pq "$__zsh_config_dir/.zshenv"
+} &!
+
 # Uncomment the following for profiling, must be at the bottom of `zshrc`
 # zprof
 

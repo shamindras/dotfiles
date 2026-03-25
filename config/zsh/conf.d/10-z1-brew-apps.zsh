@@ -13,14 +13,17 @@ function z1_brew_app_starship {
 # Zoxide
 # source: https://github.com/ajeetdsouza/zoxide/tree/d99e9b7d8671946dafe53662c519045f84d1d334#step-2-add-zoxide-to-your-shell
 function z1_brew_app_zoxide {
-  eval "$(zoxide init zsh)"
+  # Cache the output of `zoxide init zsh` for 20 hours (via __memoize_cmd)
+  # instead of running the command on every shell startup.
+  __memoize_cmd 'zoxide_init.zsh' zoxide init zsh
 }
 
 # fzf
 # source: https://github.com/junegunn/fzf?tab=readme-ov-file#setting-up-shell-integration
 function z1_brew_app_fzf {
-  # Set up fzf key bindings and fuzzy completion
-  eval "$(fzf --zsh)"
+  # Cache fzf shell integration for 20 hours (via __memoize_cmd)
+  # instead of running `fzf --zsh` on every shell startup.
+  __memoize_cmd 'fzf_init.zsh' fzf --zsh
   # FZF options
   export FZF_DEFAULT_COMMAND='fd -HI -L --exclude .git --color=always'
   export FZF_DEFAULT_OPTS='
