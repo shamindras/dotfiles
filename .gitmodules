@@ -2,45 +2,9 @@
 	path = submods/dotbot
 	url = https://github.com/anishathalye/dotbot
 	ignore = dirty
-[submodule "submods/zshrc1"]
-	path = submods/zshrc1
-	url = git@github.com:mattmc3/zshrc1.git
-[submodule "submods/themes/tokyonight.nvim"]
-	path = submods/themes/tokyonight.nvim
-	url = git@github.com:folke/tokyonight.nvim.git
-[submodule "submods/themes/catppuccin/bat"]
-	path = submods/themes/catppuccin/bat
-	url = git@github.com:catppuccin/bat.git
 [submodule "submods/dotbot-plugins/dotbot-brew"]
 	path = submods/dotbot-plugins/dotbot-brew
 	url = git@github.com:d12frosted/dotbot-brew.git
-[submodule "submods/dotfiles_examples/josean-dev/dev-environment-files"]
-	path = submods/dotfiles_examples/josean-dev/dev-environment-files
-	url = git@github.com:josean-dev/dev-environment-files.git
-[submodule "submods/themes/catppuccin/newsboat"]
-	path = submods/themes/catppuccin/newsboat
-	url = git@github.com:catppuccin/newsboat.git
-[submodule "submods/yazi/themes/flavors"]
-	path = submods/yazi/themes/flavors
-	url = git@github.com:yazi-rs/flavors.git
-[submodule "submods/yazi/themes/moonfly.yazi"]
-	path = submods/yazi/themes/moonfly.yazi
-	url = git@github.com:tkapias/moonfly.yazi.git
-[submodule "submods/yazi/themes/nightfly.yazi"]
-	path = submods/yazi/themes/nightfly.yazi
-	url = git@github.com:tkapias/nightfly.yazi.git
-[submodule "submods/yazi/themes/monokai-vibrant.yazi"]
-	path = submods/yazi/themes/monokai-vibrant.yazi
-	url = git@github.com:sanjinso/monokai-vibrant.yazi.git
-[submodule "submods/yazi/themes/tokyo-night.yazi"]
-	path = submods/yazi/themes/tokyo-night.yazi
-	url = git@github.com:BennyOe/tokyo-night.yazi.git
-[submodule "submods/newsboat/dracula/newsboat"]
-	path = submods/newsboat/dracula/newsboat
-	url = git@github.com:dracula/newsboat.git
-[submodule "submods/taskwarrior/taskwarrior-themes"]
-	path = submods/taskwarrior/taskwarrior-themes
-	url = git@github.com:jrcharney/taskwarrior-themes.git
 [submodule "submods/tmux-plugins/tpm"]
 	path = submods/tmux-plugins/tpm
 	url = https://github.com/tmux-plugins/tpm.git
