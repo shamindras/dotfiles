@@ -63,6 +63,9 @@ include ~/.config/task/themes/catppuccin-mocha.theme
 uda.taskwarrior-tui.style.context.active=black on rgb343
 uda.taskwarrior-tui.style.report.selection=black on rgb343
 
+# TUI layout — task list spans full width, detail pane below (press \ to toggle)
+uda.taskwarrior-tui.tasklist.vertical=true
+
 # Shortcut scripts (keys 1-8 toggle tags, key 9 toggles context)
 # Key → Action (help menu shows generic labels; comments are the reference)
 uda.taskwarrior-tui.shortcuts.1=~/.config/task/scripts/tui/tag.sh errands            # +errands
