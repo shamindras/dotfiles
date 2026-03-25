@@ -158,6 +158,17 @@ sets `automatic-rename off` for the specific window on any explicit rename
 
 Active windows append ` [Z]` when zoomed.
 
+## Theme Management
+
+tmux themes are managed via TPM (Tmux Plugin Manager). The Catppuccin
+theme is version-pinned in `plugins.conf`.
+
+- **Set flavor**: edit `@catppuccin_flavor` in `theme.conf`
+  (options: `latte`, `frappe`, `macchiato`, `mocha`)
+- **Pin version**: use `#v<tag>` suffix in plugin declaration
+  (e.g., `catppuccin/tmux#v2.1.3`)
+- **Install/update**: `prefix+I` (install) / `prefix+U` (update)
+
 ## Development Notes
 - Reload config: `prefix + r` (or `tmux source-file ~/.config/tmux/tmux.conf`)
 - Debug options: `tmux show-options -g` / `tmux show-options -s`

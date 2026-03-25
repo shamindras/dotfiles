@@ -31,6 +31,16 @@ showing directory and git branch. Currently commented out in zsh config
 - Integrates with **zsh** (prompt display, init in `10-z1-brew-apps.zsh`)
 - Uses **git** for branch info
 
+## Theme Management
+
+starship uses inline colors in `starship.toml`. Official presets are
+available via the CLI.
+
+- **List presets**: `starship preset --list`
+- **Apply a preset**: `starship preset <name> -o ~/.config/starship/starship.toml`
+  (overwrites config — back up first)
+- **Manual theming**: edit hex/named colors directly in `starship.toml`
+
 ## Development Notes
 
 - Reload: automatic on save (shell re-evaluates prompt)

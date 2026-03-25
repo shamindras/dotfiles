@@ -19,6 +19,16 @@
 - **Process sorting**: by memory, tree mode off
 - **Truecolor**: enabled
 
+## Theme Management
+
+btop ships built-in themes at `/opt/homebrew/share/btop/themes/`. Custom
+themes go in `config/btop/themes/`.
+
+- **Set theme**: edit `color_theme` in `btop.conf` (filename without path
+  for custom themes, or full path for built-in)
+- **Add custom theme**: place `.theme` file in `config/btop/themes/`
+- **List built-in**: `ls /opt/homebrew/share/btop/themes/`
+
 ## Development Notes
 
 - Config is mutated by runtime UI interactions — btop rewrites `btop.conf`

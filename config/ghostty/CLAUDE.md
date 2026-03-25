@@ -30,6 +30,14 @@ alongside wezterm (workspace W), assigned to workspace T in aerospace.
 - Assigned to workspace T in **aerospace**
 - Launched/quit via **leader-key**
 
+## Theme Management
+
+Ghostty ships built-in themes — no external files needed.
+
+- **Set theme**: edit `theme = <name>` in `config` (supports dual-mode:
+  `light:<name>,dark:<name>`)
+- **List themes**: check https://ghostty.org/docs/config/reference#theme
+
 ## Development Notes
 
 - Reload: automatic on file change

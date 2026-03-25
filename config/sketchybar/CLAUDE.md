@@ -63,3 +63,12 @@ and automatic restart on crash.
 - **Brewfile**: `restart_service: :changed` restarts the service on formula upgrade
 - **Nvim autocmd**: saving `sketchybarrc`, `colors.sh`, or `items/*.sh` triggers
   `sketchybar --reload` via `BufWritePost` in `config/nvim/lua/shamindras/core/autocmds.lua`
+
+## Theme Management
+
+sketchybar uses inline ARGB hex colors in shell scripts. No external theme
+files or import system.
+
+- **Canonical palette**: `colors.sh` (Catppuccin Mocha in `0xAARRGGBB` format)
+- **Change theme**: replace hex values in `colors.sh`, then `sketchybar --reload`
+- All items source `colors.sh` — changing it propagates to the entire bar

@@ -24,12 +24,13 @@ this setup — btop mutates its config on UI interactions, bottom does not.
 | `[styles.*]`  | Linkarzu color theme (inline, no ext files) |
 | `[[row]]`     | Layout: processes only (full screen)        |
 
-## Theme
+## Theme Management
 
-Colors are inline under `[styles]` subsections. No external theme files.
-Palette mapped from the linkarzu-btop theme. To swap themes, replace hex
-values in `[styles]`. Catppuccin themes available at
-https://github.com/catppuccin/bottom.
+bottom uses inline hex colors under `[styles]` subsections in `bottom.toml`.
+No external theme files or import system.
+
+- **Change theme**: replace hex values in `[styles.*]` sections
+- Catppuccin themes available at https://github.com/catppuccin/bottom
 
 ## Key Bindings (built-in, not configurable)
 

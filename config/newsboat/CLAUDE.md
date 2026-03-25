@@ -14,7 +14,7 @@ color theme.
 | ---------- | ------------------------------------------ |
 | `config`   | Main config (67 lines, shell-comment)      |
 | `urls`     | Feed list (one per line with tags)         |
-| `themes/`  | Color schemes (dracula active, latte/dark) |
+| `themes/`  | Color schemes (dracula active)             |
 
 ## Key Settings
 
@@ -31,6 +31,15 @@ color theme.
 
 - Opens links in **firefox**
 - sesh session "feed" runs newsboat in window 1
+
+## Theme Management
+
+Newsboat has no built-in theme system. Themes are plain config files
+loaded via the `include` directive.
+
+- **Set theme**: `include ~/.config/newsboat/themes/<name>` in `config`
+- **Add a theme**: place a color definition file in `config/newsboat/themes/`
+- Themes are typically 10-25 lines of `color` and `highlight` directives
 
 ## Development Notes
 
