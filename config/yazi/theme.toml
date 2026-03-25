@@ -1,26 +1,7 @@
 # A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
 # If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
-# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
 "$schema" = "https://yazi-rs.github.io/schemas/theme.json"
 
 [flavor]
-# dark  = "catppuccin-mocha"
-# light = "catppuccin-mocha"
-
-# dark  = "catppuccin-latte"
-# light = "catppuccin-latte"
-
-# dark  = "tokyo-night"
-# light = "tokyo-night"
-
-# dark  = "monokai-vibrant"
-# light = "monokai-vibrant"
-
-# dark  = "dracula"
-# light = "dracula"
-
-# dark  = "moonfly"
-# light = "moonfly"
-
-dark  = "nightfly"
-light = "nightfly"
+dark  = "catppuccin-mocha"
+light = "catppuccin-mocha"

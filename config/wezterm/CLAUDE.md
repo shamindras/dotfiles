@@ -56,6 +56,16 @@ If changing the workspace letter, update these locations to stay in sync:
 - `config/leader-key/config.json`: quit-Ghostty conditional — navigates to
   WezTerm's workspace when WezTerm is running
 
+## Theme Management
+
+wezterm ships a large built-in color scheme registry — no external files
+needed.
+
+- **Set theme**: edit `active.theme` in `utils/appearance.lua` (theme
+  library table maps short keys to wezterm scheme names)
+- **Browse schemes**: https://wezfurlong.org/wezterm/colorschemes/index.html
+- **Dark/light auto-switch**: handled by `depending_on_appearance()` helper
+
 ## Development Notes
 - **Rendering**: `max_fps=120` (ProMotion), `animation_fps=1`, cursor blink
   disabled. These minimize input-to-pixel latency.

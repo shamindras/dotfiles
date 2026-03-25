@@ -70,3 +70,12 @@ Previous context is persisted in `~/.local/state/task/prev-context`.
 - **No fzf tag picker** — taskwarrior-tui does not support it; use tab completion
   (`Tab`/`Ctrl+n` after `+`) or shortcut keys 1-9 instead
 - **Theme uses 256-color palette** — mapped from Catppuccin Mocha hex values
+
+## Theme Management
+
+Taskwarrior has no built-in theme system. Themes are `.theme` files loaded
+via the `include` directive in `taskrc`.
+
+- **Set theme**: `include ~/.config/task/themes/<name>.theme` in `taskrc`
+- **Add a theme**: place a `.theme` file in `config/task/themes/`
+- Themes define `color.*` rules mapping task attributes to 256-color codes

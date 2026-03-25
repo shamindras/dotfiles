@@ -33,6 +33,16 @@ skipped by plain `brew upgrade`. Three mechanisms ensure they get upgraded:
 - The dotbot `./install` script runs under bash and does NOT source zsh
   config, so the explicit flag is needed there
 
+## Adding and Removing Packages
+
+Always modify the live brew state first, then regenerate the Brewfile.
+Never edit the Brewfile directly.
+
+- **Add a formula**: `brew install <name>` then `just update_brewfile`
+- **Add a cask**: `brew install --cask <name>` then `just update_brewfile`
+- **Remove a formula**: `brew uninstall <name>` then `just update_brewfile`
+- **Remove a cask**: `brew uninstall --cask <name>` then `just update_brewfile`
+
 ## Development Notes
 
 - Update Brewfile from current packages: `just update_brewfile`

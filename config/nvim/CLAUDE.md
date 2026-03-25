@@ -90,6 +90,17 @@ config/nvim/
 | zk         | zk-nvim with LSP attach on .md files in notebook       |
 | fd/rg      | Custom args in snacks/pickers.lua (exclude .git, submods) |
 
+## Theme Management
+
+Colorschemes are managed via lazy.nvim plugin specs in
+`lua/shamindras/plugins/colorscheme.lua`.
+
+- **Add a theme**: add a plugin spec to `colorscheme.lua` and include it
+  in the `themes` table for the cycler
+- **Cycle themes**: `<leader>tc` (persists selection to
+  `~/.local/state/nvim/colorscheme_state.txt`)
+- **Update themes**: `:Lazy update` or `<leader>lu`
+
 ## Development Notes
 
 - **options.lua API convention**: use `o` (`vim.o`) for scalar options, `opt`
