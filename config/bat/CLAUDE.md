@@ -5,19 +5,25 @@
 
 ## File Structure
 
-| File      | Purpose                                     |
-| --------- | ------------------------------------------- |
-| `config`  | Runtime flags (theme, style, pager)         |
-| `themes/` | Custom .tmTheme files (Catppuccin, Tokyo Night) |
+| File     | Purpose                             |
+| -------- | ----------------------------------- |
+| `config` | Runtime flags (theme, style, pager) |
 
 ## Key Settings
 
-- **Theme**: `tokyonight_night`
+- **Theme**: `Catppuccin Mocha` (built-in)
 - **Style**: `grid,numbers` (line numbers + grid)
 - **Pager**: `less -FRS` with italic support
-- Custom theme files in `themes/` — rebuild cache after changes
+
+## Theme Management
+
+bat ships built-in themes — no vendored files needed.
+
+- **List themes**: `bat --list-themes`
+- **Set theme**: edit `--theme="<name>"` in `config`
+- **Rebuild cache**: `bat cache --build` (only needed if adding custom
+  `.tmTheme` files to `~/.config/bat/themes/`)
 
 ## Development Notes
 
-- Rebuild theme cache: `bat cache --build`
 - Used as pager by **gh**, **fzf** (Ctrl-T preview), and **zk**
