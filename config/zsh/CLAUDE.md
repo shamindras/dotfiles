@@ -3,8 +3,9 @@
 ## Overview
 
 Modular zsh config with custom "Z1" framework. Numbered `conf.d/` files ensure
-deterministic load order. Custom plugin system (git-based, no external manager).
-18 autoloaded functions in `functions/`.
+deterministic load order. Plugin system based on
+[zsh_unplugged](https://github.com/mattmc3/zsh_unplugged) (git-based, 2 plugins:
+zsh-autosuggestions, zsh-syntax-highlighting). 18 autoloaded functions in `functions/`.
 
 - **Docs**: https://zsh.sourceforge.io/Doc/
 - **Installed version**: zsh 5.9 (system `/bin/zsh`, verified 2026-03-25)
@@ -27,7 +28,7 @@ config/zsh/
 │   ├── 05-z1-editor.zsh             # Vi keybindings, smart-enter, zsh-no-ps2
 │   ├── 06-z1-history.zsh            # History: 100k entries, no share
 │   ├── 07-z1-utility.zsh            # Misc options, bracketed paste
-│   ├── 08-z1-plugins.zsh            # Custom plugin manager (clone/update/compile)
+│   ├── 08-z1-plugins.zsh            # Plugin system (zsh_unplugged-based, load/update/compile)
 │   ├── 09-z1-completions.zsh        # Completion system, 50+ zstyle rules
 │   ├── 10-z1-brew-apps.zsh          # zoxide, fzf, atuin (cached via __memoize_cmd)
 │   ├── 11-z1-aliases.zsh            # 90+ aliases (regular, suffix, global)
@@ -53,7 +54,7 @@ config/zsh/
 2. `.zshrc` — initializes Z1 framework, defines `z1_confd`
 3. `z1_confd` — sources all `conf.d/*.zsh` in alphabetical order
 4. Function calls in sequence: funcdir → directory → vi_keybindings →
-   history → utility → plugins → completions → brew_apps → aliases → prompt
+   history → utility → completions → plugins → brew_apps → aliases → prompt
 
 ### Naming Convention
 
@@ -69,7 +70,8 @@ one or more `z1_*` functions called by `.zshrc`.
 - **Background compinit**: `.zcompdump.zwc` compiled async (`&!`)
 - **Memoization**: `__memoize_cmd` caches command output for 20 hours
   (used for fzf init, zoxide init, atuin init)
-- **No plugin manager**: custom `plugin-clone/update/compile` functions
+- **Plugin system**: zsh_unplugged-based `plugin-load/update/compile` functions;
+  plugins stored at `$__zsh_user_data_dir/plugins` (`~/.local/share/zsh/plugins`)
 - **No .zwc pre-compilation**: tested and found negligible benefit (~1ms)
   for these small config files; the fork overhead outweighed savings
 
