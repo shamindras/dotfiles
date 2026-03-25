@@ -193,6 +193,7 @@ function M.setup(config)
     tmux_table('y', 'CMD', 'O', 'y'),         -- CMD+Y       = yazi
     tmux_table('i', 'CMD', 'O', 'i'),         -- CMD+I       = items (taskwarrior-tui)
     tmux_table('b', 'CMD', 'O', 'b'),         -- CMD+B       = btm
+    tmux_table('c', 'CMD', 'O', 'C'),         -- CMD+C       = Claude Code window
     tmux_table('u', 'CMD', 'O', 'u'),         -- CMD+U       = fzf-url picker
     tmux_shift('R', 'r'),          -- CMD+Shift+R = reload tmux config
 

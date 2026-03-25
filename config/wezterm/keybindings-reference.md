@@ -65,14 +65,15 @@ bindings send prefix + table key + action key (e.g., `C-a O g` for lazygit).
 
 ## Tool Launchers — O (Open) key table
 
-| WezTerm key     | tmux key | Action                  |
-| --------------- | -------- | ----------------------- |
-| `CMD+G`         | `O g`    | Lazygit popup           |
-| `CMD+Y`         | `O y`    | Yazi                    |
-| `CMD+I`         | `O i`    | Items (taskwarrior-tui) |
-| `CMD+B`         | `O b`    | Btm                     |
-| `CMD+SHIFT+C`   | `O c`    | Claude Code split       |
-| `CMD+U`         | `O u`    | fzf-url picker          |
+| WezTerm key     | tmux key | Action                          |
+| --------------- | -------- | ------------------------------- |
+| `CMD+G`         | `O g`    | Lazygit popup                   |
+| `CMD+Y`         | `O y`    | Yazi window (yazi, yazi-1…)     |
+| `CMD+I`         | `O i`    | Items (taskwarrior-tui)         |
+| `CMD+B`         | `O b`    | Btm                             |
+| `CMD+C`         | `O C`    | Claude Code window (claude…)    |
+| `CMD+SHIFT+C`   | `O c`    | Claude Code sidebar (50%)       |
+| `CMD+U`         | `O u`    | fzf-url picker                  |
 
 ## Copy Mode & Utilities
 
