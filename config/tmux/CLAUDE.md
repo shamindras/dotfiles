@@ -29,7 +29,7 @@ use `#{E:...}` lazy expansion so they resolve at render time.
 
 | Component | Location | Tracked in git? |
 |-----------|----------|-----------------|
-| TPM itself | `submods/tmux-plugins/tpm` | Yes (submodule ref) |
+| TPM itself | `submods/plugins/tpm` | Yes (submodule ref) |
 | TPM symlink | `~/.config/tmux/plugins/tpm` | No (dotbot symlink) |
 | Other plugins | `~/.local/share/tmux/plugins/<plugin>/` | No (TPM managed) |
 | Resurrect data | `~/.local/share/tmux/resurrect/` | No (session data) |

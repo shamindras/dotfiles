@@ -7,8 +7,8 @@ set -Eeuo pipefail
 # ------------------------------------------------------------------------------
 
 DOTBOT_CONFIG_FILE="install.conf.yaml"
-DOTBOT_DIR="submods/dotbot"
-DOTBOT_PLUGIN_DIR="submods/dotbot-plugins"
+DOTBOT_DIR="submods/core/dotbot"
+DOTBOT_PLUGIN_DIR="submods/core"
 
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

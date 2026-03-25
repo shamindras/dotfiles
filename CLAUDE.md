@@ -52,7 +52,7 @@ just all              # Run clean, stylua_config, and update_brewfile
 
 - `config/` - All application configurations organized by tool
 - `scripts/` - Setup and utility scripts for various components
-- `submods/` - Git submodules (dotbot and plugins)
+- `submods/` - Git submodules (`core/` for dotbot, `plugins/` for runtime plugins)
 - `install.conf.yaml` - Main dotbot configuration
 - `justfile` - Just command runner tasks
 - `Makefile` - Basic make targets for setup
