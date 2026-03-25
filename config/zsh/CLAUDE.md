@@ -54,8 +54,6 @@ config/zsh/
 3. `z1_confd` — sources all `conf.d/*.zsh` in alphabetical order
 4. Function calls in sequence: funcdir → directory → vi_keybindings →
    history → utility → plugins → completions → brew_apps → aliases → prompt
-5. Background `zrecompile` — compiles .zwc bytecode for conf.d, functions,
-   .zshrc, .zshenv (runs after startup, doesn't block)
 
 ### Naming Convention
 
@@ -69,9 +67,9 @@ one or more `z1_*` functions called by `.zshrc`.
 - **Background compinit**: `.zcompdump.zwc` compiled async (`&!`)
 - **Memoization**: `__memoize_cmd` caches command output for 20 hours
   (used for dircolors, fzf init, zoxide init)
-- **Pre-compilation**: background `zrecompile` creates adjacent `.zwc` files
-  (`.zwc` in `.gitignore`; fd/eza/rg respect `.gitignore` automatically)
 - **No plugin manager**: custom `plugin-clone/update/compile` functions
+- **No .zwc pre-compilation**: tested and found negligible benefit (~1ms)
+  for these small config files; the fork overhead outweighed savings
 
 ### Env Var Assignment Convention
 
