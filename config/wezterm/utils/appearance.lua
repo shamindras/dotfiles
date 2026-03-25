@@ -88,6 +88,12 @@ function M.setup(config)
   config.enable_tab_bar = false
   config.window_padding = active.padding
 
+  -- Input Latency and Rendering
+  config.max_fps = 120 -- Match ProMotion 120Hz display
+  config.animation_fps = 1 -- Minimize animation overhead
+  config.cursor_blink_rate = 0 -- Disable cursor blink entirely
+  config.default_cursor_style = 'SteadyBlock' -- No blink overhead
+
   return config
 end
 

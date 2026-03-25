@@ -57,6 +57,8 @@ If changing the workspace letter, update these locations to stay in sync:
   WezTerm's workspace when WezTerm is running
 
 ## Development Notes
+- **Rendering**: `max_fps=120` (ProMotion), `animation_fps=1`, cursor blink
+  disabled. These minimize input-to-pixel latency.
 - Changes apply on save (no restart needed)
 - Debug with `wezterm.log_info()`, view in debug overlay (CTRL+SHIFT+L)
 - Format with: `just stylua_config`
