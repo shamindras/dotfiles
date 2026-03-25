@@ -2,8 +2,8 @@
 
 # shfmt:disable
 
-# Uncomment the following for profiling, must be at the top of `zshrc`
-# zmodload zsh/zprof
+# Profile startup with: ZSH_PROFILE=1 zsh
+[[ -n "$ZSH_PROFILE" ]] && zmodload zsh/zprof
 
 # clear the "Last login" message for new tabs in terminal --------
 # source: https://stackoverflow.com/a/69915614/4687531
@@ -135,7 +135,6 @@ z1_simple_prompt
   zrecompile -pq "$__zsh_config_dir/.zshenv"
 } &!
 
-# Uncomment the following for profiling, must be at the bottom of `zshrc`
-# zprof
+[[ -n "$ZSH_PROFILE" ]] && zprof
 
 # vim: ft=zsh
