@@ -123,8 +123,8 @@ function z1_aliases {
   # source: running `xdg-ninja` in `$HOME` gave these suggestion
   # subversion
   alias svn="svn --config-dir ${XDG_CONFIG_HOME}/subversion"
-  alias gpg='${aliases[gpg]:-gpg} --homedir \"\$GNUPGHOME\"'
-  alias wget='wget --hsts-file=\"$XDG_DATA_HOME/wget-hsts\"'
+  alias gpg='${aliases[gpg]:-gpg} --homedir "$GNUPGHOME"'
+  alias wget='wget --hsts-file="$XDG_DATA_HOME/wget-hsts"'
 
   # Additional clean --
   # Source: https://github.com/sharkdp/fd/discussions/1615

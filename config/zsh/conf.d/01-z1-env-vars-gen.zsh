@@ -13,7 +13,7 @@ export BROWSER=${BROWSER:-firefox}
 # Encodings, languges and misc settings
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export LC_CTYPE=UTF-8
+export LC_CTYPE=en_US.UTF-8
 
 # Set the Less input preprocessor.
 # Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
@@ -47,7 +47,7 @@ if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX";
   export MANPATH="$HOMEBREW_PREFIX/share/man${MANPATH+:$MANPATH}:";
   export INFOPATH="$HOMEBREW_PREFIX/share/info:${INFOPATH:-}";
-  export HELPDIR="${MANPATH}"
+  export HELPDIR="$HOMEBREW_PREFIX/share/zsh/help"
 fi
 
 # Ghostty - terminal color fix

@@ -16,7 +16,7 @@ export BAT_CONFIG_PATH="${BAT_CONFIG_PATH:-$XDG_CONFIG_HOME/bat/config}"
 # bat-extras
 # Use `delta` as the default pager for `batdiff`
 # source: https://github.com/eth-p/bat-extras/blob/master/doc/batdiff.md#environment
-BATDIFF_USE_DELTA=true
+export BATDIFF_USE_DELTA=true
 
 # Cache
 export CCACHE_DIR="${CCACHE_DIR:-$XDG_CACHE_HOME/ccache}"
@@ -74,8 +74,8 @@ export STARSHIP_CACHE="${STARSHIP_CACHE:-$XDG_CACHE_HOME/starship/cache}"
 export TEALDEER_CONFIG_DIR=~/.config/tealdeer
 
 # Terminfo
-export TERMINFO="${TERMINFO:-$XDG_DATA_HOME}"/terminfo
-export TERMINFO_DIRS="${TERMINFO_DIRS:-$XDG_DATA_HOME}"/terminfo:/usr/share/terminfo
+export TERMINFO="$XDG_DATA_HOME/terminfo"
+export TERMINFO_DIRS="$XDG_DATA_HOME/terminfo:/usr/share/terminfo"
 
 # Zoxide
 export _ZO_DATA_DIR="${_ZO_DATA_DIR:-$XDG_DATA_HOME/zoxide}"

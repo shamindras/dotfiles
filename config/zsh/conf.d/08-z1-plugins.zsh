@@ -65,7 +65,7 @@ function plugin-update {
       oldsha=$(command git -C $plugin_dir rev-parse --short HEAD)
       command git -C $plugin_dir pull --quiet --ff --depth 1 --rebase --autostash
       newsha=$(command git -C $plugin_dir rev-parse --short HEAD)
-      [[ $oldsha == $newsha ]] || echo "Plugin updated: $plugin_dir:t ($oldsha -> $newsha)"
+      [[ $oldsha == $newsha ]] || echo "Plugin updated: ${plugin_dir:t} ($oldsha -> $newsha)"
     ) &
   done
   wait
@@ -91,8 +91,8 @@ function z1_plugins {
   emulate -L zsh; setopt local_options $__z1_opts
 
   local repo_dir giturl
-  zstyle -s ':z1:repos' repo_dir 'repo_dir' || repo_dir=$__zsh_cache_dir/repos
-  zstyle -s ':z1:plugins' git_url  'git_url'  || git_url="https://github.com"
+  zstyle -s ':z1:plugins:repos' dir     'repo_dir' || repo_dir=$__zsh_cache_dir/repos
+  zstyle -s ':z1:plugins:repos' git_url 'git_url'  || git_url="https://github.com"
 
   # Get all the different plugin types.
   local -a {clone,path,fpath,zsh,defer}_plugins
@@ -110,11 +110,11 @@ function z1_plugins {
   local repo; local -aU repos
   for repo in ${${(M)plugins:#*/*}:#/*}; do
     repo=${(@j:/:)${(@s:/:)repo}[1,2]}
-    if [[ ! -d $ZSH_REPO_HOME/$repo ]]; then
+    if [[ ! -d $repo_dir/$repo ]]; then
       (
         command git clone -q --depth 1 --recursive --shallow-submodules \
-          $git_url/$repo $ZSH_REPO_HOME/$repo
-          plugin-compile $ZSH_REPO_HOME/$repo
+          $git_url/$repo $repo_dir/$repo
+          plugin-compile $repo_dir/$repo
       ) &
     fi
   done
