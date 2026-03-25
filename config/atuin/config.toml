@@ -2,12 +2,30 @@
 # source: https://docs.atuin.sh/configuration/config/
 
 auto_sync = false
-inline_height = 16
+update_check = false
 dialect = "us"
-search_mode = "fuzzy"
-show_help = true
-show_preview = true
+
+# UI
 style = "compact"
 invert = true
+inline_height = 16
+show_help = true
+show_preview = true
 scroll_context_lines = 3
-update_check = false
+enter_accept = true
+
+# Search
+search_mode = "fuzzy"
+workspaces = true
+filter_mode_shell_up_key_binding = "host"
+
+# Vi keymap to match zsh vi mode
+keymap_mode = "vim-insert"
+
+# Filter sensitive commands from history
+history_filter = [
+  "^export.*KEY",
+  "^export.*SECRET",
+  "^export.*TOKEN",
+  "^export.*PASSWORD",
+]
