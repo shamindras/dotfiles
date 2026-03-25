@@ -30,16 +30,12 @@ printf '\33c\e[3J'
   done
 
   # Define Z1 paths
-  typeset -g Z1_{COMPLETIONS,CONFIGS,FUNCTION,REPO}_DIR
+  typeset -g Z1_{COMPLETIONS,CONFIGS,FUNCTION}_DIR
   typeset -g Z1_{COMPSTYLE,THEME}
 
   # Directory for Zsh autoload functions.
   zstyle -s ':z1:functions' dir 'Z1_FUNCTION_DIR' \
     || Z1_FUNCTION_DIR=${Z1_FUNCTION_DIR:-$__zsh_config_dir/functions}
-
-  # Directory for cloned Zsh plugin repos.
-  zstyle -s ':z1:repos' dir 'Z1_REPO_DIR' \
-    || Z1_REPO_DIR=${Z1_REPO_DIR:-$__zsh_cache_dir/repos}
 
   # Customize with zstyles.
   [[ ! -r $__zsh_config_dir/.zstyles ]] || source $__zsh_config_dir/.zstyles
@@ -76,8 +72,8 @@ z1_directory
 z1_vi_style_keybindings
 z1_history
 z1_utility
-z1_plugins
 z1_completions
+z1_plugins
 
 # Homebrew apps ----
 # z1_brew_app_starship
