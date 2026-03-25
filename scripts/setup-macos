@@ -115,8 +115,10 @@ echo "  Trackpad, keyboard, and input..."
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Set a blazingly fast keyboard repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+# Values must stay within the System Settings slider range or macOS Tahoe
+# ignores them. Fastest valid: KeyRepeat=2 (30ms), InitialKeyRepeat=15 (225ms).
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 # Set language and text formats
 # Note: if you’re in the US, replace `EUR` with `USD`, `Centimeters` with
