@@ -91,7 +91,7 @@ Others (use when they clearly apply):
 - `(git)` — Git configuration
 - `(aerospace)` — Window manager config
 - `(karabiner)` — Keyboard remapping
-- `(wezterm)`, `(ghostty)`, `(alacritty)` — Terminal configs
+- `(wezterm)`, `(ghostty)` — Terminal configs
 - `(leader-key)` — Leader key shortcuts
 - `(yazi)`, `(lazygit)` — File/git TUIs
 - `(surfingkeys)`, `(vimium)` — Browser vim extensions
