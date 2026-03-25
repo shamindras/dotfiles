@@ -4,6 +4,9 @@
 ##?
 ##? usage:
 ##?   mcd <dir>
+##?
+##? examples:
+##?   mcd ~/Projects/new-app    # create and cd into new-app
 
 mcd() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }

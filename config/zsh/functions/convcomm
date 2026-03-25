@@ -1,10 +1,11 @@
 #!/bin/zsh
 
-##? source: https://github.com/joshmedeski/dotfiles/blob/main/.config/bin/gc
 ##? convcomm - write a conventional commit message with interactive prompts
 ##?
 ##? usage:
 ##?   convcomm
+##?
+##? source: https://github.com/joshmedeski/dotfiles/blob/main/.config/bin/gc
 
 convcomm() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }

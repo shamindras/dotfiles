@@ -4,6 +4,10 @@
 ##?
 ##? usage:
 ##?   up [<num>]
+##?
+##? examples:
+##?   up      # go up 1 directory
+##?   up 3    # go up 3 directories
 
 up() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
