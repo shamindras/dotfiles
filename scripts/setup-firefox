@@ -2,10 +2,12 @@
 
 set -Eeuo pipefail
 
-# setup-firefox — sync user.js and userChrome.css into the Firefox profile
+# setup-firefox — sync user.js, userChrome.css, and policies.json into Firefox
 #
 # Firefox's macOS sandbox blocks reading from symlinked paths, so we rsync
-# files from config/firefox/ into the profile directory.
+# files from config/firefox/ into the profile directory. policies.json is
+# deployed to the app bundle's distribution/ directory (wiped on every Firefox
+# update, so this script re-creates it each run).
 #
 # Usage: ./scripts/setup-firefox
 
@@ -96,5 +98,18 @@ rsync -av --checksum "${FIREFOX_SRC}/user.js" "${PROFILE_DIR}/user.js"
 
 # 5. Rsync chrome/ directory (creates it if needed)
 rsync -av --checksum "${FIREFOX_SRC}/chrome/" "${PROFILE_DIR}/chrome/"
+
+# 6. Deploy policies.json into the Firefox app bundle
+#    The distribution/ directory is wiped on every Firefox update,
+#    so this step recreates it each time setup-firefox runs.
+DISTRIBUTION_DIR="${FIREFOX_APP}/Contents/Resources/distribution"
+
+if [[ -f "${FIREFOX_SRC}/policies.json" ]]; then
+  mkdir -p "${DISTRIBUTION_DIR}"
+  rsync -av --checksum "${FIREFOX_SRC}/policies.json" "${DISTRIBUTION_DIR}/policies.json"
+  # Clear quarantine if modifying the bundle triggers it
+  xattr -dr com.apple.quarantine "${FIREFOX_APP}" 2>/dev/null || true
+  echo "[INFO] policies.json deployed to ${DISTRIBUTION_DIR}"
+fi
 
 echo "[SUCCESS] Firefox config synced. Restart Firefox for changes to take effect."

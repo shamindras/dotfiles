@@ -7,41 +7,47 @@
 // To change a setting: edit this file, run `just firefox_sync`, restart Firefox.
 
 // =============================================================================
-// Privacy & Telemetry {{{
+// Privacy {{{
 // =============================================================================
 
-user_pref("app.shield.optoutstudies.enabled", false);
-user_pref("datareporting.healthreport.uploadEnabled", false);
-user_pref("datareporting.usage.uploadEnabled", false);
-user_pref("nimbus.rollouts.enabled", false);
+// Studies, telemetry, and Normandy are disabled and locked via policies.json
+// (DisableFirefoxStudies, DisableTelemetry, nimbus.rollouts, app.normandy).
 user_pref("privacy.donottrackheader.enabled", true);
 user_pref("privacy.userContext.enabled", true);
 user_pref("privacy.userContext.ui.enabled", true);
-user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
 
 // }}}
 
 // =============================================================================
-// AI / ML (all off) {{{
+// Telemetry Detail — supplements DisableTelemetry policy in policies.json {{{
 // =============================================================================
 
-user_pref("browser.ml.chat.enabled", false);
-user_pref("browser.ml.chat.hideLocalhost", false);
-user_pref("browser.ml.chat.menu", false);
-user_pref("browser.ml.chat.page", false);
-user_pref("browser.ml.chat.page.footerBadge", false);
-user_pref("browser.ml.chat.page.menuBadge", false);
-user_pref("browser.ml.chat.shortcuts", false);
-user_pref("browser.ml.chat.shortcuts.custom", false);
-user_pref("browser.ml.chat.sidebar", false);
-user_pref("browser.ml.checkForMemory", false);
-user_pref("browser.ml.enable", false);
-user_pref("browser.ml.linkPreview.blockListEnabled", false);
-user_pref("browser.ml.linkPreview.collapsed", true);
-user_pref("browser.ml.linkPreview.longPress", false);
-user_pref("extensions.ml.enabled", false);
+// Web Beacon API (analytics/tracking pings)
+user_pref("beacon.enabled", false);
+// New tab page telemetry
+user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
+user_pref("browser.newtabpage.activity-stream.telemetry", false);
+// Ping Centre telemetry
+user_pref("browser.ping-centre.telemetry", false);
+// Code coverage telemetry
+user_pref("toolkit.telemetry.coverage.opt-out", true);
+user_pref("toolkit.coverage.opt-out", true);
+user_pref("toolkit.coverage.endpoint.base", "");
+// Crash report submission
+user_pref("breakpad.reportURL", "");
+// Extension metadata daily phone-home
+user_pref("extensions.getAddons.cache.enabled", false);
+user_pref("extensions.getAddons.showPane", false);
+// Content blocking reports
+user_pref("browser.contentblocking.report.monitor.enabled", false);
+user_pref("browser.contentblocking.report.vpn.enabled", false);
 
 // }}}
+
+// =============================================================================
+// AI / ML — managed and locked via policies.json (GenerativeAI policy +
+// browser.ai.control.* + browser.ml.* prefs). See config/firefox/policies.json.
+// =============================================================================
 
 // =============================================================================
 // Search & URL Bar {{{
@@ -67,10 +73,10 @@ user_pref("browser.urlbar.suggest.topsites", false);
 // New Tab Page {{{
 // =============================================================================
 
-user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
-user_pref("browser.newtabpage.activity-stream.showSponsored", false);
+// Pocket, sponsored content, and top sites are disabled and locked via
+// policies.json (DisablePocket + FirefoxHome). Checkbox visibility below
+// is not covered by FirefoxHome, so it stays here.
 user_pref("browser.newtabpage.activity-stream.showSponsoredCheckboxes", false);
-user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 
 // }}}
 
@@ -132,10 +138,37 @@ user_pref("layout.css.prefers-color-scheme.content-override", 0);
 
 // Restore previous session on startup
 user_pref("browser.startup.page", 3);
-// Do not save passwords in Firefox (use a dedicated password manager)
-user_pref("signon.rememberSignons", false);
+// Homepage
+user_pref("browser.startup.homepage", "https://example.com/");
+// Password manager disabled and locked via policies.json (PasswordManagerEnabled)
 // Decline syncing passwords and credit cards
 user_pref("services.sync.engine.passwords", false);
+
+// }}}
+
+// =============================================================================
+// Security {{{
+// =============================================================================
+
+// HTTPS-only mode (shows warning page for HTTP sites, click-through allowed)
+user_pref("dom.security.https_only_mode", true);
+
+// }}}
+
+// =============================================================================
+// Performance {{{
+// =============================================================================
+
+// Reduce per-tab back/forward history (50 → 10, saves memory)
+user_pref("browser.sessionhistory.max_entries", 10);
+// Back/forward cache — instant Back button (-1 = auto-managed by Firefox)
+user_pref("browser.sessionhistory.max_viewers", -1);
+// Save session state less frequently (15s → 60s, reduces disk I/O)
+user_pref("browser.sessionstore.interval", 60000);
+// Unload inactive tabs under memory pressure (tabs reload on click)
+user_pref("browser.tabs.unloadOnLowMemory", true);
+// Use Apple Silicon hardware video decoder (less CPU, better battery)
+user_pref("media.hardware-video-decoding.enabled", true);
 
 // }}}
 

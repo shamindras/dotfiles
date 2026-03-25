@@ -116,10 +116,10 @@
     - command: brew services start sketchybar
       description: Start sketchybar as a brew service
 
-# Setup Firefox user.js and userChrome.css
+# Setup Firefox user.js, userChrome.css, and policies.json
 - shell:
     - command: ./scripts/setup-firefox
-      description: Setup Firefox user.js and userChrome.css
+      description: Setup Firefox user.js, userChrome.css, and policies.json
 
 # rust + cargo
 - shell:
