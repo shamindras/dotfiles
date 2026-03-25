@@ -10,11 +10,6 @@ function z1_aliases {
   alias ..='z ..'
   alias ...='z ../..'
   alias ....='z ../../..'
-  alias .2='z ../../'             # Go up 2 dirs
-  alias .3='z ../../../'          # Go up 3 dirs
-  alias .4='z ../../../../'       # Go up 4 dirs
-  alias .5='z ../../../../../'    # Go up 5 dirs
-  alias .6='z ../../../../../../' # Go up 6 dirs
   alias asl='aerospace list-apps'
   alias asr='aerospace reload-config;clear;'
   alias asf='(killall AeroSpace || true) && open -a AeroSpace;clear;' # [a]eroSpace [f]orced [r]estart
@@ -24,7 +19,6 @@ function z1_aliases {
   alias c='clear; [[ -n $TMUX ]] && tmux clear-history || true'
   alias cl='clear;claude'
   alias clr='clear;claude --resume'
-  alias cat='bat --paging=never'
   alias cd='z'
   alias cp='cp -r'
   alias cpi='cp -iv'
@@ -36,7 +30,7 @@ function z1_aliases {
   alias ghd='tmux-resize;gh dash;clear;'
   alias ghup='gh extension upgrade --all'
   alias kl='launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server'
-  alias ls='eza --color=always --group-directories-first --icons'
+  alias ls='eza --color=always --group-directories-first --icons --git-ignore'
   alias l='ls -la'
   alias lg='tmux-resize;lazygit;clear;'
   alias less='less -R'
@@ -93,7 +87,6 @@ function z1_aliases {
   # bat-extras
   # source: https://github.com/eth-p/bat-extras/tree/master
   alias bdf='batdiff'
-  alias bmn='batman'
   alias brg='batgrep --smart-case --no-snip --no-separator --color --context=1'
   alias brga='brg --rga' # batgrep with ripgrep-all
   alias bpe='batpipe'
