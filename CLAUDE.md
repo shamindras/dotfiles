@@ -169,7 +169,20 @@ multi-step work.
 
 ## Workflow
 
-- **Task tracking** — Use the todo list (`TaskCreate` / `TaskUpdate` /
+### Plan mode
+
+- **Interview-style**: Do not present a large plan upfront. Break the work
+  into modular sections and walk through each one interactively — present
+  findings/proposal for one section, get input, then move to the next.
+  Compile the final plan only after all sections are discussed.
+- **Section-by-section implementation**: After plan approval, implement one
+  section at a time, presenting diffs for approval at each step. Full
+  end-to-end execution (no per-section approval) is available but opt-in —
+  only proceed that way if explicitly requested.
+
+### Task tracking
+
+- Use the todo list (`TaskCreate` / `TaskUpdate` /
   `TaskList`) for all multi-step operations, including planning. Show progress
   to the user. Before marking a task complete, verify it works.
 - **Cleanup before merge** — Run `just clean` and remove any temporary files
