@@ -88,5 +88,7 @@ These dotfiles have been mainly inspired by the following people. I thank them f
   [macOS-Defaults project](https://github.com/kevinSuttle/macOS-Defaults), which aims to provide better documentation
   for [`~/.macos`](https://mths.be/macos). This is inspired by Mathias Bynen's `.macos` settings.
 - [Dylan McDowell's zsh config](https://github.com/dylanjm/teton/blob/2eb03539fe2c9489ed6b5ade4ee4ee44d8c6f421/config/shells/zsh/zshenv.zsh)
+- [Linkarzu's neovim markdown setup](https://linkarzu.com/posts/neovim/markdown-setup-2025/) and his
+  [dotfiles](https://github.com/linkarzu/dotfiles-latest/tree/main/neovim/neobean).
 
 </details>
