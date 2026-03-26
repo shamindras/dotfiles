@@ -7,3 +7,15 @@
 !*/
 # Step 3: un-ignore markdown files in any directory
 !**/*.md
+
+# Exclude directories we don't own
+submods/
+
+# Exclude Claude skill/convention files (precise formatting, REPO-SPECIFIC markers)
+.claude/
+
+# Exclude CLAUDE.md files (hand-aligned tables, bold-prefixed lists)
+**/CLAUDE.md
+
+# Exclude vendored theme files
+config/yazi/flavors/
