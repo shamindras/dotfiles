@@ -23,6 +23,7 @@ return {
       bash = { 'shfmt' },
       -- zsh = { 'shfmt' },
       make = { 'make-format' },
+      markdown = { 'prettier' },
       json = { 'jq' },
       toml = { 'taplo' },
       yaml = { 'yq' },

@@ -1,0 +1,9 @@
+# Only format markdown files — ignore everything else
+# Step 1: ignore all files and directories
+*
+# Step 2: un-ignore directories so prettier can traverse into subdirectories
+# (without this, a negation like !**/*.md cannot reach files in subdirs,
+# because gitignore rules cannot re-include a file whose parent is excluded)
+!*/
+# Step 3: un-ignore markdown files in any directory
+!**/*.md

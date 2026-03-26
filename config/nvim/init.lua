@@ -69,6 +69,10 @@ require('lazy').setup({
 
   -- zk (zettelkasten)
   require('shamindras.plugins.zk'),
+
+  -- markdown
+  require('shamindras.plugins.markdown'),
+  require('shamindras.plugins.render-markdown'),
 }, {
   defaults = { lazy = false },
   install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },

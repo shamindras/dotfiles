@@ -72,6 +72,16 @@ return {
         ruff = {
           -- Your existing lua_ls configuration
         },
+        marksman = {
+          root_dir = function(bufnr, on_dir)
+            local fname = vim.api.nvim_buf_get_name(bufnr)
+            local zk_dir = vim.fn.getenv('ZK_NOTEBOOK_DIR')
+            if zk_dir ~= vim.NIL and zk_dir ~= '' and vim.startswith(fname, zk_dir) then
+              return -- skip zk notebooks → marksman won't attach
+            end
+            on_dir(require('lspconfig.util').root_pattern('.marksman.toml', '.git')(fname))
+          end,
+        },
       }
 
       -- Mason setup with explicit ensure_installed configuration
@@ -85,21 +95,37 @@ return {
         },
       })
 
+      -- Servers managed outside Mason (installed via Homebrew)
+      local mason_exclude = { 'marksman' }
+
       -- Mason-lspconfig setup with explicit handlers
       require('mason-lspconfig').setup({
-        ensure_installed = vim.tbl_keys(servers),
-        automatic_installation = true,
+        ensure_installed = vim.tbl_filter(function(s)
+          return not vim.tbl_contains(mason_exclude, s)
+        end, vim.tbl_keys(servers)),
+        automatic_installation = { exclude = mason_exclude },
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
+            vim.lsp.enable(server_name)
           end,
         },
       })
 
+      -- Setup Homebrew-managed servers directly (not via mason-lspconfig handler)
+      for _, server_name in ipairs(mason_exclude) do
+        local server = servers[server_name] or {}
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+        vim.lsp.config(server_name, server)
+        vim.lsp.enable(server_name)
+      end
+
       -- Mason-tool-installer setup
-      local ensure_installed = vim.tbl_keys(servers or {})
+      local ensure_installed = vim.tbl_filter(function(s)
+        return not vim.tbl_contains(mason_exclude, s)
+      end, vim.tbl_keys(servers or {}))
       vim.list_extend(ensure_installed, {
         'stylua',
       })

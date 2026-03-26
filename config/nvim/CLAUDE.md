@@ -2,7 +2,7 @@
 
 ## Overview
 
-Neovim editor config with lazy.nvim plugin manager, ~44 plugins, leader-based
+Neovim editor config with lazy.nvim plugin manager, ~47 plugins, leader-based
 keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 
 - **Docs**: https://neovim.io/doc/
@@ -16,9 +16,12 @@ keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 ```
 config/nvim/
 ├── init.lua                          # Entry point: leader key, lazy.nvim setup
-├── lazy-lock.json                    # Plugin version lockfile (~44 plugins)
+├── lazy-lock.json                    # Plugin version lockfile (~47 plugins)
+├── after/
+│   └── queries/markdown/
+│       └── textobjects.scm           # Custom section text object (@section.outer/inner)
 ├── ftplugin/
-│   └── markdown.lua                  # Buffer-local zk keymaps for .md files
+│   └── markdown.lua                  # Buffer-local md settings + zk keymaps
 ├── lua/shamindras/
 │   ├── core/
 │   │   ├── options.lua               # Editor settings (12 fold sections)
@@ -36,6 +39,8 @@ config/nvim/
 │       │   ├── init.lua              # Fuzzy finder, file explorer, lazygit
 │       │   └── pickers.lua           # Custom Snacks picker configs (fd, rg, ivy)
 │       ├── zk.lua                    # Zettelkasten integration
+│       ├── markdown.lua              # Markdown editing (tadmccorkle/markdown.nvim)
+│       ├── render-markdown.lua       # In-buffer markdown rendering
 │       ├── mini.lua                  # 13 mini.nvim modules
 │       ├── flash.nvim                # Enhanced f/t motion
 │       ├── smart-splits.lua          # Tmux-aware splits (C-hjkl)
@@ -63,6 +68,7 @@ config/nvim/
 | `<leader>g`  | Go/navigation (link opening)                      |
 | `<leader>k`  | Zettelkasten (daily, idea, search, backlinks)     |
 | `<leader>l`  | Lazy manager (menu, update, profile, sync)        |
+| `<leader>m`  | Markdown ops (checkbox, TOC, list, render toggle) |
 | `<leader>n`  | Number ops (increment, decrement)                 |
 | `<leader>s`  | Search/replace (grep, diagnostics, replace word)  |
 | `<leader>t`  | Toggle (line numbers, spell check, theme)         |
@@ -74,6 +80,7 @@ config/nvim/
 **Finding & Navigation**: snacks.nvim (pickers), flash.nvim, smart-splits.nvim, mini.files
 **Syntax & Editing**: treesitter, mini.ai, mini.surround, mini.pairs, mini.move, Comment.nvim
 **Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, noice.nvim, todo-comments
+**Markdown**: markdown.nvim (editing/motions), render-markdown.nvim (rendering), marksman (LSP, non-zk files)
 **Special**: zk-nvim (notes), tmux-resurrect awareness
 
 ## Cross-Tool Integration
@@ -100,6 +107,62 @@ Colorschemes are managed via lazy.nvim plugin specs in
 - **Cycle themes**: `<leader>tc` (persists selection to
   `~/.local/state/nvim/colorscheme_state.txt`)
 - **Update themes**: `:Lazy update` or `<leader>lu`
+
+## Markdown Setup
+
+Three plugins + formatter, all lazy-loaded on `ft = "markdown"`:
+
+- **markdown.nvim** — editing: inline style toggle, TOC, checkbox, lists, links
+- **render-markdown.nvim** — in-buffer rendering (headings, tables, checkboxes, callouts)
+- **marksman** — LSP for non-zk markdown (link validation, completions, go-to-def)
+- **prettier** — GFM formatter via conform.nvim (config from `.prettierrc.yaml`: `proseWrap: always`, `printWidth: 120`)
+
+### Markdown Keybindings (filetype-local)
+
+| Key                 | Action                    | Mode    |
+| ------------------- | ------------------------- | ------- |
+| `gl{motion}{style}` | Toggle inline style       | n       |
+| `gll{style}`        | Toggle style (line)       | n       |
+| `gl{style}`         | Toggle style (visual)     | v       |
+| `ds{style}`         | Delete inline style       | n       |
+| `cs{from}{to}`      | Change inline style       | n       |
+| `C-b`               | Toggle bold (cursor word) | n, v, i |
+| `C-t`               | Toggle italic (cursor word)| n, v, i|
+| `<CR>`              | Follow link               | n       |
+| `gL`                | Add link                  | n, v    |
+| `<leader>mx`        | Toggle checkbox           | n, v    |
+| `<leader>mo` / `mO` | List item below / above  | n       |
+| `<leader>mt` / `mT` | Insert TOC / TOC loclist | n       |
+| `<leader>mR`        | Toggle render-markdown    | n       |
+| `]]` / `[[`         | Next / prev heading       | n       |
+| `]h` / `[h`         | Current / parent heading  | n       |
+| `dah` / `vah`       | Delete/select heading section (heading + content) | n, v |
+| `dih` / `vih`       | Delete/select section content (without heading)   | n, v |
+
+Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
+
+### LSP Routing
+
+- Files inside `$ZK_NOTEBOOK_DIR` → zk LSP (auto-attach via zk-nvim)
+- All other `.md` files → marksman (guard in `lspconfig.lua` `root_dir`)
+
+### Buffer Settings (ftplugin/markdown.lua)
+
+- Spell check auto-enabled (en_AU/en_GB)
+- Treesitter-based heading folding (all folds open by default)
+- Section text object `h` via mini.ai + custom treesitter query
+  (`after/queries/markdown/textobjects.scm`)
+
+### Formatter Config (repo root)
+
+- `.prettierrc.yaml` — prettier options (`printWidth: 120`, `proseWrap: always`)
+- `.prettierignore` — ignore all except `.md` files (with `!*/` to traverse subdirs)
+
+### LSP API
+
+Servers use the nvim 0.11 native `vim.lsp.config()` + `vim.lsp.enable()` API.
+Homebrew-managed servers (marksman) are excluded from Mason via `mason_exclude`
+list and set up directly in `lspconfig.lua`.
 
 ## Development Notes
 
