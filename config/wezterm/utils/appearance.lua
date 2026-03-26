@@ -22,7 +22,7 @@ local active = {
   font    = 'Victor',
   theme   = 'nightfox',
   size    = 16,
-  opacity = 0.90,
+  opacity = 1,
   blur    = 4,
   padding = { left = 0, right = 0, top = 0, bottom = 0 },
 }
