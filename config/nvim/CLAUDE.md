@@ -113,7 +113,8 @@ Colorschemes are managed via lazy.nvim plugin specs in
 Three plugins + formatter, all lazy-loaded on `ft = "markdown"`:
 
 - **markdown.nvim** — editing: inline style toggle, TOC, checkbox, lists, links
-- **render-markdown.nvim** — in-buffer rendering (headings, tables, checkboxes, callouts)
+- **render-markdown.nvim** — in-buffer rendering with custom config: linkarzu-style
+  heading backgrounds/icons, inline checkboxes, code block borders, link icons
 - **marksman** — LSP for non-zk markdown (link validation, completions, go-to-def)
 - **prettier** — GFM formatter via conform.nvim (config from `.prettierrc.yaml`: `proseWrap: always`, `printWidth: 120`)
 
@@ -134,10 +135,13 @@ Three plugins + formatter, all lazy-loaded on `ft = "markdown"`:
 | `<leader>mo` / `mO` | List item below / above  | n       |
 | `<leader>mt` / `mT` | Insert TOC / TOC loclist | n       |
 | `<leader>mR`        | Toggle render-markdown    | n       |
-| `]]` / `[[`         | Next / prev heading       | n       |
-| `]h` / `[h`         | Current / parent heading  | n       |
-| `dah` / `vah`       | Delete/select heading section (heading + content) | n, v |
-| `dih` / `vih`       | Delete/select section content (without heading)   | n, v |
+| `zv`                | Toggle heading fold / focus nearest               | n       |
+| `zj`                | Next heading fold (cycle)                         | n       |
+| `zk`                | Previous heading fold (cycle)                     | n       |
+| `]]` / `[[`         | Next / prev heading                               | n       |
+| `]h` / `[h`         | Current / parent heading                          | n       |
+| `dah` / `vah`       | Delete/select heading section (heading + content) | n, v    |
+| `dih` / `vih`       | Delete/select section content (without heading)   | n, v    |
 
 Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 
@@ -152,6 +156,10 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 - Treesitter-based heading folding (all folds open by default)
 - Section text object `h` via mini.ai + custom treesitter query
   (`after/queries/markdown/textobjects.scm`)
+- Theme-aware heading highlights (`Headline1-6Bg/Fg`) — per-theme palettes
+  for Eldritch, TokyoNight, Jellybeans; auto-updates on `ColorScheme` event
+- Buffer-local `zv`/`zj`/`zk` fold cycling — uses treesitter `atx_heading`
+  query to cycle all heading levels (overrides global fold-cycling keymaps)
 
 ### Formatter Config (repo root)
 
