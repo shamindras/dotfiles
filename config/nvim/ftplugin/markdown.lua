@@ -1,5 +1,27 @@
--- Buffer-local keymaps for markdown files within a zk notebook
--- Only loads when opening .md files, and only applies keymaps if in a zk notebook
+-- Buffer-local settings for all markdown files, plus zk-specific keymaps
+
+-- {{{ Buffer Settings (all markdown files) ------------------------------------------------
+
+-- Auto-enable spell check
+vim.wo.spell = true
+vim.opt_local.spelllang = { 'en_au', 'en_gb' }
+
+-- Fold by heading level using Treesitter
+vim.wo.foldmethod = 'expr'
+vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.wo.foldlevel = 99 -- Start with all folds open
+
+-- Section text object: select heading + content (daS, diS, vaS, viS, etc.)
+local ai = require('mini.ai')
+vim.b.miniai_config = {
+  custom_textobjects = {
+    h = ai.gen_spec.treesitter({ a = '@section.outer', i = '@section.inner' }),
+  },
+}
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ zk Notebook Keymaps -----------------------------------------------------------------
 
 -- Check if we're in a zk notebook
 if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
@@ -7,16 +29,6 @@ if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
   local function map(mode, lhs, rhs, desc)
     vim.api.nvim_buf_set_keymap(0, mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
   end
-
-  -- {{{ Navigation -------------------------------------------------------------------------
-
-  -- Follow link under cursor
-  map('n', '<CR>', '<Cmd>lua vim.lsp.buf.definition()<CR>', 'Follow link')
-
-  -- Preview linked note
-  map('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', 'Preview note')
-
-  -- }}}
 
   -- {{{ Current Buffer Operations ----------------------------------------------------------
 
@@ -51,3 +63,5 @@ if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
 
   -- }}}
 end
+
+-- ------------------------------------------------------------------------- }}}
