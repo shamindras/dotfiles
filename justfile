@@ -2,7 +2,7 @@ _default:
 	@just --choose
 
 # NOTE: we don't include update submods here
-all: clean stylua_config update_brewfile firefox_sync firefox_audit treesitter_sync
+all: clean stylua_config prettier_md update_brewfile firefox_sync firefox_audit treesitter_sync
 
 clean:
 	@printf "🧹 Sweeping out .DS_Store, swap files, stale sessions...\n"
@@ -14,6 +14,11 @@ stylua_config:
 	@printf "🎨 Formatting all Lua config files with stylua...\n"
 	@fd . 'config/' -e lua -j 4 -x sh -c 'stylua "$1" > /dev/null 2>&1 || true' sh {}
 	@printf "✅ Lua files formatted!\n"
+
+prettier_md:
+	@printf "🎨 Formatting markdown files with prettier...\n"
+	@prettier --write . > /dev/null 2>&1
+	@printf "✅ Markdown files formatted!\n"
 
 update_brewfile:
 	@printf "🍺 Dumping current Homebrew packages to Brewfile...\n"
