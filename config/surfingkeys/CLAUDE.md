@@ -44,6 +44,28 @@ keys spread the base and append their own:
 | `localhost:2718`    | `a,m`           | Other Sites      |
 | `shamindras.com`   | `f`             | Other Sites      |
 
+## Gmail Shortcuts
+
+### Navigation (`ag` prefix — go to view)
+
+Auto-detects account number from URL (`/u/0/`, `/u/1/`, etc.) via `gmailNavigate()`.
+
+| Shortcut | View      | Mnemonic      |
+| -------- | --------- | ------------- |
+| `aga`    | all mail  | **a**ll       |
+| `agd`    | drafts    | **d**rafts    |
+| `agi`    | inbox     | **i**nbox     |
+| `agr`    | starred   | sta**r**red   |
+| `ags`    | scheduled | **s**cheduled |
+| `agt`    | sent      | sen**t**      |
+| `agz`    | snoozed   | snoo**z**ed   |
+
+### Actions (`ar` prefix — perform action)
+
+| Shortcut | Action    | Mnemonic                         |
+| -------- | --------- | -------------------------------- |
+| `ara`    | reply all | **a**ction → **r**eply → **a**ll |
+
 ## Development Notes
 
 - JavaScript config; Vimium-compatible mappings for consistency

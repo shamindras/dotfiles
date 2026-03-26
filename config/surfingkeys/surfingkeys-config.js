@@ -569,12 +569,18 @@ const gmailNavigate = (view) => {
     window.location.href = `https://mail.google.com/mail/u/${accountNum}/#${view}`;
 };
 
-api.mapkey('agi', '#0Go to inbox', () => gmailNavigate('inbox'), {domain: /mail\.google\.com/i});
-api.mapkey('ags', '#0Go to starred', () => gmailNavigate('starred'), {domain: /mail\.google\.com/i});
-api.mapkey('agt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
-api.mapkey('agd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
 api.mapkey('aga', '#0Go to all mail', () => gmailNavigate('all'), {domain: /mail\.google\.com/i});
+api.mapkey('agd', '#0Go to drafts', () => gmailNavigate('drafts'), {domain: /mail\.google\.com/i});
+api.mapkey('agi', '#0Go to inbox', () => gmailNavigate('inbox'), {domain: /mail\.google\.com/i});
+api.mapkey('agr', '#0Go to starred', () => gmailNavigate('starred'), {domain: /mail\.google\.com/i});
+api.mapkey('ags', '#0Go to scheduled', () => gmailNavigate('scheduled'), {domain: /mail\.google\.com/i});
+api.mapkey('agt', '#0Go to sent', () => gmailNavigate('sent'), {domain: /mail\.google\.com/i});
 api.mapkey('agz', '#0Go to snoozed', () => gmailNavigate('snoozed'), {domain: /mail\.google\.com/i});
+
+// Gmail - Action shortcuts (ar prefix)
+api.mapkey('ara', '#0Reply all', () => {
+    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'a', code: 'KeyA', bubbles: true}));
+}, {domain: /mail\.google\.com/i});
 
 // Gmail - Use runtime conditional for / remapping
 if (/mail\.google\.com/.test(window.location.host)) {
