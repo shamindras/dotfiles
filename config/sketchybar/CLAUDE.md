@@ -23,6 +23,7 @@ config/sketchybar/
 │   ├── battery.sh        # Polls pmset for battery info
 │   ├── wifi.sh           # Polls system_profiler for WiFi status
 │   ├── volume.sh         # Polls osascript for volume level
+│   ├── wake_refresh.sh   # Guards system_woke → sketchybar --update
 │   └── toggle_bar.sh     # Toggles between sketchybar and native menu bar
 └── CLAUDE.md             # This file
 ```
@@ -44,6 +45,24 @@ config/sketchybar/
 - Workspace updates via Aerospace's `exec-on-workspace-change` event
 - Plugin scripts (standalone) must include `set -Eeuo pipefail` (repo convention)
 - Item scripts are sourced into `sketchybarrc` — do **not** add strict mode
+
+### Wake Refresh
+
+A central `wake_refresh` item in `sketchybarrc` subscribes to `system_woke` and
+runs `sketchybar --update` to force all items to re-execute their plugin scripts.
+This prevents stale data (clock, battery, wifi, etc.) after waking from sleep.
+The clock additionally subscribes to `display_change` to catch lid-open scenarios
+that may not trigger a full sleep/wake cycle.
+
+| Item           | Event subscriptions                                  |
+| -------------- | ---------------------------------------------------- |
+| wake_refresh   | `system_woke` (forces global `--update`)             |
+| clock          | `display_change`                                     |
+| battery        | `power_source_change`                                |
+| wifi           | `wifi_change`                                        |
+| volume         | `volume_change`                                      |
+| workspace      | `aerospace_workspace_change` (custom)                |
+| front_app      | `front_app_switched`                                 |
 
 ## Service Management
 
