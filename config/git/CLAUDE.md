@@ -6,15 +6,14 @@
 ## Overview
 
 Git config with delta pager, Catppuccin Mocha diff theme, and custom
-aliases. Includes global ignore and attributes files.
+aliases. Includes global ignore file.
 
 ## File Structure
 
-| File         | Purpose                                       |
-| ------------ | --------------------------------------------- |
-| `config`     | Main gitconfig (editor, pager, aliases, delta) |
-| `ignore`     | Global gitignore patterns                     |
-| `attributes` | Line-ending normalization rules               |
+| File     | Purpose                                        |
+| -------- | ---------------------------------------------- |
+| `config` | Main gitconfig (editor, pager, aliases, delta)  |
+| `ignore` | Global gitignore patterns                       |
 
 ## Key Settings
 
