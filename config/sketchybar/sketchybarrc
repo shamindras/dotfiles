@@ -79,5 +79,14 @@ sketchybar --add bracket right_pill wifi volume battery clock \
   background.border_width="$PILL_BORDER_WIDTH" \
   background.border_color="$PILL_BORDER"
 
+##### Wake Refresh #####
+# Force all items to re-run their scripts on system wake so nothing
+# displays stale data (clocks, battery, wifi, etc.).
+sketchybar --add item wake_refresh center \
+  --set wake_refresh \
+  drawing=off \
+  script="$PLUGIN_DIR/wake_refresh.sh" \
+  --subscribe wake_refresh system_woke
+
 ##### Force Initial Update #####
 sketchybar --update
