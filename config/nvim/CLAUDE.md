@@ -21,8 +21,11 @@ config/nvim/
 │   └── queries/markdown/
 │       └── textobjects.scm           # Custom section text object (@section.outer/inner)
 ├── ftplugin/
-│   └── markdown.lua                  # Buffer-local md settings + zk keymaps
+│   ├── markdown.lua                  # Buffer-local md settings, highlights, heading ops, zk keymaps
+│   └── markdown_folds.lua            # Fold cycling (zv/zj/zk) + auto-collapse on load
 ├── lua/shamindras/
+│   ├── util/
+│   │   └── markdown.lua              # Shared treesitter helpers (headings, folds, section ops)
 │   ├── core/
 │   │   ├── options.lua               # Editor settings (12 fold sections)
 │   │   ├── keymaps.lua               # ~370 lines of leader-based keymaps
@@ -120,21 +123,26 @@ Three plugins + formatter, all lazy-loaded on `ft = "markdown"`:
 
 ### Markdown Keybindings (filetype-local)
 
-| Key                 | Action                    | Mode    |
-| ------------------- | ------------------------- | ------- |
-| `gl{motion}{style}` | Toggle inline style       | n       |
-| `gll{style}`        | Toggle style (line)       | n       |
-| `gl{style}`         | Toggle style (visual)     | v       |
-| `ds{style}`         | Delete inline style       | n       |
-| `cs{from}{to}`      | Change inline style       | n       |
-| `C-b`               | Toggle bold (cursor word) | n, v, i |
-| `C-t`               | Toggle italic (cursor word)| n, v, i|
-| `<CR>`              | Follow link               | n       |
-| `gL`                | Add link                  | n, v    |
-| `<leader>mx`        | Toggle checkbox           | n, v    |
-| `<leader>mo` / `mO` | List item below / above  | n       |
-| `<leader>mt` / `mT` | Insert TOC / TOC loclist | n       |
-| `<leader>mR`        | Toggle render-markdown    | n       |
+| Key                 | Action                                            | Mode    |
+| ------------------- | ------------------------------------------------- | ------- |
+| `gl{motion}{style}` | Toggle inline style                               | n       |
+| `gll{style}`        | Toggle style (line)                               | n       |
+| `gl{style}`         | Toggle style (visual)                             | v       |
+| `ds{style}`         | Delete inline style                               | n       |
+| `cs{from}{to}`      | Change inline style                               | n       |
+| `C-b`               | Toggle bold (cursor word)                         | n, v, i |
+| `C-t`               | Toggle italic (cursor word)                       | n, v, i |
+| `<CR>`              | Follow link                                       | n       |
+| `gL`                | Add link                                          | n, v    |
+| `<leader>mx`        | Toggle checkbox (dot-repeatable)                  | n, v    |
+| `<C-x>`             | Toggle checkbox (dot-repeatable)                  | n       |
+| `<leader>mo` / `mO` | List item below / above                           | n       |
+| `<leader>mc` / `mC` | Insert TOC / TOC loclist                          | n       |
+| `<leader>mr`        | Toggle render-markdown                            | n       |
+| `<leader>mh`        | Promote heading level (dot-repeatable)            | n       |
+| `<leader>ml`        | Demote heading level (dot-repeatable)             | n       |
+| `<leader>mj`        | Move section down (dot-repeatable)                | n       |
+| `<leader>mk`        | Move section up (dot-repeatable)                  | n       |
 | `zv`                | Toggle heading fold / focus nearest               | n       |
 | `zj`                | Next heading fold (cycle)                         | n       |
 | `zk`                | Previous heading fold (cycle)                     | n       |
@@ -156,7 +164,7 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 - Treesitter-based heading folding (all folds open by default)
 - Section text object `h` via mini.ai + custom treesitter query
   (`after/queries/markdown/textobjects.scm`)
-- Theme-aware heading highlights (`Headline1-6Bg/Fg`) — per-theme palettes
+- Theme-aware heading + code block highlights — per-theme palettes
   for Eldritch, TokyoNight, Jellybeans; auto-updates on `ColorScheme` event
 - Buffer-local `zv`/`zj`/`zk` fold cycling — uses treesitter `atx_heading`
   query to cycle all heading levels (overrides global fold-cycling keymaps)

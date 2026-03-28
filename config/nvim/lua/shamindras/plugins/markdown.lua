@@ -47,20 +47,34 @@ return {
 
       -- ------------------------------------------------------------------------- }}}
 
+      -- {{{ Dot-repeatable helpers --------------------------------------------------------------
+
+      -- Checkbox toggle (dot-repeatable via operatorfunc)
+      _G.md_task_toggle = function(mode)
+        if not mode then
+          vim.o.operatorfunc = 'v:lua.md_task_toggle'
+          return 'g@l'
+        end
+        vim.cmd('MDTaskToggle')
+      end
+
+      -- ------------------------------------------------------------------------- }}}
+
       -- {{{ Markdown Commands -----------------------------------------------------------------
 
-      map('n', '<leader>mx', '<Cmd>MDTaskToggle<CR>', opts('[m]arkdown checkbox toggle [x]'))
+      map('n', '<leader>mx', _G.md_task_toggle, { buffer = bufnr, expr = true, desc = '[m]arkdown checkbox toggle [x]' })
       map('x', '<leader>mx', ':MDTaskToggle<CR>', opts('[m]arkdown checkbox toggle [x]'))
+      map('n', '<C-x>', _G.md_task_toggle, { buffer = bufnr, expr = true, desc = 'Toggle checkbox' })
       map('n', '<leader>mo', '<Cmd>MDListItemBelow<CR>', opts('[m]arkdown list item below [o]'))
       map('n', '<leader>mO', '<Cmd>MDListItemAbove<CR>', opts('[m]arkdown list item above [O]'))
-      map('n', '<leader>mt', '<Cmd>MDInsertToc<CR>', opts('[m]arkdown insert [t]oc'))
-      map('n', '<leader>mT', '<Cmd>MDToc<CR>', opts('[m]arkdown [T]oc (loclist)'))
+      map('n', '<leader>mc', '<Cmd>MDInsertToc<CR>', opts('[m]arkdown insert to[c]'))
+      map('n', '<leader>mC', '<Cmd>MDToc<CR>', opts('[m]arkdown to[C] (loclist)'))
 
       -- ------------------------------------------------------------------------- }}}
 
       -- {{{ Render Toggle ---------------------------------------------------------------------
 
-      map('n', '<leader>mR', '<Cmd>RenderMarkdown toggle<CR>', opts('[m]arkdown [R]ender toggle'))
+      map('n', '<leader>mr', '<Cmd>RenderMarkdown toggle<CR>', opts('[m]arkdown [r]ender toggle'))
 
       -- ------------------------------------------------------------------------- }}}
     end,

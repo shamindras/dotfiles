@@ -124,7 +124,17 @@ local function cycle_heading(direction)
     vim.notify('Only heading in buffer', vim.log.levels.INFO)
     return
   end
-  focus_heading(headings, find_adjacent_heading(headings, vim.fn.line('.'), direction))
+  -- Snap to containing heading so prev/next is relative to section, not cursor line
+  local raw_cur = vim.fn.line('.')
+  local cur = headings[1].line
+  for _, h in ipairs(headings) do
+    if h.line <= raw_cur then
+      cur = h.line
+    else
+      break
+    end
+  end
+  focus_heading(headings, find_adjacent_heading(headings, cur, direction))
 end
 
 -- Toggle fold on heading / focus nearest heading (zv)
@@ -169,5 +179,42 @@ end, { buffer = 0, desc = 'Next heading (cycle)' })
 vim.keymap.set('n', 'zk', function()
   cycle_heading('prev')
 end, { buffer = 0, desc = 'Previous heading (cycle)' })
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Auto-collapse on buffer load ------------------------------------------------------------
+
+-- Close all folds, then focus the heading nearest to cursor (reuses zv logic).
+-- Uses BufWinEnter (fires after buffer is displayed) + defer to ensure folds exist.
+local bufnr = vim.api.nvim_get_current_buf()
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  buffer = bufnr,
+  once = true,
+  callback = function()
+    vim.defer_fn(function()
+      if not vim.api.nvim_buf_is_valid(bufnr) or vim.api.nvim_get_current_buf() ~= bufnr then
+        return
+      end
+      local headings = get_headings()
+      if #headings == 0 then
+        return
+      end
+      -- Find the containing heading (at or above cursor), close all, focus it,
+      -- then restore cursor to original position
+      local saved_cursor = vim.api.nvim_win_get_cursor(0)
+      local cur = saved_cursor[1]
+      local containing = headings[1]
+      for _, h in ipairs(headings) do
+        if h.line <= cur then
+          containing = h
+        else
+          break
+        end
+      end
+      focus_heading(headings, containing.line)
+      vim.api.nvim_win_set_cursor(0, saved_cursor)
+    end, 50)
+  end,
+})
 
 -- ------------------------------------------------------------------------- }}}

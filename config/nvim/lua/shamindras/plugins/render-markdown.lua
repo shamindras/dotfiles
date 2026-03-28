@@ -36,6 +36,7 @@ return {
       enabled = true,
       style = 'full',
       border = 'thin',
+      highlight = 'RenderMarkdownCode',
     },
     link = {
       enabled = true,

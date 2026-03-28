@@ -40,24 +40,82 @@ local heading_palettes = {
   },
 }
 
--- Apply Headline1-6Bg/Fg highlight groups for the active colorscheme
-local function set_heading_highlights()
+-- Per-theme code block palettes: subtle bg slightly lighter than editor background
+local code_palettes = {
+  eldritch              = { bg = '#1a1a2e' },
+  ['tokyonight-night']  = { bg = '#1a1a2a' },
+  ['jellybeans-nvim']   = { bg = '#1c1c1c' },
+}
+
+-- Apply Headline1-6Bg/Fg and RenderMarkdownCode highlight groups for the active colorscheme
+local function set_markdown_highlights()
   local scheme = vim.g.colors_name or 'eldritch'
-  local palette = heading_palettes[scheme] or heading_palettes.eldritch
+
+  -- Heading highlights
+  local h_palette = heading_palettes[scheme] or heading_palettes.eldritch
   for i = 1, 6 do
-    vim.api.nvim_set_hl(0, 'Headline' .. i .. 'Bg', { bg = palette.bg[i], fg = palette.fg, bold = true })
-    vim.api.nvim_set_hl(0, 'Headline' .. i .. 'Fg', { fg = palette.bg[i], bold = true })
+    vim.api.nvim_set_hl(0, 'Headline' .. i .. 'Bg', { bg = h_palette.bg[i], fg = h_palette.fg, bold = true })
+    vim.api.nvim_set_hl(0, 'Headline' .. i .. 'Fg', { fg = h_palette.bg[i], bold = true })
   end
+
+  -- Code block highlight
+  local c_palette = code_palettes[scheme] or code_palettes.eldritch
+  vim.api.nvim_set_hl(0, 'RenderMarkdownCode', { bg = c_palette.bg })
 end
 
 -- Re-apply on theme change (augroup clear = true prevents duplicates from ftplugin re-entry)
 vim.api.nvim_create_autocmd('ColorScheme', {
-  group = vim.api.nvim_create_augroup('MarkdownHeadingHighlights', { clear = true }),
-  callback = set_heading_highlights,
+  group = vim.api.nvim_create_augroup('MarkdownHighlights', { clear = true }),
+  callback = set_markdown_highlights,
 })
 
 -- Apply immediately for the current colorscheme
-set_heading_highlights()
+set_markdown_highlights()
+
+-- ------------------------------------------------------------------------- }}}
+
+-- {{{ Heading Operations (section moves + level cycling) ------------------------------------
+
+local md = require('shamindras.util.markdown')
+
+-- Section moves (dot-repeatable via operatorfunc)
+_G.md_section_down = function(mode)
+  if not mode then
+    vim.o.operatorfunc = 'v:lua.md_section_down'
+    return 'g@l'
+  end
+  md.move_section('down')
+end
+
+_G.md_section_up = function(mode)
+  if not mode then
+    vim.o.operatorfunc = 'v:lua.md_section_up'
+    return 'g@l'
+  end
+  md.move_section('up')
+end
+
+-- Heading level cycling (dot-repeatable via operatorfunc)
+_G.md_heading_promote = function(mode)
+  if not mode then
+    vim.o.operatorfunc = 'v:lua.md_heading_promote'
+    return 'g@l'
+  end
+  md.cycle_heading_level(-1)
+end
+
+_G.md_heading_demote = function(mode)
+  if not mode then
+    vim.o.operatorfunc = 'v:lua.md_heading_demote'
+    return 'g@l'
+  end
+  md.cycle_heading_level(1)
+end
+
+vim.keymap.set('n', '<leader>mj', _G.md_section_down, { buffer = 0, expr = true, desc = '[m]arkdown section move down [j]' })
+vim.keymap.set('n', '<leader>mk', _G.md_section_up, { buffer = 0, expr = true, desc = '[m]arkdown section move up [k]' })
+vim.keymap.set('n', '<leader>mh', _G.md_heading_promote, { buffer = 0, expr = true, desc = '[m]arkdown [h]eading promote' })
+vim.keymap.set('n', '<leader>ml', _G.md_heading_demote, { buffer = 0, expr = true, desc = '[m]arkdown heading demote [l]' })
 
 -- ------------------------------------------------------------------------- }}}
 
