@@ -42,9 +42,9 @@ local heading_palettes = {
 
 -- Per-theme code block palettes: subtle bg slightly lighter than editor background
 local code_palettes = {
-  eldritch              = { bg = '#1a1a2e' },
-  ['tokyonight-night']  = { bg = '#1a1a2a' },
-  ['jellybeans-nvim']   = { bg = '#1c1c1c' },
+  eldritch = { bg = '#1a1a2e' },
+  ['tokyonight-night'] = { bg = '#1a1a2a' },
+  ['jellybeans-nvim'] = { bg = '#1c1c1c' },
 }
 
 -- Apply Headline1-6Bg/Fg and RenderMarkdownCode highlight groups for the active colorscheme
@@ -112,10 +112,25 @@ _G.md_heading_demote = function(mode)
   md.cycle_heading_level(1)
 end
 
-vim.keymap.set('n', '<leader>mj', _G.md_section_down, { buf = 0, expr = true, desc = '[m]arkdown section move down [j]' })
+vim.keymap.set(
+  'n',
+  '<leader>mj',
+  _G.md_section_down,
+  { buf = 0, expr = true, desc = '[m]arkdown section move down [j]' }
+)
 vim.keymap.set('n', '<leader>mk', _G.md_section_up, { buf = 0, expr = true, desc = '[m]arkdown section move up [k]' })
-vim.keymap.set('n', '<leader>mh', _G.md_heading_promote, { buf = 0, expr = true, desc = '[m]arkdown [h]eading promote' })
-vim.keymap.set('n', '<leader>ml', _G.md_heading_demote, { buf = 0, expr = true, desc = '[m]arkdown heading demote [l]' })
+vim.keymap.set(
+  'n',
+  '<leader>mh',
+  _G.md_heading_promote,
+  { buf = 0, expr = true, desc = '[m]arkdown [h]eading promote' }
+)
+vim.keymap.set(
+  'n',
+  '<leader>ml',
+  _G.md_heading_demote,
+  { buf = 0, expr = true, desc = '[m]arkdown heading demote [l]' }
+)
 
 -- ------------------------------------------------------------------------- }}}
 

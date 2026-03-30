@@ -332,10 +332,7 @@ function M.move_section(direction)
   -- Calculate cursor offset within current section
   local cursor_offset = cur - cur_start
 
-  M.swap_sections(
-    { start = cur_start, stop = cur_end },
-    { start = sib_start, stop = sib_end }
-  )
+  M.swap_sections({ start = cur_start, stop = cur_end }, { start = sib_start, stop = sib_end })
 
   -- Move cursor to new position of the swapped section
   local new_cursor
