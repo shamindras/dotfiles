@@ -192,7 +192,7 @@ return {
           filetypes = { 'markdown' },
           on_attach = function(client, bufnr)
             -- Setup omnifunc for completion
-            vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+            vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
           end,
         },
         auto_attach = {

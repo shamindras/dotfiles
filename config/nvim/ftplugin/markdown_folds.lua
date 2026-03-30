@@ -300,15 +300,15 @@ local function toggle_or_focus()
 end
 
 -- Buffer-local keymaps (override global fold cycling for markdown)
-vim.keymap.set('n', 'zv', toggle_or_focus, { buffer = 0, desc = 'Toggle heading fold / focus nearest' })
+vim.keymap.set('n', 'zv', toggle_or_focus, { buf = 0, desc = 'Toggle heading fold / focus nearest' })
 
 vim.keymap.set('n', 'zj', function()
   cycle_heading('next')
-end, { buffer = 0, desc = 'Next heading (cycle)' })
+end, { buf = 0, desc = 'Next heading (cycle)' })
 
 vim.keymap.set('n', 'zk', function()
   cycle_heading('prev')
-end, { buffer = 0, desc = 'Previous heading (cycle)' })
+end, { buf = 0, desc = 'Previous heading (cycle)' })
 
 -- ------------------------------------------------------------------------- }}}
 

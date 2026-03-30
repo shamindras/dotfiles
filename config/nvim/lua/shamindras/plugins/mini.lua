@@ -115,7 +115,7 @@ table.insert(M, {
       pattern = 'MiniFilesBufferCreate',
       callback = function(args)
         local buf_id = args.data.buf_id
-        vim.keymap.set('n', 'q', MiniFiles.close, { buffer = buf_id, desc = 'Close Mini Files' })
+        vim.keymap.set('n', 'q', MiniFiles.close, { buf = buf_id, desc = 'Close Mini Files' })
       end,
     })
   end,

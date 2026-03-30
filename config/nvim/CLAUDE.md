@@ -6,7 +6,7 @@ Neovim editor config with lazy.nvim plugin manager, ~47 plugins, leader-based
 keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 
 - **Docs**: https://neovim.io/doc/
-- **Installed version**: NVIM v0.11.6 (verified 2026-02-26)
+- **Installed version**: NVIM v0.12.0 (verified 2026-03-30)
 - **Lua conventions**: `.claude/conventions/lua.md`
 
 ## Architecture

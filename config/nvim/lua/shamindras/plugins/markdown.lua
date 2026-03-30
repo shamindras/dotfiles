@@ -17,7 +17,7 @@ return {
     on_attach = function(bufnr)
       local map = vim.keymap.set
       local opts = function(desc)
-        return { buffer = bufnr, desc = desc }
+        return { buf = bufnr, desc = desc }
       end
 
       -- {{{ Link Operations -------------------------------------------------------------------
@@ -62,9 +62,9 @@ return {
 
       -- {{{ Markdown Commands -----------------------------------------------------------------
 
-      map('n', '<leader>mx', _G.md_task_toggle, { buffer = bufnr, expr = true, desc = '[m]arkdown checkbox toggle [x]' })
+      map('n', '<leader>mx', _G.md_task_toggle, { buf = bufnr, expr = true, desc = '[m]arkdown checkbox toggle [x]' })
       map('x', '<leader>mx', ':MDTaskToggle<CR>', opts('[m]arkdown checkbox toggle [x]'))
-      map('n', '<C-x>', _G.md_task_toggle, { buffer = bufnr, expr = true, desc = 'Toggle checkbox' })
+      map('n', '<C-x>', _G.md_task_toggle, { buf = bufnr, expr = true, desc = 'Toggle checkbox' })
       map('n', '<leader>mo', '<Cmd>MDListItemBelow<CR>', opts('[m]arkdown list item below [o]'))
       map('n', '<leader>mO', '<Cmd>MDListItemAbove<CR>', opts('[m]arkdown list item above [O]'))
       map('n', '<leader>mc', '<Cmd>MDInsertToc<CR>', opts('[m]arkdown insert to[c]'))
