@@ -5,12 +5,13 @@
 
 ## File Structure
 
-| File        | Purpose                                     |
-| ----------- | ------------------------------------------- |
-| `btm-popup`            | Opens bottom (btm) monitor in popup terminal  |
-| `close-notifications`  | Dismisses all macOS Notification Center alerts (grouped and individual) |
-| `gc`                   | Git-related utility script                     |
-| `tmux-session-picker`  | fzf-based tmux session switcher (exact match)  |
+| File                  | Purpose                                                                |
+| --------------------- | ---------------------------------------------------------------------- |
+| `btm-popup`           | Opens bottom (btm) monitor in popup terminal                           |
+| `close-notifications` | Dismisses all macOS Notification Center alerts (grouped and individual) |
+| `gc`                  | Git-related utility script                                             |
+| `quit-app`            | Quit a macOS app, wait for exit, then switch aerospace workspace       |
+| `tmux-session-picker` | fzf-based tmux session switcher (exact match)                          |
 
 ## Development Notes
 
