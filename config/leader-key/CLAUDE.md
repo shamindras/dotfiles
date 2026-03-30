@@ -19,8 +19,9 @@ action groups for opening/quitting apps, running commands, and quick URLs.
 - **Action groups**: `claude`, `github`, `open`, `quit`, `run`, `search-raycast`, `urls`
 - **Application launching**: 14 macOS apps (1password, firefox, signal,
   spotify, vlc, vscode, etc.)
-- **Application quitting**: sophisticated quit with sleep delays and
-  aerospace workspace navigation
+- **Application quitting**: uses `config/bin/quit-app` helper which
+  polls until the app actually exits, then switches aerospace workspace
+  (Finder is the sole inline exception due to its special quit sequence)
 - **Utility commands**: brew upgrade (`--greedy`),
   close-notifications, move-files, restart-leaderkey, trash-empty,
   toggle-mute, wash-dropbox

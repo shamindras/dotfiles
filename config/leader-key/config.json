@@ -134,97 +134,97 @@
           "key": "1",
           "label": "1password",
           "type": "command",
-          "value": "osascript -e 'quit app \"1Password\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app 1Password B"
         },
         {
           "key": "a",
           "label": "djview",
           "type": "command",
-          "value": "(pkill -x djview 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
+          "value": "~/.config/bin/quit-app --pkill djview DjView W"
         },
         {
           "key": "b",
           "label": "firefox",
           "type": "command",
-          "value": "osascript -e 'quit app \"Firefox\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app Firefox B"
         },
         {
           "key": "d",
           "label": "preview",
           "type": "command",
-          "value": "osascript -e 'quit app \"Preview\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
+          "value": "~/.config/bin/quit-app Preview W"
         },
         {
           "key": "e",
           "label": "finder",
           "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.2 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.2 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
+          "value": "osascript -e 'tell application \"Finder\" to activate' && sleep 0.3 && osascript -e 'tell application \"System Events\" to keystroke \"q\" using command down' && sleep 0.3 && /opt/homebrew/bin/aerospace workspace W"
         },
         {
           "key": "g",
           "label": "signal",
           "type": "command",
-          "value": "osascript -e 'quit app \"Signal\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app Signal B"
         },
         {
           "key": "i",
           "label": "books",
           "type": "command",
-          "value": "(pkill -x Books 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app --pkill Books Books B"
         },
         {
           "key": "m",
           "label": "spotify",
           "type": "command",
-          "value": "osascript -e 'quit app \"Spotify\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app Spotify B"
         },
         {
           "key": "n",
           "label": "nordvpn",
           "type": "command",
-          "value": "osascript -e 'quit app \"NordVPN\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app NordVPN B"
         },
         {
           "key": "p",
           "label": "skim",
           "type": "command",
-          "value": "osascript -e 'quit app \"Skim\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
+          "value": "~/.config/bin/quit-app Skim W"
         },
         {
           "key": "t",
           "label": "ghostty",
           "type": "command",
-          "value": "osascript -e 'quit app \"Ghostty\"' && sleep 0.1 && if pgrep -x \"wezterm-gui\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+          "value": "~/.config/bin/quit-app Ghostty W --check wezterm-gui --fallback B"
         },
         {
           "key": "q",
           "label": "textedit",
           "type": "command",
-          "value": "osascript -e 'quit app \"TextEdit\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace W'"
+          "value": "~/.config/bin/quit-app TextEdit W"
         },
         {
           "key": "s",
           "label": "vscode",
           "type": "command",
-          "value": "osascript -e 'quit app \"Code\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace S'"
+          "value": "~/.config/bin/quit-app Code S"
         },
         {
           "key": "v",
           "label": "vlc",
           "type": "command",
-          "value": "osascript -e 'quit app \"VLC\"' && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app VLC B"
         },
         {
           "key": "w",
           "label": "wezterm",
           "type": "command",
-          "value": "osascript -e 'quit app \"WezTerm\"' && sleep 0.1 && if pgrep -x \"ghostty\" > /dev/null; then /bin/zsh -c '/opt/homebrew/bin/aerospace workspace T'; else /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'; fi"
+          "value": "~/.config/bin/quit-app WezTerm T --check ghostty --fallback B"
         },
         {
           "key": "x",
           "label": "jdownloader",
           "type": "command",
-          "value": "(pkill -f \"JDownloader2.app\" 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "~/.config/bin/quit-app --pkill-f JDownloader2.app JDownloader B"
         }
       ],
       "key": "q",
