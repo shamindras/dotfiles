@@ -58,6 +58,34 @@ local function find_adjacent_heading(headings, cur, direction)
   end
 end
 
+-- Find the containing heading for a given line (nearest heading at or above cursor)
+local function find_containing_heading(headings, cur)
+  local containing = headings[1]
+  for _, h in ipairs(headings) do
+    if h.line <= cur then
+      containing = h
+    else
+      break
+    end
+  end
+  return containing
+end
+
+-- Ensure every heading is visible as a fold bar by opening parent folds.
+-- foldclosed(line) == line means the heading IS a fold bar (visible);
+-- foldclosed(line) == other means it's hidden inside another fold.
+-- Content preamble folds (from rebuild_manual_folds) prevent content leak.
+local function ensure_headings_visible(headings)
+  for _, h in ipairs(headings) do
+    local fc = vim.fn.foldclosed(h.line)
+    while fc ~= -1 and fc ~= h.line do
+      vim.api.nvim_win_set_cursor(0, { fc, 0 })
+      vim.cmd('normal! zo')
+      fc = vim.fn.foldclosed(h.line)
+    end
+  end
+end
+
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ Focus Heading -------------------------------------------------------------------------
@@ -142,6 +170,18 @@ local function schedule_fold_restore()
   })
 end
 
+-- Collapse all heading folds, keeping every heading visible as a fold bar.
+-- Used by toggle_or_focus() collapse paths; focus_heading() handles uncollapse.
+-- No explicit ancestor/preamble opening needed — ensure_headings_visible opens
+-- parent folds to reveal all headings, which implicitly opens ancestors and
+-- exposes preamble content (opening H1 to reveal H2 also reveals lines between them).
+local function collapse_all_headings(headings)
+  rebuild_manual_folds(headings)
+  schedule_fold_restore()
+  vim.cmd('normal! zM')
+  ensure_headings_visible(headings)
+end
+
 -- Close all folds, open ancestor chain one level at a time, open target section
 -- recursively, keep preamble (YAML/TOC) visible, center viewport.
 local function focus_heading(headings, target_line)
@@ -199,19 +239,7 @@ local function focus_heading(headings, target_line)
   end
   vim.api.nvim_win_set_cursor(0, { target_line, 0 })
 
-  -- Ensure all headings are visible as fold bars. A heading hidden inside a
-  -- collapsed sibling fold (e.g., demoted H4 inside an H3 section) gets
-  -- revealed by opening its parent fold. Content preamble folds prevent leak.
-  -- foldclosed(line) == line means the heading IS a fold bar (visible);
-  -- foldclosed(line) == other means it's hidden inside another fold.
-  for _, h in ipairs(headings) do
-    local fc = vim.fn.foldclosed(h.line)
-    while fc ~= -1 and fc ~= h.line do
-      vim.api.nvim_win_set_cursor(0, { fc, 0 })
-      vim.cmd('normal! zo')
-      fc = vim.fn.foldclosed(h.line)
-    end
-  end
+  ensure_headings_visible(headings)
   vim.api.nvim_win_set_cursor(0, { target_line, 0 })
 
   -- Keep preamble open (YAML frontmatter, H1, TOC — lines 1 to just before second heading)
@@ -239,15 +267,7 @@ local function cycle_heading(direction)
     return
   end
   -- Snap to containing heading so prev/next is relative to section, not cursor line
-  local raw_cur = vim.fn.line('.')
-  local cur = headings[1].line
-  for _, h in ipairs(headings) do
-    if h.line <= raw_cur then
-      cur = h.line
-    else
-      break
-    end
-  end
+  local cur = find_containing_heading(headings, vim.fn.line('.')).line
   focus_heading(headings, find_adjacent_heading(headings, cur, direction))
 end
 
@@ -271,24 +291,22 @@ local function toggle_or_focus()
   end
 
   if not on_heading then
-    -- Close the containing heading's fold, saving cursor for restore on reopen
-    local containing = headings[1].line
-    for _, h in ipairs(headings) do
-      if h.line <= cur then
-        containing = h.line
-      else
-        break
-      end
-    end
+    -- Collapse all folds, saving cursor for restore on reopen
+    local containing = find_containing_heading(headings, cur).line
     vim.b.zv_saved_cursor = vim.api.nvim_win_get_cursor(0)
+    collapse_all_headings(headings)
     vim.api.nvim_win_set_cursor(0, { containing, 0 })
-    vim.cmd('normal! zc')
+    vim.cmd('normal! zz')
     return
   end
 
   -- On a heading — toggle its fold
   if vim.fn.foldclosed('.') == -1 then
-    vim.cmd('normal! zc')
+    -- Collapse all folds (clear stale saved cursor from prior case-1)
+    vim.b.zv_saved_cursor = nil
+    collapse_all_headings(headings)
+    vim.api.nvim_win_set_cursor(0, { cur, 0 })
+    vim.cmd('normal! zz')
   else
     focus_heading(headings, cur)
     -- Restore cursor position from prior zv collapse
@@ -332,15 +350,7 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
       -- Find the containing heading (at or above cursor), close all, focus it,
       -- then restore cursor to original position
       local saved_cursor = vim.api.nvim_win_get_cursor(0)
-      local cur = saved_cursor[1]
-      local containing = headings[1]
-      for _, h in ipairs(headings) do
-        if h.line <= cur then
-          containing = h
-        else
-          break
-        end
-      end
+      local containing = find_containing_heading(headings, saved_cursor[1])
       focus_heading(headings, containing.line)
       vim.api.nvim_win_set_cursor(0, saved_cursor)
     end, 50)
