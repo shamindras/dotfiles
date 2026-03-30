@@ -66,10 +66,13 @@ local function tmux_table(key, mods, table_key, action_key)
     key = key,
     mods = mods,
     action = wezterm.action_callback(function(window, pane)
-      window:perform_action(act.Multiple({
-        act.SendKey(TMUX_PREFIX),
-        act.SendKey({ key = table_key }),
-      }), pane)
+      window:perform_action(
+        act.Multiple({
+          act.SendKey(TMUX_PREFIX),
+          act.SendKey({ key = table_key }),
+        }),
+        pane
+      )
       wezterm.sleep_ms(10)
       window:perform_action(act.SendKey({ key = action_key }), pane)
     end),
