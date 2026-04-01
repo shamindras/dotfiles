@@ -1,3 +1,5 @@
+-- {{{ Render Markdown Configuration
+
 return {
   'MeanderingProgrammer/render-markdown.nvim',
   ft = 'markdown',
@@ -48,3 +50,5 @@ return {
     },
   },
 }
+
+-- }}}

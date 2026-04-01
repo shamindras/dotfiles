@@ -1,3 +1,5 @@
+-- {{{ Format Options
+
 -- disable automatic comment continuation for all file type in normal mode
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('DisableAutoComment', { clear = true }),
@@ -32,6 +34,10 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- }}}
+
+-- {{{ Yank Highlight
+
 -- highlight yanked text with customizable duration
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
@@ -39,6 +45,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank({ timeout = 500, higroup = 'IncSearch', on_macro = true })
   end,
 })
+
+-- }}}
+
+-- {{{ Tool Config Restarts
 
 -- yazi config
 -- source: https://github.com/joshmedeski/dotfiles/blob/d337bef32b58c46c857d19448b2949f9c11d6a1f/.config/nvim/lua/config/autocmds.lua
@@ -71,6 +81,10 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   command = "execute 'silent !sketchybar --reload'",
 })
 
+-- }}}
+
+-- {{{ Window Resize
+
 -- resize splits if window got resized
 local resize_window_group = vim.api.nvim_create_augroup('resize_window', { clear = true })
 vim.api.nvim_create_autocmd({ 'VimResized' }, {
@@ -79,6 +93,10 @@ vim.api.nvim_create_autocmd({ 'VimResized' }, {
   end,
   group = resize_window_group,
 })
+
+-- }}}
+
+-- {{{ Last Location Restore
 
 -- Goto last location when opening a buffer.
 local go_last_location_buffer_group = vim.api.nvim_create_augroup('go_last_location_buffer', { clear = true })
@@ -93,7 +111,9 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   group = go_last_location_buffer_group,
 })
 
--- {{{ close some filetypes with <q>.
+-- }}}
+
+-- {{{ Close Filetypes with q
 
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('close_with_q', { clear = true }),
@@ -123,9 +143,9 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ cursor line
+-- {{{ Cursor Line (Active Window Only)
 
 -- show cursor line only in active window
 vim.api.nvim_create_autocmd({ 'InsertLeave', 'WinEnter' }, {
@@ -145,10 +165,9 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'WinLeave' }, {
   end,
 })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{ Auto create dir when saving a file, in case some intermediate directory does not exist
--- source: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua#L116-L126
+-- {{{ Auto Create Directory on Save
 vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
   group = vim.api.nvim_create_augroup('auto_create_dir', { clear = true }),
   callback = function(event)
@@ -160,11 +179,9 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
   end,
 })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ WinSeparator color line
-
--- Add this at the end of your file
+-- {{{ Window Separator Highlight
 vim.api.nvim_create_autocmd('ColorScheme', {
   pattern = '*',
   callback = function()
@@ -172,4 +189,4 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   end,
 })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}

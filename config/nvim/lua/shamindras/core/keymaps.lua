@@ -1,5 +1,3 @@
--- Keymaps
-
 -- {{{ Keymap Helper
 
 -- Keymap helper which sets default options for silent and noremap to true
@@ -10,9 +8,9 @@ local function keymap(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, opts)
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [b]uffer Operations
+-- {{{ Buffer Operations
 
 -- Width-adaptive save: echo in wide windows, notify (auto-clears 1s) in narrow
 keymap({ 'i', 'x', 'n', 's' }, '<C-s>', function()
@@ -39,15 +37,15 @@ keymap('n', '<leader>bl', '<cmd>%d _<CR>', { desc = '[b]uffer c[l]ear (no copy)'
 keymap('n', '<leader>bc', '<cmd>%d<CR>', { desc = '[b]uffer [c]lear (with copy)' })
 keymap('n', '<leader>bw', '<cmd>wall!<cr>', { desc = '[b]uffer [w]rite all' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [d]elete to Black Hole
+-- {{{ Delete to Black Hole
 
 keymap({ 'n', 'v' }, '<leader>d', '"_d', { desc = '[d]elete to black hole' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [f]ile Operations
+-- {{{ File Operations
 
 local function rename_file()
   local old_name = vim.fn.expand('%')
@@ -87,9 +85,9 @@ end
 keymap('n', '<leader>fx', make_executable, { desc = '[f]ile e[x]ecutable (chmod +x)' })
 keymap('n', '<leader>fr', rename_file, { desc = '[f]ile [r]ename' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [g]o/Navigate
+-- {{{ Go / Navigate
 
 keymap({ 'n', 'x' }, '<leader>gx', function()
   if _G.MiniOperators then
@@ -102,9 +100,9 @@ keymap({ 'n', 'x' }, '<leader>gx', function()
   end
 end, { desc = '[g]o open lin[x]/link' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [i]nsert Operations
+-- {{{ Insert Operations
 
 _G.put_empty_line = function(put_above)
   if type(put_above) == 'boolean' then
@@ -120,46 +118,46 @@ end
 keymap('n', '<leader>in', 'v:lua.put_empty_line(v:false)', { expr = true, desc = '[i]nsert line [n]ext (below)' })
 keymap('n', '<leader>ip', 'v:lua.put_empty_line(v:true)', { expr = true, desc = '[i]nsert line [p]revious (above)' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [l]azy Plugin Manager
+-- {{{ Lazy Plugin Manager
 
 keymap('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = '[l]azy menu' })
 keymap('n', '<leader>lu', '<cmd>Lazy update<cr>', { desc = '[l]azy [u]pdate' })
 keymap('n', '<leader>lp', '<cmd>Lazy profile<cr>', { desc = '[l]azy [p]rofile' })
 keymap('n', '<leader>ls', '<cmd>Lazy sync<cr>', { desc = '[l]azy [s]ync' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [n]umber Operations
+-- {{{ Number Operations
 
 keymap({ 'n', 'v' }, '<leader>na', '<C-a>', { desc = '[n]umber [a]dd (increment)' })
 keymap({ 'n', 'v' }, '<leader>nx', '<C-x>', { desc = '[n]umber subtrac[x]t (decrement)' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [p]aste (Register-Aware)
+-- {{{ Paste (Register-Aware)
 
 keymap('v', '<leader>p', '"_dP', { desc = '[p]aste (preserve register)' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [q]uit Operations
+-- {{{ Quit Operations
 
 keymap('n', '<leader>qa', '<cmd>qall!<cr>', { desc = '[q]uit [a]ll (force, no save)' })
 keymap('n', '<leader>qs', '<cmd>wqall!<cr>', { desc = '[q]uit [s]ave all and exit' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [s]earch/Replace Operations
+-- {{{ Search / Replace
 
 keymap('n', '<leader>sr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {
   desc = '[s]earch [r]eplace word under cursor',
 })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [t]oggle Operations
+-- {{{ Toggle Operations
 
 local function custom_toggle_line_numbers()
   if vim.o.relativenumber then
@@ -203,9 +201,9 @@ keymap('n', '<leader>th', function()
   end
 end, { desc = '[t]oggle [h]ipatterns comment filter' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [w]indow Operations
+-- {{{ Window Operations
 
 local function toggle_window_maximize()
   local current_win = vim.api.nvim_get_current_win()
@@ -230,9 +228,9 @@ keymap('n', '<leader>wm', toggle_window_maximize, { desc = '[w]indow [m]aximize 
 keymap('n', '<leader>wv', '<C-w>v', { desc = '[w]indow split [v]ertical' })
 keymap('n', '<leader>wx', '<cmd>close<CR>', { desc = '[w]indow close [x]' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ E[x]ecute Operations
+-- {{{ Execute Operations
 
 keymap('n', '<leader>xl', '<cmd>.lua<CR>', { desc = 'e[x]ecute [l]ine (Lua)' })
 keymap('v', '<leader>xv', ':lua<CR>', { desc = 'e[x]ecute [v]isual (Lua)' })
@@ -243,14 +241,14 @@ keymap(
   { desc = 'e[x]ecute [b]uffer (source file)' }
 )
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ [y]ank to Clipboard
+-- {{{ Yank to Clipboard
 
 keymap({ 'n', 'v' }, '<leader>y', '"+y', { desc = '[y]ank to clipboard' })
 keymap('n', '<leader>Y', '"+Y', { desc = '[y]ank line to clipboard' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
 -- {{{ Editing Text
 
@@ -268,7 +266,7 @@ keymap('i', '<Esc>', function()
   return vim.fn.col('.') == 1 and '<Esc>' or '<Esc>l'
 end, { expr = true, desc = 'Exit insert (smart cursor)' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
 -- {{{ Folding
 
@@ -397,7 +395,7 @@ keymap('n', 'zk', function()
   cycle_fold('prev')
 end, { desc = 'Previous fold (cycle)' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
 -- {{{ Macros
 
@@ -405,7 +403,7 @@ end, { desc = 'Previous fold (cycle)' })
 keymap('n', 'Q', '@q', { desc = 'Execute macro q' })
 keymap('v', 'Q', '<cmd>norm @q<cr>', { desc = 'Execute macro q on selection' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
 -- {{{ Navigation
 
@@ -426,4 +424,4 @@ keymap('n', 'J', 'mzJ`z', { desc = 'Join lines (stay in place)' })
 keymap('n', '<C-d>', '<C-d>zz', { desc = 'Half page down (centered)' })
 keymap('n', '<C-u>', '<C-u>zz', { desc = 'Half page up (centered)' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}

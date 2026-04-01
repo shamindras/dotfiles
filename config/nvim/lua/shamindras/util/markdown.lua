@@ -3,7 +3,7 @@
 
 local M = {}
 
--- {{{ Heading Query ---------------------------------------------------------------------------
+-- {{{ Heading Query
 
 -- Cache the treesitter query (parsed once per nvim session, not per keypress)
 local heading_query = vim.treesitter.query.parse('markdown', '(atx_heading) @heading')
@@ -29,9 +29,9 @@ function M.get_headings()
   return headings
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Heading Navigation ----------------------------------------------------------------------
+-- {{{ Heading Navigation
 
 -- Find next or previous heading from cursor, with wrap-around
 function M.find_adjacent_heading(headings, cur, direction)
@@ -76,9 +76,9 @@ function M.find_containing_heading(headings, cur)
   return containing
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Fold Management -------------------------------------------------------------------------
+-- {{{ Fold Management
 
 -- Autocmd group for restoring expr foldmethod after manual fold cycling
 -- Share the same augroup as ftplugin/markdown_folds.lua so clearing one
@@ -255,9 +255,9 @@ function M.focus_heading(headings, target_line)
   vim.cmd('normal! zz')
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Section Operations ----------------------------------------------------------------------
+-- {{{ Section Operations
 
 -- Get line range for a section: from heading line to line before next same-or-higher-level heading
 -- Returns (start_line, end_line) both 1-indexed, inclusive
@@ -363,9 +363,9 @@ function M.move_section(direction)
   end
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Heading Level Cycling -------------------------------------------------------------------
+-- {{{ Heading Level Cycling
 
 -- Change heading level (promote or demote) for the heading containing the cursor.
 -- direction: -1 to promote (fewer #), +1 to demote (more #). Clamped H1–H6.
@@ -412,6 +412,6 @@ function M.cycle_heading_level(direction)
   end, 50)
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
 return M

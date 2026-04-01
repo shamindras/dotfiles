@@ -1,4 +1,4 @@
--- {{{ Theme Registry -------------------------------------------------------------------------
+-- {{{ Theme Registry
 --
 -- Single source of truth for all colorscheme data. Both plugins/colorscheme.lua
 -- (spec generation, cycling) and ftplugin/markdown.lua (heading palettes)
@@ -30,7 +30,7 @@ M.order = {
 
 -- }}}
 
--- {{{ Plugin Configurations (shared per plugin family) -----------------------------------------
+-- {{{ Plugin Configurations
 
 local plugins = {
   eldritch = {
@@ -72,7 +72,7 @@ local plugins = {
 
 -- }}}
 
--- {{{ Variant Definitions (scheme + palettes per variant) --------------------------------------
+-- {{{ Variant Definitions
 
 -- Helper: merge shared plugin config with variant-specific fields
 local function variant(base, fields)
@@ -203,7 +203,7 @@ M.themes = {
 
 -- }}}
 
--- {{{ Reverse Lookup ---------------------------------------------------------------------------
+-- {{{ Reverse Lookup
 
 -- Map vim.g.colors_name → registry key (e.g. 'catppuccin-mocha' → 'catppuccin-mocha')
 M.scheme_to_key = {}

@@ -25,7 +25,7 @@ return {
       map('n', '<CR>', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts('Follow link'))
       map({ 'n', 'v' }, 'gL', '<Plug>(markdown_add_link)', opts('Add link'))
 
-      -- ------------------------------------------------------------------------- }}}
+      -- }}}
 
       -- {{{ Quick Toggles (cursor word) -------------------------------------------------------
 
@@ -45,7 +45,7 @@ return {
         vim.cmd('normal gliwi')
       end, opts('Toggle italic'))
 
-      -- ------------------------------------------------------------------------- }}}
+      -- }}}
 
       -- {{{ Dot-repeatable helpers --------------------------------------------------------------
 
@@ -58,7 +58,7 @@ return {
         vim.cmd('MDTaskToggle')
       end
 
-      -- ------------------------------------------------------------------------- }}}
+      -- }}}
 
       -- {{{ Markdown Commands -----------------------------------------------------------------
 
@@ -70,13 +70,13 @@ return {
       map('n', '<leader>mc', '<Cmd>MDInsertToc<CR>', opts('[m]arkdown insert to[c]'))
       map('n', '<leader>mC', '<Cmd>MDToc<CR>', opts('[m]arkdown to[C] (loclist)'))
 
-      -- ------------------------------------------------------------------------- }}}
+      -- }}}
 
       -- {{{ Render Toggle ---------------------------------------------------------------------
 
       map('n', '<leader>mr', '<Cmd>RenderMarkdown toggle<CR>', opts('[m]arkdown [r]ender toggle'))
 
-      -- ------------------------------------------------------------------------- }}}
+      -- }}}
     end,
   },
 }

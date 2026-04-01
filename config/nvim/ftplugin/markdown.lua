@@ -1,6 +1,6 @@
 -- Buffer-local settings for all markdown files, plus zk-specific keymaps
 
--- {{{ Buffer Settings (all markdown files) ------------------------------------------------
+-- {{{ Buffer Settings
 
 -- Auto-enable spell check
 vim.wo.spell = true
@@ -20,9 +20,9 @@ vim.b.miniai_config = {
   },
 }
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Heading Highlights (theme-aware) --------------------------------------------------
+-- {{{ Heading Highlights
 
 -- Palettes sourced from util/themes.lua (single source of truth for all theme data)
 local theme_registry = require('shamindras.util.themes')
@@ -54,9 +54,9 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 -- Apply immediately for the current colorscheme
 set_markdown_highlights()
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Heading Operations (section moves + level cycling) ------------------------------------
+-- {{{ Heading Operations
 
 local md = require('shamindras.util.markdown')
 
@@ -114,9 +114,9 @@ vim.keymap.set(
   { buf = 0, expr = true, desc = '[m]arkdown heading demote [l]' }
 )
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ zk Notebook Keymaps -----------------------------------------------------------------
+-- {{{ Zettelkasten Keymaps
 
 -- Check if we're in a zk notebook
 if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
@@ -125,7 +125,7 @@ if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
     vim.api.nvim_buf_set_keymap(0, mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
   end
 
-  -- {{{ Current Buffer Operations ----------------------------------------------------------
+  -- {{{ Current Buffer Operations
 
   -- Show backlinks to current note
   map('n', '<leader>kb', '<Cmd>ZkBacklinks<CR>', '[k]asten [b]acklinks')
@@ -135,7 +135,7 @@ if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
 
   -- }}}
 
-  -- {{{ Link Insertion ---------------------------------------------------------------------
+  -- {{{ Link Insertion
 
   -- Insert link at cursor (high frequency - lowercase l)
   map('n', '<leader>kl', '<Cmd>ZkInsertLink<CR>', '[k]asten insert [l]ink')
@@ -145,7 +145,7 @@ if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
 
   -- }}}
 
-  -- {{{ Visual Mode - Create Notes from Selection -----------------------------------------
+  -- {{{ Visual Mode Note Creation
 
   -- Create note using selection as title
   map('v', '<leader>kv', ":'<,'>ZkNewFromTitleSelection<CR>", '[k]asten note from [v]isual title')
@@ -159,4 +159,4 @@ if require('zk.util').notebook_root(vim.fn.expand('%:p')) ~= nil then
   -- }}}
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}

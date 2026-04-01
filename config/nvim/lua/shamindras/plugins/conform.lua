@@ -1,3 +1,5 @@
+-- {{{ Formatter Mapping
+
 return {
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },
@@ -13,7 +15,6 @@ return {
     },
   },
   opts = {
-    -- Enable auto-installation of formatters
     auto_install = true,
 
     formatters_by_ft = {
@@ -27,10 +28,13 @@ return {
       json = { 'jq' },
       toml = { 'taplo' },
       yaml = { 'yq' },
-      ['*'] = { 'trim_whitespace' }, -- Default trim-whitespace for all other filetypes
+      ['*'] = { 'trim_whitespace' },
     },
 
-    -- Formatter-specific settings
+    -- }}}
+
+    -- {{{ Formatter Options
+
     formatters = {
       jq = {
         -- jq-specific arguments for JSON
@@ -80,7 +84,10 @@ return {
       },
     },
 
-    -- Format on save with optimizations
+    -- }}}
+
+    -- {{{ Format on Save
+
     format_on_save = function(bufnr)
       local file_size = #vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
       local file_type = vim.bo[bufnr].filetype
@@ -96,5 +103,7 @@ return {
         lsp_fallback = true,
       }
     end,
+
+    -- }}}
   },
 }

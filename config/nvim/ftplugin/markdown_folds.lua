@@ -1,7 +1,7 @@
 -- Markdown heading fold cycling: buffer-local zv/zj/zk overrides
 -- Uses treesitter to cycle all heading levels with ancestor-aware fold management.
 
--- {{{ Helpers -------------------------------------------------------------------------------
+-- {{{ Helpers
 
 -- Cache the treesitter query (parsed once per nvim session, not per keypress)
 local heading_query = vim.treesitter.query.parse('markdown', '(atx_heading) @heading')
@@ -107,9 +107,9 @@ local function ensure_headings_visible(headings)
   end
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Focus Heading -------------------------------------------------------------------------
+-- {{{ Focus Heading
 
 -- Autocmd group for restoring expr foldmethod after manual fold cycling
 local fold_augroup = vim.api.nvim_create_augroup('MarkdownFoldRestore', { clear = true })
@@ -272,9 +272,9 @@ local function focus_heading(headings, target_line)
   vim.cmd('normal! zz')
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Keymaps -------------------------------------------------------------------------------
+-- {{{ Keymaps
 
 -- Cycle to next/prev heading (shared logic for zj/zk)
 local function cycle_heading(direction)
@@ -361,9 +361,9 @@ vim.keymap.set('n', 'zk', function()
   cycle_heading('prev')
 end, { buf = 0, desc = 'Previous heading (cycle)' })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Auto-collapse on buffer load ------------------------------------------------------------
+-- {{{ Auto-collapse on Buffer Load
 
 -- Close all folds, then focus the heading nearest to cursor (reuses zv logic).
 -- Uses BufWinEnter (fires after buffer is displayed) + defer to ensure folds exist.
@@ -390,4 +390,4 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
   end,
 })
 
--- ------------------------------------------------------------------------- }}}
+-- }}}

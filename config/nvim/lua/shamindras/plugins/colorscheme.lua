@@ -1,4 +1,4 @@
--- {{{ Colorscheme Configuration -------------------------------------------------------------------
+-- {{{ Colorscheme Configuration
 --
 -- Generates lazy.nvim plugin specs from the theme registry (util/themes.lua).
 -- Only the active theme's plugin loads eagerly; all others are lazy until cycled to.
@@ -9,7 +9,7 @@ local themes = require('shamindras.util.themes')
 
 -- }}}
 
--- {{{ State Management --------------------------------------------------------------------------
+-- {{{ State Management
 
 local function get_state_file()
   return vim.fn.stdpath('state') .. '/colorscheme_state.txt'
@@ -48,7 +48,7 @@ local active_key, current_index = get_active_theme()
 
 -- }}}
 
--- {{{ Colorscheme Loading -----------------------------------------------------------------------
+-- {{{ Colorscheme Loading
 
 local function load_colorscheme(key)
   local theme = themes.themes[key]
@@ -81,7 +81,7 @@ end
 
 -- }}}
 
--- {{{ Spec Generation ---------------------------------------------------------------------------
+-- {{{ Spec Generation
 
 -- Deduplicate: one lazy.nvim spec per plugin, not per variant.
 -- The active variant's plugin is eager; all other plugins are lazy.
