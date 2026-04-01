@@ -1,7 +1,6 @@
 local M = {}
-local Snacks = require('snacks')
 
--- {{{ Layout Configuration -----------------------------------------------------------------------
+-- {{{ Layout Configuration
 
 M.layout_config = {
   height = 0.7,
@@ -10,7 +9,7 @@ M.layout_config = {
 
 -- }}}
 
--- {{{ Custom Arguments for Pickers ---------------------------------------------------------------
+-- {{{ Custom Arguments for Pickers
 
 -- Custom fd args for the find files picker
 M.fd_args = {
@@ -43,7 +42,7 @@ M.ripgrep_args = {
 
 -- }}}
 
--- {{{ Ivy Layout Configuration -------------------------------------------------------------------
+-- {{{ Ivy Layout Configuration
 
 M.ivy_layout = {
   layout = {
@@ -71,7 +70,7 @@ M.ivy_layout = {
 
 -- }}}
 
--- {{{ Wrapper Functions -------------------------------------------------------------------------
+-- {{{ Wrapper Functions
 
 -- Wrapper function to apply ivy layout to a picker
 function M.with_ivy_layout(picker_func, opts)
@@ -117,7 +116,7 @@ end
 
 -- }}}
 
--- {{{ TODO Comments Picker (colored categories) ------------------------------------------------
+-- {{{ TODO Comments Picker
 
 -- Keyword → highlight group mapping (matches mini.hipatterns config in mini.lua)
 local todo_keyword_hl = {
@@ -239,9 +238,9 @@ function M.todo_comments_picker(filter)
   })
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Curated Colorscheme Picker ---------------------------------------------------------------
+-- {{{ Curated Colorscheme Picker
 
 -- Picker showing only registered themes from util/themes.lua with live preview.
 -- on_change applies each theme as you browse; on_close restores on cancel.
@@ -339,9 +338,9 @@ function M.colorscheme_picker()
   })
 end
 
--- ------------------------------------------------------------------------- }}}
+-- }}}
 
--- {{{ Helper Function for Buffers Picker --------------------------------------------------------
+-- {{{ Buffers Picker
 
 -- Helper function to configure and show the buffers picker
 function M.buffers_picker(opts)
@@ -368,101 +367,6 @@ function M.buffers_picker(opts)
     -- In case you want to override the layout for this keymap
     layout = 'ivy',
   })
-end
-
--- }}}
-
--- {{{ Keymap Configuration -----------------------------------------------------------------------
-
--- Function to set up all picker-related keymaps
-function M.setup_keymaps()
-  -- Helper function for key mapping
-  local function keymap(key, picker_func, opts)
-    opts = opts or {}
-    vim.keymap.set('n', key, function()
-      picker_func(opts)
-    end, { noremap = true, silent = true, desc = opts.desc or '' })
-  end
-
-  -- Top Pickers & Explorer
-  keymap('<leader><space>', function()
-    M.picker_with_fd(Snacks.picker.smart)
-  end, { desc = '[s]mart [F]ind Files' })
-  keymap('<leader>,', function()
-    M.buffers_picker()
-  end, { desc = '[b]uffers' })
-  keymap('<leader>/', function()
-    M.grep_with_ripgrep()
-  end, { desc = '[g]rep' })
-  keymap('<leader>:', function()
-    M.with_ivy_layout(Snacks.picker.command_history)
-  end, { desc = '[c]ommand [h]istory' })
-  keymap('<leader>fe', function()
-    Snacks.explorer()
-  end, { desc = '[f]ile [e]xplorer' })
-  keymap('<leader>lg', function()
-    Snacks.lazygit()
-  end, { desc = '[l]azy [g]it' })
-
-  -- Find Pickers
-  keymap('<leader>fb', function()
-    M.buffers_picker()
-  end, { desc = '[f]ind [b]uffers' })
-  keymap('<leader>fc', function()
-    M.with_ivy_layout(Snacks.picker.files, { cwd = vim.fn.stdpath('config') })
-  end, { desc = '[f]ind [c]onfig file' })
-  keymap('<leader>ff', function()
-    M.picker_with_fd(Snacks.picker.files)
-  end, { desc = '[f]ind [f]iles' })
-
-  -- Grep Pickers with ripgrep arguments
-  keymap('<leader>sg', function()
-    M.grep_with_ripgrep()
-  end, { desc = '[s]earch [g]rep' })
-  keymap('<leader>sw', function()
-    M.with_ivy_layout(Snacks.picker.grep_word)
-  end, { desc = '[s]earch selected [w]ord', mode = { 'n', 'x' } })
-
-  -- Search
-  keymap('<leader>s"', function()
-    M.with_ivy_layout(Snacks.picker.registers)
-  end, { desc = '[s]earch [r]egisters' })
-  keymap('<leader>sd', function()
-    M.with_ivy_layout(Snacks.picker.diagnostics)
-  end, { desc = '[s]earch [d]iagnostics' })
-  keymap('<leader>sh', function()
-    M.with_ivy_layout(Snacks.picker.help)
-  end, { desc = '[s]earch [h]elp pages' })
-  keymap('<leader>si', function()
-    M.with_ivy_layout(Snacks.picker.icons)
-  end, { desc = '[s]earch [i]cons' })
-  keymap('<leader>sk', function()
-    M.with_ivy_layout(Snacks.picker.keymaps)
-  end, { desc = '[s]earch [k]eymaps' })
-  keymap('<leader>sq', function()
-    M.with_ivy_layout(Snacks.picker.qflist)
-  end, { desc = '[s]earch [q]uickfix list' })
-  keymap('<leader>sn', function()
-    M.with_ivy_layout(Snacks.picker.notifications)
-  end, { desc = '[s]earch [n]otification history' })
-  keymap('<leader>st', function()
-    M.todo_comments_picker()
-  end, { desc = '[s]earch [t]odo comments (all)' })
-  keymap('<leader>sT', function()
-    M.todo_comments_picker('TODO')
-  end, { desc = '[s]earch [T]ODO only' })
-  keymap('<leader>sF', function()
-    M.todo_comments_picker('FIXME')
-  end, { desc = '[s]earch [F]IXME/BUG only' })
-  keymap('<leader>sN', function()
-    M.todo_comments_picker('NOTE')
-  end, { desc = '[s]earch [N]OTE/INFO only' })
-  keymap('<leader>sW', function()
-    M.todo_comments_picker('WARN')
-  end, { desc = '[s]earch [W]ARN only' })
-  keymap('<leader>pc', function()
-    M.colorscheme_picker()
-  end, { desc = '[p]ick [c]olorscheme' })
 end
 
 -- }}}
