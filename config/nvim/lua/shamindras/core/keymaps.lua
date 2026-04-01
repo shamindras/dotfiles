@@ -27,7 +27,11 @@ keymap({ 'i', 'x', 'n', 's' }, '<C-s>', function()
   else
     vim.notify(msg, vim.log.levels.INFO)
     vim.defer_fn(function()
-      require('mini.notify').clear()
+      if package.loaded['mini.notify'] then
+        require('mini.notify').clear()
+      else
+        vim.cmd('echo ""')
+      end
     end, 1000)
   end
 end, { desc = 'Save file' })
@@ -84,21 +88,6 @@ end
 
 keymap('n', '<leader>fx', make_executable, { desc = '[f]ile e[x]ecutable (chmod +x)' })
 keymap('n', '<leader>fr', rename_file, { desc = '[f]ile [r]ename' })
-
--- }}}
-
--- {{{ Go / Navigate
-
-keymap({ 'n', 'x' }, '<leader>gx', function()
-  if _G.MiniOperators then
-    local gx_keymap = vim.fn.maparg('gX', 'n', false, true)
-    if gx_keymap.callback then
-      gx_keymap.callback()
-    end
-  else
-    vim.cmd('normal! gx')
-  end
-end, { desc = '[g]o open lin[x]/link' })
 
 -- }}}
 
@@ -185,21 +174,6 @@ keymap('n', '<leader>ts', function()
   end
 end, { desc = '[t]oggle [s]pell check' })
 
-keymap('n', '<leader>th', function()
-  vim.g.hipatterns_comment_only = not vim.g.hipatterns_comment_only
-  -- Force re-highlight all attached buffers
-  local hi = require('mini.hipatterns')
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(buf) then
-      pcall(hi.update, buf)
-    end
-  end
-  if vim.g.hipatterns_comment_only then
-    vim.notify('Hipatterns: comment-only')
-  else
-    vim.notify('Hipatterns: all matches')
-  end
-end, { desc = '[t]oggle [h]ipatterns comment filter' })
 
 -- }}}
 

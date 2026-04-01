@@ -25,6 +25,16 @@ return {
     })
 
     require('mini.operators').setup()
+
+    vim.keymap.set({ 'n', 'x' }, '<leader>gx', function()
+      local gx_keymap = vim.fn.maparg('gX', 'n', false, true)
+      if gx_keymap.callback then
+        gx_keymap.callback()
+      else
+        vim.cmd('normal! gx')
+      end
+    end, { desc = '[g]o open lin[x]/link' })
+
     require('mini.surround').setup()
     require('mini.move').setup()
     require('mini.pairs').setup()
@@ -252,6 +262,21 @@ return {
         failed = kw('FAILED', 'MiniHipatternsTest'),
       },
     })
+
+    vim.keymap.set('n', '<leader>th', function()
+      vim.g.hipatterns_comment_only = not vim.g.hipatterns_comment_only
+      -- Force re-highlight all attached buffers
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) then
+          pcall(hipatterns.update, buf)
+        end
+      end
+      if vim.g.hipatterns_comment_only then
+        vim.notify('Hipatterns: comment-only')
+      else
+        vim.notify('Hipatterns: all matches')
+      end
+    end, { desc = '[t]oggle [h]ipatterns comment filter' })
 
     -- }}}
 
