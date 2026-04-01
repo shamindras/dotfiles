@@ -2,7 +2,7 @@
 
 ## Overview
 
-Neovim editor config with lazy.nvim plugin manager, ~45 plugins, leader-based
+Neovim editor config with lazy.nvim plugin manager, ~29 plugins, leader-based
 keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 
 - **Docs**: https://neovim.io/doc/
@@ -16,7 +16,7 @@ keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 ```
 config/nvim/
 ├── init.lua                          # Entry point: leader key, lazy.nvim setup
-├── lazy-lock.json                    # Plugin version lockfile (~45 plugins)
+├── lazy-lock.json                    # Plugin version lockfile (~29 plugins)
 ├── after/
 │   └── queries/markdown/
 │       └── textobjects.scm           # Custom section text object (@section.outer/inner)
@@ -30,45 +30,45 @@ config/nvim/
 │   ├── core/
 │   │   ├── options.lua               # Editor settings (12 fold sections)
 │   │   ├── keymaps.lua               # ~370 lines of leader-based keymaps
-│   │   ├── autocmds.lua              # ~164 lines (lint, format, tool restarts)
+│   │   ├── autocmds.lua              # ~176 lines (lint, format, tool restarts)
 │   │   └── lazy-bootstrap.lua        # Auto-downloads lazy.nvim if missing
 │   └── plugins/
-│       ├── lspconfig.lua             # LSP + Mason + Fidget
-│       ├── cmp.lua                   # Completion (nvim-cmp + LuaSnip)
+│       ├── lspconfig.lua             # LSP + Mason (lazydev, blink.cmp capabilities)
+│       ├── cmp.lua                   # Completion (blink.cmp + LuaSnip)
 │       ├── conform.lua               # Multi-tool formatter
 │       ├── nvim-lint.lua             # Multi-tool linter (100ms debounce)
 │       ├── treesitter.lua            # Syntax highlighting + text objects
 │       ├── colorscheme.lua           # 6-plugin theme registry (12 variants, dark-to-light)
 │       ├── snacks/
-│       │   ├── init.lua              # Fuzzy finder, file explorer, lazygit
-│       │   └── pickers.lua           # Custom Snacks picker configs (fd, rg, ivy)
+│       │   ├── init.lua              # Fuzzy finder, file explorer, lazygit, buffer delete
+│       │   └── pickers.lua           # Custom Snacks picker configs (fd, rg, ivy, todo, colorscheme)
 │       ├── zk.lua                    # Zettelkasten integration
 │       ├── markdown.lua              # Markdown editing (tadmccorkle/markdown.nvim)
 │       ├── render-markdown.lua       # In-buffer markdown rendering
-│       ├── mini.lua                  # 14 mini.nvim modules (incl. hipatterns for TODO/FIXME)
+│       ├── mini.lua                  # Single mini.nvim spec (12 modules)
 │       ├── flash.nvim                # Enhanced f/t motion
 │       ├── smart-splits.lua          # Tmux-aware splits (C-hjkl)
-│       ├── comment.lua               # Comment toggling
-│       ├── noice.lua                 # Cmdline popup
-│       └── backout.lua               # Alt+hl escape insert/cmdline
+│       └── noice.lua                 # Cmdline popup
 └── spell/
     └── en.utf-8.add*                 # Custom spell dictionary
 ```
 
 ### Key Patterns
 
-- **Plugin manager**: lazy.nvim with event-based lazy loading
+- **Plugin manager**: lazy.nvim with `defaults = { lazy = true }` and event/keys-based loading
 - **Namespace**: `shamindras.core` (base) + `shamindras.plugins` (specs)
 - **Leader key**: Space (set before plugin load in `init.lua`)
 - **State**: colorscheme persisted to `~/.local/state/nvim/colorscheme_state.txt`
+- **Fold markers**: `-- {{{ Descriptive Name` / `-- }}}` in all Lua config files (>20 lines)
 
 ### Keymap Organization
 
 | Prefix       | Scope                                             |
 | ------------ | ------------------------------------------------- |
-| `<leader>b`  | Buffer ops (format, yank, write)                  |
+| `<leader>b`  | Buffer ops (format, delete, yank, write)          |
+| `<leader>c`  | Code/LSP (definition, references, actions, rename)|
 | `<leader>f`  | File ops (rename, explorer, config browser, lint) |
-| `<leader>g`  | Go/navigation (link opening)                      |
+| `<leader>g`  | Go/navigate (link opening)                        |
 | `<leader>k`  | Zettelkasten (daily, idea, search, backlinks)     |
 | `<leader>l`  | Lazy manager (menu, update, profile, sync)        |
 | `<leader>m`  | Markdown ops (checkbox, TOC, list, render toggle) |
@@ -79,9 +79,9 @@ config/nvim/
 
 ### Plugin Categories
 
-**Completion & LSP**: nvim-lspconfig, mason.nvim, nvim-cmp, LuaSnip, conform.nvim, nvim-lint, lazydev.nvim
-**Finding & Navigation**: snacks.nvim (pickers), flash.nvim, smart-splits.nvim, mini.files
-**Syntax & Editing**: treesitter, mini.ai, mini.surround, mini.pairs, mini.move, Comment.nvim
+**Completion & LSP**: nvim-lspconfig, mason.nvim, blink.cmp, LuaSnip, conform.nvim, nvim-lint, lazydev.nvim
+**Finding & Navigation**: snacks.nvim (pickers, explorer, lazygit, bufdelete), flash.nvim, smart-splits.nvim, mini.files
+**Syntax & Editing**: treesitter, mini.ai, mini.surround, mini.pairs, mini.move (built-in `gc`/`gcc` for commenting)
 **Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, mini.hipatterns, noice.nvim
 **Markdown**: markdown.nvim (editing/motions), render-markdown.nvim (rendering), marksman (LSP, non-zk files)
 **Special**: zk-nvim (notes), tmux-resurrect awareness
@@ -159,6 +159,19 @@ Three plugins + formatter, all lazy-loaded on `ft = "markdown"`:
 
 Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 
+### LSP Keybindings
+
+| Key          | Action              | Mnemonic             |
+| ------------ | ------------------- | -------------------- |
+| `<leader>cd` | Go to Definition    | [c]ode [d]efinition  |
+| `<leader>cr` | Go to References    | [c]ode [r]eferences  |
+| `<leader>ci` | Go to Implementation| [c]ode [i]mplementation |
+| `<leader>ca` | Code Actions        | [c]ode [a]ctions     |
+| `<leader>cn` | Rename Symbol       | [c]ode re[n]ame      |
+| `<leader>ct` | Type Definition     | [c]ode [t]ype        |
+| `<leader>cs` | Signature Help      | [c]ode [s]ignature   |
+| `K`          | Hover Documentation | Standard Vim         |
+
 ### LSP Routing
 
 - Files inside `$ZK_NOTEBOOK_DIR` → zk LSP (auto-attach via zk-nvim)
@@ -171,7 +184,7 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 - Section text object `h` via mini.ai + custom treesitter query
   (`after/queries/markdown/textobjects.scm`)
 - Theme-aware heading + code block highlights — palettes imported from
-  `util/themes.lua` for all 4 themes; auto-updates on `ColorScheme` event
+  `util/themes.lua` for all 12 themes; auto-updates on `ColorScheme` event
 - Buffer-local `zv`/`zj`/`zk` fold cycling — uses treesitter `atx_heading`
   query to cycle all heading levels (overrides global fold-cycling keymaps)
 
@@ -184,7 +197,31 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 
 Servers use the nvim 0.11 native `vim.lsp.config()` + `vim.lsp.enable()` API.
 Homebrew-managed servers (marksman) are excluded from Mason via `mason_exclude`
-list and set up directly in `lspconfig.lua`.
+list and set up directly in `lspconfig.lua`. LSP capabilities provided by
+`require('blink.cmp').get_lsp_capabilities()`.
+
+## Completion
+
+Completion is powered by **blink.cmp** (replaced nvim-cmp):
+
+- **Keymap preset**: `default` — `<C-y>` accept, `<C-n>`/`<C-p>` navigate
+- **Sources**: lsp, path, snippets, buffer (+ lazydev for lua files)
+- **Snippets**: LuaSnip integration via `snippets = { preset = 'luasnip' }`
+- **Signature help**: enabled
+- **Fuzzy**: Lua implementation
+
+## Plugin Consolidation
+
+**mini.nvim**: single `'nvim-mini/mini.nvim'` spec with `event = 'VeryLazy'`.
+All 12 modules configured in one `config` function, organized by fold sections:
+Text Editing (ai, operators, surround, move, pairs), General Workflow
+(bracketed, files), Appearance (icons, statusline, notify, hipatterns),
+Keymap Discovery (clue).
+
+**snacks.nvim**: single spec with `lazy = false`, `priority = 1000` per
+official docs. Module configs in `opts`, all keymaps in `keys` array.
+`pickers.lua` is a utility module providing layout config, wrapper functions,
+and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()`.
 
 ## Development Notes
 
@@ -194,11 +231,13 @@ list and set up directly in `lspconfig.lua`.
 - **Timing chain**: `ttimeoutlen=5` (key code sequences) + tmux `escape-time 0`
   + Ghostty atomic key codes = instant Esc-to-Normal. Do not increase
   `ttimeoutlen` above ~10ms or Esc will feel laggy.
+- **Commenting**: built-in `gc`/`gcc` (Neovim 0.10+), no plugin needed
+- **LSP progress**: mini.notify built-in `lsp_progress` (no fidget.nvim)
 - Format on save via conform.nvim (skips files >100KB)
 - Lint debounce: 100ms on BufWritePost/InsertLeave
 - Reload config: `:source $MYVIMRC` or `<leader>xb` (source current file)
 - Check LSP: `:LspInfo` — check Mason: `:Mason`
-- Profile startup: `<leader>lp`
+- Profile startup: `<leader>lp` (~24ms startup, 10/29 plugins loaded at start)
 - View keymaps: `<leader>sk`
 - **Treesitter parsers**: nvim 0.11+ bundles parsers for c, lua, markdown,
   markdown_inline, query, vim, vimdoc. `ensure_installed` lists only
