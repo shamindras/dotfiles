@@ -1,9 +1,8 @@
+-- {{{ Navigation Keymaps
+
 return {
   'mrjones2014/smart-splits.nvim',
-  lazy = true, -- Change to true since we'll load it on demand
-  event = { 'VeryLazy' },
   keys = {
-    -- Moving between splits
     {
       '<C-h>',
       function()
@@ -45,7 +44,10 @@ return {
       desc = 'Move to previous split',
     },
 
-    -- Swapping buffers
+    -- }}}
+
+    -- {{{ Swap Keymaps
+
     {
       '<leader>wH',
       function()
@@ -79,12 +81,8 @@ return {
       desc = 'Swap with right buffer',
     },
   },
-  config = function()
-    require('smart-splits').setup({
-      -- Prevent multiplexer pane navigation when the tmux pane is zoomed.
-      -- Without this, a WinEnter event fired by the SIGWINCH on zoom causes
-      -- smart-splits to call select-pane, immediately stealing focus away.
-      disable_multiplexer_nav_when_zoomed = true,
-    })
-  end,
+
+  -- }}}
+
+  opts = {},
 }

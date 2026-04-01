@@ -3,7 +3,6 @@ return {
   dependencies = {
     'folke/snacks.nvim', -- Required: we use snacks pickers and ivy layout
   },
-  event = 'VeryLazy',
   keys = {
     -- Pre-define keys for lazy loading with which-key labels
     { '<leader>k', desc = '+[k]asten (zk notes)' },
@@ -22,7 +21,7 @@ return {
     { '<leader>kT', desc = '[k]asten sync [T]emplates' },
   },
   config = function()
-    -- {{{ Helper Functions -------------------------------------------------------------------
+    -- {{{ Helper Functions
 
     -- Get notebook directory
     local function get_notebook_dir()
@@ -68,7 +67,7 @@ return {
 
     -- }}}
 
-    -- {{{ Notification Helpers ---------------------------------------------------------------
+    -- {{{ Notification Helpers
 
     -- Create note with automatic notification
     local function create_note_with_notification(options, note_type)
@@ -138,7 +137,7 @@ return {
 
     -- }}}
 
-    -- {{{ Interactive Note Creation ----------------------------------------------------------
+    -- {{{ Interactive Note Creation
 
     -- Create idea note with interactive prompt and validation
     local function create_idea_note(sync_first)
@@ -169,7 +168,7 @@ return {
 
     -- }}}
 
-    -- {{{ Setup zk-nvim ----------------------------------------------------------------------
+    -- {{{ Setup zk-nvim
 
     local zk = require('zk')
     -- Lazy-load snacks_pickers to avoid circular dependency
@@ -204,7 +203,7 @@ return {
 
     -- }}}
 
-    -- {{{ Custom Commands --------------------------------------------------------------------
+    -- {{{ Custom Commands
 
     local commands = require('zk.commands')
 
@@ -286,7 +285,7 @@ return {
 
     -- }}}
 
-    -- {{{ Global Keymaps ---------------------------------------------------------------------
+    -- {{{ Global Keymaps
 
     local opts = { noremap = true, silent = true }
 

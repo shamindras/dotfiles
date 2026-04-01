@@ -1,6 +1,6 @@
 -- Adapted from the amazing kickstart.nvim
 
--- {{{ Set leader keys -------------------------------------------------------------------------------
+-- {{{ Leader Keys
 
 -- Set <space> as the leader key
 -- Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -9,7 +9,7 @@ vim.g.maplocalleader = ' '
 
 -- }}}
 
--- {{{ Load custom settings --------------------------------------------------------------------------
+-- {{{ Core Modules
 
 require('shamindras.core.options') -- general options
 require('shamindras.core.autocmds') -- autocommands
@@ -18,7 +18,7 @@ require('shamindras.core.lazy-bootstrap') -- lazy package manager
 
 -- }}}
 
--- {{{ Configure and install plugins ------------------------------------------------------------------------
+-- {{{ Plugin Setup
 
 require('lazy').setup({
 
@@ -52,17 +52,11 @@ require('lazy').setup({
   -- mini.nvim
   require('shamindras.plugins.mini'),
 
-  -- comment
-  require('shamindras.plugins.comment'),
-
   -- noice
   require('shamindras.plugins.noice'),
 
   -- smart-splits
   require('shamindras.plugins.smart-splits'),
-
-  -- backout
-  require('shamindras.plugins.backout'),
 
   -- zk (zettelkasten)
   require('shamindras.plugins.zk'),
@@ -71,13 +65,10 @@ require('lazy').setup({
   require('shamindras.plugins.markdown'),
   require('shamindras.plugins.render-markdown'),
 }, {
-  defaults = { lazy = false },
+  defaults = { lazy = true },
   install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },
   checker = { enabled = true, notify = false },
   performance = {
-    cache = {
-      enabled = true,
-    },
     rtp = {
       disabled_plugins = {
         '2html_plugin',
@@ -110,7 +101,6 @@ require('lazy').setup({
       },
     },
   },
-  debug = false,
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
@@ -133,5 +123,3 @@ require('lazy').setup({
 })
 
 -- }}}
-
--- vim: ts=2 sts=2 sw=2 et

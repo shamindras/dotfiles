@@ -1,16 +1,16 @@
+-- {{{ Dependencies
+
 return {
   'mfussenegger/nvim-lint',
   event = { 'BufReadPre', 'BufNewFile', 'InsertLeave' },
   dependencies = {
     {
       'williamboman/mason.nvim',
-      lazy = false,
       config = true,
       priority = 100,
     },
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      lazy = false,
       config = function()
         require('mason-tool-installer').setup({
           ensure_installed = {
@@ -30,14 +30,17 @@ return {
       priority = 90,
     },
   },
+
+  -- }}}
+
+  -- {{{ Linter Configuration
+
   config = function()
     local lint = require('lint')
 
-    -- Add mason bin path to ensure executables can be found
     local mason_bin = vim.fn.stdpath('data') .. '/mason/bin'
     vim.env.PATH = mason_bin .. ':' .. vim.env.PATH
 
-    -- Configure linters per filetype
     lint.linters_by_ft = {
       bash = { 'shellcheck' },
       cmake = { 'cmakelint' },
@@ -67,7 +70,10 @@ return {
       }
     end
 
-    -- Set up debounced linting
+    -- }}}
+
+    -- {{{ Debounced Linting
+
     local DEBOUNCE_TIME = 100
     local timer = nil
 
@@ -100,5 +106,7 @@ return {
     vim.keymap.set('n', '<leader>fl', function()
       require('lint').try_lint()
     end, { desc = '[f]ile [l]int (trigger)' })
+
+    -- }}}
   end,
 }

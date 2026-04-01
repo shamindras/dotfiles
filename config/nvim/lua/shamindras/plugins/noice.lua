@@ -1,3 +1,5 @@
+-- {{{ Cmdline Configuration
+
 return {
   'folke/noice.nvim',
   event = 'VimEnter',
@@ -38,14 +40,7 @@ return {
         },
       },
     },
-    routes = {},
-    presets = {
-      -- Disable all presets
-      bottom_search = false,
-      command_palette = false,
-      long_message_to_split = false,
-      inc_rename = false,
-      lsp_doc_border = false,
-    },
   },
 }
+
+-- }}}
