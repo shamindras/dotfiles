@@ -28,9 +28,6 @@ require('lazy').setup({
   -- which.key
   -- require('shamindras.plugins.which-key'),
 
-  -- todo comments
-  require('shamindras.plugins.todo-comments'),
-
   -- fuzzy finder
   require('shamindras.plugins.snacks'),
 

@@ -182,6 +182,22 @@ keymap('n', '<leader>ts', function()
   end
 end, { desc = '[t]oggle [s]pell check' })
 
+keymap('n', '<leader>th', function()
+  vim.g.hipatterns_comment_only = not vim.g.hipatterns_comment_only
+  -- Force re-highlight all attached buffers
+  local hi = require('mini.hipatterns')
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+      pcall(hi.update, buf)
+    end
+  end
+  if vim.g.hipatterns_comment_only then
+    vim.notify('Hipatterns: comment-only')
+  else
+    vim.notify('Hipatterns: all matches')
+  end
+end, { desc = '[t]oggle [h]ipatterns comment filter' })
+
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ [w]indow Operations

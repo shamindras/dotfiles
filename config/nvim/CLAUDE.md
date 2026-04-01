@@ -2,7 +2,7 @@
 
 ## Overview
 
-Neovim editor config with lazy.nvim plugin manager, ~47 plugins, leader-based
+Neovim editor config with lazy.nvim plugin manager, ~45 plugins, leader-based
 keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 
 - **Docs**: https://neovim.io/doc/
@@ -16,7 +16,7 @@ keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 ```
 config/nvim/
 ├── init.lua                          # Entry point: leader key, lazy.nvim setup
-├── lazy-lock.json                    # Plugin version lockfile (~47 plugins)
+├── lazy-lock.json                    # Plugin version lockfile (~45 plugins)
 ├── after/
 │   └── queries/markdown/
 │       └── textobjects.scm           # Custom section text object (@section.outer/inner)
@@ -44,10 +44,9 @@ config/nvim/
 │       ├── zk.lua                    # Zettelkasten integration
 │       ├── markdown.lua              # Markdown editing (tadmccorkle/markdown.nvim)
 │       ├── render-markdown.lua       # In-buffer markdown rendering
-│       ├── mini.lua                  # 13 mini.nvim modules
+│       ├── mini.lua                  # 14 mini.nvim modules (incl. hipatterns for TODO/FIXME)
 │       ├── flash.nvim                # Enhanced f/t motion
 │       ├── smart-splits.lua          # Tmux-aware splits (C-hjkl)
-│       ├── todo-comments.lua         # TODO/FIXME highlighting
 │       ├── comment.lua               # Comment toggling
 │       ├── noice.lua                 # Cmdline popup
 │       └── backout.lua               # Alt+hl escape insert/cmdline
@@ -73,8 +72,8 @@ config/nvim/
 | `<leader>l`  | Lazy manager (menu, update, profile, sync)        |
 | `<leader>m`  | Markdown ops (checkbox, TOC, list, render toggle) |
 | `<leader>n`  | Number ops (increment, decrement)                 |
-| `<leader>s`  | Search/replace (grep, diagnostics, replace word)  |
-| `<leader>t`  | Toggle (line numbers, spell check, theme)         |
+| `<leader>s`  | Search/replace (grep, diagnostics, todo comments) |
+| `<leader>t`  | Toggle (line numbers, spell, theme, hipatterns)   |
 | `<leader>w`  | Window (split, equalize, maximize, swap)          |
 
 ### Plugin Categories
@@ -82,7 +81,7 @@ config/nvim/
 **Completion & LSP**: nvim-lspconfig, mason.nvim, nvim-cmp, LuaSnip, conform.nvim, nvim-lint, lazydev.nvim
 **Finding & Navigation**: snacks.nvim (pickers), flash.nvim, smart-splits.nvim, mini.files
 **Syntax & Editing**: treesitter, mini.ai, mini.surround, mini.pairs, mini.move, Comment.nvim
-**Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, noice.nvim, todo-comments
+**Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, mini.hipatterns, noice.nvim
 **Markdown**: markdown.nvim (editing/motions), render-markdown.nvim (rendering), marksman (LSP, non-zk files)
 **Special**: zk-nvim (notes), tmux-resurrect awareness
 

@@ -117,6 +117,130 @@ end
 
 -- }}}
 
+-- {{{ TODO Comments Picker (colored categories) ------------------------------------------------
+
+-- Keyword → highlight group mapping (matches mini.hipatterns config in mini.lua)
+local todo_keyword_hl = {
+  FIXME = 'MiniHipatternsFixme',
+  BUG = 'MiniHipatternsFixme',
+  FIXIT = 'MiniHipatternsFixme',
+  ISSUE = 'MiniHipatternsFixme',
+  TODO = 'MiniHipatternsTodo',
+  HACK = 'MiniHipatternsHack',
+  NOTE = 'MiniHipatternsNote',
+  INFO = 'MiniHipatternsNote',
+  WARN = 'MiniHipatternsWarn',
+  WARNING = 'MiniHipatternsWarn',
+  XXX = 'MiniHipatternsWarn',
+  PERF = 'MiniHipatternsPerf',
+  OPTIM = 'MiniHipatternsPerf',
+  OPTIMIZE = 'MiniHipatternsPerf',
+  PERFORMANCE = 'MiniHipatternsPerf',
+  TEST = 'MiniHipatternsTest',
+  TESTING = 'MiniHipatternsTest',
+  PASSED = 'MiniHipatternsTest',
+  FAILED = 'MiniHipatternsTest',
+}
+
+-- Keyword category groups for filtered pickers (deterministic order for badge detection)
+local todo_keyword_groups = {
+  TODO = { 'TODO' },
+  FIXME = { 'FIXME', 'BUG', 'FIXIT', 'ISSUE' },
+  NOTE = { 'NOTE', 'INFO' },
+  WARN = { 'WARN', 'WARNING', 'XXX' },
+  HACK = { 'HACK' },
+  PERF = { 'PERF', 'OPTIM', 'OPTIMIZE', 'PERFORMANCE' },
+  TEST = { 'TEST', 'TESTING', 'PASSED', 'FAILED' },
+}
+
+-- All keywords in priority order (primary first, then alternates)
+local todo_all_keywords = {
+  'TODO',
+  'FIXME',
+  'HACK',
+  'NOTE',
+  'WARN',
+  'PERF',
+  'TEST',
+  'BUG',
+  'FIXIT',
+  'ISSUE',
+  'INFO',
+  'WARNING',
+  'XXX',
+  'OPTIM',
+  'OPTIMIZE',
+  'PERFORMANCE',
+  'TESTING',
+  'PASSED',
+  'FAILED',
+}
+
+-- Build a comment-prefix-aware rg pattern for the given keywords.
+-- Covers: // # -- /* <!-- ; % (C/JS/Python/Shell/Lua/CSS/HTML/Lisp/LaTeX)
+local function build_todo_rg_pattern(keywords)
+  return '(<!--|/\\*|//|--|#|;|%).*?\\b(' .. table.concat(keywords, '|') .. ')\\b'
+end
+
+-- Picker with colored keyword categories, pre-filtered to comment lines.
+-- Uses Snacks.picker() with pre-loaded items so the input bar is clean.
+-- @param filter string|nil  Category name (e.g. "TODO", "FIXME") to restrict results
+function M.todo_comments_picker(filter)
+  local keywords
+  local title = 'Todo Comments'
+  if filter and todo_keyword_groups[filter] then
+    keywords = todo_keyword_groups[filter]
+    title = filter .. ' Comments'
+  else
+    keywords = todo_all_keywords
+  end
+
+  local rg_pattern = build_todo_rg_pattern(keywords)
+  local cmd = vim.list_extend({ 'rg' }, M.ripgrep_args)
+  vim.list_extend(cmd, { '-e', rg_pattern })
+
+  local output = vim.fn.systemlist(cmd)
+  local items = {}
+  -- Detect keyword from the filtered set first (deterministic order), avoiding
+  -- false badges when a line contains multiple keywords (e.g. "TODO/FIXME").
+  local detect_keywords = keywords
+  for _, line in ipairs(output) do
+    local file, lnum, col, text = line:match('^(.+):(%d+):(%d+):(.*)$')
+    if file and lnum then
+      local kw_match
+      for _, kw in ipairs(detect_keywords) do
+        if text:find('%f[%w]' .. kw .. '%f[%W]') then
+          kw_match = kw
+          break
+        end
+      end
+      items[#items + 1] = {
+        text = line,
+        file = file,
+        pos = { tonumber(lnum), tonumber(col) },
+        keyword = kw_match,
+        idx = #items + 1,
+      }
+    end
+  end
+
+  Snacks.picker({
+    title = title,
+    items = items,
+    format = function(item, picker)
+      local ret = require('snacks.picker.format').file(item, picker)
+      if item.keyword and todo_keyword_hl[item.keyword] then
+        table.insert(ret, { ' ' .. item.keyword .. ' ', todo_keyword_hl[item.keyword] })
+      end
+      return ret
+    end,
+    layout = 'ivy',
+    layouts = { ivy = M.ivy_layout },
+  })
+end
+
+-- ------------------------------------------------------------------------- }}}
+
 -- {{{ Helper Function for Buffers Picker --------------------------------------------------------
 
 -- Helper function to configure and show the buffers picker
@@ -222,8 +346,20 @@ function M.setup_keymaps()
     M.with_ivy_layout(Snacks.picker.notifications)
   end, { desc = '[s]earch [n]otification history' })
   keymap('<leader>st', function()
-    M.with_ivy_layout(Snacks.picker.todo_comments)
-  end, { desc = '[s]earch [t]odo comments' })
+    M.todo_comments_picker()
+  end, { desc = '[s]earch [t]odo comments (all)' })
+  keymap('<leader>sT', function()
+    M.todo_comments_picker('TODO')
+  end, { desc = '[s]earch [T]ODO only' })
+  keymap('<leader>sF', function()
+    M.todo_comments_picker('FIXME')
+  end, { desc = '[s]earch [F]IXME/BUG only' })
+  keymap('<leader>sN', function()
+    M.todo_comments_picker('NOTE')
+  end, { desc = '[s]earch [N]OTE/INFO only' })
+  keymap('<leader>sW', function()
+    M.todo_comments_picker('WARN')
+  end, { desc = '[s]earch [W]ARN only' })
   keymap('<leader>pc', function()
     M.with_ivy_layout(Snacks.picker.colorschemes)
   end, { desc = '[p]ick [c]olorscheme' })
