@@ -24,42 +24,24 @@ vim.b.miniai_config = {
 
 -- {{{ Heading Highlights (theme-aware) --------------------------------------------------
 
--- Per-theme heading palettes: { bg = { H1..H6 }, fg = dark text color }
-local heading_palettes = {
-  eldritch = {
-    bg = { '#987afb', '#37f499', '#04d1f9', '#fca6ff', '#9ad900', '#e58f2a' },
-    fg = '#0D1116',
-  },
-  ['tokyonight-night'] = {
-    bg = { '#bb9af7', '#7aa2f7', '#7dcfff', '#9ece6a', '#ff9e64', '#e0af68' },
-    fg = '#1a1b26',
-  },
-  ['jellybeans-nvim'] = {
-    bg = { '#8197bf', '#70b950', '#8fbfdc', '#f0a0c0', '#ffb964', '#b888e2' },
-    fg = '#151515',
-  },
-}
+-- Palettes sourced from util/themes.lua (single source of truth for all theme data)
+local theme_registry = require('shamindras.util.themes')
 
--- Per-theme code block palettes: subtle bg slightly lighter than editor background
-local code_palettes = {
-  eldritch = { bg = '#1a1a2e' },
-  ['tokyonight-night'] = { bg = '#1a1a2a' },
-  ['jellybeans-nvim'] = { bg = '#1c1c1c' },
-}
+local function get_palette(palette_key)
+  local scheme = vim.g.colors_name or theme_registry.themes[theme_registry.default].scheme
+  local key = theme_registry.scheme_to_key[scheme] or theme_registry.default
+  return theme_registry.themes[key][palette_key]
+end
 
 -- Apply Headline1-6Bg/Fg and RenderMarkdownCode highlight groups for the active colorscheme
 local function set_markdown_highlights()
-  local scheme = vim.g.colors_name or 'eldritch'
-
-  -- Heading highlights
-  local h_palette = heading_palettes[scheme] or heading_palettes.eldritch
+  local h_palette = get_palette('heading_palette')
   for i = 1, 6 do
     vim.api.nvim_set_hl(0, 'Headline' .. i .. 'Bg', { bg = h_palette.bg[i], fg = h_palette.fg, bold = true })
     vim.api.nvim_set_hl(0, 'Headline' .. i .. 'Fg', { fg = h_palette.bg[i], bold = true })
   end
 
-  -- Code block highlight
-  local c_palette = code_palettes[scheme] or code_palettes.eldritch
+  local c_palette = get_palette('code_palette')
   vim.api.nvim_set_hl(0, 'RenderMarkdownCode', { bg = c_palette.bg })
 end
 
