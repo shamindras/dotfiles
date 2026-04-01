@@ -1,15 +1,6 @@
-local M = {}
-
--- {{{ Text Editing Plugins
-
-table.insert(M, {
-  'nvim-mini/mini.ai',
-  version = '*',
+return {
+  'nvim-mini/mini.nvim',
   event = 'VeryLazy',
-  keys = {
-    { 'a', mode = { 'x', 'o' } },
-    { 'i', mode = { 'x', 'o' } },
-  },
   dependencies = {
     {
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -17,9 +8,11 @@ table.insert(M, {
       lazy = true,
     },
   },
-  opts = function()
+  config = function()
+    -- {{{ Text Editing
+
     local ai = require('mini.ai')
-    return {
+    ai.setup({
       n_lines = 500,
       custom_textobjects = {
         o = ai.gen_spec.treesitter({
@@ -29,85 +22,29 @@ table.insert(M, {
         f = ai.gen_spec.treesitter({ a = '@function.outer', i = '@function.inner' }),
         c = ai.gen_spec.treesitter({ a = '@class.outer', i = '@class.inner' }),
       },
-    }
-  end,
-})
+    })
 
-table.insert(M, {
-  'nvim-mini/mini.operators',
-  version = '*',
-  event = 'VeryLazy',
-  config = function()
     require('mini.operators').setup()
-  end,
-})
-
-table.insert(M, {
-  'nvim-mini/mini.surround',
-  version = '*',
-  event = { 'BufReadPost', 'BufNewFile' },
-  config = function()
     require('mini.surround').setup()
-  end,
-})
-
-table.insert(M, {
-  'nvim-mini/mini.move',
-  version = '*',
-  event = { 'BufReadPost', 'BufNewFile' },
-  config = function()
     require('mini.move').setup()
-  end,
-})
-
-table.insert(M, {
-  'nvim-mini/mini.pairs',
-  version = '*',
-  event = 'InsertEnter',
-  config = function()
     require('mini.pairs').setup()
-  end,
-})
 
--- ------------------------------------------------------------------------- }}}
+    -- }}}
 
--- {{{ General Workflow Plugins
+    -- {{{ General Workflow
 
-table.insert(M, {
-  'nvim-mini/mini.bracketed',
-  version = '*',
-  event = { 'BufReadPost', 'BufNewFile' },
-  config = function()
     require('mini.bracketed').setup()
-  end,
-})
 
-table.insert(M, {
-  'nvim-mini/mini.files',
-  version = '*',
-  cmd = {
-    'MiniFiles',
-    'MiniFilesBufferDir',
-    'MiniFilesCursorFile',
-  },
-  keys = {
-    { '<leader>fm', '<cmd>lua MiniFiles.open()<cr>', desc = '[f]ile [m]ini files' },
-    { '<leader>fa', '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>', desc = '[f]ile [a]ctive file' },
-    { '<leader>fh', "<cmd>lua MiniFiles.open('~')<cr>", desc = '[f]ile [h]ome dir' },
-  },
-  config = function()
     local minifiles = require('mini.files')
     minifiles.setup({
       windows = {
         max_number = 3,
         preview = true,
         width_focus = 30,
-        width_nofocus = 15,
         width_preview = 60,
       },
       options = {
         permanent_delete = false,
-        use_as_default_explorer = true,
       },
     })
 
@@ -118,27 +55,22 @@ table.insert(M, {
         vim.keymap.set('n', 'q', MiniFiles.close, { buf = buf_id, desc = 'Close Mini Files' })
       end,
     })
-  end,
-})
 
--- ------------------------------------------------------------------------- }}}
+    vim.keymap.set('n', '<leader>fm', '<cmd>lua MiniFiles.open()<cr>', { desc = '[f]ile [m]ini files' })
+    vim.keymap.set(
+      'n',
+      '<leader>fa',
+      '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>',
+      { desc = '[f]ile [a]ctive file' }
+    )
+    vim.keymap.set('n', '<leader>fh', "<cmd>lua MiniFiles.open('~')<cr>", { desc = '[f]ile [h]ome dir' })
 
--- {{{ Appearance Plugins
+    -- }}}
 
-table.insert(M, {
-  'nvim-mini/mini.icons',
-  version = '*',
-  event = 'VeryLazy',
-  config = function()
+    -- {{{ Appearance
+
     require('mini.icons').setup()
-  end,
-})
 
-table.insert(M, {
-  'nvim-mini/mini.statusline',
-  version = '*',
-  event = 'VimEnter',
-  config = function()
     local statusline = require('mini.statusline')
     statusline.setup({ use_icons = vim.g.have_nerd_font })
 
@@ -218,27 +150,11 @@ table.insert(M, {
         { hl = mode_hl, strings = { location } },
       })
     end
-  end,
-})
 
-table.insert(M, {
-  'nvim-mini/mini.notify',
-  version = '*',
-  event = 'VeryLazy',
-  config = function()
     local mini_notify = require('mini.notify')
-    -- Use all defaults - they're already sensible
     mini_notify.setup()
-    -- Set as vim.notify handler
     vim.notify = mini_notify.make_notify()
-  end,
-})
 
-table.insert(M, {
-  'nvim-mini/mini.hipatterns',
-  version = '*',
-  event = { 'BufReadPost', 'BufNewFile' },
-  config = function()
     local hipatterns = require('mini.hipatterns')
 
     -- Define custom highlight groups for keywords not covered by built-in groups.
@@ -336,18 +252,11 @@ table.insert(M, {
         failed = kw('FAILED', 'MiniHipatternsTest'),
       },
     })
-  end,
-})
 
--- ------------------------------------------------------------------------- }}}
+    -- }}}
 
--- {{{ Keymap Discovery
+    -- {{{ Keymap Discovery
 
-table.insert(M, {
-  'nvim-mini/mini.clue',
-  version = '*',
-  event = 'VeryLazy',
-  config = function()
     local miniclue = require('mini.clue')
     miniclue.setup({
       triggers = {
@@ -374,9 +283,11 @@ table.insert(M, {
       clues = {
         { mode = 'n', keys = '<leader>b', desc = '+[b]uffer' },
         { mode = 'n', keys = '<leader>d', desc = '+[d]elete (black hole)' },
+        { mode = 'n', keys = '<leader>c', desc = '+[c]ode' },
         { mode = 'n', keys = '<leader>f', desc = '+[f]ile' },
         { mode = 'n', keys = '<leader>g', desc = '+[g]o/navigate' },
         { mode = 'n', keys = '<leader>i', desc = '+[i]nsert' },
+        { mode = 'n', keys = '<leader>k', desc = '+[k]asten' },
         { mode = 'n', keys = '<leader>l', desc = '+[l]azy' },
         { mode = 'n', keys = '<leader>m', desc = '+[m]arkdown' },
         { mode = 'n', keys = '<leader>n', desc = '+[n]umber' },
@@ -403,9 +314,7 @@ table.insert(M, {
         },
       },
     })
+
+    -- }}}
   end,
-})
-
--- ------------------------------------------------------------------------- }}}
-
-return M
+}
