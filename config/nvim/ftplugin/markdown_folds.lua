@@ -71,6 +71,27 @@ local function find_containing_heading(headings, cur)
   return containing
 end
 
+-- Check if any heading at the same level (sibling) has its fold open.
+-- Used to distinguish "focused" (only target open) from "unfocused" (multiple open, e.g. after zR).
+local function has_other_open_siblings(headings, target_line)
+  local target_level
+  for _, h in ipairs(headings) do
+    if h.line == target_line then
+      target_level = h.level
+      break
+    end
+  end
+  if not target_level then
+    return false
+  end
+  for _, h in ipairs(headings) do
+    if h.line ~= target_line and h.level == target_level and vim.fn.foldclosed(h.line) == -1 then
+      return true
+    end
+  end
+  return false
+end
+
 -- Ensure every heading is visible as a fold bar by opening parent folds.
 -- foldclosed(line) == line means the heading IS a fold bar (visible);
 -- foldclosed(line) == other means it's hidden inside another fold.
@@ -272,6 +293,8 @@ local function cycle_heading(direction)
 end
 
 -- Toggle fold on heading / focus nearest heading (zv)
+-- 3-state cycle: focus (close others) → collapse all → open + restore cursor
+-- Uses same-level sibling fold state to detect focus vs unfocused (no buffer variable needed).
 local function toggle_or_focus()
   local headings = get_headings()
   if #headings == 0 then
@@ -281,7 +304,6 @@ local function toggle_or_focus()
 
   local cur = vim.fn.line('.')
 
-  -- O(1) heading check via set
   local on_heading = false
   for _, h in ipairs(headings) do
     if h.line == cur then
@@ -291,25 +313,36 @@ local function toggle_or_focus()
   end
 
   if not on_heading then
-    -- Collapse all folds, saving cursor for restore on reopen
     local containing = find_containing_heading(headings, cur).line
     vim.b.zv_saved_cursor = vim.api.nvim_win_get_cursor(0)
-    collapse_all_headings(headings)
-    vim.api.nvim_win_set_cursor(0, { containing, 0 })
+    if has_other_open_siblings(headings, containing) then
+      -- Other sections open → focus containing heading, preserve cursor
+      focus_heading(headings, containing)
+      vim.api.nvim_win_set_cursor(0, vim.b.zv_saved_cursor)
+    else
+      -- Already focused → collapse all
+      collapse_all_headings(headings)
+      vim.api.nvim_win_set_cursor(0, { containing, 0 })
+    end
     vim.cmd('normal! zz')
     return
   end
 
-  -- On a heading — toggle its fold
+  -- On a heading — 3-state cycle
   if vim.fn.foldclosed('.') == -1 then
-    -- Collapse all folds (clear stale saved cursor from prior case-1)
-    vim.b.zv_saved_cursor = nil
-    collapse_all_headings(headings)
-    vim.api.nvim_win_set_cursor(0, { cur, 0 })
+    vim.b.zv_saved_cursor = vim.api.nvim_win_get_cursor(0)
+    if has_other_open_siblings(headings, cur) then
+      -- Other sections open → focus this heading
+      focus_heading(headings, cur)
+    else
+      -- Already focused → collapse all
+      collapse_all_headings(headings)
+      vim.api.nvim_win_set_cursor(0, { cur, 0 })
+    end
     vim.cmd('normal! zz')
   else
+    -- Closed heading → open, restore saved cursor
     focus_heading(headings, cur)
-    -- Restore cursor position from prior zv collapse
     if vim.b.zv_saved_cursor then
       vim.api.nvim_win_set_cursor(0, vim.b.zv_saved_cursor)
       vim.b.zv_saved_cursor = nil
