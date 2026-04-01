@@ -16,6 +16,11 @@ end
 
 -- Width-adaptive save: echo in wide windows, notify (auto-clears 1s) in narrow
 keymap({ 'i', 'x', 'n', 's' }, '<C-s>', function()
+  if vim.fn.expand('%') == '' then
+    vim.cmd('stopinsert')
+    vim.notify('No file to save', vim.log.levels.WARN)
+    return
+  end
   vim.cmd('silent w')
   vim.cmd('stopinsert')
   local msg = 'Saved ' .. vim.fn.expand('%')
