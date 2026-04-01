@@ -241,6 +241,105 @@ end
 
 -- ------------------------------------------------------------------------- }}}
 
+-- {{{ Curated Colorscheme Picker ---------------------------------------------------------------
+
+-- Picker showing only registered themes from util/themes.lua with live preview.
+-- on_change applies each theme as you browse; on_close restores on cancel.
+function M.colorscheme_picker()
+  local theme_registry = require('shamindras.util.themes')
+  local original_scheme = vim.g.colors_name or ''
+  local confirmed = false
+
+  -- Resolve active theme key via registry lookup (handles scheme name mismatches)
+  local active_key = theme_registry.scheme_to_key[original_scheme]
+
+  -- Build items from the curated theme list
+  local items = {}
+  for idx, key in ipairs(theme_registry.order) do
+    local theme = theme_registry.themes[key]
+    items[#items + 1] = {
+      text = theme.scheme,
+      idx = idx,
+      theme_key = key,
+    }
+  end
+
+  -- Load a theme plugin and apply its colorscheme
+  local function apply_theme(theme_key, scheme)
+    local short_name = theme_registry.themes[theme_key].plugin:match('[^/]+$')
+    require('lazy').load({ plugins = { short_name } })
+    pcall(vim.cmd.colorscheme, scheme)
+  end
+
+  -- Ivy layout without preview pane (live switching makes file preview unnecessary)
+  local ivy_no_preview = {
+    layout = {
+      box = 'vertical',
+      backdrop = false,
+      row = -1,
+      width = 0,
+      height = M.layout_config.height,
+      border = 'top',
+      title = ' {title} {live} {flags}',
+      title_pos = 'left',
+      { win = 'input', height = 1, border = 'bottom' },
+      { win = 'list', border = 'none' },
+    },
+  }
+
+  Snacks.picker({
+    title = 'Colorschemes',
+    items = items,
+    format = function(item)
+      local ret = { { item.text } }
+      if item.theme_key == active_key then
+        table.insert(ret, { ' (active)', 'DiagnosticHint' })
+      end
+      return ret
+    end,
+    layout = 'ivy',
+    layouts = { ivy = ivy_no_preview },
+    on_change = function(_picker, item)
+      if item then
+        vim.schedule(function()
+          apply_theme(item.theme_key, item.text)
+        end)
+      end
+    end,
+    confirm = function(picker, item)
+      confirmed = true
+      picker:close()
+      if item then
+        vim.schedule(function()
+          apply_theme(item.theme_key, item.text)
+          vim.cmd.hi('Comment gui=none')
+
+          -- Persist selection
+          local state_file = vim.fn.stdpath('state') .. '/colorscheme_state.txt'
+          local file = io.open(state_file, 'w')
+          if file then
+            file:write(item.theme_key)
+            file:close()
+          end
+        end)
+      end
+    end,
+    on_close = function()
+      if not confirmed then
+        -- Restore original colorscheme on cancel
+        local orig_key = theme_registry.scheme_to_key[original_scheme]
+        if orig_key then
+          vim.schedule(function()
+            apply_theme(orig_key, original_scheme)
+          end)
+        end
+      end
+    end,
+  })
+end
+
+-- ------------------------------------------------------------------------- }}}
+
 -- {{{ Helper Function for Buffers Picker --------------------------------------------------------
 
 -- Helper function to configure and show the buffers picker
@@ -361,7 +460,7 @@ function M.setup_keymaps()
     M.todo_comments_picker('WARN')
   end, { desc = '[s]earch [W]ARN only' })
   keymap('<leader>pc', function()
-    M.with_ivy_layout(Snacks.picker.colorschemes)
+    M.colorscheme_picker()
   end, { desc = '[p]ick [c]olorscheme' })
 end
 

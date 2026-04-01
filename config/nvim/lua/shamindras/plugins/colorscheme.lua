@@ -1,206 +1,139 @@
 -- {{{ Colorscheme Configuration -------------------------------------------------------------------
+--
+-- Generates lazy.nvim plugin specs from the theme registry (util/themes.lua).
+-- Only the active theme's plugin loads eagerly; all others are lazy until cycled to.
+-- Multiple variants of the same plugin produce one deduplicated spec.
+-- State persists to ~/.local/state/nvim/colorscheme_state.txt (XDG-compliant).
 
--- Store the cycle function in _G so it's globally accessible
-local colorschemes = {
-  eldritch = {
-    plugin = 'eldritch-theme/eldritch.nvim',
-    scheme = 'eldritch',
-  },
-  tokyonight = {
-    plugin = 'folke/tokyonight.nvim',
-    scheme = 'tokyonight-night',
-  },
-  jellybeans = {
-    plugin = 'metalelf0/jellybeans-nvim',
-    scheme = 'jellybeans-nvim',
-  },
-}
-
-local color_scheme_order = { 'eldritch', 'tokyonight', 'jellybeans' }
+local themes = require('shamindras.util.themes')
 
 -- }}}
 
--- {{{ State Management Functions -----------------------------------------------------------------
+-- {{{ State Management --------------------------------------------------------------------------
 
--- Function to get the state file path
 local function get_state_file()
   return vim.fn.stdpath('state') .. '/colorscheme_state.txt'
 end
 
--- Function to save current colorscheme
-local function save_colorscheme(scheme_name)
+local function save_colorscheme(key)
   local file = io.open(get_state_file(), 'w')
   if file then
-    file:write(scheme_name)
+    file:write(key)
     file:close()
   end
 end
 
--- Function to load last used colorscheme
-local function get_last_colorscheme()
+-- Returns (key, index) of the active theme from saved state, or default.
+local function get_active_theme()
   local file = io.open(get_state_file(), 'r')
   if file then
-    local scheme = file:read('*all')
+    local key = file:read('*all')
     file:close()
-    -- Verify the scheme exists in our list
-    for i, name in ipairs(color_scheme_order) do
-      if name == scheme then
-        return scheme, i
+    for i, name in ipairs(themes.order) do
+      if name == key then
+        return key, i
       end
     end
   end
-  return 'eldritch', 1 -- fallback to eldritch
+  -- Fallback: find the default in the order list
+  for i, name in ipairs(themes.order) do
+    if name == themes.default then
+      return themes.default, i
+    end
+  end
+  return themes.default, 1
 end
 
--- Initialize current scheme from saved state
-local initial_scheme, initial_index = get_last_colorscheme()
-local current_scheme_index = initial_index
+local active_key, current_index = get_active_theme()
 
 -- }}}
 
--- {{{ Colorscheme Loading Functions -------------------------------------------------------------
+-- {{{ Colorscheme Loading -----------------------------------------------------------------------
 
-local function load_colorscheme(scheme)
-  local config = colorschemes[scheme]
-
-  if not config then
-    print('Unknown colorscheme: ' .. scheme)
+local function load_colorscheme(key)
+  local theme = themes.themes[key]
+  if not theme then
+    vim.notify('Unknown colorscheme: ' .. key, vim.log.levels.ERROR)
     return
   end
 
-  -- Special handling for eldritch to ensure it's properly configured
-  if scheme == 'eldritch' then
-    local eldritch_ok, eldritch = pcall(require, 'eldritch')
-    if eldritch_ok then
-      -- Setup eldritch with default configuration to avoid the nil styles error
-      eldritch.setup({
-        palette = 'default',
-        transparent = false,
-        terminal_colors = true,
-        styles = {
-          comments = { italic = true },
-          keywords = { italic = true },
-          functions = {},
-          variables = {},
-          sidebars = 'dark',
-          floats = 'dark',
-        },
-        sidebars = { 'qf', 'help' },
-        hide_inactive_statusline = false,
-        -- Optional callback functions for color and highlight customization
-        on_colors = function(colors)
-          -- Override colors here if needed
-        end,
-        on_highlights = function(highlights, colors)
-          -- Override highlight groups here if needed
-        end,
-      })
-    end
-  end
+  -- Ensure lazy plugin is loaded
+  local short_name = theme.plugin:match('[^/]+$')
+  require('lazy').load({ plugins = { short_name } })
 
-  -- Protected call to load the colorscheme
-  local ok, err = pcall(vim.cmd.colorscheme, config.scheme)
+  -- Apply colorscheme
+  local ok, err = pcall(vim.cmd.colorscheme, theme.scheme)
   if not ok then
-    vim.notify('Failed to load colorscheme ' .. config.scheme .. ': ' .. err, vim.log.levels.ERROR)
+    vim.notify('Failed to load colorscheme ' .. theme.scheme .. ': ' .. err, vim.log.levels.ERROR)
     return
   end
 
-  -- Save the successfully loaded colorscheme
-  save_colorscheme(scheme)
-
-  -- Common settings for all themes
+  save_colorscheme(key)
   vim.cmd.hi('Comment gui=none')
 end
 
--- Make the cycle function globally accessible
-_G.cycle_colorscheme = function()
-  -- Move to the next scheme in the list
-  current_scheme_index = (current_scheme_index % #color_scheme_order) + 1
-  local next_scheme = color_scheme_order[current_scheme_index]
-  load_colorscheme(next_scheme)
+-- Cycle to the next theme in order
+local function cycle_colorscheme()
+  current_index = (current_index % #themes.order) + 1
+  local next_key = themes.order[current_index]
+  load_colorscheme(next_key)
 end
 
 -- }}}
 
--- {{{ Plugin Specifications --------------------------------------------------------------------
+-- {{{ Spec Generation ---------------------------------------------------------------------------
 
-return {
-  -- Lush plugin (required for jellybeans)
-  {
-    'rktjmp/lush.nvim',
-    lazy = true, -- Make lazy since it's only needed for jellybeans
-  },
+-- Deduplicate: one lazy.nvim spec per plugin, not per variant.
+-- The active variant's plugin is eager; all other plugins are lazy.
+local function generate_specs()
+  local specs = {}
+  local seen = {}
+  local active_theme = themes.themes[active_key]
+  local active_plugin = active_theme.plugin
 
-  -- Eldritch colorscheme plugin (initial theme)
-  {
-    'eldritch-theme/eldritch.nvim',
-    priority = 1000,
-    lazy = false, -- Ensure it loads immediately
-    config = function()
-      -- Setup eldritch with proper configuration matching official docs
-      require('eldritch').setup({
-        palette = 'default', -- Available options: "default" (standard palette), "darker" (darker variant)
-        transparent = false, -- Enable this to disable setting the background color
-        terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
-        styles = {
-          -- Style to be applied to different syntax groups
-          -- Value is any valid attr-list value for `:help nvim_set_hl`
-          comments = { italic = true },
-          keywords = { italic = true },
-          functions = {},
-          variables = {},
-          -- Background styles. Can be "dark", "transparent" or "normal"
-          sidebars = 'dark', -- style for sidebars, see below
-          floats = 'dark', -- style for floating windows
-        },
-        sidebars = { 'qf', 'help' }, -- Set a darker background on sidebar-like windows
-        hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead
-        -- Optional callback functions for color and highlight customization
-        on_colors = function(colors)
-          -- Override colors here if needed
-          -- Example: colors.hint = colors.orange
-        end,
-        on_highlights = function(highlights, colors)
-          -- Override highlight groups here if needed
-          -- Example: highlights.Comment = { fg = colors.grey, italic = true }
-        end,
-      })
-    end,
-    init = function()
-      -- Set colorscheme to last used or fallback
-      vim.cmd.colorscheme(colorschemes[initial_scheme].scheme)
-    end,
-  },
+  for _, key in ipairs(themes.order) do
+    local theme = themes.themes[key]
+    if not seen[theme.plugin] then
+      seen[theme.plugin] = true
 
-  -- TokyoNight colorscheme plugin
-  {
-    'folke/tokyonight.nvim',
-    lazy = initial_scheme ~= 'tokyonight', -- Only lazy if not the initial scheme
-  },
+      local spec = { theme.plugin }
+      local is_active_plugin = (theme.plugin == active_plugin)
 
-  -- Jellybeans colorscheme plugin
-  {
-    'metalelf0/jellybeans-nvim',
-    dependencies = { 'rktjmp/lush.nvim' },
-    lazy = initial_scheme ~= 'jellybeans', -- Only lazy if not the initial scheme
-    config = function()
-      -- Empty config function to satisfy the plugin requirement
-    end,
-  },
+      if is_active_plugin then
+        spec.lazy = false
+        spec.priority = 1000
+        spec.init = function()
+          vim.cmd.colorscheme(active_theme.scheme)
+        end
+      else
+        spec.lazy = true
+      end
 
-  -- Set up keymap
-  {
-    'eldritch-theme/eldritch.nvim',
+      if theme.setup and theme.mod then
+        spec.config = function()
+          require(theme.mod).setup(theme.setup)
+        end
+      end
+
+      specs[#specs + 1] = spec
+    end
+  end
+
+  -- Attach cycle keymap to the active plugin's spec
+  specs[#specs + 1] = {
+    active_plugin,
     keys = {
       {
         '<leader>tc',
-        function()
-          _G.cycle_colorscheme()
-        end,
+        cycle_colorscheme,
         desc = '[t]oggle cycle [c]olorscheme',
       },
     },
-  },
-}
+  }
+
+  return specs
+end
 
 -- }}}
+
+return generate_specs()
