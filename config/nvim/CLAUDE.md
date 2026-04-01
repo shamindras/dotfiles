@@ -29,7 +29,7 @@ config/nvim/
 │   │   └── themes.lua                # Theme registry (plugins, palettes, setup opts)
 │   ├── core/
 │   │   ├── options.lua               # Editor settings (12 fold sections)
-│   │   ├── keymaps.lua               # ~370 lines of leader-based keymaps
+│   │   ├── keymaps.lua               # ~400 lines of leader-based keymaps
 │   │   ├── autocmds.lua              # ~176 lines (lint, format, tool restarts)
 │   │   └── lazy-bootstrap.lua        # Auto-downloads lazy.nvim if missing
 │   └── plugins/
