@@ -15,8 +15,9 @@ M.default = 'eldritch'
 -- Cycle/display order: dark-to-light gradient
 M.order = {
   'eldritch',
-  'tokyonight-night',
   'catppuccin-mocha',
+  'tokyonight-night',
+  'cyberdream',
   'nightfox',
   'terafox',
   'teide-dark',
@@ -36,21 +37,7 @@ local plugins = {
     plugin = 'eldritch-theme/eldritch.nvim',
     mod = 'eldritch',
     setup = {
-      palette = 'default',
-      transparent = false,
-      terminal_colors = true,
-      styles = {
-        comments = { italic = true },
-        keywords = { italic = true },
-        functions = {},
-        variables = {},
-        sidebars = 'dark',
-        floats = 'dark',
-      },
-      sidebars = { 'qf', 'help' },
-      hide_inactive_statusline = false,
-      on_colors = function(_colors) end,
-      on_highlights = function(_highlights, _colors) end,
+      styles = { sidebars = 'dark', floats = 'dark' },
     },
   },
   tokyonight = {
@@ -60,35 +47,25 @@ local plugins = {
   catppuccin = {
     plugin = 'catppuccin/nvim',
     mod = 'catppuccin',
-    setup = {
-      transparent_background = false,
-      terminal_colors = true,
-    },
   },
   nightfox = {
     plugin = 'EdenEast/nightfox.nvim',
     mod = 'nightfox',
     setup = {
       options = {
-        transparent = false,
-        terminal_colors = true,
-        styles = {
-          comments = 'italic',
-          keywords = 'italic',
-        },
+        styles = { comments = 'italic', keywords = 'italic' },
       },
     },
   },
   teide = {
     plugin = 'serhez/teide.nvim',
     mod = 'teide',
+  },
+  cyberdream = {
+    plugin = 'scottmckendry/cyberdream.nvim',
+    mod = 'cyberdream',
     setup = {
-      transparent = false,
-      terminal_colors = true,
-      styles = {
-        comments = { italic = true },
-        keywords = { italic = true },
-      },
+      italic_comments = true,
     },
   },
 }
@@ -137,6 +114,15 @@ M.themes = {
       fg = '#1e1e2e',
     },
     code_palette = { bg = '#252536' },
+  }),
+
+  cyberdream = variant(plugins.cyberdream, {
+    scheme = 'cyberdream',
+    heading_palette = {
+      bg = { '#ff5ef1', '#5ea1ff', '#5ef1ff', '#5eff6c', '#ffbd5e', '#f1ff5e' },
+      fg = '#16181a',
+    },
+    code_palette = { bg = '#1e2124' },
   }),
 
   nightfox = variant(plugins.nightfox, {
