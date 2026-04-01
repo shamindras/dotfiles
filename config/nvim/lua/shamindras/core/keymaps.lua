@@ -279,96 +279,117 @@ local function get_fold_starts()
   return starts
 end
 
-keymap('n', 'zv', function()
-  if vim.fn.foldlevel('.') == 0 then
-    -- Not on a fold — move to nearest fold (prefer next like zj)
-    local starts = get_fold_starts()
-    if #starts == 0 then
-      vim.notify('No folds in buffer', vim.log.levels.INFO)
-      return
+-- Find the fold start line containing the cursor (nearest start at or before cursor)
+local function find_containing_fold_start(starts, cur)
+  local containing = starts[1]
+  for _, s in ipairs(starts) do
+    if s <= cur then
+      containing = s
+    else
+      break
     end
-    local cur = vim.fn.line('.')
-    local target
-    for _, start in ipairs(starts) do
-      if start > cur then
-        target = start
-        break
+  end
+  return containing
+end
+
+-- Check if any fold other than the current one is open
+local function has_other_open_folds(starts, current_start)
+  for _, s in ipairs(starts) do
+    if s ~= current_start and vim.fn.foldclosed(s) == -1 then
+      return true
+    end
+  end
+  return false
+end
+
+-- Find next or previous fold start from cursor, with wrap-around
+local function find_adjacent_fold_start(starts, cur, direction)
+  if direction == 'next' then
+    for _, s in ipairs(starts) do
+      if s > cur then
+        return s
       end
     end
-    if not target then
-      target = starts[1]
+    return starts[1]
+  else
+    for i = #starts, 1, -1 do
+      if starts[i] < cur then
+        return starts[i]
+      end
     end
-    vim.api.nvim_win_set_cursor(0, { target, 0 })
-    vim.cmd('normal! zMzvzz')
+    return starts[#starts]
+  end
+end
+
+-- Cycle to next/prev fold (shared logic for zj/zk)
+local function cycle_fold(direction)
+  local starts = get_fold_starts()
+  if #starts == 0 then
+    vim.notify('No folds in buffer', vim.log.levels.INFO)
+    return
+  end
+  if #starts == 1 then
+    vim.notify('Only fold in buffer', vim.log.levels.INFO)
+    return
+  end
+  local cur = find_containing_fold_start(starts, vim.fn.line('.'))
+  local target = find_adjacent_fold_start(starts, cur, direction)
+  vim.cmd('normal! zM')
+  vim.api.nvim_win_set_cursor(0, { target, 0 })
+  vim.cmd('normal! zOzz')
+end
+
+keymap('n', 'zv', function()
+  local starts = get_fold_starts()
+  if #starts == 0 then
+    vim.notify('No folds in buffer', vim.log.levels.INFO)
     return
   end
 
-  -- On a fold — toggle
+  local cur = vim.fn.line('.')
+
+  if vim.fn.foldlevel('.') == 0 then
+    -- Not on a fold — collapse all, jump to containing fold start
+    local containing = find_containing_fold_start(starts, cur)
+    vim.b.zv_saved_cursor = vim.api.nvim_win_get_cursor(0)
+    vim.cmd('normal! zM')
+    vim.api.nvim_win_set_cursor(0, { containing, 0 })
+    vim.cmd('normal! zz')
+    return
+  end
+
+  local containing = find_containing_fold_start(starts, cur)
+
   if vim.fn.foldclosed('.') == -1 then
-    vim.cmd('normal! zc')
+    -- Open fold — focus or collapse depending on other folds' state
+    local others_open = has_other_open_folds(starts, containing)
+    vim.b.zv_saved_cursor = vim.api.nvim_win_get_cursor(0)
+    vim.cmd('normal! zM')
+    vim.api.nvim_win_set_cursor(0, { containing, 0 })
+    if others_open then
+      -- Other folds open → focus: reopen just this fold, restore cursor
+      vim.cmd('normal! zO')
+      vim.api.nvim_win_set_cursor(0, vim.b.zv_saved_cursor)
+    end
+    vim.cmd('normal! zz')
   else
+    -- Closed fold → open, restore saved cursor
+    vim.cmd('normal! zM')
+    vim.api.nvim_win_set_cursor(0, { cur, 0 })
     vim.cmd('normal! zOzz')
+    if vim.b.zv_saved_cursor then
+      vim.api.nvim_win_set_cursor(0, vim.b.zv_saved_cursor)
+      vim.b.zv_saved_cursor = nil
+    end
   end
 end, { desc = 'Toggle fold / focus nearest' })
 
 keymap('n', 'zj', function()
-  local starts = get_fold_starts()
-  if #starts == 0 then
-    vim.notify('No folds in buffer', vim.log.levels.INFO)
-    return
-  end
-  if #starts == 1 then
-    vim.notify('Only fold in buffer', vim.log.levels.INFO)
-    return
-  end
-
-  -- Close current fold if open
-  if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
-    vim.cmd('normal! zc')
-  end
-
-  local cur = vim.fn.line('.')
-  for _, start in ipairs(starts) do
-    if start > cur then
-      vim.api.nvim_win_set_cursor(0, { start, 0 })
-      vim.cmd('normal! zOzz')
-      return
-    end
-  end
-
-  -- Cycle to first fold
-  vim.api.nvim_win_set_cursor(0, { starts[1], 0 })
-  vim.cmd('normal! zOzz')
+  cycle_fold('next')
 end, { desc = 'Next fold (cycle)' })
 
 keymap('n', 'zk', function()
-  local starts = get_fold_starts()
-  if #starts == 0 then
-    vim.notify('No folds in buffer', vim.log.levels.INFO)
-    return
-  end
-  if #starts == 1 then
-    vim.notify('Only fold in buffer', vim.log.levels.INFO)
-    return
-  end
-
-  -- Close current fold if open
-  if vim.fn.foldclosed('.') == -1 and vim.fn.foldlevel('.') > 0 then
-    vim.cmd('normal! zc')
-  end
-
-  local cur = vim.fn.line('.')
-  for i = #starts, 1, -1 do
-    if starts[i] < cur then
-      vim.api.nvim_win_set_cursor(0, { starts[i], 0 })
-      vim.cmd('normal! zOzz')
-      return
-    end
-  end
-
-  -- Cycle to last fold
-  vim.api.nvim_win_set_cursor(0, { starts[#starts], 0 })
-  vim.cmd('normal! zOzz')
+  cycle_fold('prev')
 end, { desc = 'Previous fold (cycle)' })
 
 -- ------------------------------------------------------------------------- }}}

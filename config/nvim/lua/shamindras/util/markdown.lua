@@ -329,8 +329,9 @@ function M.move_section(direction)
   local cur_start, cur_end = M.get_section_range(headings, current)
   local sib_start, sib_end = M.get_section_range(headings, sibling)
 
-  -- Calculate cursor offset within current section
+  -- Calculate cursor offset within current section (preserve line + column)
   local cursor_offset = cur - cur_start
+  local cursor_col = vim.api.nvim_win_get_cursor(0)[2]
 
   M.swap_sections({ start = cur_start, stop = cur_end }, { start = sib_start, stop = sib_end })
 
@@ -342,7 +343,7 @@ function M.move_section(direction)
   else
     new_cursor = sib_start + cursor_offset
   end
-  vim.api.nvim_win_set_cursor(0, { new_cursor, 0 })
+  vim.api.nvim_win_set_cursor(0, { new_cursor, cursor_col })
 
   -- Rebuild folds: collapse all, focus the moved section (like zj/zk behavior).
   -- Clear fold-restore autocmd first — the swap's pending TextChanged would
@@ -355,7 +356,7 @@ function M.move_section(direction)
     local containing = M.find_containing_heading(new_headings, new_cursor)
     if containing then
       M.focus_heading(new_headings, containing.line)
-      vim.api.nvim_win_set_cursor(0, { new_cursor, 0 })
+      vim.api.nvim_win_set_cursor(0, { new_cursor, cursor_col })
       vim.api.nvim_clear_autocmds({ group = fold_augroup })
       vim.schedule(schedule_fold_restore)
     end
