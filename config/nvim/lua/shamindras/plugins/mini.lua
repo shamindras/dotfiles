@@ -234,6 +234,111 @@ table.insert(M, {
   end,
 })
 
+table.insert(M, {
+  'nvim-mini/mini.hipatterns',
+  version = '*',
+  event = { 'BufReadPost', 'BufNewFile' },
+  config = function()
+    local hipatterns = require('mini.hipatterns')
+
+    -- Define custom highlight groups for keywords not covered by built-in groups.
+    -- Built-in: MiniHipatternsFixme, MiniHipatternsHack, MiniHipatternsTodo, MiniHipatternsNote
+    -- Custom:   MiniHipatternsWarn, MiniHipatternsPerf, MiniHipatternsTest
+    local function set_custom_highlight_groups()
+      local function fg_from(group, fallback)
+        local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+        return hl.fg or fallback
+      end
+
+      vim.api.nvim_set_hl(0, 'MiniHipatternsWarn', {
+        bg = fg_from('DiagnosticWarn', 0xFBBF24),
+        fg = 0xFFFFFF,
+        bold = true,
+      })
+      vim.api.nvim_set_hl(0, 'MiniHipatternsPerf', {
+        bg = fg_from('Identifier', 0x7C3AED),
+        fg = 0xFFFFFF,
+        bold = true,
+      })
+      vim.api.nvim_set_hl(0, 'MiniHipatternsTest', {
+        bg = fg_from('Identifier', 0xFF00FF),
+        fg = 0xFFFFFF,
+        bold = true,
+      })
+    end
+
+    set_custom_highlight_groups()
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = vim.api.nvim_create_augroup('MiniHipatternsCustomHl', { clear = true }),
+      callback = set_custom_highlight_groups,
+    })
+
+    -- Session-persistent toggle: true = comment-only (default), false = all matches
+    vim.g.hipatterns_comment_only = true
+
+    -- Check if a position is inside a treesitter @comment capture.
+    -- Falls back to always-highlight when no treesitter parser is available.
+    local function is_in_comment(buf_id, data)
+      if not vim.g.hipatterns_comment_only then
+        return true
+      end
+      local ok, parser = pcall(vim.treesitter.get_parser, buf_id)
+      if not ok or not parser then
+        return true
+      end
+      local row = data.line - 1
+      local col = data.from_col - 1
+      local captures = vim.treesitter.get_captures_at_pos(buf_id, row, col)
+      for _, cap in ipairs(captures) do
+        if cap.capture:match('^comment') then
+          return true
+        end
+      end
+      return false
+    end
+
+    -- Word-boundary pattern helper: matches whole-word KEYWORD only inside comments
+    local function kw(word, hl_group)
+      return {
+        pattern = '%f[%w]()' .. word .. '()%f[%W]',
+        group = function(buf_id, _, data)
+          if is_in_comment(buf_id, data) then
+            return hl_group
+          end
+          return nil
+        end,
+      }
+    end
+
+    hipatterns.setup({
+      highlighters = {
+        -- Primary keywords
+        fixme = kw('FIXME', 'MiniHipatternsFixme'),
+        hack = kw('HACK', 'MiniHipatternsHack'),
+        todo = kw('TODO', 'MiniHipatternsTodo'),
+        note = kw('NOTE', 'MiniHipatternsNote'),
+        warn = kw('WARN', 'MiniHipatternsWarn'),
+        perf = kw('PERF', 'MiniHipatternsPerf'),
+        test = kw('TEST', 'MiniHipatternsTest'),
+
+        -- Alternate keywords (match todo-comments.nvim defaults)
+        bug = kw('BUG', 'MiniHipatternsFixme'),
+        fixit = kw('FIXIT', 'MiniHipatternsFixme'),
+        issue = kw('ISSUE', 'MiniHipatternsFixme'),
+        info = kw('INFO', 'MiniHipatternsNote'),
+        warning = kw('WARNING', 'MiniHipatternsWarn'),
+        xxx = kw('XXX', 'MiniHipatternsWarn'),
+        optim = kw('OPTIM', 'MiniHipatternsPerf'),
+        optimize = kw('OPTIMIZE', 'MiniHipatternsPerf'),
+        performance = kw('PERFORMANCE', 'MiniHipatternsPerf'),
+        testing = kw('TESTING', 'MiniHipatternsTest'),
+        passed = kw('PASSED', 'MiniHipatternsTest'),
+        failed = kw('FAILED', 'MiniHipatternsTest'),
+      },
+    })
+  end,
+})
+
 -- ------------------------------------------------------------------------- }}}
 
 -- {{{ Keymap Discovery
