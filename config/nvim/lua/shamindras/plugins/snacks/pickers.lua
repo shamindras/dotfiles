@@ -253,13 +253,15 @@ function M.colorscheme_picker()
   -- Resolve active theme key via registry lookup (handles scheme name mismatches)
   local active_key = theme_registry.scheme_to_key[original_scheme]
 
-  -- Build items from the curated theme list
+  -- Build items from the curated theme list (descending score preserves M.order)
   local items = {}
+  local total = #theme_registry.order
   for idx, key in ipairs(theme_registry.order) do
     local theme = theme_registry.themes[key]
     items[#items + 1] = {
       text = theme.scheme,
       idx = idx,
+      score = total - idx,
       theme_key = key,
     }
   end
