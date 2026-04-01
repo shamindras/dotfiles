@@ -1,8 +1,9 @@
--- LSP Plugins
+-- {{{ Plugin Specs
+
 return {
   {
     'folke/lazydev.nvim',
-    event = { 'BufReadPre', 'BufNewFile' }, -- Load when buffer is read or created
+    event = { 'BufReadPre', 'BufNewFile' },
     ft = 'lua',
     opts = {
       library = {
@@ -11,12 +12,9 @@ return {
     },
   },
 
-  -- Remove the standalone luvit-meta plugin since it's causing issues
-  -- We'll handle its functionality through lazydev
-
   {
     'neovim/nvim-lspconfig',
-    event = { 'BufReadPre', 'BufNewFile' }, -- Load when buffer is read or created
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       {
         'williamboman/mason.nvim',
@@ -32,18 +30,10 @@ return {
         'WhoIsSethDaniel/mason-tool-installer.nvim',
         cmd = { 'MasonToolsInstall', 'MasonToolsUpdate' },
       },
-      {
-        'j-hui/fidget.nvim',
-        event = 'LspAttach',
-        opts = {},
-      },
-      {
-        'hrsh7th/cmp-nvim-lsp',
-        event = 'InsertEnter', -- Load when entering insert mode
-      },
     },
     config = function()
-      -- Your existing LSP configuration code here
+      -- {{{ LSP Attach Keymaps
+
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -51,27 +41,27 @@ return {
             vim.keymap.set('n', keys, func, { buf = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          map('<leader>gd', vim.lsp.buf.definition, 'Go to Definition')
-          -- Optional: Add these complementary navigation mappings
-          map('<leader>gr', vim.lsp.buf.references, 'Go to References')
-          map('<leader>gI', vim.lsp.buf.implementation, 'Go to Implementation')
+          map('<leader>cd', vim.lsp.buf.definition, '[c]ode [d]efinition')
+          map('<leader>cr', vim.lsp.buf.references, '[c]ode [r]eferences')
+          map('<leader>ci', vim.lsp.buf.implementation, '[c]ode [i]mplementation')
+          map('<leader>ca', vim.lsp.buf.code_action, '[c]ode [a]ctions')
+          map('<leader>cn', vim.lsp.buf.rename, '[c]ode re[n]ame')
+          map('<leader>ct', vim.lsp.buf.type_definition, '[c]ode [t]ype definition')
+          map('<leader>cs', vim.lsp.buf.signature_help, '[c]ode [s]ignature help')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
         end,
       })
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      -- }}}
+
+      -- {{{ Server Definitions
+
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       local servers = {
-        pylsp = {
-          -- Your existing pylsp configuration
-        },
-        lua_ls = {
-          -- Your existing lua_ls configuration
-        },
-        ruff = {
-          -- Your existing lua_ls configuration
-        },
+        pylsp = {},
+        lua_ls = {},
+        ruff = {},
         marksman = {
           root_dir = function(bufnr, on_dir)
             local fname = vim.api.nvim_buf_get_name(bufnr)
@@ -84,7 +74,10 @@ return {
         },
       }
 
-      -- Mason setup with explicit ensure_installed configuration
+      -- }}}
+
+      -- {{{ Mason Setup
+
       require('mason').setup({
         ui = {
           icons = {
@@ -98,7 +91,6 @@ return {
       -- Servers managed outside Mason (installed via Homebrew)
       local mason_exclude = { 'marksman' }
 
-      -- Mason-lspconfig setup with explicit handlers
       require('mason-lspconfig').setup({
         ensure_installed = vim.tbl_filter(function(s)
           return not vim.tbl_contains(mason_exclude, s)
@@ -134,8 +126,10 @@ return {
         auto_update = true,
         run_on_start = true,
       })
+
+      -- }}}
     end,
   },
 }
 
--- vim: ts=2 sts=2 sw=2 et
+-- }}}

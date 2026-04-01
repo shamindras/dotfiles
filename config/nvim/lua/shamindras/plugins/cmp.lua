@@ -1,122 +1,58 @@
+-- {{{ Dependencies
+
 return {
   {
-    'hrsh7th/nvim-cmp',
-    event = { 'InsertEnter', 'CmdlineEnter' }, -- Load when entering insert mode or cmdline
+    'saghen/blink.cmp',
+    event = { 'InsertEnter', 'CmdlineEnter' },
+    version = '*',
     dependencies = {
       {
         'L3MON4D3/LuaSnip',
-        event = 'InsertEnter', -- Only load when entering insert mode
+        event = 'InsertEnter',
         build = (function()
           if vim.fn.has('win32') == 1 or vim.fn.executable('make') == 0 then
             return
           end
           return 'make install_jsregexp'
         end)(),
-        dependencies = {}, -- Removed friendly-snippets as it was commented out
         config = function()
           require('luasnip').config.setup({})
         end,
       },
-      {
-        'saadparwaiz1/cmp_luasnip',
-        event = 'InsertEnter', -- Load with insert mode
+    },
+
+    -- }}}
+
+    -- {{{ Completion Setup
+
+    opts = {
+      keymap = { preset = 'default' },
+      snippets = { preset = 'luasnip' },
+      fuzzy = { implementation = 'lua' },
+      signature = { enabled = true },
+
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        per_filetype = {
+          lua = { inherit_defaults = true, 'lazydev' },
+        },
       },
-      {
-        'hrsh7th/cmp-nvim-lsp',
-        event = 'InsertEnter',
-      },
-      {
-        'hrsh7th/cmp-path',
-        event = { 'InsertEnter', 'CmdlineEnter' }, -- Load for both insert and cmdline
+
+      completion = {
+        list = {
+          max_items = 20,
+          selection = { preselect = true, auto_insert = false },
+        },
+        menu = {
+          auto_show = true,
+        },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 200,
+        },
       },
     },
-    config = function()
-      local cmp = require('cmp')
-      local luasnip = require('luasnip')
-      cmp.setup({
-        performance = {
-          debounce = 60, -- Delay completions to save CPU
-          throttle = 30, -- Throttle completion menu updates
-          fetching_timeout = 100, -- Timeout for completion requests
-          async_budget = 1, -- ms to use for async operations
-          max_view_entries = 100, -- Maximum number of items to show in view
-          filtering_context_budget = 10, -- Budget for filtering context
-          confirm_resolve_timeout = 80, -- Timeout for confirmation resolving
-        },
 
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-
-        -- Optimize loading by setting a reasonable size limit
-        completion = {
-          completeopt = 'menu,menuone,noinsert',
-          keyword_length = 2, -- Start completing after 2 characters
-          max_item_count = 20, -- Limit number of suggestions
-        },
-
-        mapping = cmp.mapping.preset.insert({
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-          ['<C-Space>'] = cmp.mapping.complete({}),
-          ['<C-l>'] = cmp.mapping(function()
-            if luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            end
-          end, { 'i', 's' }),
-          ['<C-h>'] = cmp.mapping(function()
-            if luasnip.locally_jumpable(-1) then
-              luasnip.jump(-1)
-            end
-          end, { 'i', 's' }),
-        }),
-
-        -- Prioritize sources and lazy load them
-        -- NOTE: Using cmp.config.sources with two groups allows fallback behavior
-        sources = cmp.config.sources({
-          -- Primary sources (high priority)
-          {
-            name = 'lazydev',
-            group_index = 0,
-            max_item_count = 20,
-          },
-          {
-            name = 'nvim_lsp',
-            max_item_count = 20,
-            keyword_length = 1, -- Lower threshold to trigger for [[ in zk
-            priority = 1000,
-          },
-          {
-            name = 'luasnip',
-            max_item_count = 10,
-            priority = 750,
-          },
-        }, {
-          -- Secondary sources (fallback when primary sources have no results)
-          {
-            name = 'path',
-            max_item_count = 10,
-            priority = 500,
-            keyword_length = 3,
-          },
-        }),
-
-        -- Add view options to optimize performance
-        view = {
-          entries = { name = 'custom', selection_order = 'near_cursor' },
-        },
-
-        -- Add experimental features for better performance
-        experimental = {
-          ghost_text = false, -- Disable ghost text for better performance
-        },
-      })
-    end,
+    -- }}}
   },
 }
--- vim: ts=2 sts=2 sw=2 et
