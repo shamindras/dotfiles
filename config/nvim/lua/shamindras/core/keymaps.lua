@@ -174,7 +174,6 @@ keymap('n', '<leader>ts', function()
   end
 end, { desc = '[t]oggle [s]pell check' })
 
-
 -- }}}
 
 -- {{{ Window Operations

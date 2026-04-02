@@ -15,14 +15,15 @@ M.default = 'eldritch'
 -- Cycle/display order: dark-to-light gradient
 M.order = {
   'eldritch',
-  'catppuccin-mocha',
-  'tokyonight-night',
-  'cyberdream',
-  'nightfox',
-  'terafox',
   'teide-dark',
   'teide-dimmed',
+  'catppuccin-mocha',
   'catppuccin-macchiato',
+  'nightfox',
+  'terafox',
+  'dracula',
+  'cyberdream',
+  'tokyonight-night',
   'catppuccin-latte',
   'dayfox',
   'teide-light',
@@ -66,6 +67,13 @@ local plugins = {
     mod = 'cyberdream',
     setup = {
       italic_comments = true,
+    },
+  },
+  dracula = {
+    plugin = 'Mofiqul/dracula.nvim',
+    mod = 'dracula',
+    setup = {
+      italic_comment = true,
     },
   },
 }
@@ -141,6 +149,15 @@ M.themes = {
       fg = '#152528',
     },
     code_palette = { bg = '#1d3337' },
+  }),
+
+  dracula = variant(plugins.dracula, {
+    scheme = 'dracula',
+    heading_palette = {
+      bg = { '#BD93F9', '#50FA7B', '#8BE9FD', '#FF79C6', '#FFB86C', '#F1FA8C' },
+      fg = '#282A36',
+    },
+    code_palette = { bg = '#2d2f3d' },
   }),
 
   ['teide-dark'] = variant(plugins.teide, {
