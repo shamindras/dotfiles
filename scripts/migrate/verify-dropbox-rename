@@ -112,7 +112,7 @@ while IFS= read -r file; do
       generated+=("$file")
       ;;
     # Research data and Overleaf content (not dotfiles generators)
-    */firepred/data/*|*/apps/overleaf/*|*/overleaf/*)
+    */firepred/data/*|*/Apps/Overleaf/*|*/Dropbox/overleaf/*|*/Dropbox/Overleaf/*)
       generated+=("$file")
       ;;
     # Quarto/Library caches, containers, and app state
@@ -128,10 +128,10 @@ while IFS= read -r file; do
       ;;
     # Dropbox content (notes, teaching, backup, personal, resources)
     # These are user data files that mention DROPBOX in content, not config
-    */dropbox/notes/*|*/dropbox/teaching/*|*/dropbox/backup/*)
+    */Dropbox/notes/*|*/Dropbox/teaching/*|*/Dropbox/backup/*)
       generated+=("$file")
       ;;
-    */dropbox/personal/*|*/dropbox/resources/*)
+    */Dropbox/personal/*|*/Dropbox/resources/*)
       generated+=("$file")
       ;;
     # XDG state/data dirs (tool-managed state)
