@@ -261,7 +261,7 @@
           "key": "t",
           "label": "trash-empty",
           "type": "command",
-          "value": "osascript -e 'tell application \"Finder\" to activate' -e 'tell application \"Finder\" to if (count of items in trash) > 0 then empty trash' && sleep 0.2 && (killall Finder 2>/dev/null || true) && sleep 0.1 && /bin/zsh -c '/opt/homebrew/bin/aerospace workspace B'"
+          "value": "test $(osascript -e 'tell application \"Finder\" to count of items in trash') -gt 0 && osascript -e 'tell application \"Finder\" to activate' -e 'delay 0.3' -e 'tell application \"System Events\" to key code 51 using {command down, shift down, option down}' -e 'delay 0.3' && killall Finder 2>/dev/null && sleep 0.2 && /opt/homebrew/bin/aerospace workspace B"
         },
         {
           "key": "u",
