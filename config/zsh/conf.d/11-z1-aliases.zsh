@@ -22,7 +22,7 @@ function z1_aliases {
   alias cpi='cp -iv'
   alias da='deactivate;clear'
   alias df='df -kH'
-  alias dn='z ~/DROPBOX/REPOS/dotfiles;tmux-resize;nvim;clear'
+  alias dn='z $DROPBOX_REPOS_DIR/dotfiles;tmux-resize;nvim;clear'
   alias dus='du -sckx * | sort -nr'
   alias er='espanso restart'
   alias ghd='tmux-resize;gh dash;clear;'
@@ -57,10 +57,10 @@ function z1_aliases {
   alias uac="ua;clear" # run `ua` function and clear screen
 
   # wash hidden files in downloads and refs, change into directory and launch yazi
-  alias yd="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/Downloads;y"
+  alias yd="wash ~/Downloads && wash $DROPBOX_BOOKS_DIR;z ~/Downloads;y"
   alias yh="clean ~;z ~;y"
-  alias yr="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;y"
-  alias y0="wash ~/Downloads && wash ~/DROPBOX/RESOURCES/BOOKS;z ~/DROPBOX/RESOURCES/BOOKS/CURRENT_READING/books/00_now_reading;y"
+  alias yr="wash ~/Downloads && wash $DROPBOX_BOOKS_DIR;z $DROPBOX_BOOKS_DIR/reference_books;y"
+  alias y0="wash ~/Downloads && wash $DROPBOX_BOOKS_DIR;z $DROPBOX_BOOKS_DIR/current_reading/books/00_now_reading;y"
 
   # ============================================================================
   # zk (zettelkasten) aliases
@@ -105,11 +105,11 @@ function z1_aliases {
 
   # directory aliases
   alias conf="z ${XDG_CONFIG_HOME};clear;"
-  alias dots='z ~/DROPBOX/REPOS/dotfiles;clear;'
+  alias dots='z $DROPBOX_REPOS_DIR/dotfiles;clear;'
   alias down='z ~/Downloads;clear;'
-  alias reps='z ~/DROPBOX/REPOS;clear;'
-  alias refs='z ~/DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS;clear;'
-  alias play='z ~/DROPBOX/REPOS/codebox;ua;clear;' # Also activates uv
+  alias reps='z $DROPBOX_REPOS_DIR;clear;'
+  alias refs='z $DROPBOX_BOOKS_DIR/reference_books;clear;'
+  alias play='z $DROPBOX_REPOS_DIR/codebox;ua;clear;' # Also activates uv
 
   # source: running `xdg-ninja` in `$HOME` gave these suggestion
   # subversion

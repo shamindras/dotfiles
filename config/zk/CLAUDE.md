@@ -12,7 +12,7 @@
 
 ## Key Settings
 
-- **Notebook dir**: `$HOME/DROPBOX/notes/zk`
+- **Notebook dir**: `$HOME/Dropbox/notes/zk`
 - **Filename**: `{{slug title}}-{{id}}` with 5-char alphanum IDs
 - **Groups**: journal (daily auto-numbered), ideas (with template)
 - **Aliases**: daily, edit (interactive), list, search

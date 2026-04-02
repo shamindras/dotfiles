@@ -1,26 +1,26 @@
 [[session]]
 name = "play"
-path = "~/DROPBOX/REPOS/codebox"
+path = "~/Dropbox/repos/codebox"
 startup_command = "~/.config/sesh/scripts/play.sh"
 
 [[session]]
 name = "dots"
-path = "~/DROPBOX/REPOS/dotfiles"
+path = "~/Dropbox/repos/dotfiles"
 startup_command = "~/.config/sesh/scripts/dots.sh"
 
 [[session]]
 name = "career"
-path = "~/DROPBOX/REPOS/ss_applications"
+path = "~/Dropbox/repos/ss_applications"
 startup_command = "~/.config/sesh/scripts/career.sh"
 
 [[session]]
 name = "blog"
-path = "~/DROPBOX/REPOS/ss_personal_quarto_blog"
+path = "~/Dropbox/repos/ss_personal_quarto_blog"
 startup_command = "~/.config/sesh/scripts/blog.sh"
 
 [[session]]
 name = "notes"
-path = "~/DROPBOX/notes/zk"
+path = "~/Dropbox/notes/zk"
 startup_command = "~/.config/sesh/scripts/notes.sh"
 
 [[session]]

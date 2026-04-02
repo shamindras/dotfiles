@@ -17,7 +17,11 @@ export BATDIFF_USE_DELTA=true
 export CCACHE_DIR="$XDG_CACHE_HOME/ccache"
 
 # Dropbox
-export DROPBOX_DIR="$HOME/DROPBOX"
+export DROPBOX_DIR="$HOME/Dropbox"
+export DROPBOX_REPOS_DIR="$DROPBOX_DIR/repos"
+export DROPBOX_RESOURCES_DIR="$DROPBOX_DIR/resources"
+export DROPBOX_BOOKS_DIR="$DROPBOX_RESOURCES_DIR/books"
+export DROPBOX_NOTES_DIR="$DROPBOX_DIR/notes"
 
 # less
 export LESSKEY="$XDG_CONFIG_HOME/less/lesskey"
@@ -92,7 +96,7 @@ export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export CURL_HOME="$XDG_CONFIG_HOME/curl"
 
 # zk - https://zk-org.github.io/zk/
-export ZK_NOTEBOOK_DIR="$DROPBOX_DIR/notes/zk"
+export ZK_NOTEBOOK_DIR="$DROPBOX_NOTES_DIR/zk"
 
 # endregion --------------------------------------------------------------------
 

@@ -32,7 +32,7 @@ Follow the on-screen instructions to:
 
 - Sign in to your Dropbox account
 - Wait for initial sync to complete
-- Verify `~/DROPBOX` directory exists and contains your files
+- Verify `~/Dropbox` directory exists and contains your files
 
 2. **Install dotfiles** (after Dropbox sync completes):
 

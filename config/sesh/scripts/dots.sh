@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 SESSION="dots"
-WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/dotfiles"
+WORK_DIR="${DROPBOX_DIR:-$HOME/Dropbox}/repos/dotfiles"
 
 # shellcheck source=helpers.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

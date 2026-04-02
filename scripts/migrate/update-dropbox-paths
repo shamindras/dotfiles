@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# ==============================================================================
+# update-dropbox-paths — Replace uppercase DROPBOX paths with lowercase
+#
+# Targets external files outside the dotfiles repo that contain absolute or
+# tilde-prefixed DROPBOX paths. Dotfiles-repo files are updated directly in
+# their respective modules; this script handles the rest.
+#
+# Usage:
+#   ./scripts/migrate/update-dropbox-paths [--dry-run]
+#
+# Options:
+#   --dry-run   Show what would change without modifying files
+# ==============================================================================
+
+DRY_RUN=false
+[[ "${1:-}" == "--dry-run" ]] && DRY_RUN=true
+
+# Replacement pairs: most-specific first to avoid partial matches.
+# Format: "old_pattern|new_pattern"
+REPLACEMENTS=(
+  "DROPBOX/RESOURCES/BOOKS/REFERENCE_BOOKS|Dropbox/resources/books/reference_books"
+  "DROPBOX/RESOURCES/BOOKS/CURRENT_READING|Dropbox/resources/books/current_reading"
+  "DROPBOX/RESOURCES/BOOKS/EBOOKS|Dropbox/resources/books/ebooks"
+  "DROPBOX/RESOURCES/BOOKS|Dropbox/resources/books"
+  "DROPBOX/RESOURCES|Dropbox/resources"
+  "DROPBOX/REPOS|Dropbox/repos"
+  "DROPBOX/notes|Dropbox/notes"
+  "DROPBOX|Dropbox"
+)
+
+# ---------------------------------------------------------------------------
+# Target files (hardcoded from system-wide audit)
+# ---------------------------------------------------------------------------
+TARGET_FILES=()
+
+# Other repos' Claude Code settings
+for repo in codebox ss_applications ss_personal_quarto_blog; do
+  f="$HOME/Dropbox/repos/${repo}/.claude/settings.local.json"
+  [[ -f "$f" ]] && TARGET_FILES+=("$f")
+done
+
+# This repo's Claude Code settings
+f="$HOME/Dropbox/repos/dotfiles/.claude/settings.local.json"
+[[ -f "$f" ]] && TARGET_FILES+=("$f")
+
+# Alfred default results prefs
+for plist in "$HOME/Library/Application Support/Alfred/Alfred.alfredpreferences/preferences/local"/*/features/defaultresults/prefs.plist; do
+  [[ -f "$plist" ]] && TARGET_FILES+=("$plist")
+done
+
+# Positron workspace/global storage
+for json in \
+  "$HOME/Library/Application Support/Positron/User/globalStorage/storage.json" \
+  "$HOME/Library/Application Support/Positron/User"/workspaceStorage/*/workspace.json; do
+  [[ -f "$json" ]] && TARGET_FILES+=("$json")
+done
+
+# VS Code workspace/global storage
+for json in \
+  "$HOME/Library/Application Support/Code/User/globalStorage/storage.json" \
+  "$HOME/Library/Application Support/Code/User"/workspaceStorage/*/workspace.json; do
+  [[ -f "$json" ]] && TARGET_FILES+=("$json")
+done
+
+# VS Code / Positron Python locator cache
+for json in "$HOME/Library/Application Support"/*/User/globalStorage/ms-python.python/pythonLocator/*.json; do
+  [[ -f "$json" ]] && TARGET_FILES+=("$json")
+done
+
+# ---------------------------------------------------------------------------
+# Apply replacements
+# ---------------------------------------------------------------------------
+changed=0
+
+for file in "${TARGET_FILES[@]}"; do
+  file_changed=false
+  for pair in "${REPLACEMENTS[@]}"; do
+    old="${pair%%|*}"
+    new="${pair##*|}"
+    if grep -q "$old" "$file" 2>/dev/null; then
+      if [[ "$DRY_RUN" == true ]]; then
+        echo "[dry-run] $file: $old → $new"
+      else
+        sed -i .bak "s|${old}|${new}|g" "$file"
+      fi
+      file_changed=true
+    fi
+  done
+  if [[ "$file_changed" == true ]]; then
+    ((changed++)) || true
+  fi
+done
+
+# Clean up .bak files
+if [[ "$DRY_RUN" == false ]]; then
+  for file in "${TARGET_FILES[@]}"; do
+    rm -f "${file}.bak"
+  done
+fi
+
+echo ""
+echo "=== update-dropbox-paths ==="
+if [[ "$DRY_RUN" == true ]]; then
+  echo "Dry run complete. ${changed} file(s) would be modified."
+else
+  echo "Updated ${changed} file(s)."
+fi
+
+# ---------------------------------------------------------------------------
+# Verification pass: check for remaining uppercase DROPBOX filesystem refs
+# ---------------------------------------------------------------------------
+echo ""
+echo "=== Verification: scanning for remaining uppercase DROPBOX refs ==="
+
+# Search home dir for remaining uppercase DROPBOX refs.
+# Uses --no-ignore --hidden for broad scanning, with exclusions for
+# vendored/generated dirs and external app state.
+remaining=$(rg --no-ignore --hidden \
+  --glob '!.git' \
+  --glob '!.venv' \
+  --glob '!**/renv/library' \
+  --glob '!**/.Rproj.user' \
+  --glob '!node_modules' \
+  --glob '!__pycache__' \
+  --glob '!.pytest_cache' \
+  --glob '!.ruff_cache' \
+  --glob '!**/_site' \
+  --glob '!**/_freeze' \
+  --glob '!.Trash' \
+  --glob '!.dropbox' \
+  --glob '!Library/Dropbox' \
+  --glob '!Library/Application Support/Dropbox' \
+  --glob '!Library/Application Support/Google' \
+  --glob '!Library/Application Support/Mozilla' \
+  --glob '!Library/Application Support/zen' \
+  --glob '!Library/Application Support/Microsoft Edge' \
+  --glob '!Library/Application Support/CrashReporter' \
+  --glob '!Library/CloudStorage' \
+  --glob '!Library/Metadata' \
+  --glob '!Library/LaunchAgents' \
+  --glob '!Library/Application Support/Alfred/Alfred.alfredpreferences/workflows' \
+  --glob '!.claude/debug' \
+  --glob '!.claude/backups' \
+  --glob '!.claude/file-history' \
+  --glob '!.claude/plans' \
+  --glob '!.claude/projects' \
+  --glob '!*.jsonl' \
+  --glob '!*.fls' \
+  --glob '!*.fdb_latexmk' \
+  --glob '!*.log' \
+  --glob '!*.cache' \
+  --glob '!Library/Application Support/virtualenv' \
+  --glob '!Library/Application Support/taskwarrior-tui' \
+  --glob '!Library/Containers' \
+  -l 'DROPBOX' "$HOME" 2>/dev/null || true)
+
+if [[ -n "$remaining" ]]; then
+  echo "WARNING: The following files still contain uppercase DROPBOX:"
+  echo "$remaining"
+  exit 1
+else
+  echo "All clear — no uppercase DROPBOX filesystem refs found."
+fi
