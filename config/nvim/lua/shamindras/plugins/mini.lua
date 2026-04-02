@@ -199,8 +199,8 @@ return {
       callback = set_custom_highlight_groups,
     })
 
-    -- Session-persistent toggle: true = comment-only (default), false = all matches
-    vim.g.hipatterns_comment_only = true
+    -- Session-persistent toggle: false = all matches (default), true = comment-only
+    vim.g.hipatterns_comment_only = false
 
     -- Check if a position is inside a treesitter @comment capture.
     -- Falls back to always-highlight when no treesitter parser is available.
