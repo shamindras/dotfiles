@@ -34,7 +34,7 @@ config/nvim/
 │   │   └── lazy-bootstrap.lua        # Auto-downloads lazy.nvim if missing
 │   └── plugins/
 │       ├── lspconfig.lua             # LSP + Mason (lazydev, blink.cmp capabilities)
-│       ├── cmp.lua                   # Completion (blink.cmp + LuaSnip)
+│       ├── blink.lua                 # Completion (blink.cmp + LuaSnip)
 │       ├── conform.lua               # Multi-tool formatter
 │       ├── nvim-lint.lua             # Multi-tool linter (100ms debounce)
 │       ├── treesitter.lua            # Syntax highlighting + text objects
@@ -213,6 +213,11 @@ Completion is powered by **blink.cmp** (replaced nvim-cmp):
 - **Snippets**: LuaSnip integration via `snippets = { preset = 'luasnip' }`
 - **Signature help**: enabled
 - **Fuzzy**: Lua implementation
+- **Cmdline mode**: enabled with auto-show for `:` commands only (not `/` `?`
+  search). Inherits insert-mode keymap preset (`C-n`/`C-p` navigate, `C-y`
+  accept). Sources: buffer + cmdline (vim's `getcompletion()` — covers
+  commands, options, lua API, file paths). Ghost text enabled for inline
+  previews.
 
 ## Plugin Consolidation
 

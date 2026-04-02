@@ -34,8 +34,8 @@ require('lazy').setup({
   -- lsp
   require('shamindras.plugins.lspconfig'),
 
-  -- cmp
-  require('shamindras.plugins.cmp'),
+  -- blink
+  require('shamindras.plugins.blink'),
 
   -- treesitter
   require('shamindras.plugins.treesitter'),

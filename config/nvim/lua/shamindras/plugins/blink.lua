@@ -51,6 +51,18 @@ return {
           auto_show_delay_ms = 200,
         },
       },
+
+      cmdline = {
+        keymap = { preset = 'inherit' },
+        completion = {
+          menu = {
+            auto_show = function(ctx)
+              return vim.fn.getcmdtype() == ':'
+            end,
+          },
+          ghost_text = { enabled = true },
+        },
+      },
     },
 
     -- }}}
