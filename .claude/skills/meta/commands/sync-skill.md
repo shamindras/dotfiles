@@ -70,8 +70,10 @@ When the source has a skill that doesn't exist in the target:
    ```
 6. Wait for approval before creating any files.
 7. After approval: create directory, copy/scaffold files, create symlinks.
-8. Post-bootstrap: prompt user to fill TODO placeholders. Offer: "Want me
-   to analyze your repo and suggest repo-specific content for each zone?"
+8. Post-bootstrap: offer to fill repo-specific zones interactively:
+   "Want me to analyze your repo and walk you through each zone?"
+   If the user accepts, run the **repo-specific zone survey** (see Step 6a)
+   for every scaffolded zone across all files.
 
 ## 2. Discover files
 
@@ -213,7 +215,37 @@ User responses:
   <!-- TODO: Define <name> for this repo. See source for format. -->
   <!-- END REPO-SPECIFIC -->
   ```
-- Present scaffolded file to user, ask them to fill in zones.
+- Present scaffolded file to user, then run the **repo-specific zone survey**
+  (Step 6a) for each zone.
+
+### Step 6a: Repo-specific zone survey
+
+When filling repo-specific zones — whether from bootstrap (Step 1a) or
+COPY-AND-SCAFFOLD — walk the user through each zone interactively:
+
+1. **Analyze the target repo** — read directory structure, `CLAUDE.md`,
+   `git log --oneline -20`, and any relevant config files to inform
+   suggestions.
+2. **One zone at a time** — for each `<!-- REPO-SPECIFIC: <name> -->` zone:
+   a. Explain what this zone controls and show what the source repo has.
+   b. Present suggested options as a checkbox list with a freeform option:
+      ```
+      Zone: scopes (workflow.md)
+      Source has: nvim, tmux, brew, git, zsh, ...
+
+      What scopes fit this repo?
+
+      a. [ ] By directory (frontend, backend, infra, ...)
+      b. [ ] By language (ts, py, go, ...)
+      c. [ ] By concern (api, auth, db, ui, ...)
+      d. [ ] Use source scopes as-is (they fit this repo too)
+      e. [ ] Other — tell me what you have in mind
+      ```
+   c. Wait for the user's answer before moving to the next zone.
+   d. After the answer, draft the zone content and confirm:
+      "Here's what I'll write for `<name>` — approve or revise?"
+3. **After all zones complete** — show the full file with all zones filled
+   in for final approval before writing.
 
 **SKIP:**
 - No action.
