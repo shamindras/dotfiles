@@ -34,7 +34,7 @@ All use `"modifiers": {"optional": ["any"]}` — works with any held modifier.
 
 | Parameter                                | Value | Effect                           |
 | ---------------------------------------- | ----- | -------------------------------- |
-| `basic.to_if_alone_timeout_milliseconds` | 200   | Tap window (release within 200ms)|
+| `basic.to_if_alone_timeout_milliseconds` | 125   | Tap window (release within 125ms)|
 | `basic.to_if_held_down_threshold_milliseconds` | 75 | Hold detection threshold     |
 
 ## Device Configuration
