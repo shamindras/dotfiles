@@ -4,7 +4,7 @@ return {
     'folke/snacks.nvim', -- Required: we use snacks pickers and ivy layout
   },
   keys = {
-    -- Pre-define keys for lazy loading with which-key labels
+    -- Pre-define keys for lazy loading
     { '<leader>k', desc = '+[k]asten (zk notes)' },
     { '<leader>kd', desc = '[k]asten [d]aily' },
     { '<leader>kD', desc = '[k]asten [d]aily sync' },

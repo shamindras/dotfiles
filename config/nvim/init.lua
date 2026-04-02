@@ -25,9 +25,6 @@ require('lazy').setup({
   -- colorscheme
   require('shamindras.plugins.colorscheme'),
 
-  -- which.key
-  -- require('shamindras.plugins.which-key'),
-
   -- fuzzy finder
   require('shamindras.plugins.snacks'),
 
@@ -66,7 +63,6 @@ require('lazy').setup({
   require('shamindras.plugins.render-markdown'),
 }, {
   defaults = { lazy = true },
-  install = { colorscheme = { 'tokyonight', 'darkplus', 'default' } },
   checker = { enabled = true, notify = false },
   performance = {
     rtp = {
@@ -102,23 +98,7 @@ require('lazy').setup({
     },
   },
   ui = {
-    -- If you are using a Nerd Font: set icons to an empty table which will use the
-    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-    icons = vim.g.have_nerd_font and {} or {
-      cmd = '⌘',
-      config = '🛠',
-      event = '📅',
-      ft = '📂',
-      init = '⚙',
-      keys = '🗝',
-      plugin = '🔌',
-      runtime = '💻',
-      require = '🌙',
-      source = '📄',
-      start = '🚀',
-      task = '📌',
-      lazy = '💤 ',
-    },
+    icons = {}, -- uses default lazy.nvim Nerd Font icons
   },
 })
 
