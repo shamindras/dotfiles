@@ -70,6 +70,11 @@ local function load_colorscheme(key)
 
   save_colorscheme(key)
   vim.cmd.hi('Comment gui=none')
+
+  -- Set render-markdown code highlight early (before plugin re-caches derived highlights)
+  if theme.code_palette then
+    vim.api.nvim_set_hl(0, 'RenderMarkdownCode', { bg = theme.code_palette.bg })
+  end
 end
 
 -- Cycle to the next theme in order
@@ -104,6 +109,10 @@ local function generate_specs()
         spec.priority = 1000
         spec.init = function()
           vim.cmd.colorscheme(active_theme.scheme)
+          -- Set render-markdown code highlight early (before plugin caches derived highlights)
+          if active_theme.code_palette then
+            vim.api.nvim_set_hl(0, 'RenderMarkdownCode', { bg = active_theme.code_palette.bg })
+          end
         end
       else
         spec.lazy = true
