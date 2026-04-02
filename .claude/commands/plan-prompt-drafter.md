@@ -1,0 +1,1 @@
+../skills/plan-prompt-drafter/commands/plan-prompt-drafter.md
