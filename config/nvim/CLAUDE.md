@@ -187,6 +187,10 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
   `util/themes.lua` for all 12 themes; auto-updates on `ColorScheme` event
 - Buffer-local `zv`/`zj`/`zk` fold cycling — uses treesitter `atx_heading`
   query to cycle all heading levels (overrides global fold-cycling keymaps)
+- Hipatterns keywords (TODO, FIXME, etc.) highlighted in all text by default
+  (`vim.g.hipatterns_comment_only = false`); toggle with `<leader>th` to
+  restrict to comments only. Todo comments picker in `pickers.lua` always
+  filters to comment-prefixed lines via rg pattern regardless of this setting.
 
 ### Formatter Config (repo root)
 
