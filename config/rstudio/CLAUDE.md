@@ -13,7 +13,7 @@
 
 - **Save workspace**: never
 - **Load workspace**: false
-- **Working directory**: ~/DROPBOX/REPOS
+- **Working directory**: ~/Dropbox/repos
 - **Theme**: Tomorrow Night Bright
 - **Shell**: bash
 - **Font size**: 12pt

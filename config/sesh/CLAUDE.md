@@ -72,7 +72,7 @@ All scripts use:
 - `#!/usr/bin/env bash` shebang
 - `set -Eeuo pipefail` strict mode
 - `SESSION` var matching the session name in `sesh.toml`
-- `WORK_DIR` with `${DROPBOX_DIR:-$HOME/DROPBOX}` fallback
+- `WORK_DIR` with `${DROPBOX_DIR:-$HOME/Dropbox}` fallback
 - `sesh_window_claude` renames window 1, all other windows use `tmux new-window` or inline rename
 
 ### Window Layout by Session

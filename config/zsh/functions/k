@@ -24,7 +24,7 @@ k() {
   if [[ "$sync_templates" == true ]]; then
     rsync -au --delete \
       ~/.config/zk/templates/ \
-      ~/DROPBOX/notes/zk/.zk/templates/ 2>/dev/null
+      $ZK_NOTEBOOK_DIR/.zk/templates/ 2>/dev/null
   fi
 
   command zk "$@"

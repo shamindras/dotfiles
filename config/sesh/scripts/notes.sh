@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 SESSION="notes"
-WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/notes/zk"
+WORK_DIR="${DROPBOX_DIR:-$HOME/Dropbox}/notes/zk"
 IDEAS_DIR="${WORK_DIR}/ideas"
 
 # shellcheck source=helpers.sh

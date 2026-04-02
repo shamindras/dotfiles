@@ -36,9 +36,9 @@ aliases:
   # Clone repo into a specific directory
   # source: https://github.com/cli/cli/discussions/2618#discussioncomment-205837
   # usage:gh clp playground
-  # => gh repo clone shamindras/playground ~/DROPBOX/REPOS/shamindras/playground
-  # FIXME we want to ideally clone this to ~/DROPBOX/REPOS/playground
-  clp: '!gh repo view "$1" | awk "/^name:/{print \$2}" | xargs -I% gh repo clone "%" ~/DROPBOX/REPOS/%'
+  # => gh repo clone shamindras/playground ~/Dropbox/repos/shamindras/playground
+  # FIXME we want to ideally clone this to ~/Dropbox/repos/playground
+  clp: '!gh repo view "$1" | awk "/^name:/{print \$2}" | xargs -I% gh repo clone "%" ~/Dropbox/repos/%'
 # The path to a unix socket through which send HTTP connections. If blank, HTTP
 # traffic will be handled by net/http.DefaultTransport.
 http_unix_socket:

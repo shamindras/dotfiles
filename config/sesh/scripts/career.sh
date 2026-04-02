@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 SESSION="career"
-WORK_DIR="${DROPBOX_DIR:-$HOME/DROPBOX}/REPOS/ss_applications"
+WORK_DIR="${DROPBOX_DIR:-$HOME/Dropbox}/repos/ss_applications"
 
 # shellcheck source=helpers.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
