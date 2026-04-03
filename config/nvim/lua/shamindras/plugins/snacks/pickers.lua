@@ -263,10 +263,12 @@ function M.colorscheme_picker()
     }
   end
 
-  -- Load a theme plugin and apply its colorscheme
+  -- Load a theme plugin and apply its colorscheme.
+  -- Updates _colorscheme_intended so the ColorschemeGuard allows the change.
   local function apply_theme(theme_key, scheme)
     local short_name = theme_registry.themes[theme_key].plugin:match('[^/]+$')
     require('lazy').load({ plugins = { short_name } })
+    vim.g._colorscheme_intended = scheme
     pcall(vim.cmd.colorscheme, scheme)
   end
 
