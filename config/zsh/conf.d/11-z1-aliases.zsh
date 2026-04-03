@@ -22,7 +22,7 @@ function z1_aliases {
   alias cpi='cp -iv'
   alias da='deactivate;clear'
   alias df='df -kH'
-  alias dn='z $DROPBOX_REPOS_DIR/dotfiles;tmux-resize;nvim;clear'
+  alias dn="n \$DROPBOX_REPOS_DIR/dotfiles"
   alias dus='du -sckx * | sort -nr'
   alias er='espanso restart'
   alias ghd='tmux-resize;gh dash;clear;'
@@ -34,8 +34,6 @@ function z1_aliases {
   alias less='less -R'
   alias md='mkdir -p'
   alias man='batman'
-  alias n='tmux-resize;nvim;clear'
-  alias nn='tmux-resize;nvim .;clear'
   alias nb='tmux-resize;newsboat;clear;'
   alias paths='echo -e ${PATH//:/\\n}' # Echo all executable Paths
   alias rcp='rsync -ah --info=progress2'

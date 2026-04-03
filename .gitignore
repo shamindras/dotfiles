@@ -286,7 +286,7 @@ rsconnect/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,R,Python,VisualStudioCode
-n
+/n
 .vscode/settings.json
 
 config/brew/Brewfile.lock.json
