@@ -282,6 +282,8 @@ cask "dropbox"
 cask "espanso"
 # Web browser
 cask "firefox"
+# Screen colour temperature controller
+cask "flux-app"
 cask "font-cascadia-code-nf"
 cask "font-commit-mono-nerd-font"
 cask "font-fira-code-nerd-font"
