@@ -28,7 +28,7 @@ sesh_window_nvim() {
   local session="$1" work_dir="$2"
   tmux new-window -a -t "${session}:\$" -n "nvim" -c "${work_dir}"
   tmux send-keys -l -t "${session}:nvim" \
-    "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.files)'"
+    "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.files)';clear"
   tmux send-keys -t "${session}:nvim" Enter
 }
 
