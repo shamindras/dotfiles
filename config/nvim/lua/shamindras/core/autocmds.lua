@@ -87,15 +87,6 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 
 -- {{{ Window Resize
 
--- resize splits if window got resized
-local resize_window_group = vim.api.nvim_create_augroup('resize_window', { clear = true })
-vim.api.nvim_create_autocmd({ 'VimResized' }, {
-  callback = function()
-    vim.cmd('tabdo wincmd =')
-  end,
-  group = resize_window_group,
-})
-
 -- }}}
 
 -- {{{ Last Location Restore

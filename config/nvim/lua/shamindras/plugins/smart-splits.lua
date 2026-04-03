@@ -46,6 +46,43 @@ return {
 
     -- }}}
 
+    -- {{{ Resize Keymaps
+
+    {
+      '<leader>wh',
+      function()
+        require('smart-splits').resize_left()
+      end,
+      mode = 'n',
+      desc = '[w]indow resize left [h]',
+    },
+    {
+      '<leader>wj',
+      function()
+        require('smart-splits').resize_down()
+      end,
+      mode = 'n',
+      desc = '[w]indow resize down [j]',
+    },
+    {
+      '<leader>wk',
+      function()
+        require('smart-splits').resize_up()
+      end,
+      mode = 'n',
+      desc = '[w]indow resize up [k]',
+    },
+    {
+      '<leader>wl',
+      function()
+        require('smart-splits').resize_right()
+      end,
+      mode = 'n',
+      desc = '[w]indow resize right [l]',
+    },
+
+    -- }}}
+
     -- {{{ Swap Keymaps
 
     {
@@ -54,7 +91,7 @@ return {
         require('smart-splits').swap_buf_left()
       end,
       mode = 'n',
-      desc = 'Swap with left buffer',
+      desc = '[w]indow swap left [H]',
     },
     {
       '<leader>wJ',
@@ -62,7 +99,7 @@ return {
         require('smart-splits').swap_buf_down()
       end,
       mode = 'n',
-      desc = 'Swap with bottom buffer',
+      desc = '[w]indow swap down [J]',
     },
     {
       '<leader>wK',
@@ -70,7 +107,7 @@ return {
         require('smart-splits').swap_buf_up()
       end,
       mode = 'n',
-      desc = 'Swap with top buffer',
+      desc = '[w]indow swap up [K]',
     },
     {
       '<leader>wL',
@@ -78,7 +115,7 @@ return {
         require('smart-splits').swap_buf_right()
       end,
       mode = 'n',
-      desc = 'Swap with right buffer',
+      desc = '[w]indow swap right [L]',
     },
   },
 

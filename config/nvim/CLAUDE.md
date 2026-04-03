@@ -47,7 +47,7 @@ config/nvim/
 │       ├── render-markdown.lua       # In-buffer markdown rendering
 │       ├── mini.lua                  # Single mini.nvim spec (12 modules)
 │       ├── flash.nvim                # Enhanced f/t motion
-│       ├── smart-splits.lua          # Tmux-aware splits (C-hjkl)
+│       ├── smart-splits.lua          # Tmux-aware splits (C-hjkl nav, resize, swap)
 │       └── noice.lua                 # Cmdline popup
 └── spell/
     └── en.utf-8.add*                 # Custom spell dictionary
@@ -75,7 +75,7 @@ config/nvim/
 | `<leader>n`  | Number ops (increment, decrement)                 |
 | `<leader>s`  | Search/replace (grep, diagnostics, todo comments) |
 | `<leader>t`  | Toggle (line numbers, spell, theme, hipatterns)   |
-| `<leader>w`  | Window (split, equalize, maximize, swap)          |
+| `<leader>w`  | Window (split, equalize, maximize, resize, swap)  |
 
 ### Plugin Categories
 
@@ -90,7 +90,7 @@ config/nvim/
 
 | Tool       | Integration                                            |
 | ---------- | ------------------------------------------------------ |
-| tmux       | smart-splits.nvim: C-hjkl nav, zoom-aware             |
+| tmux       | smart-splits.nvim: C-hjkl nav, `<leader>wh/j/k/l` resize, zoom-aware |
 | aerospace  | Autocmd: reload-config on aerospace.toml save          |
 | yazi       | Autocmd: clear-cache on yazi.toml save                 |
 | lazygit    | Snacks.lazygit() via `<leader>lg`                      |
@@ -234,6 +234,9 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
 
 ## Development Notes
 
+- **Window resize/swap convention** (smart-splits.nvim): lowercase
+  `<leader>wh/j/k/l` = resize (tmux-aware), uppercase `<leader>wH/J/K/L` =
+  swap. `<leader>wz` = split horizontal (freed `wh` for resize).
 - **options.lua API convention**: use `o` (`vim.o`) for scalar options, `opt`
   (`vim.opt`) only for table-valued assignments (`listchars`, `fillchars`) or
   `:append()`/`:remove()` methods, and `vim.g` directly for global variables

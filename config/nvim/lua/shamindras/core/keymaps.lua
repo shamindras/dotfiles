@@ -196,10 +196,10 @@ local function toggle_window_maximize()
 end
 
 keymap('n', '<leader>we', '<C-w>=', { desc = '[w]indow [e]qualize' })
-keymap('n', '<leader>wh', '<C-w>s', { desc = '[w]indow split [h]orizontal' })
 keymap('n', '<leader>wm', toggle_window_maximize, { desc = '[w]indow [m]aximize toggle' })
 keymap('n', '<leader>wv', '<C-w>v', { desc = '[w]indow split [v]ertical' })
 keymap('n', '<leader>wx', '<cmd>close<CR>', { desc = '[w]indow close [x]' })
+keymap('n', '<leader>wz', '<C-w>s', { desc = '[w]indow split hori[z]ontal' })
 
 -- }}}
 
