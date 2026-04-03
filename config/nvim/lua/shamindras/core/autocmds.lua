@@ -85,7 +85,57 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 
 -- }}}
 
--- {{{ Window Resize
+-- {{{ Marker Fold Auto-Collapse
+
+-- Filetypes that use fold markers ({{{ / }}}) and should auto-collapse on open.
+-- Markdown is excluded: it uses foldmethod=expr with treesitter foldexpr.
+-- To add a filetype, append it to this table — no other changes needed.
+local marker_fold_filetypes = { 'javascript', 'julia', 'lua', 'python', 'toml', 'vim' }
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('MarkerFoldCollapse', { clear = true }),
+  pattern = marker_fold_filetypes,
+  callback = function(event)
+    if vim.b.large_file then
+      return
+    end
+
+    -- Enforce marker folding (overrides runtime defaults like nvim 0.12 expr)
+    vim.wo.foldmethod = 'marker'
+    vim.wo.foldlevel = 99 -- Folds exist but start open (auto-collapse handles UX)
+
+    -- Register buffer-local auto-collapse: close all folds, open at cursor
+    local bufnr = event.buf
+    vim.api.nvim_create_autocmd('BufWinEnter', {
+      buffer = bufnr,
+      once = true,
+      callback = function()
+        vim.defer_fn(function()
+          if not vim.api.nvim_buf_is_valid(bufnr) or vim.api.nvim_get_current_buf() ~= bufnr then
+            return
+          end
+
+          -- Verify folds exist (foldmethod=marker should create them)
+          local has_folds = false
+          for i = 1, vim.fn.line('$') do
+            if vim.fn.foldlevel(i) > 0 then
+              has_folds = true
+              break
+            end
+          end
+          if not has_folds then
+            return
+          end
+
+          local saved_cursor = vim.api.nvim_win_get_cursor(0)
+          vim.cmd('normal! zM')
+          vim.api.nvim_win_set_cursor(0, saved_cursor)
+          vim.cmd('normal! zvzz')
+        end, 100)
+      end,
+    })
+  end,
+})
 
 -- }}}
 
