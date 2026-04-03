@@ -1,35 +1,37 @@
 -- {{{ Format Options
 
--- disable automatic comment continuation for all file type in normal mode
+-- enforce consistent formatoptions across all filetypes
+-- nvim defaults are 'tcqj'; we explicitly set all desired flags to be
+-- self-documenting and guard against future default changes
 vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('DisableAutoComment', { clear = true }),
+  group = vim.api.nvim_create_augroup('SetFormatOptions', { clear = true }),
   pattern = { '*' },
   callback = function()
-    -- let comments respect textwidth
+    -- auto-wrap text using textwidth
+    vim.opt.formatoptions:prepend({ 't' })
+
+    -- auto-wrap comments using textwidth
     vim.opt.formatoptions:prepend({ 'c' })
-
-    -- auto-remove comments if possible
-    vim.opt.formatoptions:prepend({ 'j' })
-
-    -- indent past the formatlistpat, not underneath it.
-    vim.opt.formatoptions:prepend({ 'n' })
 
     -- allow formatting comments with `gq`
     vim.opt.formatoptions:prepend({ 'q' })
 
-    -- continue comments when pressing enter in insert mode
+    -- remove comment leader when joining lines (e.g. J on two comment lines)
+    vim.opt.formatoptions:prepend({ 'j' })
+
+    -- indent past formatlistpat, not underneath it (better numbered list formatting)
+    vim.opt.formatoptions:prepend({ 'n' })
+
+    -- continue comments when pressing Enter in insert mode
     vim.opt.formatoptions:prepend({ 'r' })
 
-    -- auto-wrap text using textwidth
-    vim.opt.formatoptions:prepend({ 't' })
-
-    -- do not continue comments with `O` or `o`
+    -- do not continue comments with `o` or `O` in normal mode
     vim.opt.formatoptions:remove({ 'o' })
 
-    -- no need to use autoformat, use linters
+    -- do not auto-format paragraphs on every text change (use linters instead)
     vim.opt.formatoptions:remove({ 'a' })
 
-    -- TODO: add more details for this option
+    -- do not use second line's indent for the rest of the paragraph
     vim.opt.formatoptions:remove({ '2' })
   end,
 })
@@ -98,7 +100,7 @@ vim.api.nvim_create_autocmd({ 'VimResized' }, {
 
 -- {{{ Last Location Restore
 
--- Goto last location when opening a buffer.
+-- Goto last location when opening a buffer, then top-align the view.
 local go_last_location_buffer_group = vim.api.nvim_create_augroup('go_last_location_buffer', { clear = true })
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function()
@@ -106,6 +108,10 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     local lcount = vim.api.nvim_buf_line_count(0)
     if mark[1] > 0 and mark[1] <= lcount then
       pcall(vim.api.nvim_win_set_cursor, 0, mark)
+      -- defer to run after render-markdown and treesitter finish adjusting the viewport
+      vim.defer_fn(function()
+        vim.cmd('normal! zt')
+      end, 250)
     end
   end,
   group = go_last_location_buffer_group,
@@ -181,11 +187,67 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
 
 -- }}}
 
+-- {{{ Help Vertical Split
+
+-- open help buffers in a vertical split (right side via splitright)
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  group = vim.api.nvim_create_augroup('HelpVerticalSplit', { clear = true }),
+  callback = function()
+    if vim.bo.buftype == 'help' then
+      vim.cmd('wincmd L')
+    end
+  end,
+})
+
+-- }}}
+
+-- {{{ Large File Detection
+
+-- disable expensive features for large files to prevent freezes
+local large_file_threshold = 1.5 * 1024 * 1024 -- 1.5 MB
+vim.api.nvim_create_autocmd('BufReadPre', {
+  group = vim.api.nvim_create_augroup('LargeFileDetection', { clear = true }),
+  callback = function(event)
+    local file = event.match
+    local size = vim.fn.getfsize(file)
+    if size <= large_file_threshold or size == -2 then
+      return
+    end
+    vim.b[event.buf].large_file = true
+    vim.notify(
+      ('Large file detected (%s) — disabling treesitter, LSP, syntax'):format(vim.fn.fnamemodify(file, ':t')),
+      vim.log.levels.WARN
+    )
+    vim.cmd('syntax off')
+    vim.opt_local.foldmethod = 'manual'
+    vim.opt_local.swapfile = false
+    vim.opt_local.undolevels = -1
+    vim.schedule(function()
+      vim.treesitter.stop(event.buf)
+      for _, client in ipairs(vim.lsp.get_clients({ bufnr = event.buf })) do
+        vim.lsp.buf_detach_client(event.buf, client.id)
+      end
+    end)
+  end,
+})
+
+-- }}}
+
 -- {{{ Window Separator Highlight
+
+-- theme-aware separator: looks up the active colorscheme in the theme registry
+-- and applies its separator_fg color. Falls back to white if theme is unknown.
 vim.api.nvim_create_autocmd('ColorScheme', {
+  group = vim.api.nvim_create_augroup('WinSeparatorHighlight', { clear = true }),
   pattern = '*',
   callback = function()
-    vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = 'white' })
+    local themes = require('shamindras.util.themes')
+    local key = themes.scheme_to_key[vim.g.colors_name]
+    local fg = 'white'
+    if key and themes.themes[key] and themes.themes[key].separator_fg then
+      fg = themes.themes[key].separator_fg
+    end
+    vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = fg })
   end,
 })
 

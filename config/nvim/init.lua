@@ -1,5 +1,3 @@
--- Adapted from the amazing kickstart.nvim
-
 -- {{{ Leader Keys
 
 -- Set <space> as the leader key

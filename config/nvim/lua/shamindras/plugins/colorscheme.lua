@@ -68,6 +68,9 @@ local function load_colorscheme(key)
     return
   end
 
+  -- Track intended scheme so ColorScheme guard can revert unauthorized resets
+  vim.g._colorscheme_intended = theme.scheme
+
   save_colorscheme(key)
   vim.cmd.hi('Comment gui=none')
 
@@ -83,6 +86,29 @@ local function cycle_colorscheme()
   local next_key = themes.order[current_index]
   load_colorscheme(next_key)
 end
+
+-- Guard against unauthorized colorscheme resets (e.g., OSC 11 background detection
+-- after tmux session switch). Any colorscheme change that doesn't match the intended
+-- scheme is immediately reverted. Uses vim.schedule to avoid recursion.
+local restoring_colorscheme = false
+vim.api.nvim_create_autocmd('ColorScheme', {
+  group = vim.api.nvim_create_augroup('ColorschemeGuard', { clear = true }),
+  callback = function()
+    if restoring_colorscheme then
+      return
+    end
+    local intended = vim.g._colorscheme_intended
+    if not intended or vim.g.colors_name == intended then
+      return
+    end
+    restoring_colorscheme = true
+    vim.schedule(function()
+      pcall(vim.cmd.colorscheme, intended)
+      vim.cmd.hi('Comment gui=none')
+      restoring_colorscheme = false
+    end)
+  end,
+})
 
 -- }}}
 
@@ -109,6 +135,7 @@ local function generate_specs()
         spec.priority = 1000
         spec.init = function()
           vim.cmd.colorscheme(active_theme.scheme)
+          vim.g._colorscheme_intended = active_theme.scheme
           -- Set render-markdown code highlight early (before plugin caches derived highlights)
           if active_theme.code_palette then
             vim.api.nvim_set_hl(0, 'RenderMarkdownCode', { bg = active_theme.code_palette.bg })

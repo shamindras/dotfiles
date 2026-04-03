@@ -35,7 +35,7 @@ return {
       -- {{{ LSP Attach Keymaps
 
       vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+        group = vim.api.nvim_create_augroup('LspAttachKeymaps', { clear = true }),
         callback = function(event)
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buf = event.buf, desc = 'LSP: ' .. desc })
@@ -49,6 +49,31 @@ return {
           map('<leader>ct', vim.lsp.buf.type_definition, '[c]ode [t]ype definition')
           map('<leader>cs', vim.lsp.buf.signature_help, '[c]ode [s]ignature help')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
+
+          -- highlight references to symbol under cursor on idle
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
+          if client and client.server_capabilities.documentHighlightProvider then
+            local hl_group = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = false })
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+              buffer = event.buf,
+              group = hl_group,
+              callback = vim.lsp.buf.document_highlight,
+            })
+            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+              buffer = event.buf,
+              group = hl_group,
+              callback = vim.lsp.buf.clear_references,
+            })
+          end
+        end,
+      })
+
+      -- clean up document highlight autocmds when LSP detaches
+      vim.api.nvim_create_autocmd('LspDetach', {
+        group = vim.api.nvim_create_augroup('LspDetachCleanup', { clear = true }),
+        callback = function(event)
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_clear_autocmds({ group = 'lsp-document-highlight', buffer = event.buf })
         end,
       })
 

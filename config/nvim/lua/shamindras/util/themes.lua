@@ -104,6 +104,7 @@ M.themes = {
       fg = '#0D1116',
     },
     code_palette = { bg = '#1a1a2e' },
+    separator_fg = '#3b4048',
   }),
 
   ['tokyonight-night'] = variant(plugins.tokyonight, {
@@ -113,6 +114,7 @@ M.themes = {
       fg = '#1a1b26',
     },
     code_palette = { bg = '#1a1a2a' },
+    separator_fg = '#3b4261',
   }),
 
   ['catppuccin-mocha'] = variant(plugins.catppuccin, {
@@ -122,6 +124,7 @@ M.themes = {
       fg = '#1e1e2e',
     },
     code_palette = { bg = '#252536' },
+    separator_fg = '#45475a',
   }),
 
   cyberdream = variant(plugins.cyberdream, {
@@ -131,6 +134,7 @@ M.themes = {
       fg = '#16181a',
     },
     code_palette = { bg = '#1e2124' },
+    separator_fg = '#3c4048',
   }),
 
   nightfox = variant(plugins.nightfox, {
@@ -140,6 +144,7 @@ M.themes = {
       fg = '#192330',
     },
     code_palette = { bg = '#212e3f' },
+    separator_fg = '#2b3b51',
   }),
 
   terafox = variant(plugins.nightfox, {
@@ -149,6 +154,7 @@ M.themes = {
       fg = '#152528',
     },
     code_palette = { bg = '#1d3337' },
+    separator_fg = '#2d4f56',
   }),
 
   dracula = variant(plugins.dracula, {
@@ -158,6 +164,7 @@ M.themes = {
       fg = '#282A36',
     },
     code_palette = { bg = '#2d2f3d' },
+    separator_fg = '#44475a',
   }),
 
   ['teide-dark'] = variant(plugins.teide, {
@@ -167,6 +174,7 @@ M.themes = {
       fg = '#1D2228',
     },
     code_palette = { bg = '#2C313A' },
+    separator_fg = '#3a4049',
   }),
 
   ['teide-dimmed'] = variant(plugins.teide, {
@@ -176,6 +184,7 @@ M.themes = {
       fg = '#1e2228',
     },
     code_palette = { bg = '#282e36' },
+    separator_fg = '#363c47',
   }),
 
   -- Medium themes
@@ -186,6 +195,7 @@ M.themes = {
       fg = '#24273a',
     },
     code_palette = { bg = '#363a4f' },
+    separator_fg = '#494d64',
   }),
 
   -- Light themes
@@ -196,6 +206,7 @@ M.themes = {
       fg = '#eff1f5',
     },
     code_palette = { bg = '#ccd0da' },
+    separator_fg = '#9ca0b0',
   }),
 
   dayfox = variant(plugins.nightfox, {
@@ -205,6 +216,7 @@ M.themes = {
       fg = '#f6f2ee',
     },
     code_palette = { bg = '#dbd1dd' },
+    separator_fg = '#a8a4a0',
   }),
 
   ['teide-light'] = variant(plugins.teide, {
@@ -214,6 +226,7 @@ M.themes = {
       fg = '#E1DDD2',
     },
     code_palette = { bg = '#D4D0C5' },
+    separator_fg = '#a09c91',
   }),
 }
 -- stylua: ignore end
