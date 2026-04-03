@@ -1,0 +1,31 @@
+##? n - launch nvim with Snacks file picker
+##?
+##? usage:
+##?   n [dir]
+##?
+##? If dir is given and exists, opens nvim with file picker in that directory.
+##? Otherwise, opens nvim with file picker in the current directory.
+##?
+##? examples:
+##?   n              # file picker in cwd
+##?   n ~/Downloads  # file picker in ~/Downloads
+
+n() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  emulate -L zsh
+  local target="${1:-.}"
+
+  if [[ ! -d "$target" ]]; then
+    echo "n: not a directory: $target" >&2
+    read -q "?Open in cwd instead? [Y/n] " || { echo; return 1; }
+    echo
+    target="."
+  fi
+
+  tmux-resize
+  (cd "$target" && nvim +'autocmd User VeryLazy ++once lua require("shamindras.plugins.snacks.pickers").picker_with_fd(Snacks.picker.files)')
+  clear
+}
+
+# vim: ft=zsh
