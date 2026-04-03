@@ -10,7 +10,7 @@ source "${SCRIPT_DIR}/helpers.sh"
 
 # Window 1: newsboat
 tmux rename-window -t "${SESSION}:1" "newsboat"
-tmux send-keys -t "${SESSION}:newsboat" "newsboat" Enter
+tmux send-keys -t "${SESSION}:newsboat" "newsboat;clear" Enter
 
 # Window 2: term
 sesh_window_term "${SESSION}" "${WORK_DIR}"

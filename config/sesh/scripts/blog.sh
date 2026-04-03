@@ -13,7 +13,7 @@ sesh_window_nvim   "${SESSION}" "${WORK_DIR}"   # Window 2
 
 # Window 3: quarto preview server (session-specific)
 tmux new-window -a -t "${SESSION}:\$" -n "preview" -c "${WORK_DIR}"
-tmux send-keys -t "${SESSION}:preview" "quarto preview" Enter
+tmux send-keys -t "${SESSION}:preview" "quarto preview;clear" Enter
 
 sesh_window_term   "${SESSION}" "${WORK_DIR}"   # Window 4
 sesh_window_yazi   "${SESSION}" "${WORK_DIR}"   # Window 5
