@@ -26,8 +26,32 @@
 ## setup-macos
 
 Applies `defaults write` commands for system preferences, Finder, Dock,
-Aerospace, and third-party apps (Skim, Preview). Requires `sudo` for
-some settings. Restarts Dock, Finder, and SystemUIServer at the end.
+Aerospace, and third-party apps (Skim, Preview). Manages Login Items for
+apps that need to start at login. Requires `sudo` for some settings.
+Restarts Dock, Finder, and SystemUIServer at the end.
+
+### Login Items
+
+Registers macOS Login Items for apps that don't have their own startup
+mechanism. Cleans up redundant login items for apps that do.
+
+| App              | Startup mechanism            | Managed by          |
+| ---------------- | ---------------------------- | ------------------- |
+| AeroSpace        | `start-at-login` in config   | `aerospace.toml`    |
+| borders          | brew service (LaunchAgent)   | `install.conf.yaml` |
+| Dropbox          | Login Item                   | `setup-macos`       |
+| Espanso          | `espanso service register`   | `install.conf.yaml` |
+| Leader Key       | Login Item                   | `setup-macos`       |
+| noTunes          | Login Item                   | `setup-macos`       |
+| Raycast          | Login Item                   | `setup-macos`       |
+| Scroll Reverser  | Login Item                   | `setup-macos`       |
+| Shottr           | Login Item                   | `setup-macos`       |
+| sketchybar       | brew service (LaunchAgent)   | `install.conf.yaml` |
+
+To add a new login item, append its path to the `login_items` array in
+`setup-macos`. For apps with their own startup mechanism (brew services,
+LaunchAgent, in-app config), do NOT add a login item — use the app's
+native mechanism instead.
 
 ### Version sensitivity
 
