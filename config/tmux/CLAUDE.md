@@ -87,7 +87,8 @@ when bindings change in `keybindings.conf`.
 | `K`          | Clear pane and scrollback                 |
 | `r`          | Reload tmux config (with message)         |
 | `v`          | Enter copy mode                           |
-| `M-h/j/k/l` | Vi-style pane resize (repeatable, 5-unit) |
+| `M-h/j/k/l` | Vi-style pane resize (repeatable, 5-unit)          |
+| `M-Arrow`    | Arrow-key pane resize — WezTerm passthrough target |
 
 ### Key tables
 

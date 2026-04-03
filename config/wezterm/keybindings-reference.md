@@ -35,6 +35,9 @@ All tmux bindings send prefix `C-a` followed by the tmux key. Key-table bindings
 | `CMD+SHIFT+Up`    | `M-Up`    | Resize up 5    |
 | `CMD+SHIFT+Down`  | `M-Down`  | Resize down 5  |
 
+Note: `M-Arrow` bindings are explicitly defined in `keybindings.conf`
+(not dependent on tmux-sensible plugin defaults).
+
 ## Window Management
 
 | WezTerm key   | tmux key | Action                     |
