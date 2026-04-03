@@ -21,6 +21,8 @@ config/nvim/
 │   └── queries/markdown/
 │       └── textobjects.scm           # Custom section text object (@section.outer/inner)
 ├── ftplugin/
+│   ├── lua.lua                       # Buffer-local lua settings (enforce marker folding)
+│   ├── lua_folds.lua                 # Auto-collapse marker folds on load, focus at cursor
 │   ├── markdown.lua                  # Buffer-local md settings, highlights, heading ops, zk keymaps
 │   └── markdown_folds.lua            # Fold cycling (zv/zj/zk) + auto-collapse on load
 ├── lua/shamindras/
@@ -247,6 +249,12 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
 - **LSP progress**: mini.notify built-in `lsp_progress` (no fidget.nvim)
 - **LSP document highlight**: CursorHold-based reference highlighting in
   `lspconfig.lua` LspAttach callback (with LspDetach cleanup)
+- **Lua fold system**: `ftplugin/lua.lua` enforces `foldmethod=marker` (overrides
+  Neovim 0.12 defaults that set `foldmethod=expr`). `ftplugin/lua_folds.lua` adds
+  a `BufWinEnter` autocmd (100ms defer) that collapses all folds then opens the
+  one containing the cursor. Cursor position restored via existing Last Location
+  Restore autocmd. Both files guard against large-file detection (`vim.b.large_file`).
+  Global `zv`/`zj`/`zk` fold cycling in `keymaps.lua` handles ongoing navigation.
 - Format on save via conform.nvim (skips files >100KB)
 - Lint debounce: 100ms on BufWritePost/InsertLeave
 - Reload config: `:source $MYVIMRC` or `<leader>xb` (source current file)
