@@ -34,15 +34,6 @@ return {
         additional_vim_regex_highlighting = { 'ruby', 'markdown' },
       },
       indent = { enable = true, disable = { 'ruby' } },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = '<Enter>',
-          node_incremental = '<Enter>',
-          scope_incremental = false,
-          node_decremental = '<BS>',
-        },
-      },
     },
   },
 }

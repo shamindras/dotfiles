@@ -262,6 +262,17 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
 - Check LSP: `:LspInfo` — check Mason: `:Mason`
 - Profile startup: `<leader>lp` (~24ms startup, 10/29 plugins loaded at start)
 - View keymaps: `<leader>sk`
+- **Treesitter incremental selection**: uses nvim 0.12 built-in
+  `vim.treesitter._select` API (not the plugin's `incremental_selection`
+  module). `<A-o>` expands to parent node (outer), `<A-i>` shrinks to
+  child node (inner). Works in n/x/o modes, count-aware (e.g., `3<A-o>`).
+  Falls back to `vim.lsp.buf.selection_range()` for buffers without a
+  treesitter parser. Keymaps defined in `core/keymaps.lua`. Triggered via
+  Cmd+Alt+o/i in WezTerm (AeroSpace intercepts bare Alt+letter).
+- **Alt key convention**: keymaps use `<A-...>` (not `<M-...>`) to
+  explicitly bind to the physical Alt/Option key, since `<M-...>` (Meta)
+  can be remapped. In WezTerm, press Cmd+Alt+letter to trigger `<A-...>`
+  bindings (bare Alt is intercepted by AeroSpace for workspace switching).
 - **Treesitter parsers**: nvim 0.11+ bundles parsers for c, lua, markdown,
   markdown_inline, query, vim, vimdoc. `ensure_installed` lists only
   non-bundled parsers (bash, python, etc.). `auto_install` is disabled and
