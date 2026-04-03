@@ -35,9 +35,8 @@ All tmux bindings send prefix `C-a` followed by the tmux key. Key-table bindings
 | `CMD+SHIFT+Up`    | `M-Up`    | Resize up 5    |
 | `CMD+SHIFT+Down`  | `M-Down`  | Resize down 5  |
 
-Note: All tmux bindings in this reference (including former core defaults
-like `z`, `;`, `C-o`, `p`, `n`, `1-9`, `[`, `&`) are explicitly defined
-in `keybindings.conf` — no plugin or tmux default dependencies.
+Note: All tmux bindings in this reference (including former core defaults like `z`, `;`, `C-o`, `p`, `n`, `1-9`, `[`,
+`&`) are explicitly defined in `keybindings.conf` — no plugin or tmux default dependencies.
 
 ## Window Management
 
