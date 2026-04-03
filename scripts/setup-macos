@@ -358,6 +358,7 @@ done
 #   - AeroSpace (config), Espanso (LaunchAgent), borders/sketchybar (brew services)
 login_items=(
   "/Applications/Dropbox.app"
+  "/Applications/Flux.app"
   "/Applications/Leader Key.app"
   "/Applications/noTunes.app"
   "/Applications/Raycast.app"

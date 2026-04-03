@@ -41,6 +41,7 @@ mechanism. Cleans up redundant login items for apps that do.
 | borders          | brew service (LaunchAgent)   | `install.conf.yaml` |
 | Dropbox          | Login Item                   | `setup-macos`       |
 | Espanso          | `espanso service register`   | `install.conf.yaml` |
+| Flux             | Login Item                   | `setup-macos`       |
 | Leader Key       | Login Item                   | `setup-macos`       |
 | noTunes          | Login Item                   | `setup-macos`       |
 | Raycast          | Login Item                   | `setup-macos`       |
