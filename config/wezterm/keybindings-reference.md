@@ -35,8 +35,9 @@ All tmux bindings send prefix `C-a` followed by the tmux key. Key-table bindings
 | `CMD+SHIFT+Up`    | `M-Up`    | Resize up 5    |
 | `CMD+SHIFT+Down`  | `M-Down`  | Resize down 5  |
 
-Note: `M-Arrow` bindings are explicitly defined in `keybindings.conf`
-(not dependent on tmux-sensible plugin defaults).
+Note: All tmux bindings in this reference (including former core defaults
+like `z`, `;`, `C-o`, `p`, `n`, `1-9`, `[`, `&`) are explicitly defined
+in `keybindings.conf` — no plugin or tmux default dependencies.
 
 ## Window Management
 
@@ -83,6 +84,17 @@ Note: `M-Arrow` bindings are explicitly defined in `keybindings.conf`
 | ------------- | -------- | ------------------ |
 | `CMD+[`       | `[`      | Enter copy mode    |
 | `CMD+SHIFT+R` | `r`      | Reload tmux config |
+
+## Pane Navigation — root table (no prefix)
+
+Vim-aware: forwards to vim/nvim/fzf if active in pane, otherwise selects tmux pane.
+
+| Key   | Action                          |
+| ----- | ------------------------------- |
+| `C-h` | Select pane left (or send vim)  |
+| `C-j` | Select pane down (or send vim)  |
+| `C-k` | Select pane up (or send vim)    |
+| `C-l` | Select pane right (or send vim) |
 
 ## WezTerm-native (no tmux passthrough)
 
