@@ -75,20 +75,30 @@ Update both this table and
 [`config/wezterm/keybindings-reference.md`](../wezterm/keybindings-reference.md)
 when bindings change in `keybindings.conf`.
 
-| Key          | Action                                    |
-|--------------|-------------------------------------------|
-| `\|`         | Split pane horizontally (preserves cwd)   |
-| `-`          | Split pane vertically (preserves cwd)     |
-| `c`          | New window after current (preserves cwd)  |
-| `x`          | Kill pane (no confirmation)               |
-| `a`          | Last window (toggle)                      |
-| `,`          | Rename window                             |
-| `<` / `>`    | Swap window left/right                    |
-| `K`          | Clear pane and scrollback                 |
-| `r`          | Reload tmux config (with message)         |
-| `v`          | Enter copy mode                           |
+| Key          | Action                                             |
+|--------------|----------------------------------------------------|
+| `\|`         | Split pane horizontally (preserves cwd)            |
+| `-`          | Split pane vertically (preserves cwd)              |
+| `c`          | New window after current (preserves cwd)           |
+| `x`          | Kill pane (no confirmation)                        |
+| `&`          | Kill window (with confirmation)                    |
+| `z`          | Toggle zoom                                        |
+| `;`          | Last pane                                          |
+| `C-o`        | Rotate panes                                       |
+| `[` / `v`    | Enter copy mode                                    |
+| `p`          | Previous window                                    |
+| `n`          | Next window                                        |
+| `a`          | Last window (toggle)                               |
+| `1-9`        | Select window by number                            |
+| `,`          | Rename window                                      |
+| `<` / `>`    | Swap window left/right                             |
+| `K`          | Clear pane and scrollback                          |
+| `r`          | Reload tmux config (with message)                  |
 | `M-h/j/k/l` | Vi-style pane resize (repeatable, 5-unit)          |
 | `M-Arrow`    | Arrow-key pane resize — WezTerm passthrough target |
+
+All bindings are explicitly defined in `keybindings.conf` — no reliance
+on plugin defaults or tmux built-in defaults.
 
 ### Key tables
 
