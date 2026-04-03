@@ -398,3 +398,23 @@ keymap('n', '<C-d>', '<C-d>zz', { desc = 'Half page down (centered)' })
 keymap('n', '<C-u>', '<C-u>zz', { desc = 'Half page up (centered)' })
 
 -- }}}
+
+-- {{{ Treesitter Incremental Selection
+
+keymap({ 'n', 'x', 'o' }, '<A-o>', function()
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require('vim.treesitter._select').select_parent(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(vim.v.count1)
+  end
+end, { desc = 'Select parent treesitter node (expand)' })
+
+keymap({ 'n', 'x', 'o' }, '<A-i>', function()
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require('vim.treesitter._select').select_child(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(-vim.v.count1)
+  end
+end, { desc = 'Select child treesitter node (shrink)' })
+
+-- }}}
