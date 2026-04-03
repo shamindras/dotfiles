@@ -35,19 +35,20 @@ Restarts Dock, Finder, and SystemUIServer at the end.
 Registers macOS Login Items for apps that don't have their own startup
 mechanism. Cleans up redundant login items for apps that do.
 
-| App              | Startup mechanism            | Managed by          |
-| ---------------- | ---------------------------- | ------------------- |
-| AeroSpace        | `start-at-login` in config   | `aerospace.toml`    |
-| borders          | brew service (LaunchAgent)   | `install.conf.yaml` |
-| Dropbox          | Login Item                   | `setup-macos`       |
-| Espanso          | `espanso service register`   | `install.conf.yaml` |
-| Flux             | Login Item                   | `setup-macos`       |
-| Leader Key       | Login Item                   | `setup-macos`       |
-| noTunes          | Login Item                   | `setup-macos`       |
-| Raycast          | Login Item                   | `setup-macos`       |
-| Scroll Reverser  | Login Item                   | `setup-macos`       |
-| Shottr           | Login Item                   | `setup-macos`       |
-| sketchybar       | brew service (LaunchAgent)   | `install.conf.yaml` |
+| App                  | Startup mechanism          | Managed by          |
+| -------------------- | -------------------------- | ------------------- |
+| AeroSpace            | Login Item                 | `setup-macos`       |
+| borders              | brew service (LaunchAgent) | `install.conf.yaml` |
+| Dropbox              | Login Item                 | `setup-macos`       |
+| Espanso              | `espanso service register` | `install.conf.yaml` |
+| Flux                 | Login Item                 | `setup-macos`       |
+| Karabiner-Elements   | Login Item                 | `setup-macos`       |
+| Leader Key           | Login Item                 | `setup-macos`       |
+| noTunes              | Login Item                 | `setup-macos`       |
+| Raycast              | Login Item                 | `setup-macos`       |
+| Scroll Reverser      | Login Item                 | `setup-macos`       |
+| Shottr               | Login Item                 | `setup-macos`       |
+| sketchybar           | brew service (LaunchAgent) | `install.conf.yaml` |
 
 To add a new login item, append its path to the `login_items` array in
 `setup-macos`. For apps with their own startup mechanism (brew services,

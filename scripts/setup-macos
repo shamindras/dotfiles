@@ -347,18 +347,19 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "
 echo "  Login items..."
 
 # Remove redundant login items for apps that have their own startup mechanism:
-#   - AeroSpace: start-at-login = true in aerospace.toml
 #   - Espanso: espanso service register (LaunchAgent with RunAtLoad)
-for redundant in "AeroSpace" "Espanso"; do
+for redundant in "Espanso"; do
   osascript -e "tell application \"System Events\" to delete login item \"${redundant}\"" 2>/dev/null || true
 done
 
 # Register login items for apps that rely on macOS Login Items to start at boot.
 # Apps with their own mechanism are excluded:
-#   - AeroSpace (config), Espanso (LaunchAgent), borders/sketchybar (brew services)
+#   - Espanso (LaunchAgent), borders/sketchybar (brew services)
 login_items=(
+  "/Applications/AeroSpace.app"
   "/Applications/Dropbox.app"
   "/Applications/Flux.app"
+  "/Applications/Karabiner-Elements.app"
   "/Applications/Leader Key.app"
   "/Applications/noTunes.app"
   "/Applications/Raycast.app"
