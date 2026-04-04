@@ -42,7 +42,10 @@ config/sketchybar/
   - `right_pill`: wraps volume, wifi, battery, clock
 - **Toggle** (`Alt+Shift+.`): keybinding-driven script that switches between
   sketchybar and native menu bar (not event-subscribed)
-- Workspace updates via Aerospace's `exec-on-workspace-change` event
+- Workspace display queries aerospace directly (`list-windows --focused`) for the
+  app name, not the global `front_app` sketchybar label — ensures only apps on
+  the focused workspace are shown. Uses `FOCUSED_WORKSPACE` env var from
+  aerospace's `exec-on-workspace-change` when available
 - Plugin scripts (standalone) must include `set -Eeuo pipefail` (repo convention)
 - Item scripts are sourced into `sketchybarrc` — do **not** add strict mode
 
