@@ -1,0 +1,16 @@
+;; aliases-base.kbd — dual-function key remaps
+;;
+;; Ported from Karabiner-Elements (125ms tap timeout, 75ms hold threshold).
+;; tap-hold-press triggers hold early when another key is pressed while held,
+;; matching Karabiner's lazy modifier behavior.
+
+(defalias
+  ;; Caps Lock: tap → Escape, hold → Left Control
+  cap (tap-hold-release 200 200 esc lctl)
+
+  ;; Left Control: tap → Escape, hold → Left Control
+  lc  (tap-hold-release 200 200 esc lctl)
+
+  ;; Right Command: tap → leader sequence mode, hold → Right Command
+  rmc (tap-hold-release 200 200 sldr rmet)
+)

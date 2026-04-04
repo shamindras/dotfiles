@@ -19,6 +19,7 @@
 | `setup-dropbox`           | Dropbox installation and setup       |
 | `setup-upgrade-homebrew`  | Homebrew installation/upgrade        |
 | `setup-upgrade-rust-cargo`| Rust toolchain management            |
+| `setup-upgrade-kanata`   | Build kanata from source with cmd feature |
 | `setup-firefox`           | Firefox user.js and userChrome.css   |
 | `setup-zk`               | Zettelkasten (zk) setup             |
 | `setup-nvim-treesitter`  | Install/update treesitter parsers (`--status` for read-only table) |
@@ -43,8 +44,7 @@ mechanism. Cleans up redundant login items for apps that do.
 | Dropbox              | Login Item                 | `setup-macos`       |
 | Espanso              | `espanso service register` | `install.conf.yaml` |
 | Flux                 | Login Item                 | `setup-macos`       |
-| Karabiner-Elements   | Login Item                 | `setup-macos`       |
-| Leader Key           | Login Item                 | `setup-macos`       |
+| Kanata               | LaunchDaemon               | `com.jtroo.kanata.plist` |
 | noTunes              | Login Item                 | `setup-macos`       |
 | Raycast              | Login Item                 | `setup-macos`       |
 | Scroll Reverser      | Login Item                 | `setup-macos`       |

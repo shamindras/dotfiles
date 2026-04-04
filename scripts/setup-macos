@@ -355,12 +355,11 @@ done
 # Register login items for apps that rely on macOS Login Items to start at boot.
 # Apps with their own mechanism are excluded:
 #   - Espanso (LaunchAgent), borders/sketchybar (brew services)
+#   - Kanata (LaunchDaemon: /Library/LaunchDaemons/com.jtroo.kanata.plist)
 login_items=(
   "/Applications/AeroSpace.app"
   "/Applications/Dropbox.app"
   "/Applications/Flux.app"
-  "/Applications/Karabiner-Elements.app"
-  "/Applications/Leader Key.app"
   "/Applications/noTunes.app"
   "/Applications/Raycast.app"
   "/Applications/Scroll Reverser.app"

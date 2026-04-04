@@ -51,9 +51,8 @@
     ${XDG_CONFIG_HOME}/ghostty: config/ghostty
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
-    ${XDG_CONFIG_HOME}/karabiner: config/karabiner
+    ${XDG_CONFIG_HOME}/kanata: config/kanata
     ${XDG_CONFIG_HOME}/lazygit: config/lazygit
-    ${XDG_CONFIG_HOME}/leader-key: config/leader-key
     ${XDG_CONFIG_HOME}/marimo: config/marimo
     ${XDG_CONFIG_HOME}/newsboat: config/newsboat
     ${XDG_CONFIG_HOME}/npm: config/npm
@@ -124,6 +123,11 @@
 - shell:
     - command: ./scripts/setup-upgrade-rust-cargo
       description: install rust and cargo, or upgrade both
+
+# kanata (keyboard remapper with cmd feature — built from source)
+- shell:
+    - command: ./scripts/setup-upgrade-kanata
+      description: install kanata with cmd feature, or upgrade
 
 # Update bat themes cache
 # NOTE: here we prefix with `command` to use the original `bat` command, without any alias.

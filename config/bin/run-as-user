@@ -1,0 +1,16 @@
+#!/bin/sh
+# run-as-user — execute a command as the console user
+#
+# When run as root (e.g., from kanata launchd daemon), re-executes the
+# given command as the logged-in console user. No-op when already running
+# as a regular user.
+#
+# Usage: run-as-user <command> [args...]
+
+set -eu
+
+if [ "$(id -u)" -eq 0 ]; then
+  exec sudo -u "$(stat -f '%Su' /dev/console)" "$@"
+else
+  exec "$@"
+fi

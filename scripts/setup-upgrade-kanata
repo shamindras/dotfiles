@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+# setup-upgrade-kanata — build kanata from source and configure launchd daemon
+#
+# Requires: cargo (installed via scripts/setup-upgrade-rust-cargo)
+# The cmd feature enables shell command execution from kanata configs.
+# Homebrew's kanata formula does NOT include this feature.
+#
+# This script:
+#   1. Builds/upgrades kanata with the cmd feature
+#   2. Copies the launchd plist to /Library/LaunchDaemons/
+#   3. Loads (or restarts) the kanata daemon
+#   4. Stops Karabiner-Elements services that conflict with kanata
+#      (keeps VirtualHIDDevice driver which kanata depends on)
+#
+# Manual step that CANNOT be automated (TCC/SIP protected):
+#   System Settings → Privacy & Security → Input Monitoring →
+#   add ~/.local/share/cargo/bin/kanata
+
+set -Eeuo pipefail
+
+KANATA_FEATURES="default,cmd"
+PLIST_SRC="${XDG_CONFIG_HOME:-$HOME/.config}/kanata/com.jtroo.kanata.plist"
+PLIST_DST="/Library/LaunchDaemons/com.jtroo.kanata.plist"
+DAEMON_LABEL="system/com.jtroo.kanata"
+
+# ── Build kanata ─────────────────────────────────────────────────────────────
+
+if ! command -v cargo >/dev/null 2>&1; then
+    echo "[ERROR] cargo not found. Run scripts/setup-upgrade-rust-cargo first."
+    exit 1
+fi
+
+echo "[INFO] Checking kanata installation status..."
+if command -v kanata >/dev/null 2>&1; then
+    echo "[INFO] kanata already installed: $(kanata --version 2>/dev/null || echo 'unknown')"
+    echo "[INFO] Upgrading kanata..."
+else
+    echo "[INFO] kanata not found. Installing..."
+fi
+
+echo "[INFO] Building kanata with features: ${KANATA_FEATURES}..."
+cargo install kanata --features "${KANATA_FEATURES}" 2>&1
+
+if ! command -v kanata >/dev/null 2>&1; then
+    echo "[ERROR] kanata build failed."
+    exit 1
+fi
+echo "[SUCCESS] kanata $(kanata --version) ready."
+
+# ── Configure launchd daemon ─────────────────────────────────────────────────
+
+if [ ! -f "$PLIST_SRC" ]; then
+    echo "[WARNING] Plist not found at ${PLIST_SRC}, skipping daemon setup."
+    exit 0
+fi
+
+echo "[INFO] Installing kanata launchd daemon..."
+sudo cp "$PLIST_SRC" "$PLIST_DST"
+
+# Load or restart the daemon
+if sudo launchctl print "$DAEMON_LABEL" >/dev/null 2>&1; then
+    echo "[INFO] Restarting kanata daemon..."
+    sudo launchctl kickstart -k "$DAEMON_LABEL"
+else
+    echo "[INFO] Loading kanata daemon..."
+    sudo launchctl load "$PLIST_DST"
+fi
+
+echo "[SUCCESS] kanata daemon active."
+
+# ── Stop conflicting Karabiner-Elements services ─────────────────────────────
+# Kanata and Karabiner both grab exclusive keyboard access. The VirtualHIDDevice
+# driver must STAY running (kanata depends on it), but the Karabiner services
+# that intercept keyboard input must be stopped.
+
+echo "[INFO] Stopping conflicting Karabiner-Elements services..."
+
+KARABINER_SYSTEM_SERVICES=(
+    "system/org.pqrs.service.daemon.Karabiner-Core-Service"
+)
+KARABINER_USER_SERVICES=(
+    "org.pqrs.service.agent.karabiner_console_user_server"
+    "org.pqrs.service.agent.karabiner_session_monitor"
+)
+
+for svc in "${KARABINER_SYSTEM_SERVICES[@]}"; do
+    if sudo launchctl print "$svc" >/dev/null 2>&1; then
+        sudo launchctl bootout "$svc" 2>/dev/null && echo "  Stopped: $svc" || true
+    fi
+done
+
+GUI_UID=$(id -u)
+for svc in "${KARABINER_USER_SERVICES[@]}"; do
+    if launchctl print "gui/${GUI_UID}/${svc}" >/dev/null 2>&1; then
+        launchctl bootout "gui/${GUI_UID}/${svc}" 2>/dev/null && echo "  Stopped: $svc" || true
+    fi
+done
+
+echo "[SUCCESS] Setup complete!"
+echo ""
+echo "⚠️  Manual step required (one-time, cannot be automated):"
+echo "   System Settings → Privacy & Security → Input Monitoring"
+echo "   Add: ~/.local/share/cargo/bin/kanata"

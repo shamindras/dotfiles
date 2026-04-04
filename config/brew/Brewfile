@@ -311,10 +311,10 @@ cask "google-chrome"
 cask "inkscape"
 # Download manager
 cask "jdownloader"
-# Keyboard customiser
-cask "karabiner-elements"
-# Application launcher
-cask "leader-key"
+# Keyboard customiser (replaced by kanata — built from source via scripts/setup-upgrade-kanata)
+# cask "karabiner-elements"
+# Application launcher (replaced by kanata leader sequences)
+# cask "leader-key"
 # Free cross-platform office suite, fresh version
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications
