@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-WORKSPACE="$(aerospace list-workspaces --focused 2>/dev/null || echo "")"
-FRONT_APP="$(sketchybar --query front_app 2>/dev/null | jq -r '.label.value')"
+# Prefer the env var passed by aerospace's exec-on-workspace-change;
+# fall back to querying aerospace directly (e.g., on app-switch triggers).
+WORKSPACE="${FOCUSED_WORKSPACE:-$(aerospace list-workspaces --focused 2>/dev/null || echo "")}"
+FRONT_APP="$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null || echo "")"
 
 if [ -n "$WORKSPACE" ] && [ -n "$FRONT_APP" ]; then
   sketchybar --set workspace label="$WORKSPACE $FRONT_APP"
