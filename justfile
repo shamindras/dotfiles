@@ -54,6 +54,18 @@ treesitter_update:
 treesitter_status:
 	@./scripts/setup-nvim-treesitter --status
 
+raycast_export:
+	@printf "📦 Opening Raycast export dialog...\n"
+	@open "raycast://extensions/raycast/raycast/export-settings-data"
+	@printf "💡 Save to: config/raycast/Raycast.rayconfig\n"
+	@printf "📖 Full instructions: config/raycast/CLAUDE.md\n"
+
+raycast_import:
+	@printf "📥 Opening Raycast import dialog...\n"
+	@open "raycast://extensions/raycast/raycast/import-settings-data"
+	@printf "💡 Select: config/raycast/Raycast.rayconfig\n"
+	@printf "📖 Full instructions: config/raycast/CLAUDE.md\n"
+
 update_submods:
 	@printf "📦 Pulling latest submodules...\n"
 	git submodule update --recursive --remote
