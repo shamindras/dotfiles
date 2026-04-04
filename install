@@ -6,6 +6,15 @@ set -Eeuo pipefail
 # Global variables
 # ------------------------------------------------------------------------------
 
+# Parse flags
+DOTFILES_NO_HINTS=0
+for arg in "$@"; do
+  case "$arg" in
+    --no-hints) DOTFILES_NO_HINTS=1 ;;
+  esac
+done
+export DOTFILES_NO_HINTS
+
 DOTBOT_CONFIG_FILE="install.conf.yaml"
 DOTBOT_DIR="submods/core/dotbot"
 DOTBOT_PLUGIN_DIR="submods/core"
@@ -46,8 +55,4 @@ git submodule update --init --recursive "${DOTBOT_DIR}"
 # Post-install reminders
 # ------------------------------------------------------------------------------
 
-echo ""
-echo "=== Firefox Post-Install Reminder ==="
-echo "Some extensions need manual setup after Firefox Sync."
-echo "See: config/firefox/post-install-checklist.md"
-echo ""
+./scripts/post-install-hints

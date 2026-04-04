@@ -246,6 +246,18 @@
           "value": "~/.config/bin/close-notifications"
         },
         {
+          "key": "e",
+          "label": "raycast-export",
+          "type": "url",
+          "value": "raycast://extensions/raycast/raycast/export-settings-data"
+        },
+        {
+          "key": "i",
+          "label": "raycast-import",
+          "type": "url",
+          "value": "raycast://extensions/raycast/raycast/import-settings-data"
+        },
+        {
           "key": "m",
           "label": "move-files",
           "type": "command",

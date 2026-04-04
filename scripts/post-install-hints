@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Print manual post-install hints for tools that can't be fully automated.
+# Suppressed when DOTFILES_NO_HINTS=1.
+
+[[ "${DOTFILES_NO_HINTS:-0}" == "1" ]] && exit 0
+
+printf "\n"
+printf "📋 Manual post-install steps\n"
+printf "   ─────────────────────────\n"
+printf "\n"
+printf "   🦊 Firefox\n"
+printf "      Some extensions need manual setup after Firefox Sync.\n"
+printf "      📖 See: config/firefox/post-install-checklist.md\n"
+printf "\n"
+printf "   🚀 Raycast\n"
+printf "      1. Open Raycast and sign in\n"
+printf "      2. Run: just raycast_import\n"
+printf "      3. Enter export passphrase (🔐 see password manager)\n"
+printf "      4. Reinstall Store extensions + re-auth OAuth tokens\n"
+printf "      📖 See: config/raycast/CLAUDE.md\n"
+printf "\n"

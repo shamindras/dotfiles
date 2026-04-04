@@ -23,8 +23,8 @@ action groups for opening/quitting apps, running commands, and quick URLs.
   polls until the app actually exits, then switches aerospace workspace
   (Finder is the sole inline exception due to its special quit sequence)
 - **Utility commands**: brew upgrade (`--greedy`),
-  close-notifications, move-files, restart-leaderkey, trash-empty,
-  toggle-mute, wash-dropbox
+  close-notifications, move-files, raycast-export, raycast-import,
+  restart-leaderkey, trash-empty, toggle-mute, wash-dropbox
 - **GitHub URLs** (`g`): personal repos (codebox, dotfiles, quarto-blog),
   GitHub profile, neovim config
 - **URLs** (`u`): blog, homepage, Google Keep, YouTube incognito

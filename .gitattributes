@@ -8,6 +8,9 @@
 *.md           text diff=markdown
 *.py           text diff=python
 
+# Raycast encrypted config export
+*.rayconfig    binary
+
 # Exclude repo plumbing from git archive exports
 *.gitkeep      export-ignore
 .gitattributes export-ignore

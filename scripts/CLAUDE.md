@@ -22,6 +22,7 @@
 | `setup-firefox`           | Firefox user.js and userChrome.css   |
 | `setup-zk`               | Zettelkasten (zk) setup             |
 | `setup-nvim-treesitter`  | Install/update treesitter parsers (`--status` for read-only table) |
+| `post-install-hints`     | Print manual post-install steps (Firefox, Raycast); suppressed by `DOTFILES_NO_HINTS=1` |
 
 ## setup-macos
 
