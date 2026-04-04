@@ -122,14 +122,33 @@ Show the proposed commit message and files to be staged/committed.
 
 **Flag overrides**: see `flags.md` §--all-and-push, §--draft.
 
-## 8. Commit
+## 8. Co-author trailer
+
+If Claude contributed meaningfully to the committed changes (e.g., wrote or
+substantially revised the code, not just staged/formatted/committed), ask:
+
+> "Add me as co-author on this commit?"
+
+- **Default: no.** Most commits are user-authored work; Claude is just
+  operating the commit workflow.
+- If the user says yes, append to the commit message body:
+  ```
+  Co-Authored-By: Claude <noreply@anthropic.com>
+  ```
+- **Skip the prompt** (always add) when Claude wrote the majority of the
+  diff — e.g., generated a new file, implemented a feature, or produced
+  a multi-file refactor.
+- **Skip the prompt** (never add) for trivial commits: docs-only,
+  config tweaks, reformatting, version bumps.
+
+## 9. Commit
 
 Stage the discussed/approved files by name, then commit using a HEREDOC
 for the message to preserve formatting.
 
 **Flag overrides**: see `flags.md` §--staged, §--all, §--all-and-push, §--amend.
 
-## 9. Post-commit
+## 10. Post-commit
 
 - Run `git log --oneline -3` to confirm the result.
 - If `--land` or `--land-main` is active, proceed to land workflow (see `land.md`).
