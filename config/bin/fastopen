@@ -1,0 +1,32 @@
+#!/bin/sh
+# fastopen — launch macOS apps by short name
+#
+# Uses /usr/bin/open with full app path (no -a name resolution).
+# Centralized lookup: change launch strategy in one place.
+# Uses run-as-user for root→user context switch (kanata launchd daemon).
+#
+# Usage: fastopen <app-name>
+
+set -eu
+
+RUN="$HOME/.config/bin/run-as-user"
+
+case "$1" in
+  1password)    "$RUN" /usr/bin/open /Applications/1Password.app ;;
+  djview)       "$RUN" /usr/bin/open /Applications/DjView.app ;;
+  firefox)      "$RUN" /usr/bin/open /Applications/Firefox.app ;;
+  preview)      "$RUN" /usr/bin/open /System/Applications/Preview.app ;;
+  finder)       "$RUN" /usr/bin/open /System/Library/CoreServices/Finder.app ;;
+  signal)       "$RUN" /usr/bin/open /Applications/Signal.app ;;
+  books)        "$RUN" /usr/bin/open /System/Applications/Books.app ;;
+  spotify)      "$RUN" /usr/bin/open /Applications/Spotify.app ;;
+  nordvpn)      exec "$HOME/.config/bin/open-nordvpn" ;;
+  skim)         "$RUN" /usr/bin/open /Applications/Skim.app ;;
+  ghostty)      "$RUN" /usr/bin/open /Applications/Ghostty.app ;;
+  textedit)     "$RUN" /usr/bin/open /System/Applications/TextEdit.app ;;
+  vscode)       "$RUN" /usr/bin/open "/Applications/Visual Studio Code.app" ;;
+  vlc)          "$RUN" /usr/bin/open /Applications/VLC.app ;;
+  wezterm)      "$RUN" /usr/bin/open /Applications/WezTerm.app ;;
+  jdownloader)  "$RUN" /usr/bin/open "/Applications/JDownloader 2/JDownloader2.app" ;;
+  *) echo "fastopen: unknown app '$1'" >&2; exit 1 ;;
+esac

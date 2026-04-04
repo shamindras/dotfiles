@@ -1,0 +1,13 @@
+#!/bin/sh
+# brew-update — run brew update/upgrade in a new WezTerm window
+#
+# Uses run-as-user for root→user context switch (kanata launchd daemon).
+
+set -eu
+
+RUN="$HOME/.config/bin/run-as-user"
+WEZTERM="/Applications/WezTerm.app/Contents/MacOS/wezterm"
+BREW="/opt/homebrew/bin/brew"
+
+"$RUN" "$WEZTERM" start -- /bin/zsh -c \
+  "$BREW update && $BREW upgrade --greedy && $BREW cleanup;"' printf "\n===[ BREW UPDATE END ]===\n"; printf "\nPress any key to close this window..."; read -k 1 -s'

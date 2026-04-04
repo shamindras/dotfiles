@@ -72,7 +72,7 @@ Major categories of tools configured:
 - **Editors**: neovim, vscode configurations
 - **Terminals**: ghostty, wezterm
 - **Development**: git, gh, lazygit, tmux
-- **System**: aerospace (window manager), karabiner (keyboard)
+- **System**: aerospace (window manager), kanata (keyboard remapper + leader sequences)
 - **CLI Tools**: bat, ripgrep, yazi, starship, atuin
 - **Languages**: rust/cargo, npm packages
 
@@ -125,7 +125,7 @@ run the corresponding command:
 | ----------- | -------------------------------------------- | ------------------------------------------------------------------- |
 | aerospace   | `aerospace.toml`                             | `aerospace reload-config`                                           |
 | borders     | `bordersrc`                                  | `brew services restart borders`                                     |
-| leader-key  | `leader-key/config.json`                     | `killall 'Leader Key' 2>/dev/null; sleep 0.5; open -a 'Leader Key'` |
+| kanata      | `*.kbd`                                      | `sudo launchctl kickstart -k system/com.jtroo.kanata`               |
 | sketchybar  | `sketchybarrc`, `colors.sh`, `items/*.sh`    | `sketchybar --reload`                                               |
 | yazi        | `yazi.toml`                                  | `yazi --clear-cache`                                                |
 

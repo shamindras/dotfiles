@@ -65,10 +65,10 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   command = "execute 'silent !aerospace reload-config'",
 })
 
--- leader-key config
+-- kanata config (restart daemon to reload)
 vim.api.nvim_create_autocmd('BufWritePost', {
-  pattern = { '*/leader-key/config.json' },
-  command = 'execute \'silent !killall "Leader Key" 2>/dev/null; sleep 0.5; open -a "Leader Key"\'',
+  pattern = { '*.kbd' },
+  command = "execute 'silent !sudo launchctl kickstart -k system/com.jtroo.kanata'",
 })
 
 -- borders config

@@ -1,0 +1,25 @@
+#!/bin/sh
+# empty-trash — empty Finder trash and switch aerospace workspace
+#
+# Uses run-as-user for root→user context switch (kanata launchd daemon).
+
+set -eu
+
+RUN="$HOME/.config/bin/run-as-user"
+AEROSPACE="/opt/homebrew/bin/aerospace"
+
+# Only proceed if trash has items
+count=$("$RUN" osascript -e 'tell application "Finder" to count of items in trash')
+[ "$count" -gt 0 ] || exit 0
+
+# Activate Finder and trigger Empty Trash (Cmd+Shift+Option+Delete)
+"$RUN" osascript \
+  -e 'tell application "Finder" to activate' \
+  -e 'delay 0.3' \
+  -e 'tell application "System Events" to key code 51 using {command down, shift down, option down}' \
+  -e 'delay 0.3'
+
+killall Finder 2>/dev/null || true
+sleep 0.2
+
+"$RUN" "$AEROSPACE" workspace B

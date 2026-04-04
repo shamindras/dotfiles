@@ -1,0 +1,110 @@
+;; sequences.kbd — leader key actions
+;;
+;; Trigger: Right Command tap → sldr → type 2-key sequence → action fires.
+;; All cmd calls use /bin/sh -c for minimal shell overhead.
+;; App opens go through fastopen helper for centralized path management.
+;; App quits go through quit-app helper for graceful exit + workspace switch.
+
+(defvirtualkeys
+  ;; ── Open apps (via fastopen) ─────────────────────────────────
+  seq-o-1 (cmd /bin/sh -c "$HOME/.config/bin/fastopen 1password")
+  seq-o-a (cmd /bin/sh -c "$HOME/.config/bin/fastopen djview")
+  seq-o-b (cmd /bin/sh -c "$HOME/.config/bin/fastopen firefox")
+  seq-o-d (cmd /bin/sh -c "$HOME/.config/bin/fastopen preview")
+  seq-o-e (cmd /bin/sh -c "$HOME/.config/bin/fastopen finder")
+  seq-o-g (cmd /bin/sh -c "$HOME/.config/bin/fastopen signal")
+  seq-o-i (cmd /bin/sh -c "$HOME/.config/bin/fastopen books")
+  seq-o-m (cmd /bin/sh -c "$HOME/.config/bin/fastopen spotify")
+  seq-o-n (cmd /bin/sh -c "$HOME/.config/bin/fastopen nordvpn")
+  seq-o-p (cmd /bin/sh -c "$HOME/.config/bin/fastopen skim")
+  seq-o-t (cmd /bin/sh -c "$HOME/.config/bin/fastopen ghostty")
+  seq-o-q (cmd /bin/sh -c "$HOME/.config/bin/fastopen textedit")
+  seq-o-s (cmd /bin/sh -c "$HOME/.config/bin/fastopen vscode")
+  seq-o-v (cmd /bin/sh -c "$HOME/.config/bin/fastopen vlc")
+  seq-o-w (cmd /bin/sh -c "$HOME/.config/bin/fastopen wezterm")
+  seq-o-x (cmd /bin/sh -c "$HOME/.config/bin/fastopen jdownloader")
+
+  ;; ── Quit apps (via quit-app) ─────────────────────────────────
+  seq-q-1 (cmd /bin/sh -c "$HOME/.config/bin/quit-app 1Password B")
+  seq-q-a (cmd /bin/sh -c "$HOME/.config/bin/quit-app --pkill djview DjView W")
+  seq-q-b (cmd /bin/sh -c "$HOME/.config/bin/quit-app Firefox B")
+  seq-q-d (cmd /bin/sh -c "$HOME/.config/bin/quit-app Preview W")
+  seq-q-e (cmd /bin/sh -c "$HOME/.config/bin/quit-app --activate-quit Finder W")
+  seq-q-g (cmd /bin/sh -c "$HOME/.config/bin/quit-app Signal B")
+  seq-q-i (cmd /bin/sh -c "$HOME/.config/bin/quit-app --pkill Books Books B")
+  seq-q-m (cmd /bin/sh -c "$HOME/.config/bin/quit-app Spotify B")
+  seq-q-n (cmd /bin/sh -c "$HOME/.config/bin/quit-app NordVPN B")
+  seq-q-p (cmd /bin/sh -c "$HOME/.config/bin/quit-app Skim W")
+  seq-q-t (cmd /bin/sh -c "$HOME/.config/bin/quit-app Ghostty W --check wezterm-gui --fallback B")
+  seq-q-q (cmd /bin/sh -c "$HOME/.config/bin/quit-app TextEdit W")
+  seq-q-s (cmd /bin/sh -c "$HOME/.config/bin/quit-app Code S")
+  seq-q-v (cmd /bin/sh -c "$HOME/.config/bin/quit-app VLC B")
+  seq-q-w (cmd /bin/sh -c "$HOME/.config/bin/quit-app WezTerm T --check ghostty --fallback B")
+  seq-q-x (cmd /bin/sh -c "$HOME/.config/bin/quit-app --pkill-f JDownloader2.app JDownloader B")
+
+  ;; ── Claude URLs ──────────────────────────────────────────────
+  seq-c-r (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://claude.ai/recents'")
+  seq-c-n (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://claude.ai/new'")
+  seq-c-u (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://claude.ai/settings/usage'")
+
+  ;; ── Run utilities ────────────────────────────────────────────
+  seq-r-b (cmd /bin/sh -c "$HOME/.config/bin/brew-update")
+  seq-r-c (cmd /bin/sh -c "$HOME/.config/bin/run-as-user $HOME/.config/bin/close-notifications")
+  seq-r-e (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/raycast/export-settings-data'")
+  seq-r-i (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/raycast/import-settings-data'")
+  seq-r-m (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /opt/homebrew/bin/fd . $HOME/Downloads -e pdf -e djvu -x mv -v {} $HOME/Dropbox/resources/books/reference_books ; $HOME/.config/bin/run-as-user /opt/homebrew/bin/fd . $HOME/Downloads -e epub -x mv -v {} $HOME/Dropbox/resources/books/ebooks ; $HOME/.config/bin/run-as-user /opt/homebrew/bin/fd . $HOME/Dropbox/resources/books/reference_books -e epub -x mv -v {} $HOME/Dropbox/resources/books/ebooks")
+  seq-r-r (cmd /bin/sh -c "sudo launchctl kickstart -k system/com.jtroo.kanata")
+  seq-r-t (cmd /bin/sh -c "$HOME/.config/bin/empty-trash")
+  seq-r-u (cmd /bin/sh -c "$HOME/.config/bin/run-as-user osascript -e 'set curVolume to get volume settings' -e 'if output muted of curVolume is false then' -e 'set volume with output muted' -e 'else' -e 'set volume without output muted' -e 'end if'")
+  seq-r-w (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /opt/homebrew/bin/fd -HI -t f .DS_Store $HOME/Dropbox/resources/books $HOME/Downloads -x rm")
+
+  ;; ── Search Raycast ───────────────────────────────────────────
+  seq-s-b (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/browser-bookmarks/index'")
+  seq-s-c (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/clipboard-history/clipboard-history'")
+  seq-s-f (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/file-search/search-files'")
+
+  ;; ── GitHub URLs ──────────────────────────────────────────────
+  seq-g-b (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/ss_personal_quarto_blog'")
+  seq-g-c (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/codebox'")
+  seq-g-d (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/dotfiles'")
+  seq-g-g (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras'")
+  seq-g-n (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/dotfiles/tree/main/config/nvim'")
+
+  ;; ── Personal URLs ────────────────────────────────────────────
+  seq-u-b (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://www.shamindras.com/posts'")
+  seq-u-h (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://www.shamindras.com/'")
+  seq-u-i (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open -na Firefox --args -private-window 'https://youtube.com'")
+  seq-u-k (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://keep.google.com/u/0/'")
+)
+
+(defseq
+  ;; Open apps
+  seq-o-1 (o 1)  seq-o-a (o a)  seq-o-b (o b)  seq-o-d (o d)
+  seq-o-e (o e)  seq-o-g (o g)  seq-o-i (o i)  seq-o-m (o m)
+  seq-o-n (o n)  seq-o-p (o p)  seq-o-t (o t)  seq-o-q (o q)
+  seq-o-s (o s)  seq-o-v (o v)  seq-o-w (o w)  seq-o-x (o x)
+
+  ;; Quit apps
+  seq-q-1 (q 1)  seq-q-a (q a)  seq-q-b (q b)  seq-q-d (q d)
+  seq-q-e (q e)  seq-q-g (q g)  seq-q-i (q i)  seq-q-m (q m)
+  seq-q-n (q n)  seq-q-p (q p)  seq-q-t (q t)  seq-q-q (q q)
+  seq-q-s (q s)  seq-q-v (q v)  seq-q-w (q w)  seq-q-x (q x)
+
+  ;; Claude URLs
+  seq-c-r (c r)  seq-c-n (c n)  seq-c-u (c u)
+
+  ;; Run utilities
+  seq-r-b (r b)  seq-r-c (r c)  seq-r-e (r e)  seq-r-i (r i)
+  seq-r-m (r m)  seq-r-r (r r)  seq-r-t (r t)  seq-r-u (r u)
+  seq-r-w (r w)
+
+  ;; Search Raycast
+  seq-s-b (s b)  seq-s-c (s c)  seq-s-f (s f)
+
+  ;; GitHub URLs
+  seq-g-b (g b)  seq-g-c (g c)  seq-g-d (g d)  seq-g-g (g g)
+  seq-g-n (g n)
+
+  ;; Personal URLs
+  seq-u-b (u b)  seq-u-h (u h)  seq-u-i (u i)  seq-u-k (u k)
+)

@@ -5,7 +5,9 @@
 #   quit-app <app-name> <workspace>
 #   quit-app --pkill <process> <app-name> <workspace>
 #   quit-app --pkill-f <pattern> <app-name> <workspace>
+#   quit-app --activate-quit <app-name> <workspace>
 #   quit-app <app-name> <workspace> --check <process> --fallback <workspace>
+#   quit-app --delay <seconds> <app-name> <workspace>
 
 set -euo pipefail
 
@@ -14,9 +16,10 @@ MAX_ITERATIONS=50    # 50 × 0.1s = 5s max wait for process exit
 POLL_INTERVAL=0.1    # seconds between each running check
 POST_EXIT_DELAY=0.3  # seconds after exit for macOS animations to settle
 AEROSPACE="/opt/homebrew/bin/aerospace"
+RUN="$HOME/.config/bin/run-as-user"
 
 # --- Parse arguments ---------------------------------------------------------
-KILL_MODE="osascript"  # osascript | pkill | pkill-f
+KILL_MODE="osascript"  # osascript | pkill | pkill-f | activate-quit
 KILL_PATTERN=""
 APP_NAME=""
 WORKSPACE=""
@@ -33,6 +36,14 @@ while [[ $# -gt 0 ]]; do
     --pkill-f)
       KILL_MODE="pkill-f"
       KILL_PATTERN="$2"
+      shift 2
+      ;;
+    --activate-quit)
+      KILL_MODE="activate-quit"
+      shift
+      ;;
+    --delay)
+      POST_EXIT_DELAY="$2"
       shift 2
       ;;
     --check)
@@ -55,14 +66,14 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$APP_NAME" || -z "$WORKSPACE" ]]; then
-  echo "Usage: quit-app [--pkill|--pkill-f <pattern>] <app-name> <workspace> [--check <process> --fallback <workspace>]" >&2
+  echo "Usage: quit-app [--pkill|--pkill-f <pattern>|--activate-quit] [--delay <seconds>] <app-name> <workspace> [--check <process> --fallback <workspace>]" >&2
   exit 1
 fi
 
 # --- Quit the app ------------------------------------------------------------
 case "$KILL_MODE" in
   osascript)
-    osascript -e "quit app \"$APP_NAME\"" 2>/dev/null || true
+    "$RUN" osascript -e "quit app \"$APP_NAME\"" 2>/dev/null || true
     ;;
   pkill)
     pkill -x "$KILL_PATTERN" 2>/dev/null || true
@@ -70,36 +81,32 @@ case "$KILL_MODE" in
   pkill-f)
     pkill -f "$KILL_PATTERN" 2>/dev/null || true
     ;;
+  activate-quit)
+    "$RUN" osascript -e "tell application \"$APP_NAME\" to activate" 2>/dev/null || true
+    sleep 0.3
+    "$RUN" osascript -e 'tell application "System Events" to keystroke "q" using command down' 2>/dev/null || true
+    ;;
 esac
 
 # --- Wait for the app to actually exit ---------------------------------------
+_is_running() {
+  case "$KILL_MODE" in
+    osascript|activate-quit) pgrep -xi "$APP_NAME" >/dev/null 2>&1 ;;
+    pkill)                   pgrep -x "$KILL_PATTERN" >/dev/null 2>&1 ;;
+    pkill-f)                 pgrep -f "$KILL_PATTERN" >/dev/null 2>&1 ;;
+  esac
+}
+
 n=0
-case "$KILL_MODE" in
-  osascript)
-    while osascript -e "application \"$APP_NAME\" is running" 2>/dev/null | grep -q true \
-      && [[ $n -lt $MAX_ITERATIONS ]]; do
-      sleep "$POLL_INTERVAL"
-      n=$((n + 1))
-    done
-    ;;
-  pkill)
-    while pgrep -x "$KILL_PATTERN" >/dev/null 2>&1 \
-      && [[ $n -lt $MAX_ITERATIONS ]]; do
-      sleep "$POLL_INTERVAL"
-      n=$((n + 1))
-    done
-    ;;
-  pkill-f)
-    while pgrep -f "$KILL_PATTERN" >/dev/null 2>&1 \
-      && [[ $n -lt $MAX_ITERATIONS ]]; do
-      sleep "$POLL_INTERVAL"
-      n=$((n + 1))
-    done
-    ;;
-esac
+while _is_running && [[ $n -lt $MAX_ITERATIONS ]]; do
+  sleep "$POLL_INTERVAL"
+  n=$((n + 1))
+done
 
 # --- Post-exit delay for macOS animations (fullscreen exit, etc.) ------------
-sleep "$POST_EXIT_DELAY"
+if [[ "$POST_EXIT_DELAY" != "0" ]]; then
+  sleep "$POST_EXIT_DELAY"
+fi
 
 # --- Determine target workspace ----------------------------------------------
 if [[ -n "$CHECK_PROCESS" && -n "$FALLBACK_WS" ]]; then
@@ -111,4 +118,4 @@ if [[ -n "$CHECK_PROCESS" && -n "$FALLBACK_WS" ]]; then
 fi
 
 # --- Switch workspace --------------------------------------------------------
-"$AEROSPACE" workspace "$WORKSPACE"
+"$RUN" "$AEROSPACE" workspace "$WORKSPACE"

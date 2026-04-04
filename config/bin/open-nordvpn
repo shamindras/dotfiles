@@ -1,0 +1,18 @@
+#!/bin/sh
+# open-nordvpn — launch NordVPN with aerospace workspace integration
+#
+# Opens NordVPN, waits for it to load, moves it to fullscreen on workspace N,
+# then switches back to workspace B.
+# Uses run-as-user for root→user context switch (kanata launchd daemon).
+
+set -eu
+
+RUN="$HOME/.config/bin/run-as-user"
+
+"$RUN" /usr/bin/open /Applications/NordVPN.app
+sleep 2.5
+"$RUN" /opt/homebrew/bin/aerospace workspace N
+sleep 0.5
+"$RUN" /opt/homebrew/bin/aerospace fullscreen
+sleep 0.2
+"$RUN" /opt/homebrew/bin/aerospace workspace B

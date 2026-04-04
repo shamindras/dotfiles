@@ -1,0 +1,24 @@
+;; kanata.kbd — main entry point
+;;
+;; Replaces Karabiner-Elements (tap-hold remaps) and Leader Key (leader
+;; sequences for app launching, quitting, URLs, and utilities).
+;;
+;; Docs: https://github.com/jtroo/kanata
+
+(defcfg
+  danger-enable-cmd     yes
+  sequence-timeout      2000
+  sequence-input-mode   hidden-suppressed
+  process-unmapped-keys yes
+)
+
+(defsrc
+  caps lctl rmet
+)
+
+(deflayer default
+  @cap @lc @rmc
+)
+
+(include aliases-base.kbd)
+(include sequences.kbd)
