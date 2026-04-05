@@ -15,7 +15,7 @@
   seq-o-g (cmd /bin/sh -c "$HOME/.config/bin/fastopen signal")
   seq-o-i (cmd /bin/sh -c "$HOME/.config/bin/fastopen books")
   seq-o-m (cmd /bin/sh -c "$HOME/.config/bin/fastopen spotify")
-  seq-o-n (cmd /bin/sh -c "$HOME/.config/bin/fastopen nordvpn")
+  seq-o-n (cmd /bin/sh -c "$HOME/.config/bin/fastopen nordvpn --fullscreen N --return B")
   seq-o-p (cmd /bin/sh -c "$HOME/.config/bin/fastopen skim")
   seq-o-t (cmd /bin/sh -c "$HOME/.config/bin/fastopen ghostty")
   seq-o-q (cmd /bin/sh -c "$HOME/.config/bin/fastopen textedit")
