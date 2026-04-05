@@ -165,6 +165,30 @@ return {
     mini_notify.setup()
     vim.notify = mini_notify.make_notify()
 
+    -- {{{ Cursor Word Highlight
+
+    -- universal word-under-cursor highlight (lexical match)
+    -- LSP document highlight (semantic) takes precedence per-buffer
+    -- via vim.b.minicursorword_disable set in lspconfig.lua LspAttach
+    require('mini.cursorword').setup({
+      delay = 100,
+    })
+
+    -- toggle ALL cursor word highlighting (both mini.cursorword and LSP)
+    -- LSP CursorHold callback checks vim.g.cursor_highlight_disable
+    vim.keymap.set('n', '<leader>tw', function()
+      vim.g.cursor_highlight_disable = not vim.g.cursor_highlight_disable
+      vim.g.minicursorword_disable = vim.g.cursor_highlight_disable
+      if vim.g.cursor_highlight_disable then
+        vim.lsp.buf.clear_references()
+        vim.notify('Cursor highlight: disabled')
+      else
+        vim.notify('Cursor highlight: enabled')
+      end
+    end, { desc = '[t]oggle cursor [w]ord highlight' })
+
+    -- }}}
+
     local hipatterns = require('mini.hipatterns')
 
     -- Define custom highlight groups for keywords not covered by built-in groups.

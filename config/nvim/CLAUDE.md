@@ -74,7 +74,7 @@ config/nvim/
 | `<leader>m`  | Markdown ops (checkbox, TOC, list, render toggle) |
 | `<leader>n`  | Number ops (increment, decrement)                 |
 | `<leader>s`  | Search/replace (grep, diagnostics, todo comments) |
-| `<leader>t`  | Toggle (line numbers, spell, theme, hipatterns)   |
+| `<leader>t`  | Toggle (line numbers, spell, theme, cursorword, hipatterns) |
 | `<leader>w`  | Window (split, equalize, maximize, resize, swap)  |
 
 ### Plugin Categories
@@ -82,7 +82,7 @@ config/nvim/
 **Completion & LSP**: nvim-lspconfig, mason.nvim, blink.cmp, LuaSnip, conform.nvim, nvim-lint, lazydev.nvim
 **Finding & Navigation**: snacks.nvim (pickers, explorer, lazygit, bufdelete), flash.nvim, smart-splits.nvim, mini.files
 **Syntax & Editing**: treesitter, mini.ai, mini.surround, mini.pairs, mini.move (built-in `gc`/`gcc` for commenting)
-**Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, mini.hipatterns, noice.nvim
+**Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, mini.cursorword, mini.hipatterns, noice.nvim
 **Markdown**: markdown.nvim (editing/motions), render-markdown.nvim (rendering), marksman (LSP, non-zk files)
 **Special**: zk-nvim (notes), tmux-resurrect awareness
 
@@ -222,9 +222,9 @@ Completion is powered by **blink.cmp** (replaced nvim-cmp):
 ## Plugin Consolidation
 
 **mini.nvim**: single `'nvim-mini/mini.nvim'` spec with `event = 'VeryLazy'`.
-All 12 modules configured in one `config` function, organized by fold sections:
+All 13 modules configured in one `config` function, organized by fold sections:
 Text Editing (ai, operators, surround, move, pairs), General Workflow
-(bracketed, files), Appearance (icons, statusline, notify, hipatterns),
+(bracketed, files), Appearance (icons, statusline, notify, cursorword, hipatterns),
 Keymap Discovery (clue).
 
 **snacks.nvim**: single spec with `lazy = false`, `priority = 1000` per
@@ -245,8 +245,11 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
   `ttimeoutlen` above ~10ms or Esc will feel laggy.
 - **Commenting**: built-in `gc`/`gcc` (Neovim 0.10+), no plugin needed
 - **LSP progress**: mini.notify built-in `lsp_progress` (no fidget.nvim)
-- **LSP document highlight**: CursorHold-based reference highlighting in
-  `lspconfig.lua` LspAttach callback (with LspDetach cleanup)
+- **Cursor word highlight**: two-tier system — LSP `documentHighlightProvider`
+  (semantic, per-buffer) with mini.cursorword (lexical) as universal fallback.
+  LSP-capable buffers disable mini.cursorword via `vim.b.minicursorword_disable`.
+  Shared toggle: `<leader>tw` sets `vim.g.cursor_highlight_disable` (checked by
+  both systems). LspDetach re-enables mini.cursorword for the buffer.
 - **Marker fold system**: centralized in `autocmds.lua` via `marker_fold_filetypes`
   whitelist (`javascript`, `julia`, `lua`, `python`, `toml`, `vim`). A `FileType`
   autocmd enforces `foldmethod=marker` (overrides Neovim 0.12 defaults), then
