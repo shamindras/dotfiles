@@ -217,11 +217,15 @@ return {
       desc = '[p]ick [c]olorscheme',
     },
 
-    -- Buffer Delete
+    -- Buffer Delete (opens file picker if no buffers remain)
     {
       '<leader>bd',
       function()
+        local is_last = #vim.fn.getbufinfo({ buflisted = 1 }) <= 1
         Snacks.bufdelete()
+        if is_last then
+          require('shamindras.plugins.snacks.pickers').picker_with_fd(Snacks.picker.files)
+        end
       end,
       desc = '[b]uffer [d]elete',
     },
@@ -229,6 +233,7 @@ return {
       '<leader>bo',
       function()
         Snacks.bufdelete.other()
+        require('shamindras.plugins.snacks.pickers').picker_with_fd(Snacks.picker.files)
       end,
       desc = '[b]uffer delete [o]thers',
     },
