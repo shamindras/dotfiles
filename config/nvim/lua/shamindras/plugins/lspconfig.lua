@@ -50,14 +50,20 @@ return {
           map('<leader>cs', vim.lsp.buf.signature_help, '[c]ode [s]ignature help')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
-          -- highlight references to symbol under cursor on idle
+          -- semantic highlight: supersedes mini.cursorword for this buffer
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
+            vim.b[event.buf].minicursorword_disable = true
             local hl_group = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
               group = hl_group,
-              callback = vim.lsp.buf.document_highlight,
+              callback = function()
+                -- shared flag: toggled by <leader>tw in mini.lua
+                if not vim.g.cursor_highlight_disable then
+                  vim.lsp.buf.document_highlight()
+                end
+              end,
             })
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
@@ -74,6 +80,8 @@ return {
         callback = function(event)
           vim.lsp.buf.clear_references()
           vim.api.nvim_clear_autocmds({ group = 'lsp-document-highlight', buffer = event.buf })
+          -- let mini.cursorword resume for this buffer
+          vim.b[event.buf].minicursorword_disable = false
         end,
       })
 
