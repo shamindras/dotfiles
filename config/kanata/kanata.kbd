@@ -14,10 +14,12 @@
 
 (defsrc
   caps lctl rmet
+  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
 )
 
 (deflayer default
-  @cap @lc @rmc
+  @cap @lc  @rmc
+  brdn brup mctl sls  dtn  _    prev pp   next mute vold volu
 )
 
 (include aliases-base.kbd)
