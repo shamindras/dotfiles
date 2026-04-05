@@ -5,13 +5,22 @@
 # Centralized lookup: change launch strategy in one place.
 # Uses run-as-user for root→user context switch (kanata launchd daemon).
 #
-# Usage: fastopen <app-name>
+# Usage: fastopen <app-name> [--fullscreen <workspace> --return <workspace>]
+#
+# Flags (evaluated after the app opens):
+#   --fullscreen <ws>  Poll for the window on <ws> and fullscreen it
+#   --return <ws>      Switch to <ws> after opening
 
 set -eu
 
 RUN="$HOME/.config/bin/run-as-user"
+AERO=/opt/homebrew/bin/aerospace
 
-case "$1" in
+APP="$1"
+shift
+
+# ── Fast path: open the app immediately ────────────────────────
+case "$APP" in
   1password)    "$RUN" /usr/bin/open /Applications/1Password.app ;;
   djview)       "$RUN" /usr/bin/open /Applications/DjView.app ;;
   firefox)      "$RUN" /usr/bin/open /Applications/Firefox.app ;;
@@ -20,7 +29,7 @@ case "$1" in
   signal)       "$RUN" /usr/bin/open /Applications/Signal.app ;;
   books)        "$RUN" /usr/bin/open /System/Applications/Books.app ;;
   spotify)      "$RUN" /usr/bin/open /Applications/Spotify.app ;;
-  nordvpn)      exec "$HOME/.config/bin/open-nordvpn" ;;
+  nordvpn)      "$RUN" /usr/bin/open /Applications/NordVPN.app ;;
   skim)         "$RUN" /usr/bin/open /Applications/Skim.app ;;
   ghostty)      "$RUN" /usr/bin/open /Applications/Ghostty.app ;;
   textedit)     "$RUN" /usr/bin/open /System/Applications/TextEdit.app ;;
@@ -30,3 +39,32 @@ case "$1" in
   jdownloader)  "$RUN" /usr/bin/open "/Applications/JDownloader 2/JDownloader2.app" ;;
   *) echo "fastopen: unknown app '$1'" >&2; exit 1 ;;
 esac
+
+# ── Optional flags: evaluated after the app is already opening ─
+FULLSCREEN_WS=""
+RETURN_WS=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --fullscreen) shift; FULLSCREEN_WS="$1" ;;
+    --return)     shift; RETURN_WS="$1" ;;
+  esac
+  shift
+done
+
+[ -z "$FULLSCREEN_WS" ] && [ -z "$RETURN_WS" ] && exit 0
+
+# Poll until window appears on target workspace (max 5s)
+WID=""
+if [ -n "$FULLSCREEN_WS" ]; then
+  for _ in $(seq 1 25); do
+    WID=$("$RUN" "$AERO" list-windows --workspace "$FULLSCREEN_WS" --format '%{window-id}' 2>/dev/null | head -1)
+    [ -n "$WID" ] && break
+    sleep 0.2
+  done
+fi
+
+# Switch to return workspace first (user gets control back)
+[ -n "$RETURN_WS" ] && "$RUN" "$AERO" workspace "$RETURN_WS"
+
+# Fullscreen the window by ID (works cross-workspace)
+[ -n "$WID" ] && "$RUN" "$AERO" fullscreen on --window-id "$WID"
