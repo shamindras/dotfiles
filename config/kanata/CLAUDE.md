@@ -38,6 +38,33 @@ URLs, and utilities). Runs as a launchd daemon with root privileges.
 | Left Control  | Escape   | Left Control  | 200ms tap, 200ms hold |
 | Right Command | `sldr`   | Right Command | 200ms tap, 200ms hold |
 
+### F-row media key mappings
+
+macOS media key translation is bypassed by kanata's virtual keyboard
+(see kanata #975, #1141). F-row keys are explicitly mapped to media
+codes so brightness/volume/etc. work.
+
+**fn key limitation**: The Apple `fn` key is firmware-level and
+invisible to kanata — it cannot be intercepted or used as a modifier.
+`fn+F-key` does NOT produce raw F1–F12; it still triggers the media
+mapping. Raw F-keys are unavailable unless a spare key is designated
+as an fn-toggle for a `(layer-toggle fn-raw)` layer.
+
+| Key | Media Function  | Kanata code |
+| --- | --------------- | ----------- |
+| f1  | Brightness Down | `brdn`      |
+| f2  | Brightness Up   | `brup`      |
+| f3  | Mission Control | `mctl`      |
+| f4  | Spotlight       | `sls`       |
+| f5  | Dictation       | `dtn`       |
+| f6  | Do Not Disturb  | `_`         |
+| f7  | Media Previous  | `prev`      |
+| f8  | Play/Pause      | `pp`        |
+| f9  | Media Next      | `next`      |
+| f10 | Mute            | `mute`      |
+| f11 | Volume Down     | `vold`      |
+| f12 | Volume Up       | `volu`      |
+
 ### Leader sequences (from Leader Key)
 
 Trigger: Right Command tap → `sldr` (sequence leader mode) → type 2-key
