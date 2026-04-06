@@ -40,9 +40,6 @@ function z1_vi_style_keybindings {
   bindkey '^A' beginning-of-line
   bindkey '^E' end-of-line
 
-  # Register smart-enter as a ZLE widget (used by zsh-no-ps2 below).
-  zle -N smart-enter
-
   # PS2 prevention: validate command syntax before execution.
   # On incomplete input, inserts a newline into the edit buffer instead of
   # dropping to the confusing PS2 secondary prompt.
@@ -76,9 +73,9 @@ function z1_vi_style_keybindings {
     fi
   }
 
-  # Chain zsh-no-ps2 with smart-enter: valid commands go to smart-enter,
+  # Chain zsh-no-ps2 with accept-line: valid commands execute normally,
   # incomplete commands get a newline in the buffer instead of PS2.
-  zstyle ':zsh-no-ps2:' accept-line smart-enter
+  zstyle ':zsh-no-ps2:' accept-line accept-line
   zle -N .zsh-no-ps2 zsh-no-ps2
   bindkey '^J' .zsh-no-ps2
   bindkey '^M' .zsh-no-ps2
