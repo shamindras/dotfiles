@@ -5,7 +5,7 @@
 Modular zsh config with custom "Z1" framework. Numbered `conf.d/` files ensure
 deterministic load order. Plugin system based on
 [zsh_unplugged](https://github.com/mattmc3/zsh_unplugged) (git-based, 2 plugins:
-zsh-autosuggestions, zsh-syntax-highlighting). 18 autoloaded functions in `functions/`.
+zsh-autosuggestions, zsh-syntax-highlighting). 17 autoloaded functions in `functions/`.
 
 - **Docs**: https://zsh.sourceforge.io/Doc/
 - **Installed version**: zsh 5.9 (system `/bin/zsh`, verified 2026-03-25)
@@ -25,7 +25,7 @@ config/zsh/
 │   ├── 02-z1-funcdir.zsh            # Autoload function directory
 │   ├── 03-z1-memoize.zsh            # __memoize_cmd (caches command output 20h)
 │   ├── 04-z1-directory.zsh          # Directory options, pushd stack
-│   ├── 05-z1-editor.zsh             # Vi keybindings, smart-enter, zsh-no-ps2
+│   ├── 05-z1-editor.zsh             # Vi keybindings, zsh-no-ps2
 │   ├── 06-z1-history.zsh            # History: 100k entries, no share
 │   ├── 07-z1-utility.zsh            # Misc options, bracketed paste
 │   ├── 08-z1-plugins.zsh            # Plugin system (zsh_unplugged-based, load/update/compile)
@@ -33,8 +33,7 @@ config/zsh/
 │   ├── 10-z1-brew-apps.zsh          # zoxide, fzf, atuin (cached via __memoize_cmd)
 │   ├── 11-z1-aliases.zsh            # 90+ aliases (regular, suffix, global)
 │   └── 12-z1-prompt.zsh             # Simple vcs_info prompt
-└── functions/                        # Autoloaded functions (18 files)
-    ├── smart-enter                   # ZLE widget: git status + eza on empty Return
+└── functions/                        # Autoloaded functions (17 files)
     ├── k, ki                         # Zettelkasten (zk) wrappers
     ├── y                             # Yazi wrapper (preserves cwd)
     ├── ua                            # Activate nearest uv Python venv
@@ -103,8 +102,7 @@ All functions use `##?` docstrings:
 ```
 
 Help is extracted via `grep "^##?" "${(%):-%x}" | cut -c 5-`.
-ZLE widgets (e.g., `smart-enter`) omit `-h` handling since they operate on
-`$BUFFER`, not `$1`.
+ZLE widgets omit `-h` handling since they operate on `$BUFFER`, not `$1`.
 
 ## XDG Integration
 
@@ -118,10 +116,8 @@ directories. HISTFILE uses `XDG_STATE_HOME/zsh/history`.
 ## Editor & Keybindings (`05-z1-editor.zsh`)
 
 - Vi mode (`bindkey -v`) with emacs-style Ctrl-A/E for line navigation
-- `smart-enter`: empty Return → git status + eza; non-empty → execute
 - `zsh-no-ps2`: validates syntax before execution; incomplete commands get
   a newline in the edit buffer instead of the confusing PS2 `>` prompt.
-  Chained with smart-enter via `zstyle ':zsh-no-ps2:' accept-line smart-enter`.
   Source: https://github.com/romkatv/zsh-no-ps2
 
 ## Alias Categories
