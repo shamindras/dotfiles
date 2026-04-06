@@ -1,0 +1,213 @@
+;; layers.kbd — leader key layer system
+;;
+;; Replaces sequences.kbd with a layer-based architecture. Each leader
+;; group is a dedicated layer. Every layer transition fires a shell
+;; command to update the sketchybar HUD.
+;;
+;; Flow: RCmd tap → leader layer → group layer → action → base
+;;       Escape in sub-layer → back to leader
+;;       Escape in leader   → back to base
+;;       2s idle at any level → back to base (via on-idle-fakekey)
+;;
+;; All cmd calls use /bin/sh -c for minimal shell overhead.
+;; HUD updates go through run-as-user since kanata runs as root.
+
+;; ── Fakekeys ────────────────────────────────────────────────────────
+;; Fired by on-idle-fakekey after 2s of no input — returns to base and
+;; dismisses the HUD.
+
+(deffakekeys
+  to-base (multi
+            (layer-switch default)
+            (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide")
+          )
+)
+
+;; ── Aliases ─────────────────────────────────────────────────────────
+
+(defalias
+  ;; ── Leader entry (from rmc tap in aliases-base.kbd) ──────────────
+  ldr (multi
+        (layer-switch leader)
+        (on-idle-fakekey to-base tap 2000)
+        (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show leader")
+      )
+
+  ;; ── Return to base + hide HUD ───────────────────────────────────
+  bas (multi
+        (layer-switch default)
+        (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide")
+      )
+
+  ;; ── Back to leader from sub-layer (Escape) ──────────────────────
+  bkl (multi
+        (layer-switch leader)
+        (on-idle-fakekey to-base tap 2000)
+        (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show leader")
+      )
+
+  ;; ── Sub-layer entry (leader → group) ────────────────────────────
+  ;; Each: switch layer + show sub-layer HUD + re-arm idle timer
+  sl-o (multi (layer-switch ldr-o) (on-idle-fakekey to-base tap 2000)
+         (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show open"))
+  sl-q (multi (layer-switch ldr-q) (on-idle-fakekey to-base tap 2000)
+         (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show quit"))
+  sl-c (multi (layer-switch ldr-c) (on-idle-fakekey to-base tap 2000)
+         (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show claude"))
+  sl-r (multi (layer-switch ldr-r) (on-idle-fakekey to-base tap 2000)
+         (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show run"))
+  sl-s (multi (layer-switch ldr-s) (on-idle-fakekey to-base tap 2000)
+         (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show search"))
+  sl-g (multi (layer-switch ldr-g) (on-idle-fakekey to-base tap 2000)
+         (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show github"))
+  sl-u (multi (layer-switch ldr-u) (on-idle-fakekey to-base tap 2000)
+         (cmd /bin/sh -c "$HOME/.config/bin/leader-hud show urls"))
+
+  ;; ── Open apps (via fastopen) ────────────────────────────────────
+  ao-1 (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen 1password"))
+  ao-a (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen djview"))
+  ao-b (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen firefox"))
+  ao-d (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen preview"))
+  ao-e (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen finder"))
+  ao-g (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen signal"))
+  ao-i (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen books"))
+  ao-m (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen spotify"))
+  ao-n (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen nordvpn --fullscreen N --return B"))
+  ao-p (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen skim"))
+  ao-t (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen ghostty"))
+  ao-q (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen textedit"))
+  ao-s (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen vscode"))
+  ao-v (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen vlc"))
+  ao-w (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen wezterm"))
+  ao-x (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/fastopen jdownloader"))
+
+  ;; ── Quit apps (via quit-app) ────────────────────────────────────
+  aq-1 (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app 1Password B"))
+  aq-a (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app --pkill djview DjView W"))
+  aq-b (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app Firefox B"))
+  aq-d (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app Preview W"))
+  aq-e (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app --activate-quit Finder W"))
+  aq-g (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app Signal B"))
+  aq-i (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app --pkill Books Books B"))
+  aq-m (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app Spotify B"))
+  aq-n (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app NordVPN B"))
+  aq-p (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app Skim W"))
+  aq-t (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app Ghostty W --check wezterm-gui --fallback B"))
+  aq-q (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app TextEdit W"))
+  aq-s (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app Code S"))
+  aq-v (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app VLC B"))
+  aq-w (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app WezTerm T --check ghostty --fallback B"))
+  aq-x (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/quit-app --pkill-f JDownloader2.app JDownloader B"))
+
+  ;; ── Claude URLs ─────────────────────────────────────────────────
+  ac-r (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://claude.ai/recents'"))
+  ac-n (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://claude.ai/new'"))
+  ac-u (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://claude.ai/settings/usage'"))
+
+  ;; ── Run utilities ───────────────────────────────────────────────
+  ar-b (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/brew-update"))
+  ar-c (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user $HOME/.config/bin/close-notifications"))
+  ar-e (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/raycast/export-settings-data'"))
+  ar-i (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/raycast/import-settings-data'"))
+  ar-m (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /opt/homebrew/bin/fd . $HOME/Downloads -e pdf -e djvu -x mv -v {} $HOME/Dropbox/resources/books/reference_books ; $HOME/.config/bin/run-as-user /opt/homebrew/bin/fd . $HOME/Downloads -e epub -x mv -v {} $HOME/Dropbox/resources/books/ebooks ; $HOME/.config/bin/run-as-user /opt/homebrew/bin/fd . $HOME/Dropbox/resources/books/reference_books -e epub -x mv -v {} $HOME/Dropbox/resources/books/ebooks"))
+  ar-r (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "sudo launchctl kickstart -k system/com.jtroo.kanata"))
+  ar-t (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/empty-trash"))
+  ar-u (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user osascript -e 'set curVolume to get volume settings' -e 'if output muted of curVolume is false then' -e 'set volume with output muted' -e 'else' -e 'set volume without output muted' -e 'end if'"))
+  ar-w (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /opt/homebrew/bin/fd -HI -t f .DS_Store $HOME/Dropbox/resources/books $HOME/Downloads -x rm"))
+
+  ;; ── Search Raycast ──────────────────────────────────────────────
+  as-b (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/browser-bookmarks/index'"))
+  as-c (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/clipboard-history/clipboard-history'"))
+  as-f (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'raycast://extensions/raycast/file-search/search-files'"))
+
+  ;; ── GitHub URLs ─────────────────────────────────────────────────
+  ag-b (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/ss_personal_quarto_blog'"))
+  ag-c (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/codebox'"))
+  ag-d (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/dotfiles'"))
+  ag-g (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras'"))
+  ag-n (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://github.com/shamindras/dotfiles/tree/main/config/nvim'"))
+
+  ;; ── Personal URLs ───────────────────────────────────────────────
+  au-b (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://www.shamindras.com/posts'"))
+  au-h (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://www.shamindras.com/'"))
+  au-i (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open -na Firefox --args -private-window 'https://youtube.com'"))
+  au-k (multi (layer-switch default) (cmd /bin/sh -c "$HOME/.config/bin/leader-hud hide") (cmd /bin/sh -c "$HOME/.config/bin/run-as-user /usr/bin/open 'https://keep.google.com/u/0/'"))
+)
+
+;; ── Layer definitions ───────────────────────────────────────────────
+;;
+;; defsrc positions (39 keys):
+;;   caps lctl rmet
+;;   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+;;   esc  1
+;;   a    b    c    d    e    f    g    h    i    k
+;;   m    n    o    p    q    r    s    t    u    v    w    x
+;;
+;; In sub-layers:
+;;   - Active keys → action aliases
+;;   - esc → @bkl (back to leader)
+;;   - All other positions → @bas (return to base, fail-safe)
+
+(deflayer leader
+  @bas @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bas @bas
+  @bas  @bas  @sl-c @bas  @bas  @bas  @sl-g @bas  @bas  @bas
+  @bas  @bas  @sl-o @bas  @sl-q @sl-r @sl-s @bas  @sl-u @bas  @bas  @bas
+)
+
+(deflayer ldr-o
+  @bkl @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bkl @ao-1
+  @ao-a @ao-b @bas  @ao-d @ao-e @bas  @ao-g @bas  @ao-i @bas
+  @ao-m @ao-n @bas  @ao-p @ao-q @bas  @ao-s @ao-t @bas  @ao-v @ao-w @ao-x
+)
+
+(deflayer ldr-q
+  @bkl @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bkl @aq-1
+  @aq-a @aq-b @bas  @aq-d @aq-e @bas  @aq-g @bas  @aq-i @bas
+  @aq-m @aq-n @bas  @aq-p @aq-q @bas  @aq-s @aq-t @bas  @aq-v @aq-w @aq-x
+)
+
+(deflayer ldr-c
+  @bkl @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bkl @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bas @ac-n @bas @bas @bas @ac-r @bas @bas @ac-u @bas @bas @bas
+)
+
+(deflayer ldr-r
+  @bkl @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bkl @bas
+  @bas @ar-b @ar-c @bas @ar-e @bas @bas @bas @ar-i @bas
+  @ar-m @bas  @bas  @bas @bas  @ar-r @bas @ar-t @ar-u @bas @ar-w @bas
+)
+
+(deflayer ldr-s
+  @bkl @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bkl @bas
+  @bas @as-b @as-c @bas @bas @as-f @bas @bas @bas @bas
+  @bas @bas  @bas  @bas @bas @bas  @bas @bas @bas @bas @bas @bas
+)
+
+(deflayer ldr-g
+  @bkl @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bkl @bas
+  @bas @ag-b @ag-c @ag-d @bas @bas @ag-g @bas @bas @bas
+  @bas @ag-n @bas  @bas  @bas @bas @bas  @bas @bas @bas @bas @bas
+)
+
+(deflayer ldr-u
+  @bkl @bas @bas
+  @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
+  @bkl @bas
+  @bas @au-b @bas @bas @bas @bas @bas @au-h @au-i @au-k
+  @bas @bas  @bas @bas @bas @bas @bas @bas  @bas  @bas @bas @bas
+)

@@ -15,7 +15,8 @@ config/sketchybar/
 │   ├── clock.sh          # Date/time (right)
 │   ├── battery.sh        # Battery icon + percentage (right)
 │   ├── wifi.sh           # WiFi icon (right)
-│   └── volume.sh         # Volume icon (right)
+│   ├── volume.sh         # Volume icon (right)
+│   └── leader.sh         # Leader key HUD (right, initially hidden)
 ├── plugins/              # Plugin scripts (how to update)
 │   ├── workspace.sh      # Handles aerospace_workspace_change event
 │   ├── front_app.sh      # Handles front_app_switched, triggers workspace refresh
@@ -40,6 +41,9 @@ config/sketchybar/
 - **Bracket pills** group items into rounded pill-shaped backgrounds
   - `left_pill`: wraps workspace label
   - `right_pill`: wraps volume, wifi, battery, clock
+- **Leader HUD**: item-level pill background (Lavender border via
+  `LEADER_PILL_BORDER`), left-aligned to avoid notch. Push-updated by
+  kanata via `leader-hud` script — no plugin or event subscription.
 - **Toggle** (`Alt+Shift+.`): keybinding-driven script that switches between
   sketchybar and native menu bar (not event-subscribed)
 - Workspace display queries aerospace directly (`list-windows --focused`) for the
@@ -66,6 +70,7 @@ that may not trigger a full sleep/wake cycle.
 | volume         | `volume_change`                                      |
 | workspace      | `aerospace_workspace_change` (custom)                |
 | front_app      | `front_app_switched`                                 |
+| leader         | None (externally updated by kanata via `leader-hud`) |
 
 ## Service Management
 

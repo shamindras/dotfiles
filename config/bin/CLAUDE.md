@@ -13,6 +13,7 @@
 | `empty-trash`         | Empty Finder trash and switch to aerospace workspace B                 |
 | `fastopen`            | Launch macOS apps by short name (centralized path lookup, POSIX sh)    |
 | `gc`                  | Git-related utility script                                             |
+| `leader-hud`          | Update sketchybar leader key HUD (show/hide with group labels)         |
 | `open-nordvpn`        | Launch NordVPN with aerospace workspace integration                    |
 | `quit-app`            | Quit a macOS app, wait for exit, then switch aerospace workspace       |
 | `run-as-user`         | Execute a command as the console user (root→user context switch)       |
