@@ -11,6 +11,6 @@
   ;; Left Control: tap → Escape, hold → Left Control
   lc  (tap-hold-release 200 200 esc lctl)
 
-  ;; Right Command: tap → leader sequence mode, hold → Right Command
-  rmc (tap-hold-release 200 200 sldr rmet)
+  ;; Right Command: tap → enter leader layer, hold → Right Command
+  rmc (tap-hold-release 200 200 @ldr rmet)
 )

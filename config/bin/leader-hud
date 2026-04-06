@@ -1,0 +1,61 @@
+#!/bin/sh
+# leader-hud — update sketchybar leader key HUD
+#
+# Called by kanata at each layer transition to show available keys or
+# dismiss the HUD. Handles root→user context switch internally via
+# run-as-user (kanata runs as root, sketchybar runs as the user).
+#
+# Usage:
+#   leader-hud show <group>   Show HUD label for group
+#   leader-hud hide           Hide HUD
+
+set -eu
+
+SCRIPT_DIR="$(dirname "$0")"
+RUN_AS_USER="$SCRIPT_DIR/run-as-user"
+
+ACTION="${1:?Usage: leader-hud show|hide [group]}"
+GROUP="${2:-}"
+
+case "$ACTION" in
+  show)
+    case "$GROUP" in
+      leader)
+        LABEL="▸ o:󰏋 q:󰅖 r:󰜎 c:󰚩 s:󰍉 g:󰊤 u:󰌷"
+        ;;
+      open)
+        LABEL="(o)▸ a:󰈔 b:󰈹 d:󰋩 e:󰉋 g:󰭹 i:󰂽 m:󰓇 n:󰤨 p:󰈙 q:󰏫 s:󰨞 t:󰊠 v:󰕼 w:󰆍 x:󰇚 1:󰌋"
+        ;;
+      quit)
+        LABEL="(q)▸ a:󰈔 b:󰈹 d:󰋩 e:󰉋 g:󰭹 i:󰂽 m:󰓇 n:󰤨 p:󰈙 q:󰏫 s:󰨞 t:󰊠 v:󰕼 w:󰆍 x:󰇚 1:󰌋"
+        ;;
+      claude)
+        LABEL="(c)▸ n:󰎔 r:󰋚 u:󰄨"
+        ;;
+      run)
+        LABEL="(r)▸ b:󰏗 c:󰂜 e:󰈻 i:󰈔 m:󰉏 r:󰑓 t:󰩹 u:󰖁 w:󰛌"
+        ;;
+      search)
+        LABEL="(s)▸ b:󰃀 c:󰅇 f:󰈞"
+        ;;
+      github)
+        LABEL="(g)▸ b:󰖟 c:󰗀 d:󰉋 g:󰊤 n:󰎐"
+        ;;
+      urls)
+        LABEL="(u)▸ b:󰖟 h:󰋜 i:󰗃 k:󰷐"
+        ;;
+      *)
+        echo "leader-hud: unknown group '$GROUP'" >&2
+        exit 1
+        ;;
+    esac
+    "$RUN_AS_USER" sketchybar --set leader label="$LABEL" drawing=on
+    ;;
+  hide)
+    "$RUN_AS_USER" sketchybar --set leader drawing=off
+    ;;
+  *)
+    echo "leader-hud: unknown action '$ACTION'" >&2
+    exit 1
+    ;;
+esac

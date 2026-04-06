@@ -47,6 +47,8 @@ sketchybar --default \
 ##### Left Items #####
 # shellcheck disable=SC1091
 source "$ITEM_DIR/front_app.sh"
+# shellcheck disable=SC1091
+source "$ITEM_DIR/leader.sh"
 
 ##### Right Items #####
 # Items are added right-to-left: first sourced = rightmost in pill.
