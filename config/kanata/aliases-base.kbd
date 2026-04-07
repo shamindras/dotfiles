@@ -13,4 +13,7 @@
 
   ;; Right Command: tap → enter leader layer, hold → Right Command
   rmc (tap-hold-release 200 200 @ldr rmet)
+
+  ;; Right Option: tap → Right Option, hold → ralt-nav layer (ralt+bspc = del)
+  rao (tap-hold-press 200 200 ralt (layer-while-held ralt-nav))
 )

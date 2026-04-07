@@ -16,6 +16,7 @@
   esc  1
   a    b    c    d    e    f    g    h    i    k
   m    n    o    p    q    r    s    t    u    v    w    x
+  ralt bspc
 )
 
 (deflayer default
@@ -24,6 +25,7 @@
   esc  1
   a    b    c    d    e    f    g    h    i    k
   m    n    o    p    q    r    s    t    u    v    w    x
+  @rao bspc
 )
 
 (include layers.kbd)
