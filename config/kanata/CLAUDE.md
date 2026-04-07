@@ -41,11 +41,21 @@ Keys NOT in defsrc (j, l, y, z, 2-9, etc.) pass through via
 
 ### Tap-hold remaps (from Karabiner-Elements)
 
-| Key           | Tap      | Hold          | Timing                |
-| ------------- | -------- | ------------- | --------------------- |
-| Caps Lock     | Escape   | Left Control  | 200ms tap, 200ms hold |
-| Left Control  | Escape   | Left Control  | 200ms tap, 200ms hold |
-| Right Command | `@ldr`   | Right Command | 200ms tap, 200ms hold |
+| Key           | Tap      | Hold                       | Timing                |
+| ------------- | -------- | -------------------------- | --------------------- |
+| Caps Lock     | Escape   | Left Control               | 200ms tap, 200ms hold |
+| Left Control  | Escape   | Left Control               | 200ms tap, 200ms hold |
+| Right Command | `@ldr`   | Right Command              | 200ms tap, 200ms hold |
+| Right Option  | Right Option | `ralt-nav` layer       | 200ms tap, 200ms hold |
+
+### Forward delete
+
+Apple internal keyboards have no forward-delete key, and the `fn` key is
+invisible to kanata. Workaround: hold **Right Option + Backspace** → forward
+delete. Implemented via the `ralt-nav` layer in `layers.kbd`: only the
+`bspc` slot is remapped to `del`; all other positions are transparent (`_`).
+Left Option is untouched, so `lalt+bspc` (delete-word-backward in zsh /
+WezTerm / nvim) keeps working.
 
 ### F-row media key mappings
 

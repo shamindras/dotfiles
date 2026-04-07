@@ -136,12 +136,13 @@
 
 ;; ── Layer definitions ───────────────────────────────────────────────
 ;;
-;; defsrc positions (39 keys):
+;; defsrc positions (41 keys):
 ;;   caps lctl rmet
 ;;   f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
 ;;   esc  1
 ;;   a    b    c    d    e    f    g    h    i    k
 ;;   m    n    o    p    q    r    s    t    u    v    w    x
+;;   ralt bspc
 ;;
 ;; In sub-layers:
 ;;   - Active keys → action aliases
@@ -154,6 +155,7 @@
   @bas @bas
   @bas  @bas  @sl-c @bas  @bas  @bas  @sl-g @bas  @bas  @bas
   @bas  @bas  @sl-o @bas  @sl-q @sl-r @sl-s @bas  @sl-u @bas  @bas  @bas
+  @bas @bas
 )
 
 (deflayer ldr-o
@@ -162,6 +164,7 @@
   @bkl @ao-1
   @ao-a @ao-b @bas  @ao-d @ao-e @bas  @ao-g @bas  @ao-i @bas
   @ao-m @ao-n @bas  @ao-p @ao-q @bas  @ao-s @ao-t @bas  @ao-v @ao-w @ao-x
+  @bas @bas
 )
 
 (deflayer ldr-q
@@ -170,6 +173,7 @@
   @bkl @aq-1
   @aq-a @aq-b @bas  @aq-d @aq-e @bas  @aq-g @bas  @aq-i @bas
   @aq-m @aq-n @bas  @aq-p @aq-q @bas  @aq-s @aq-t @bas  @aq-v @aq-w @aq-x
+  @bas @bas
 )
 
 (deflayer ldr-c
@@ -178,6 +182,7 @@
   @bkl @bas
   @bas @bas @bas @bas @bas @bas @bas @bas @bas @bas
   @bas @ac-n @bas @bas @bas @ac-r @bas @bas @ac-u @bas @bas @bas
+  @bas @bas
 )
 
 (deflayer ldr-r
@@ -186,6 +191,7 @@
   @bkl @bas
   @bas @ar-b @ar-c @bas @ar-e @bas @bas @bas @ar-i @bas
   @ar-m @bas  @bas  @bas @bas  @ar-r @bas @ar-t @ar-u @bas @ar-w @bas
+  @bas @bas
 )
 
 (deflayer ldr-s
@@ -194,6 +200,7 @@
   @bkl @bas
   @bas @as-b @as-c @bas @bas @as-f @bas @bas @bas @bas
   @bas @bas  @bas  @bas @bas @bas  @bas @bas @bas @bas @bas @bas
+  @bas @bas
 )
 
 (deflayer ldr-g
@@ -202,6 +209,7 @@
   @bkl @bas
   @bas @ag-b @ag-c @ag-d @bas @bas @ag-g @bas @bas @bas
   @bas @ag-n @bas  @bas  @bas @bas @bas  @bas @bas @bas @bas @bas
+  @bas @bas
 )
 
 (deflayer ldr-u
@@ -210,4 +218,17 @@
   @bkl @bas
   @bas @au-b @bas @bas @bas @bas @bas @au-h @au-i @au-k
   @bas @bas  @bas @bas @bas @bas @bas @bas  @bas  @bas @bas @bas
+  @bas @bas
+)
+
+;; ── ralt-nav layer ──────────────────────────────────────────────────
+;; Active while right-Option is held. Only remaps bspc → del; all other
+;; positions are transparent (_) so the base layer's behavior is kept.
+(deflayer ralt-nav
+  _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _
+  _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    del
 )
