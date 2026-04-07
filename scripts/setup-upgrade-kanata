@@ -23,6 +23,9 @@ KANATA_FEATURES="default,cmd"
 PLIST_SRC="${XDG_CONFIG_HOME:-$HOME/.config}/kanata/com.jtroo.kanata.plist"
 PLIST_DST="/Library/LaunchDaemons/com.jtroo.kanata.plist"
 DAEMON_LABEL="system/com.jtroo.kanata"
+WATCHER_PLIST_SRC="${XDG_CONFIG_HOME:-$HOME/.config}/kanata/com.jtroo.kanata-watcher.plist"
+WATCHER_PLIST_DST="/Library/LaunchDaemons/com.jtroo.kanata-watcher.plist"
+WATCHER_LABEL="system/com.jtroo.kanata-watcher"
 
 # ── Build kanata ─────────────────────────────────────────────────────────────
 
@@ -68,6 +71,22 @@ else
 fi
 
 echo "[SUCCESS] kanata daemon active."
+
+# ── Configure keyboard hot-plug watcher ──────────────────────────────────────
+# Kanata has no hot-plug detection on macOS (jtroo/kanata#1479). The watcher
+# kickstarts the kanata daemon whenever the set of HID keyboards changes,
+# making external-keyboard transitions seamless.
+
+if [ -f "$WATCHER_PLIST_SRC" ]; then
+    echo "[INFO] Installing kanata keyboard-watcher daemon..."
+    sudo cp "$WATCHER_PLIST_SRC" "$WATCHER_PLIST_DST"
+    if sudo launchctl print "$WATCHER_LABEL" >/dev/null 2>&1; then
+        sudo launchctl kickstart -k "$WATCHER_LABEL"
+    else
+        sudo launchctl load "$WATCHER_PLIST_DST"
+    fi
+    echo "[SUCCESS] kanata keyboard-watcher active."
+fi
 
 # ── Stop conflicting Karabiner-Elements services ─────────────────────────────
 # Kanata and Karabiner both grab exclusive keyboard access. The VirtualHIDDevice

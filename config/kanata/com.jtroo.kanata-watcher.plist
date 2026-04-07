@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.jtroo.kanata-watcher</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/shamindras/.config/kanata/kanata-keyboard-watcher</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/kanata-watcher.stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/kanata-watcher.stderr.log</string>
+</dict>
+</plist>

@@ -19,6 +19,8 @@ URLs, and utilities). Runs as a launchd daemon with root privileges.
 | `aliases-base.kbd`       | 3 dual-function key remaps (tap-hold)               |
 | `sequences.kbd.bak`      | Archived original sequences (rollback reference)    |
 | `com.jtroo.kanata.plist` | launchd daemon config (runs as root)                |
+| `com.jtroo.kanata-watcher.plist` | launchd daemon for keyboard hot-plug watcher |
+| `kanata-keyboard-watcher` | Polls HID keyboards, kickstarts kanata on change   |
 
 ## Key Settings
 
@@ -165,6 +167,25 @@ sudo launchctl unload /Library/LaunchDaemons/com.jtroo.kanata.plist
 # Logs
 tail -f /tmp/kanata.stdout.log
 tail -f /tmp/kanata.stderr.log
+```
+
+## Keyboard hot-plug watcher
+
+Kanata enumerates input devices once at startup and has no hot-plug
+detection on macOS ([jtroo/kanata#1479](https://github.com/jtroo/kanata/issues/1479)).
+When an external keyboard (e.g. Nuphy) is attached after kanata starts,
+or after sleep/wake or Bluetooth reconnect, kanata silently stops
+remapping it. The `kanata-keyboard-watcher` LaunchDaemon polls
+`hidutil list` every 2s, hashes the set of HID keyboards (UsagePage=1,
+Usage=6), and kickstarts the kanata daemon when the set changes. The
+Karabiner VirtualHIDKeyboard (vendor `0x16c0`, product `0x27db`) is
+excluded from the hash since kanata creates it itself — including it
+would cause feedback loops on every restart.
+
+```bash
+# Status / logs
+sudo launchctl print system/com.jtroo.kanata-watcher
+tail -f /tmp/kanata-watcher.stdout.log
 ```
 
 ## Manual Setup (cannot be automated)
