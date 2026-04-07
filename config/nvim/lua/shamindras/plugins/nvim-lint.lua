@@ -1,35 +1,14 @@
 -- {{{ Dependencies
 
+-- Tool installation (linters + formatters + LSP) is centralized in
+-- `lspconfig.lua` via a single mason-tool-installer.setup() call. This
+-- plugin spec only configures the linter wiring; it does not own install
+-- responsibility for any tool. Mason's PATH prepend ensures the bare
+-- linter names below resolve to Mason-installed binaries at lint time.
+
 return {
   'mfussenegger/nvim-lint',
   event = { 'BufReadPre', 'BufNewFile', 'InsertLeave' },
-  dependencies = {
-    {
-      'williamboman/mason.nvim',
-      config = true,
-      priority = 100,
-    },
-    {
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
-      config = function()
-        require('mason-tool-installer').setup({
-          ensure_installed = {
-            'cmakelint',
-            'jsonlint',
-            'luacheck',
-            'markdownlint-cli2',
-            'ruff',
-            'shellcheck',
-            'yamllint',
-          },
-          auto_update = true,
-          run_on_start = true,
-          automatic_installation = true,
-        })
-      end,
-      priority = 90,
-    },
-  },
 
   -- }}}
 
@@ -37,9 +16,6 @@ return {
 
   config = function()
     local lint = require('lint')
-
-    local mason_bin = vim.fn.stdpath('data') .. '/mason/bin'
-    vim.env.PATH = mason_bin .. ':' .. vim.env.PATH
 
     lint.linters_by_ft = {
       bash = { 'shellcheck' },
@@ -52,6 +28,14 @@ return {
       yaml = { 'yamllint' },
       zsh = { 'shellcheck' },
     }
+
+    -- Local-first ruff: resolved per-lint-call against the active buffer's
+    -- project root. nvim-lint's spawn code (eval(linter.cmd)) accepts a
+    -- callable. Single source of truth for the registry lives in
+    -- `lua/shamindras/util/project_local_resolver.lua`.
+    lint.linters.ruff.cmd = function()
+      return require('shamindras.util.project_local_resolver').resolve_tool('ruff')
+    end
 
     -- Configure shellcheck for multiple shell types
     lint.linters.shellcheck.args = {

@@ -23,7 +23,6 @@ return {
       sh = { 'shfmt' },
       bash = { 'shfmt' },
       -- zsh = { 'shfmt' },
-      make = { 'make-format' },
       markdown = { 'prettier' },
       json = { 'jq' },
       toml = { 'taplo' },
@@ -50,18 +49,18 @@ return {
           return vim.fs.find({ '.taplo.toml' }, { path = ctx.filename, upward = true })[1] ~= nil
         end,
       },
-      yq = {
-        -- YAML formatter: Use 2 spaces for indentation and preserve key order
-        prepend_args = { '--indent', '2', '--no-sort-keys' },
-        condition = function(ctx)
-          -- Ensure the file is readable
-          return vim.fn.filereadable(ctx.filename) == 1
-        end,
-      },
+      -- yq: conform's built-in spec (`yq -P -`) is sufficient. mikefarah yq
+      -- preserves key order and uses 2-space indent by default.
       ruff_format = {
-        -- Python formatter settings
+        -- Local-first ruff: project's .venv/bin/ruff if available, global otherwise.
+        -- See `lua/shamindras/util/project_local_resolver.lua` for the registry.
+        command = function(_self, ctx)
+          return require('shamindras.util.project_local_resolver').resolve_tool('ruff', { bufnr = ctx.buf })
+        end,
+        -- Only format files inside a Python project. Single source of truth
+        -- for "what counts as a Python project" lives in project_local_resolver.lua.
         condition = function(ctx)
-          return vim.fs.find({ 'pyproject.toml', 'ruff.toml' }, { path = ctx.filename, upward = true })[1] ~= nil
+          return require('shamindras.util.project_local_resolver').find_root('python', ctx.filename) ~= nil
         end,
       },
       stylua = {
@@ -73,14 +72,6 @@ return {
       shfmt = {
         -- Shell formatter options
         prepend_args = { '-i', '2' },
-      },
-      make_format = {
-        command = 'make',
-        args = { '--help' },
-        stdin = false,
-        cwd = function()
-          return vim.fn.getcwd()
-        end,
       },
     },
 

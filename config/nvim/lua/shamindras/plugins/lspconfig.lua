@@ -23,15 +23,50 @@ return {
         config = true,
       },
       {
+        -- Kept solely as the lspconfig-name <-> Mason-package-name registry.
+        -- mason-tool-installer depends on this mapping (see its init.lua:178)
+        -- to translate `lua_ls` -> `lua-language-server` etc. We disable its
+        -- `automatic_enable` feature below: server attachment is driven by
+        -- our `servers` table, not by what happens to be installed in Mason.
         'williamboman/mason-lspconfig.nvim',
-        cmd = { 'LspInstall', 'LspUninstall' },
       },
       {
         'WhoIsSethDaniel/mason-tool-installer.nvim',
-        cmd = { 'MasonToolsInstall', 'MasonToolsUpdate' },
       },
     },
     config = function()
+      -- {{{ Diagnostic Display
+
+      vim.diagnostic.config({
+        severity_sort = true,
+        update_in_insert = false,
+        underline = { severity = vim.diagnostic.severity.WARN },
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '󰅚 ',
+            [vim.diagnostic.severity.WARN] = '󰀪 ',
+            [vim.diagnostic.severity.INFO] = '󰋽 ',
+            [vim.diagnostic.severity.HINT] = '󰌶 ',
+          },
+        },
+        -- virtual_text everywhere (truncated inline preview),
+        -- virtual_lines on the current line only (full multiline detail).
+        virtual_text = {
+          spacing = 2,
+          source = 'if_many',
+          prefix = '●',
+        },
+        virtual_lines = { current_line = true },
+        float = {
+          border = 'rounded',
+          source = true,
+          header = '',
+          prefix = '',
+        },
+      })
+
+      -- }}}
+
       -- {{{ LSP Attach Keymaps
 
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -40,6 +75,8 @@ return {
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buf = event.buf, desc = 'LSP: ' .. desc })
           end
+
+          local client = vim.lsp.get_client_by_id(event.data.client_id)
 
           map('<leader>cd', vim.lsp.buf.definition, '[c]ode [d]efinition')
           map('<leader>cr', vim.lsp.buf.references, '[c]ode [r]eferences')
@@ -50,8 +87,29 @@ return {
           map('<leader>cs', vim.lsp.buf.signature_help, '[c]ode [s]ignature help')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
+          -- Diagnostic float: full message popup at cursor (inline virtual text
+          -- can truncate). Bound to <leader>ce ([c]ode [e]rror/diagnostic).
+          map('<leader>ce', vim.diagnostic.open_float, '[c]ode [e]rror/diagnostic float')
+
+          -- Document and workspace symbol pickers via Snacks (fuzzy outline +
+          -- workspace-wide symbol search). Uppercase S avoids collision with
+          -- <leader>cs signature help.
+          map('<leader>co', function()
+            require('snacks').picker.lsp_symbols()
+          end, '[c]ode [o]utline (document symbols)')
+          map('<leader>cS', function()
+            require('snacks').picker.lsp_workspace_symbols()
+          end, '[c]ode workspace [S]ymbols')
+
+          -- Inlay hints toggle. ty emits type hints; lua_ls emits parameter
+          -- hints. Uppercase I avoids collision with <leader>ci implementation.
+          if client and client.server_capabilities.inlayHintProvider then
+            map('<leader>cI', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }), { bufnr = event.buf })
+            end, '[c]ode [I]nlay hints toggle')
+          end
+
           -- semantic highlight: supersedes mini.cursorword for this buffer
-          local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
             vim.b[event.buf].minicursorword_disable = true
             local hl_group = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = false })
@@ -90,11 +148,10 @@ return {
       -- {{{ Server Definitions
 
       local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local pt = require('shamindras.util.project_local_resolver')
 
       local servers = {
-        pylsp = {},
         lua_ls = {},
-        ruff = {},
         marksman = {
           root_dir = function(bufnr, on_dir)
             local fname = vim.api.nvim_buf_get_name(bufnr)
@@ -104,6 +161,13 @@ return {
             end
             on_dir(require('lspconfig.util').root_pattern('.marksman.toml', '.git')(fname))
           end,
+        },
+        ty = {
+          -- Local-first ty: project's .venv/bin/ty if available, Mason fallback otherwise.
+          -- LSP starts once at session start, so resolve against cwd here. Files
+          -- opened from outside their project will use the Mason ty; recovery is
+          -- `:LspRestart` after cd-ing into the project.
+          cmd = { pt.resolve_tool('ty', { cwd = vim.fn.getcwd() }), 'server' },
         },
       }
 
@@ -121,44 +185,60 @@ return {
         },
       })
 
-      -- Servers managed outside Mason (installed via Homebrew)
-      local mason_exclude = { 'marksman' }
-
+      -- mason-lspconfig: kept ONLY for its lspconfig <-> Mason-package name
+      -- mapping (consumed by mason-tool-installer). `automatic_enable = false`
+      -- disables its auto-attach feature, which would otherwise enable every
+      -- installed Mason LSP package (pylsp, ruff, etc.) regardless of our
+      -- `servers` table. No `ensure_installed`, no `handlers` -- those are
+      -- owned by mason-tool-installer and the unified loop below.
       require('mason-lspconfig').setup({
-        ensure_installed = vim.tbl_filter(function(s)
-          return not vim.tbl_contains(mason_exclude, s)
-        end, vim.tbl_keys(servers)),
-        automatic_installation = { exclude = mason_exclude },
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            vim.lsp.config(server_name, server)
-            vim.lsp.enable(server_name)
-          end,
-        },
+        automatic_enable = false,
       })
 
-      -- Setup Homebrew-managed servers directly (not via mason-lspconfig handler)
-      for _, server_name in ipairs(mason_exclude) do
-        local server = servers[server_name] or {}
-        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-        vim.lsp.config(server_name, server)
-        vim.lsp.enable(server_name)
+      -- Unified per-server config + enable. nvim-lspconfig ships sane
+      -- defaults in `lsp/<server>.lua`; vim.lsp.config() merges our
+      -- overrides on top, vim.lsp.enable() starts the client.
+      for name, cfg in pairs(servers) do
+        cfg.capabilities = vim.tbl_deep_extend('force', {}, capabilities, cfg.capabilities or {})
+        vim.lsp.config(name, cfg)
+        vim.lsp.enable(name)
       end
 
-      -- Mason-tool-installer setup
-      local ensure_installed = vim.tbl_filter(function(s)
-        return not vim.tbl_contains(mason_exclude, s)
-      end, vim.tbl_keys(servers or {}))
+      -- mason-tool-installer: single source of truth for every nvim-managed
+      -- tool — LSP servers, linters, and formatters. Mason owns the global
+      -- fallback for nvim-only tools; tools that are also shell-shared
+      -- (jq, yq, shfmt, prettier, etc.) remain in Brewfile/npm in parallel
+      -- so the shell context has its own canonical install. nvim resolves
+      -- via Mason's PATH prepend regardless.
+      local ensure_installed = vim.tbl_keys(servers)
       vim.list_extend(ensure_installed, {
+        -- Linters (consumed by nvim-lint)
+        'cmakelint',
+        'jsonlint',
+        'luacheck',
+        'markdownlint-cli2',
+        'ruff', -- also consumed by conform's ruff_format
+        'shellcheck',
+        'yamllint',
+        -- Formatters (consumed by conform)
         'stylua',
+        'shfmt',
+        'prettier',
+        'jq',
+        'yq',
+        'taplo',
       })
+
       require('mason-tool-installer').setup({
         ensure_installed = ensure_installed,
         auto_update = true,
         run_on_start = true,
       })
+      -- mason-tool-installer's plugin/ file registers a VimEnter autocmd to
+      -- call run_on_start(). Since we load it lazily (BufReadPre), VimEnter
+      -- has already fired by then and the autocmd never runs. Call it
+      -- directly so missing tools install on first buffer open.
+      require('mason-tool-installer').run_on_start()
 
       -- }}}
     end,

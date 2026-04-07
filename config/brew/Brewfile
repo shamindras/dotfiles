@@ -152,8 +152,6 @@ brew "lua"
 brew "luacheck"
 # Package manager for the Lua programming language
 brew "luarocks"
-# Language Server Protocol for Markdown
-brew "marksman"
 # Deep clean and optimize your Mac
 brew "mole"
 # Incremental parsing library

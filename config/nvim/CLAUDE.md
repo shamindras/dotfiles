@@ -161,16 +161,24 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 
 ### LSP Keybindings
 
-| Key          | Action              | Mnemonic             |
-| ------------ | ------------------- | -------------------- |
-| `<leader>cd` | Go to Definition    | [c]ode [d]efinition  |
-| `<leader>cr` | Go to References    | [c]ode [r]eferences  |
-| `<leader>ci` | Go to Implementation| [c]ode [i]mplementation |
-| `<leader>ca` | Code Actions        | [c]ode [a]ctions     |
-| `<leader>cn` | Rename Symbol       | [c]ode re[n]ame      |
-| `<leader>ct` | Type Definition     | [c]ode [t]ype        |
-| `<leader>cs` | Signature Help      | [c]ode [s]ignature   |
-| `K`          | Hover Documentation | Standard Vim         |
+| Key          | Action                        | Mnemonic                  |
+| ------------ | ----------------------------- | ------------------------- |
+| `<leader>cd` | Go to Definition              | [c]ode [d]efinition       |
+| `<leader>cr` | Go to References              | [c]ode [r]eferences       |
+| `<leader>ci` | Go to Implementation          | [c]ode [i]mplementation   |
+| `<leader>ca` | Code Actions                  | [c]ode [a]ctions          |
+| `<leader>cn` | Rename Symbol                 | [c]ode re[n]ame           |
+| `<leader>ct` | Type Definition               | [c]ode [t]ype             |
+| `<leader>cs` | Signature Help                | [c]ode [s]ignature        |
+| `<leader>ce` | Diagnostic float at cursor    | [c]ode [e]rror/diagnostic |
+| `<leader>co` | Document symbols (Snacks)     | [c]ode [o]utline          |
+| `<leader>cS` | Workspace symbols (Snacks)    | [c]ode workspace [S]ymbols|
+| `<leader>cI` | Toggle inlay hints            | [c]ode [I]nlay hints      |
+| `K`          | Hover Documentation           | Standard Vim              |
+
+The `<leader>c*` set deliberately mirrors and supersedes nvim 0.11+'s default
+`gr*` LSP keymaps to avoid clobbering mini.operators (which owns the `gr*`
+prefix for g[r]eplace, etc.).
 
 ### LSP Routing
 
@@ -199,10 +207,57 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 
 ### LSP API
 
-Servers use the nvim 0.11 native `vim.lsp.config()` + `vim.lsp.enable()` API.
-Homebrew-managed servers (marksman) are excluded from Mason via `mason_exclude`
-list and set up directly in `lspconfig.lua`. LSP capabilities provided by
-`require('blink.cmp').get_lsp_capabilities()`.
+Servers use the nvim 0.11+ native `vim.lsp.config()` + `vim.lsp.enable()` API.
+LSP capabilities provided by `require('blink.cmp').get_lsp_capabilities()`.
+
+**Configured servers** (`servers` table in `lspconfig.lua`):
+- `lua_ls` — Lua, with lazydev for nvim runtime
+- `marksman` — markdown (non-zk files; root_dir guards against `$ZK_NOTEBOOK_DIR`)
+- `ty` — Python type checker (Astral, pre-1.0). Cmd resolved local-first
+  via `util/project_local_resolver.lua`: `<project>/.venv/bin/ty` if present, else
+  Mason's ty. Resolved at session start against cwd; recovery for files
+  opened from outside their project is `:LspRestart` after cd-ing in.
+
+### Tool installation: single source of truth
+
+`mason-tool-installer` is set up **once** in `lspconfig.lua` with a unified
+`ensure_installed` list covering every nvim-managed tool — LSP servers,
+linters, AND formatters. nvim-lint and conform contain only their wiring;
+they do not own install responsibility.
+
+Architectural principle: **Mason owns the global fallback for nvim-only
+tools; Homebrew/npm own the install for shell-shared tools** (jq, yq, shfmt,
+prettier, taplo). Tools that are both nvim-used AND shell-shared are
+installed in **both** package managers in parallel — each context has its
+own canonical install. nvim resolves via Mason's automatic PATH prepend
+(mason.nvim default `PATH = "prepend"`); the shell resolves via brew/npm.
+
+**Local-first tool resolution** for `ruff` and `ty`: project's
+`.venv/bin/<tool>` if present, else Mason's binary, else PATH. Single
+source of truth for the registry lives in
+`lua/shamindras/util/project_local_resolver.lua`. Add a new local-first
+tool with one row in `local_first_tools`, a new language with one row in
+`language_profiles`. Tools without a project-local install pattern (e.g.
+marksman, lua_ls, stylua) do **not** belong here — they resolve via
+Mason's PATH prepend automatically.
+
+**Lazy-load gotcha (resolved)**: `mason-tool-installer`'s `plugin/` file
+registers a `VimEnter` autocmd to call `run_on_start()`. When the plugin
+is lazy-loaded after `BufReadPre`, `VimEnter` has already fired and the
+autocmd never runs. `lspconfig.lua` calls
+`require('mason-tool-installer').run_on_start()` directly after `setup()`
+to make missing-tool installs deterministic on first buffer open.
+
+### Diagnostic display
+
+Configured via `vim.diagnostic.config()` in `lspconfig.lua`:
+- Nerd-font icons for sign column (`󰅚 󰀪 󰋽 󰌶`)
+- `severity_sort = true`, `update_in_insert = false`
+- Underline only for WARN+
+- Inline `virtual_text` everywhere (`source = 'if_many'`); full
+  multiline `virtual_lines` on the **current line only** (nvim 0.11+
+  `current_line` mode) — best of both worlds for verbose ty errors.
+- Rounded float border with source attribution.
 
 ## Completion
 
