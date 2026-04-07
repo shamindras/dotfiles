@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# kanata-keyboard-watcher — restart kanata when HID keyboards change
+#
+# Kanata enumerates input devices once at startup and has no hot-plug
+# detection on macOS (see jtroo/kanata#1479). When a keyboard is attached
+# or detached after kanata starts (Nuphy connect, sleep/wake, Bluetooth
+# reconnect), kanata silently stops remapping it. This watcher hashes the
+# current set of HID keyboard devices every few seconds and kickstarts the
+# kanata launchd daemon when the set changes.
+#
+# Runs as a LaunchDaemon under root so `launchctl kickstart` needs no sudo.
+# Filters hidutil's services list to UsagePage=1 (Generic Desktop) +
+# Usage=6 (Keyboard) — those are the rows kanata cares about. Hashes
+# (VendorID, ProductID, LocationID) so the same keyboard at the same port
+# does not trigger spurious restarts.
+
+set -Eeuo pipefail
+
+DAEMON="system/com.jtroo.kanata"
+INTERVAL="${KANATA_WATCH_INTERVAL:-2}"
+
+current_hash() {
+    /usr/bin/hidutil list 2>/dev/null \
+        | /usr/bin/awk '$4==1 && $5==6 && !($1=="0x16c0" && $2=="0x27db") {print $1,$2,$3}' \
+        | /usr/bin/sort -u \
+        | /usr/bin/shasum \
+        | /usr/bin/awk '{print $1}'
+}
+
+prev=""
+while :; do
+    cur=$(current_hash || true)
+    if [ -n "$cur" ] && [ -n "$prev" ] && [ "$cur" != "$prev" ]; then
+        echo "[kanata-watcher] keyboard set changed, kicking $DAEMON"
+        /bin/launchctl kickstart -k "$DAEMON" || true
+    fi
+    [ -n "$cur" ] && prev="$cur"
+    sleep "$INTERVAL"
+done
