@@ -1,0 +1,7 @@
+# selene config. Docs: https://kampfkarren.github.io/selene/usage/configuration.html
+# `--config <abspath>` is passed from nvim-lint.lua (selene discovers via
+# cwd, not the buffer file — walk-up would miss this when nvim is
+# launched outside ~/.config/nvim).
+
+# Base lua51 + custom `vim` std from ./vim.yml (declares the nvim global).
+std = "lua51+vim"

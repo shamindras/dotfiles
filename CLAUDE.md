@@ -151,6 +151,10 @@ across versions (e.g., sesh v2 changed `startup_script` → `startup_command`).
 - Keep tables column-aligned with consistent padding so they are readable
   in plain text (not just rendered HTML). Use dashed separator rows that
   match column widths.
+- Linting via `markdownlint-cli2` (run by nvim-lint) uses
+  `.markdownlint-cli2.yaml` at the repo root, with `MD013 line_length: 120`
+  to match `.prettierrc.yaml`'s `printWidth: 120`. README/CLAUDE.md files
+  must start with an H1 (MD041 stays enabled here).
 
 ### Tool-specific CLAUDE.md files
 
