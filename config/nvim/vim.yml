@@ -1,0 +1,17 @@
+# Custom selene standard library declaring the Neovim `vim` global.
+# Docs: https://kampfkarren.github.io/selene/usage/std.html
+#
+# Loaded by `selene.toml` via `std = "lua51+vim"`: selene looks for
+# `vim.yml` in the same directory as `selene.toml` and merges it on top
+# of the `lua51` builtin std.
+#
+# `any: true` tells selene "`vim` is a global, and any field access on
+# it is valid — don't type-check the API surface." This is deliberately
+# minimal: we don't enumerate `vim.api`, `vim.fn`, etc. The tradeoff is
+# that typos like `vim.api.nvmi_create_autocmd` won't be caught by
+# selene — but lua_ls (with lazydev) already catches those, so selene
+# doesn't need to duplicate the work.
+---
+globals:
+  vim:
+    any: true

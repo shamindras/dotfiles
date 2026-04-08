@@ -21,7 +21,7 @@ return {
       bash = { 'shellcheck' },
       cmake = { 'cmakelint' },
       json = { 'jsonlint' },
-      lua = { 'luacheck' },
+      lua = { 'selene' },
       markdown = { 'markdownlint-cli2' },
       python = { 'ruff' },
       sh = { 'shellcheck' },
@@ -37,22 +37,62 @@ return {
       return require('shamindras.util.project_local_resolver').resolve_tool('ruff')
     end
 
+    -- markdownlint-cli2: switch from stdin to file-path mode AND pass
+    -- `--config` explicitly. markdownlint-cli2 only looks in the file's
+    -- own directory for configs — it does NOT walk up. nvim-lint spawns
+    -- with cwd = buffer dir, so without `--config` a file in
+    -- `~/Dropbox/notes/zk/ideas/foo.md` never sees
+    -- `~/Dropbox/notes/zk/.markdownlint-cli2.yaml` one level above.
+    -- We walk up from the buffer with `vim.fs.find` and inject the
+    -- nearest config path as `--config <path>`.
+    -- Per-call helper: find the nearest `.markdownlint-cli2.yaml` by
+    -- walking up from the buffer's dir. Returned as an upvalue-shared
+    -- closure so the three arg callbacks below agree on a single result.
+    local function md_ctx()
+      local bufname = vim.api.nvim_buf_get_name(0)
+      local found = vim.fs.find(
+        { '.markdownlint-cli2.yaml', '.markdownlint-cli2.yml', '.markdownlint-cli2.jsonc' },
+        { upward = true, path = vim.fs.dirname(bufname) }
+      )[1]
+      return bufname, found
+    end
+    lint.linters['markdownlint-cli2'].stdin = false
+    lint.linters['markdownlint-cli2'].stream = 'stderr'
+    lint.linters['markdownlint-cli2'].args = {
+      function()
+        local _, found = md_ctx()
+        return found and '--config' or vim.NIL
+      end,
+      function()
+        local _, found = md_ctx()
+        return found or vim.NIL
+      end,
+      function()
+        local bufname = md_ctx()
+        return bufname
+      end,
+    }
+    -- File-path mode emits `<file>:<line>(:<col>)? <msg>` instead of the
+    -- default `stdin:...`; rebuild the parser to match.
+    lint.linters['markdownlint-cli2'].parser = require('lint.parser').from_errorformat(
+      '%f:%l:%c %m,%f:%l %m',
+      { source = 'markdownlint', severity = vim.diagnostic.severity.WARN }
+    )
+
     -- Configure shellcheck for multiple shell types
     lint.linters.shellcheck.args = {
       '--shell=bash',
       '--severity=warning',
     }
 
-    -- Configure luacheck to use config from nvim config directory
-    local config_path = vim.fn.stdpath('config')
-    local luacheckrc_path = config_path .. '/.luacheckrc'
-
-    if vim.fn.filereadable(luacheckrc_path) == 1 then
-      lint.linters.luacheck.args = {
-        '--config',
-        luacheckrc_path,
-      }
-    end
+    -- selene: discover `selene.toml` from cwd (upward walk), not from the
+    -- buffer file — nvim-lint invokes selene from nvim's cwd, so when
+    -- nvim is launched outside ~/.config/nvim the config is missed and
+    -- `vim` falls back to undefined. Pass `--config` explicitly pinned
+    -- to our nvim config dir.
+    local selene_config = vim.fn.stdpath('config') .. '/selene.toml'
+    table.insert(lint.linters.selene.args, 1, selene_config)
+    table.insert(lint.linters.selene.args, 1, '--config')
 
     -- }}}
 
@@ -87,9 +127,9 @@ return {
     })
 
     -- Optional: Add keymapping for manual linting
-    vim.keymap.set('n', '<leader>fl', function()
+    vim.keymap.set('n', '<leader>cl', function()
       require('lint').try_lint()
-    end, { desc = '[f]ile [l]int (trigger)' })
+    end, { desc = '[c]ode [l]int (trigger)' })
 
     -- }}}
   end,

@@ -215,7 +215,7 @@ return {
         -- Linters (consumed by nvim-lint)
         'cmakelint',
         'jsonlint',
-        'luacheck',
+        'selene',
         'markdownlint-cli2',
         'ruff', -- also consumed by conform's ruff_format
         'shellcheck',

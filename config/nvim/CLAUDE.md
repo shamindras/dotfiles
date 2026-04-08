@@ -67,7 +67,7 @@ config/nvim/
 | ------------ | ------------------------------------------------- |
 | `<leader>b`  | Buffer ops (format, delete, yank, write)          |
 | `<leader>c`  | Code/LSP (definition, references, actions, rename)|
-| `<leader>f`  | File ops (rename, explorer, config browser, lint) |
+| `<leader>f`  | File ops (rename, explorer, config browser)       |
 | `<leader>g`  | Go/navigate (link opening)                        |
 | `<leader>k`  | Zettelkasten (daily, idea, search, backlinks)     |
 | `<leader>l`  | Lazy manager (menu, update, profile, sync)        |
@@ -171,6 +171,7 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 | `<leader>ct` | Type Definition               | [c]ode [t]ype             |
 | `<leader>cs` | Signature Help                | [c]ode [s]ignature        |
 | `<leader>ce` | Diagnostic float at cursor    | [c]ode [e]rror/diagnostic |
+| `<leader>cl` | Trigger lint on current file  | [c]ode [l]int             |
 | `<leader>co` | Document symbols (Snacks)     | [c]ode [o]utline          |
 | `<leader>cS` | Workspace symbols (Snacks)    | [c]ode workspace [S]ymbols|
 | `<leader>cI` | Toggle inlay hints            | [c]ode [I]nlay hints      |
