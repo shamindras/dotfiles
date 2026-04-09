@@ -14,7 +14,7 @@ return {
     { '<leader>kn', desc = '[k]asten [n]otes' },
     { '<leader>kt', desc = '[k]asten [t]ags' },
     { '<leader>kf', desc = '[k]asten [f]ind files' },
-    { '<leader>k/', desc = '[k]asten grep' },
+    { '<leader>kg', desc = '[k]asten [g]rep' },
     { '<leader>kN', desc = '[k]asten [N]ew note' },
     { '<leader>kc', desc = '[k]asten [c]onfig' },
     { '<leader>kx', desc = '[k]asten inde[x]' },
@@ -308,9 +308,9 @@ return {
     )
     vim.keymap.set(
       'n',
-      '<leader>k/',
+      '<leader>kg',
       '<Cmd>ZkNotebookGrep<CR>',
-      vim.tbl_extend('force', opts, { desc = '[k]asten grep' })
+      vim.tbl_extend('force', opts, { desc = '[k]asten [g]rep' })
     )
 
     -- Medium frequency operations (capitals)

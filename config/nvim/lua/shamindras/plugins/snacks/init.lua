@@ -18,7 +18,6 @@ return {
         history_bonus = true,
       },
     },
-    explorer = {},
     lazygit = {
       configure = false,
       win = {
@@ -37,7 +36,7 @@ return {
   -- {{{ Keymaps
 
   keys = {
-    -- Top Pickers & Explorer
+    -- Top Pickers
     {
       '<leader><space>',
       function()
@@ -45,40 +44,14 @@ return {
       end,
       desc = '[s]mart [f]ind files',
     },
+
+    -- Version Control
     {
-      '<leader>,',
-      function()
-        require('shamindras.plugins.snacks.pickers').buffers_picker()
-      end,
-      desc = '[b]uffers',
-    },
-    {
-      '<leader>/',
-      function()
-        require('shamindras.plugins.snacks.pickers').grep_with_ripgrep()
-      end,
-      desc = '[g]rep',
-    },
-    {
-      '<leader>:',
-      function()
-        require('shamindras.plugins.snacks.pickers').with_ivy_layout(Snacks.picker.command_history)
-      end,
-      desc = '[c]ommand [h]istory',
-    },
-    {
-      '<leader>fe',
-      function()
-        Snacks.explorer()
-      end,
-      desc = '[f]ile [e]xplorer',
-    },
-    {
-      '<leader>lg',
+      '<leader>vg',
       function()
         Snacks.lazygit()
       end,
-      desc = '[l]azy [g]it',
+      desc = '[v]cs lazy[g]it',
     },
 
     -- Find Pickers
@@ -92,12 +65,9 @@ return {
     {
       '<leader>fc',
       function()
-        require('shamindras.plugins.snacks.pickers').with_ivy_layout(
-          Snacks.picker.files,
-          { cwd = vim.fn.stdpath('config') }
-        )
+        require('shamindras.plugins.snacks.pickers').colorscheme_picker()
       end,
-      desc = '[f]ind [c]onfig file',
+      desc = '[f]ind [c]olorscheme',
     },
     {
       '<leader>ff',
@@ -124,7 +94,14 @@ return {
       desc = '[s]earch selected [w]ord',
     },
 
-    -- Search
+    -- Search Pickers
+    {
+      '<leader>sc',
+      function()
+        require('shamindras.plugins.snacks.pickers').with_ivy_layout(Snacks.picker.command_history)
+      end,
+      desc = '[s]earch [c]ommand history',
+    },
     {
       '<leader>s"',
       function()
@@ -208,13 +185,6 @@ return {
         require('shamindras.plugins.snacks.pickers').todo_comments_picker('WARN')
       end,
       desc = '[s]earch [W]ARN only',
-    },
-    {
-      '<leader>pc',
-      function()
-        require('shamindras.plugins.snacks.pickers').colorscheme_picker()
-      end,
-      desc = '[p]ick [c]olorscheme',
     },
 
     -- Buffer Delete (opens file picker if no buffers remain)

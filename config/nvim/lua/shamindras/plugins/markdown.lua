@@ -74,7 +74,7 @@ return {
 
       -- {{{ Render Toggle ---------------------------------------------------------------------
 
-      map('n', '<leader>mr', '<Cmd>RenderMarkdown toggle<CR>', opts('[m]arkdown [r]ender toggle'))
+      map('n', '<leader>tr', '<Cmd>RenderMarkdown toggle<CR>', opts('[t]oggle [r]ender markdown'))
 
       -- }}}
     end,

@@ -73,7 +73,7 @@ return {
         group = vim.api.nvim_create_augroup('LspAttachKeymaps', { clear = true }),
         callback = function(event)
           local map = function(keys, func, desc)
-            vim.keymap.set('n', keys, func, { buf = event.buf, desc = 'LSP: ' .. desc })
+            vim.keymap.set('n', keys, func, { buf = event.buf, desc = desc })
           end
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -101,12 +101,12 @@ return {
             require('snacks').picker.lsp_workspace_symbols()
           end, '[c]ode workspace [S]ymbols')
 
-          -- Inlay hints toggle. ty emits type hints; lua_ls emits parameter
-          -- hints. Uppercase I avoids collision with <leader>ci implementation.
+          -- Inlay hints toggle — lives under <leader>t (toggle) namespace
+          -- but defined here because it requires an LSP capability check.
           if client and client.server_capabilities.inlayHintProvider then
-            map('<leader>cI', function()
+            vim.keymap.set('n', '<leader>ti', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }), { bufnr = event.buf })
-            end, '[c]ode [I]nlay hints toggle')
+            end, { buf = event.buf, desc = '[t]oggle [i]nlay hints' })
           end
 
           -- semantic highlight: supersedes mini.cursorword for this buffer

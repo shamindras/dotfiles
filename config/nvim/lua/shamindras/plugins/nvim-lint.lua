@@ -129,7 +129,7 @@ return {
     -- Optional: Add keymapping for manual linting
     vim.keymap.set('n', '<leader>cl', function()
       require('lint').try_lint()
-    end, { desc = '[c]ode [l]int (trigger)' })
+    end, { desc = '[c]ode [l]int' })
 
     -- }}}
   end,

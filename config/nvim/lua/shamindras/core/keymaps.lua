@@ -49,7 +49,7 @@ keymap({ 'n', 'v' }, '<leader>d', '"_d', { desc = '[d]elete to black hole' })
 
 -- }}}
 
--- {{{ File Operations
+-- {{{ Buffer File Operations
 
 local function rename_file()
   local old_name = vim.fn.expand('%')
@@ -86,8 +86,23 @@ local function make_executable()
   vim.notify('Made executable: ' .. file)
 end
 
-keymap('n', '<leader>fx', make_executable, { desc = '[f]ile e[x]ecutable (chmod +x)' })
-keymap('n', '<leader>fr', rename_file, { desc = '[f]ile [r]ename' })
+keymap('n', '<leader>bx', make_executable, { desc = '[b]uffer chmod +[x]' })
+keymap('n', '<leader>br', rename_file, { desc = '[b]uffer [r]ename file' })
+keymap('n', '<leader>bp', function()
+  local path = vim.fn.expand('%:p')
+  vim.fn.setreg('+', path)
+  vim.notify('Copied: ' .. path)
+end, { desc = '[b]uffer copy [p]ath' })
+keymap('n', '<leader>bn', function()
+  local name = vim.fn.expand('%:t')
+  vim.fn.setreg('+', name)
+  vim.notify('Copied: ' .. name)
+end, { desc = '[b]uffer copy [n]ame' })
+keymap('n', '<leader>bs', function()
+  local loc = vim.fn.expand('%:p') .. ':' .. vim.fn.line('.')
+  vim.fn.setreg('+', loc)
+  vim.notify('Copied: ' .. loc)
+end, { desc = '[b]uffer copy [s]ource location' })
 
 -- }}}
 
@@ -109,22 +124,6 @@ keymap('n', '<leader>ip', 'v:lua.put_empty_line(v:true)', { expr = true, desc = 
 
 -- }}}
 
--- {{{ Lazy Plugin Manager
-
-keymap('n', '<leader>ll', '<cmd>Lazy<cr>', { desc = '[l]azy menu' })
-keymap('n', '<leader>lu', '<cmd>Lazy update<cr>', { desc = '[l]azy [u]pdate' })
-keymap('n', '<leader>lp', '<cmd>Lazy profile<cr>', { desc = '[l]azy [p]rofile' })
-keymap('n', '<leader>ls', '<cmd>Lazy sync<cr>', { desc = '[l]azy [s]ync' })
-
--- }}}
-
--- {{{ Number Operations
-
-keymap({ 'n', 'v' }, '<leader>na', '<C-a>', { desc = '[n]umber [a]dd (increment)' })
-keymap({ 'n', 'v' }, '<leader>nx', '<C-x>', { desc = '[n]umber subtrac[x]t (decrement)' })
-
--- }}}
-
 -- {{{ Paste (Register-Aware)
 
 keymap('v', '<leader>p', '"_dP', { desc = '[p]aste (preserve register)' })
@@ -141,7 +140,10 @@ keymap('n', '<leader>qs', '<cmd>wqall!<cr>', { desc = '[q]uit [s]ave all and exi
 -- {{{ Search / Replace
 
 keymap('n', '<leader>sr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {
-  desc = '[s]earch [r]eplace word under cursor',
+  desc = '[s]earch [r]eplace word',
+})
+keymap('v', '<leader>sr', [[:s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {
+  desc = '[s]earch [r]eplace word (selection)',
 })
 
 -- }}}
@@ -162,7 +164,7 @@ local function custom_toggle_line_numbers()
   end
 end
 
-keymap('n', '<leader>tn', custom_toggle_line_numbers, { desc = '[t]oggle line [n]umbers' })
+keymap('n', '<leader>tl', custom_toggle_line_numbers, { desc = '[t]oggle [l]ine numbers' })
 
 keymap('n', '<leader>ts', function()
   vim.wo.spell = not vim.wo.spell
@@ -213,6 +215,8 @@ keymap(
   "<cmd>w<cr><cmd>luafile %<cr><cmd>echo 'Sourced ' . @%<cr>",
   { desc = 'e[x]ecute [b]uffer (source file)' }
 )
+keymap({ 'n', 'v' }, '<leader>xa', '<C-a>', { desc = 'e[x]ecute [a]dd (increment)' })
+keymap({ 'n', 'v' }, '<leader>xx', '<C-x>', { desc = 'e[x]ecute decrement (C-[x])' })
 
 -- }}}
 
