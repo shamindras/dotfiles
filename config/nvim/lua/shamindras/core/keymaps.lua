@@ -99,10 +99,10 @@ keymap('n', '<leader>bn', function()
   vim.notify('Copied: ' .. name)
 end, { desc = '[b]uffer copy [n]ame' })
 keymap('n', '<leader>bs', function()
-  local loc = vim.fn.expand('%:p') .. ':' .. vim.fn.line('.')
-  vim.fn.setreg('+', loc)
-  vim.notify('Copied: ' .. loc)
-end, { desc = '[b]uffer copy [s]ource location' })
+  local stem = vim.fn.expand('%:t:r')
+  vim.fn.setreg('+', stem)
+  vim.notify('Copied: ' .. stem)
+end, { desc = '[b]uffer copy [s]tem' })
 
 -- }}}
 
