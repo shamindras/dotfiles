@@ -162,7 +162,7 @@ local function generate_specs()
       {
         '<leader>tc',
         cycle_colorscheme,
-        desc = '[t]oggle cycle [c]olorscheme',
+        desc = '[t]oggle [c]olorscheme cycle',
       },
     },
   }

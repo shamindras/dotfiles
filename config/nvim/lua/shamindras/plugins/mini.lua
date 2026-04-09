@@ -26,14 +26,14 @@ return {
 
     require('mini.operators').setup()
 
-    vim.keymap.set({ 'n', 'x' }, '<leader>gx', function()
+    vim.keymap.set({ 'n', 'x' }, '<leader>xo', function()
       local gx_keymap = vim.fn.maparg('gX', 'n', false, true)
       if gx_keymap.callback then
         gx_keymap.callback()
       else
         vim.cmd('normal! gx')
       end
-    end, { desc = '[g]o open lin[x]/link' })
+    end, { desc = 'e[x]ecute [o]pen URL' })
 
     require('mini.surround').setup()
     require('mini.move').setup()
@@ -66,14 +66,15 @@ return {
       end,
     })
 
-    vim.keymap.set('n', '<leader>fm', '<cmd>lua MiniFiles.open()<cr>', { desc = '[f]ile [m]ini files' })
-    vim.keymap.set(
-      'n',
-      '<leader>fa',
-      '<cmd>lua MiniFiles.open(vim.api.nvim_buf_get_name(0))<cr>',
-      { desc = '[f]ile [a]ctive file' }
-    )
-    vim.keymap.set('n', '<leader>fh', "<cmd>lua MiniFiles.open('~')<cr>", { desc = '[f]ile [h]ome dir' })
+    vim.keymap.set('n', '<leader>fa', function()
+      local bufname = vim.api.nvim_buf_get_name(0)
+      if bufname ~= '' then
+        MiniFiles.open(bufname)
+      else
+        MiniFiles.open()
+      end
+    end, { desc = '[f]ind [a]ctive file' })
+    vim.keymap.set('n', '<leader>fh', "<cmd>lua MiniFiles.open('~')<cr>", { desc = '[f]ind from [h]ome' })
 
     -- }}}
 
@@ -330,24 +331,23 @@ return {
       },
 
       clues = {
+        -- Group labels (n-mode)
         { mode = 'n', keys = '<leader>b', desc = '+[b]uffer' },
-        { mode = 'n', keys = '<leader>d', desc = '+[d]elete (black hole)' },
         { mode = 'n', keys = '<leader>c', desc = '+[c]ode' },
-        { mode = 'n', keys = '<leader>f', desc = '+[f]ile' },
-        { mode = 'n', keys = '<leader>g', desc = '+[g]o/navigate' },
+        { mode = 'n', keys = '<leader>d', desc = '+[d]elete (black hole)' },
+        { mode = 'n', keys = '<leader>f', desc = '+[f]ind' },
         { mode = 'n', keys = '<leader>i', desc = '+[i]nsert' },
         { mode = 'n', keys = '<leader>k', desc = '+[k]asten' },
-        { mode = 'n', keys = '<leader>l', desc = '+[l]azy' },
         { mode = 'n', keys = '<leader>m', desc = '+[m]arkdown' },
-        { mode = 'n', keys = '<leader>n', desc = '+[n]umber' },
-        { mode = 'v', keys = '<leader>p', desc = '+[p]aste (register-aware)' },
         { mode = 'n', keys = '<leader>q', desc = '+[q]uit' },
+        { mode = 'n', keys = '<leader>s', desc = '+[s]earch' },
         { mode = 'n', keys = '<leader>t', desc = '+[t]oggle' },
+        { mode = 'n', keys = '<leader>v', desc = '+[v]ersion control' },
         { mode = 'n', keys = '<leader>w', desc = '+[w]indow' },
         { mode = 'n', keys = '<leader>x', desc = '+e[x]ecute' },
-        { mode = 'n', keys = '<leader>y', desc = '+[y]ank (clipboard)' },
+        -- Group labels (v-mode)
         { mode = 'v', keys = '<leader>y', desc = '+[y]ank (clipboard)' },
-        { mode = 'n', keys = '<leader>s', desc = '+[s]earch' },
+        -- Built-in generators
         miniclue.gen_clues.builtin_completion(),
         miniclue.gen_clues.g(),
         miniclue.gen_clues.marks(),
