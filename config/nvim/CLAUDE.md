@@ -411,7 +411,7 @@ Every LHS that changed, was removed, or was renamed in the keymap audit:
 | `<leader>ls`   | `:Lazy sync`   | Removed | Lazy sync (prefix deleted)           |
 | N/A            | `<leader>bp`   | New     | Copy file path to clipboard          |
 | N/A            | `<leader>bn`   | New     | Copy file name to clipboard          |
-| N/A            | `<leader>bs`   | New     | Copy file:line to clipboard          |
+| N/A            | `<leader>bs`   | New     | Copy file stem to clipboard          |
 | N/A            | `<leader>sc`   | New     | Search command history               |
 | `<leader>sr`   | `<leader>sr`   | Changed | Added v-mode (visual selection)      |
 | `<leader>fa`   | `<leader>fa`   | Changed | Was active-file; now smart open      |
