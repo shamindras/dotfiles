@@ -40,7 +40,7 @@ config/nvim/
 │       ├── treesitter.lua            # Syntax highlighting + text objects
 │       ├── colorscheme.lua           # 7-plugin theme registry (13 variants, dark-to-light)
 │       ├── snacks/
-│       │   ├── init.lua              # Fuzzy finder, file explorer, lazygit, buffer delete
+│       │   ├── init.lua              # Fuzzy finder, lazygit, buffer delete
 │       │   └── pickers.lua           # Custom Snacks picker configs (fd, rg, ivy, todo, colorscheme)
 │       ├── zk.lua                    # Zettelkasten integration
 │       ├── markdown.lua              # Markdown editing (tadmccorkle/markdown.nvim)
@@ -63,24 +63,56 @@ config/nvim/
 
 ### Keymap Organization
 
-| Prefix       | Scope                                             |
-| ------------ | ------------------------------------------------- |
-| `<leader>b`  | Buffer ops (format, delete, yank, write)          |
-| `<leader>c`  | Code/LSP (definition, references, actions, rename)|
-| `<leader>f`  | File ops (rename, explorer, config browser)       |
-| `<leader>g`  | Go/navigate (link opening)                        |
-| `<leader>k`  | Zettelkasten (daily, idea, search, backlinks)     |
-| `<leader>l`  | Lazy manager (menu, update, profile, sync)        |
-| `<leader>m`  | Markdown ops (checkbox, TOC, list, render toggle) |
-| `<leader>n`  | Number ops (increment, decrement)                 |
-| `<leader>s`  | Search/replace (grep, diagnostics, todo comments) |
-| `<leader>t`  | Toggle (line numbers, spell, theme, cursorword, hipatterns) |
-| `<leader>w`  | Window (split, equalize, maximize, resize, swap)  |
+| Prefix       | Scope                                                        |
+| ------------ | ------------------------------------------------------------ |
+| `<leader>b`  | Buffer ops (delete, yank, write, rename, chmod, copy path)   |
+| `<leader>c`  | Code/LSP (definition, references, actions, rename, format)   |
+| `<leader>d`  | Delete to black hole (depth-1 allow-list)                    |
+| `<leader>f`  | Find (files, buffers, colorscheme, mini.files explorer)      |
+| `<leader>i`  | Insert (blank lines above/below)                             |
+| `<leader>k`  | Zettelkasten (daily, idea, search, grep, backlinks)          |
+| `<leader>m`  | Markdown ops (checkbox, TOC, list, heading promote/demote)   |
+| `<leader>q`  | Quit (save-all-and-exit, force-quit-all)                     |
+| `<leader>s`  | Search (grep, diagnostics, todo, command history, replace)   |
+| `<leader>t`  | Toggle (line numbers, spell, theme, cursorword, hipatterns, inlay hints, render-markdown) |
+| `<leader>v`  | Version control (lazygit)                                    |
+| `<leader>w`  | Window (split, equalize, maximize, resize, swap)             |
+| `<leader>x`  | Execute (Lua line/visual/buffer, open URL, increment/decrement) |
+
+Depth-1 allow-list (bindings that terminate at `<leader>X`):
+`<leader>d`, `<leader>y`, `<leader>Y`, `<leader>p` (v-mode), `<leader><space>`.
+These consume a top-level letter but have no sub-namespace — justified by
+frequency of use and no competing children.
+
+#### Keymap colocation rule
+
+Plugin-dependent keymaps live in the plugin's lazy.nvim spec (`keys` array
+or `config` function), not in `core/keymaps.lua`. Keymaps with a real
+native fallback live in `core/keymaps.lua`. Exception: `<leader>ti` (inlay
+hints toggle) is defined in `lspconfig.lua`'s `LspAttach` callback because
+it requires an LSP capability check, even though it's in the `<leader>t`
+namespace.
+
+#### mini.clue description style
+
+- Leader bindings: `[x]prefix [y]key description` (bracket the mnemonic letters)
+- Group labels: `+[x]scope` (plus sign, single word)
+- Non-leader bindings: plain `Verb Object (Context)` (title case)
+- No namespace prefixes (`LSP:`, `Git:`) — the group label handles context
+- Title case, no trailing punctuation
+- Consistent verbs: Find (pickers), Search (grep/filter), Toggle (on/off), Execute (run)
+
+#### Native 0.12 LSP defaults — not adopted
+
+The `<leader>c*` set deliberately supersedes nvim 0.11+'s default `gr*` LSP
+keymaps (`grn`, `gra`, `grr`, `gri`) because mini.operators owns the `gr*`
+prefix for g[r]eplace, g[x]exchange, etc. If mini.operators is ever removed,
+revisit adopting the native defaults.
 
 ### Plugin Categories
 
 **Completion & LSP**: nvim-lspconfig, mason.nvim, blink.cmp, LuaSnip, conform.nvim, nvim-lint, lazydev.nvim
-**Finding & Navigation**: snacks.nvim (pickers, explorer, lazygit, bufdelete), flash.nvim, smart-splits.nvim, mini.files
+**Finding & Navigation**: snacks.nvim (pickers, lazygit, bufdelete), flash.nvim, smart-splits.nvim, mini.files
 **Syntax & Editing**: treesitter, mini.ai, mini.surround, mini.pairs, mini.move (built-in `gc`/`gcc` for commenting)
 **Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, mini.cursorword, mini.hipatterns, noice.nvim
 **Markdown**: markdown.nvim (editing/motions), render-markdown.nvim (rendering), marksman (LSP, non-zk files)
@@ -93,7 +125,7 @@ config/nvim/
 | tmux       | smart-splits.nvim: C-hjkl nav, `<leader>wh/j/k/l` resize, zoom-aware |
 | aerospace  | Autocmd: reload-config on aerospace.toml save          |
 | yazi       | Autocmd: clear-cache on yazi.toml save                 |
-| lazygit    | Snacks.lazygit() via `<leader>lg`                      |
+| lazygit    | Snacks.lazygit() via `<leader>vg`                      |
 | borders    | Autocmd: restart service on bordersrc save             |
 | sketchybar | Autocmd: reload on sketchybarrc/colors/items save      |
 | leader-key | Autocmd: restart app on config.json save               |
@@ -112,8 +144,8 @@ auto-generated by `lua/shamindras/plugins/colorscheme.lua`.
   `util/themes.lua` (plugin, scheme, setup opts, heading/code palettes, separator_fg)
 - **Cycle themes**: `<leader>tc` (persists selection to
   `~/.local/state/nvim/colorscheme_state.txt`)
-- **Pick theme**: `<leader>pc` (curated Snacks picker with live preview)
-- **Update themes**: `:Lazy update` or `<leader>lu`
+- **Pick theme**: `<leader>fc` (curated Snacks picker with live preview)
+- **Update themes**: `:Lazy update`
 - **Lazy-loading**: only the active theme loads at startup; others are
   `lazy = true` until cycled/picked
 
@@ -144,7 +176,7 @@ Three plugins + formatter, all lazy-loaded on `ft = "markdown"`:
 | `<C-x>`             | Toggle checkbox (dot-repeatable)                  | n       |
 | `<leader>mo` / `mO` | List item below / above                           | n       |
 | `<leader>mc` / `mC` | Insert TOC / TOC loclist                          | n       |
-| `<leader>mr`        | Toggle render-markdown                            | n       |
+| `<leader>tr`        | Toggle render-markdown                            | n       |
 | `<leader>mh`        | Promote heading level (dot-repeatable)            | n       |
 | `<leader>ml`        | Demote heading level (dot-repeatable)             | n       |
 | `<leader>mj`        | Move section down (dot-repeatable)                | n       |
@@ -174,12 +206,9 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 | `<leader>cl` | Trigger lint on current file  | [c]ode [l]int             |
 | `<leader>co` | Document symbols (Snacks)     | [c]ode [o]utline          |
 | `<leader>cS` | Workspace symbols (Snacks)    | [c]ode workspace [S]ymbols|
-| `<leader>cI` | Toggle inlay hints            | [c]ode [I]nlay hints      |
+| `<leader>cf` | Format buffer (conform.nvim)  | [c]ode [f]ormat           |
+| `<leader>ti` | Toggle inlay hints            | [t]oggle [i]nlay hints    |
 | `K`          | Hover Documentation           | Standard Vim              |
-
-The `<leader>c*` set deliberately mirrors and supersedes nvim 0.11+'s default
-`gr*` LSP keymaps to avoid clobbering mini.operators (which owns the `gr*`
-prefix for g[r]eplace, etc.).
 
 ### LSP Routing
 
@@ -319,7 +348,7 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
 - Lint debounce: 100ms on BufWritePost/InsertLeave
 - Reload config: `:source $MYVIMRC` or `<leader>xb` (source current file)
 - Check LSP: `:LspInfo` — check Mason: `:Mason`
-- Profile startup: `<leader>lp` (~24ms startup, 10/29 plugins loaded at start)
+- Profile startup: `:Lazy profile` (~24ms startup, 10/29 plugins loaded at start)
 - View keymaps: `<leader>sk`
 - **Treesitter incremental selection**: uses nvim 0.12 built-in
   `vim.treesitter._select` API (not the plugin's `incremental_selection`
@@ -352,3 +381,37 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
     `just treesitter_update`
   - **Manual testing**: `:InspectTree` (AST), `:Inspect` (highlight groups),
     `:checkhealth nvim-treesitter`
+
+## Muscle-Memory Deltas (refactor/nvim-keymap-audit)
+
+Every LHS that changed, was removed, or was renamed in the keymap audit:
+
+| Old LHS        | New LHS        | Action  | Notes                                |
+| -------------- | -------------- | ------- | ------------------------------------ |
+| `<leader>fr`   | `<leader>br`   | Renamed | File rename → buffer prefix          |
+| `<leader>fx`   | `<leader>bx`   | Renamed | File chmod → buffer prefix           |
+| `<leader>bf`   | `<leader>cf`   | Renamed | Format → code prefix                 |
+| `<leader>na`   | `<leader>xa`   | Renamed | Number add → execute prefix          |
+| `<leader>nx`   | `<leader>xx`   | Renamed | Number decrement → execute prefix    |
+| `<leader>tn`   | `<leader>tl`   | Renamed | Toggle line numbers                  |
+| `<leader>cI`   | `<leader>ti`   | Renamed | Inlay hints → toggle prefix          |
+| `<leader>mr`   | `<leader>tr`   | Renamed | Render-markdown → toggle prefix      |
+| `<leader>gx`   | `<leader>xo`   | Renamed | Open URL → execute prefix            |
+| `<leader>fm`   | `<leader>fa`   | Renamed | Mini.files smart open (nicer to type)|
+| `<leader>lg`   | `<leader>vg`   | Renamed | Lazygit → version control prefix     |
+| `<leader>pc`   | `<leader>fc`   | Renamed | Pick colorscheme → find prefix       |
+| `<leader>k/`   | `<leader>kg`   | Renamed | Kasten grep (no non-alpha depth-2)   |
+| `<leader>,`    | `<leader>fb`   | Removed | Use `<leader>fb` (already existed)   |
+| `<leader>/`    | `<leader>sg`   | Removed | Use `<leader>sg` (already existed)   |
+| `<leader>:`    | `<leader>sc`   | Removed | Command history → search prefix      |
+| `<leader>fe`   | `<leader>fa`   | Removed | Snacks explorer deleted (use mini.files) |
+| `<leader>ll`   | `:Lazy`        | Removed | Lazy menu (depth-1 violation)        |
+| `<leader>lu`   | `:Lazy update` | Removed | Lazy update (prefix deleted)         |
+| `<leader>lp`   | `:Lazy profile`| Removed | Lazy profile (prefix deleted)        |
+| `<leader>ls`   | `:Lazy sync`   | Removed | Lazy sync (prefix deleted)           |
+| N/A            | `<leader>bp`   | New     | Copy file path to clipboard          |
+| N/A            | `<leader>bn`   | New     | Copy file name to clipboard          |
+| N/A            | `<leader>bs`   | New     | Copy file:line to clipboard          |
+| N/A            | `<leader>sc`   | New     | Search command history               |
+| `<leader>sr`   | `<leader>sr`   | Changed | Added v-mode (visual selection)      |
+| `<leader>fa`   | `<leader>fa`   | Changed | Was active-file; now smart open      |
