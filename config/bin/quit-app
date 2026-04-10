@@ -1,26 +1,32 @@
 #!/bin/zsh
 # quit-app — quit a macOS app and switch aerospace workspace
 #
+# Workspace-first: switch workspace instantly, then quit app in background
+# with a sketchybar notification on completion.
+#
+# --activate-quit: quit first (needs app in focus), then switch workspace.
+#
 # Usage:
 #   quit-app <app-name> <workspace>
-#   quit-app --pkill <process> <app-name> <workspace>
-#   quit-app --pkill-f <pattern> <app-name> <workspace>
 #   quit-app --activate-quit <app-name> <workspace>
 #   quit-app <app-name> <workspace> --check <process> --fallback <workspace>
-#   quit-app --delay <seconds> <app-name> <workspace>
 
 set -euo pipefail
 
 # --- Configuration -----------------------------------------------------------
-MAX_ITERATIONS=50    # 50 × 0.1s = 5s max wait for process exit
+MAX_ITERATIONS=100   # 100 × 0.1s = 10s max wait for process exit
 POLL_INTERVAL=0.1    # seconds between each running check
 POST_EXIT_DELAY=0.3  # seconds after exit for macOS animations to settle
-AEROSPACE="/opt/homebrew/bin/aerospace"
+SKETCHYBAR="/opt/homebrew/bin/sketchybar"
 RUN="$HOME/.config/bin/run-as-user"
 
+# Catppuccin Mocha colors (ARGB hex)
+COLOR_GREEN=0xffa6e3a1
+COLOR_RED=0xfff38ba8
+COLOR_LAVENDER=0xffb4befe
+
 # --- Parse arguments ---------------------------------------------------------
-KILL_MODE="osascript"  # osascript | pkill | pkill-f | activate-quit
-KILL_PATTERN=""
+ACTIVATE_QUIT=false
 APP_NAME=""
 WORKSPACE=""
 CHECK_PROCESS=""
@@ -28,32 +34,9 @@ FALLBACK_WS=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --pkill)
-      KILL_MODE="pkill"
-      KILL_PATTERN="$2"
-      shift 2
-      ;;
-    --pkill-f)
-      KILL_MODE="pkill-f"
-      KILL_PATTERN="$2"
-      shift 2
-      ;;
-    --activate-quit)
-      KILL_MODE="activate-quit"
-      shift
-      ;;
-    --delay)
-      POST_EXIT_DELAY="$2"
-      shift 2
-      ;;
-    --check)
-      CHECK_PROCESS="$2"
-      shift 2
-      ;;
-    --fallback)
-      FALLBACK_WS="$2"
-      shift 2
-      ;;
+    --activate-quit) ACTIVATE_QUIT=true; shift ;;
+    --check)         CHECK_PROCESS="$2"; shift 2 ;;
+    --fallback)      FALLBACK_WS="$2"; shift 2 ;;
     *)
       if [[ -z "$APP_NAME" ]]; then
         APP_NAME="$1"
@@ -66,49 +49,67 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$APP_NAME" || -z "$WORKSPACE" ]]; then
-  echo "Usage: quit-app [--pkill|--pkill-f <pattern>|--activate-quit] [--delay <seconds>] <app-name> <workspace> [--check <process> --fallback <workspace>]" >&2
+  echo "Usage: quit-app [--activate-quit] <app-name> <workspace> [--check <process> --fallback <workspace>]" >&2
   exit 1
 fi
 
-# --- Quit the app ------------------------------------------------------------
-case "$KILL_MODE" in
-  osascript)
-    "$RUN" osascript -e "quit app \"$APP_NAME\"" 2>/dev/null || true
-    ;;
-  pkill)
-    pkill -x "$KILL_PATTERN" 2>/dev/null || true
-    ;;
-  pkill-f)
-    pkill -f "$KILL_PATTERN" 2>/dev/null || true
-    ;;
-  activate-quit)
+# --- App-specific overrides --------------------------------------------------
+# Process detection: apps whose process name differs from their osascript name.
+# Bundle ID: non-native apps (Java, Qt) whose shutdown can steal focus —
+# get a longer settle delay before the quit signal fires.
+PGREP_FLAG="-xi"
+PGREP_PATTERN="$APP_NAME"
+BUNDLE_ID=""
+
+case "$APP_NAME" in
+  DjView)       PGREP_FLAG="-x"; PGREP_PATTERN="djview";          BUNDLE_ID="org.djvu.DjView" ;;
+  JDownloader2) PGREP_FLAG="-f"; PGREP_PATTERN="JDownloader2.app"; BUNDLE_ID="org.jdownloader.launcher" ;;
+esac
+
+# --- Helpers -----------------------------------------------------------------
+_switch_workspace() {
+  # Direct aerospace CLI via run-as-user — synchronous IPC call that
+  # completes before returning (same approach as fastopen --return)
+  "$RUN" /opt/homebrew/bin/aerospace workspace "$1" 2>/dev/null || true
+}
+
+_is_running() {
+  pgrep $PGREP_FLAG "$PGREP_PATTERN" >/dev/null 2>&1
+}
+
+_do_quit() {
+  if [[ "$ACTIVATE_QUIT" == true ]]; then
+    # Activate app then send Cmd+Q (for apps like Finder that ignore quit events)
     "$RUN" osascript -e "tell application \"$APP_NAME\" to activate" 2>/dev/null || true
     sleep 0.3
     "$RUN" osascript -e 'tell application "System Events" to keystroke "q" using command down' 2>/dev/null || true
-    ;;
-esac
-
-# --- Wait for the app to actually exit ---------------------------------------
-_is_running() {
-  case "$KILL_MODE" in
-    osascript|activate-quit) pgrep -xi "$APP_NAME" >/dev/null 2>&1 ;;
-    pkill)                   pgrep -x "$KILL_PATTERN" >/dev/null 2>&1 ;;
-    pkill-f)                 pgrep -f "$KILL_PATTERN" >/dev/null 2>&1 ;;
-  esac
+  else
+    # Apple Event quit — doesn't steal focus from background workspace
+    "$RUN" osascript -e "quit app \"$APP_NAME\"" 2>/dev/null || true
+  fi
 }
 
-n=0
-while _is_running && [[ $n -lt $MAX_ITERATIONS ]]; do
-  sleep "$POLL_INTERVAL"
-  n=$((n + 1))
-done
+_poll_exit() {
+  local n=0
+  while _is_running && [[ $n -lt $MAX_ITERATIONS ]]; do
+    sleep "$POLL_INTERVAL"
+    n=$((n + 1))
+  done
+}
 
-# --- Post-exit delay for macOS animations (fullscreen exit, etc.) ------------
-if [[ "$POST_EXIT_DELAY" != "0" ]]; then
-  sleep "$POST_EXIT_DELAY"
-fi
+_notify() {
+  if ! _is_running; then
+    "$RUN" "$SKETCHYBAR" --set leader label="✓ $APP_NAME quit" \
+      label.color="$COLOR_GREEN" drawing=on
+  else
+    "$RUN" "$SKETCHYBAR" --set leader label="✗ $APP_NAME quit failed" \
+      label.color="$COLOR_RED" drawing=on
+  fi
+  sleep 2
+  "$RUN" "$SKETCHYBAR" --set leader drawing=off label.color="$COLOR_LAVENDER"
+}
 
-# --- Determine target workspace ----------------------------------------------
+# --- Resolve target workspace ------------------------------------------------
 if [[ -n "$CHECK_PROCESS" && -n "$FALLBACK_WS" ]]; then
   if pgrep -x "$CHECK_PROCESS" >/dev/null 2>&1; then
     WORKSPACE="$WORKSPACE"
@@ -117,5 +118,36 @@ if [[ -n "$CHECK_PROCESS" && -n "$FALLBACK_WS" ]]; then
   fi
 fi
 
-# --- Switch workspace --------------------------------------------------------
-"$RUN" "$AEROSPACE" workspace "$WORKSPACE"
+# --- Execute -----------------------------------------------------------------
+if [[ "$ACTIVATE_QUIT" == true ]]; then
+  # Activate-quit needs app in focus — quit first, then switch
+  _do_quit
+  _poll_exit
+  if [[ "$POST_EXIT_DELAY" != "0" ]]; then
+    sleep "$POST_EXIT_DELAY"
+  fi
+  _switch_workspace "$WORKSPACE"
+else
+  # Workspace-first: switch instantly, quit in background.
+  # macOS window server pulls focus back to the dying app's workspace if
+  # the switch was too recent — a longer settle window prevents this.
+  # Re-assertion after poll_exit is a safety net: fires only when the app
+  # is fully dead, so there's no focus contention (no blink).
+  _switch_workspace "$WORKSPACE"
+  # App not running — just switch workspace (idempotent, no notification)
+  _is_running || exit 0
+  {
+    # Settle time: let macOS fully commit to the new workspace before
+    # the quit signal fires — prevents the dying app from stealing focus.
+    if [[ -n "$BUNDLE_ID" ]]; then
+      sleep 1.5
+    else
+      sleep 1.0
+    fi
+    _do_quit
+    _poll_exit
+    _switch_workspace "$WORKSPACE"
+    _notify
+  } &
+  disown
+fi

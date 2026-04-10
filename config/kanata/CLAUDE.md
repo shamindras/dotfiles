@@ -123,7 +123,7 @@ after 2s via `on-idle-fakekey`.
 | Group | Key | Actions                                             |
 | ----- | --- | --------------------------------------------------- |
 | `o`   | 16  | Open apps (via `fastopen` helper)                   |
-| `q`   | 16  | Quit apps (via `quit-app` helper + workspace switch) |
+| `q`   | 16  | Quit apps (workspace-first + lazy bg quit + notify)  |
 | `c`   | 3   | Claude URLs (recents, new chat, usage)              |
 | `r`   | 9   | Run utilities (brew, notifications, files, etc.)    |
 | `s`   | 3   | Search Raycast (bookmarks, clipboard, files)        |
@@ -135,12 +135,13 @@ after 2s via `on-idle-fakekey`.
 - **leader-hud** (`config/bin/leader-hud`): SketchyBar leader HUD updater (show/hide group labels)
 - **run-as-user** (`config/bin/run-as-user`): Root→user context switch (used by leader-hud and other scripts)
 - **fastopen** (`config/bin/fastopen`): Centralized app launcher with path lookup
-- **quit-app** (`config/bin/quit-app`): Graceful quit + workspace switch
+- **quit-app** (`config/bin/quit-app`): Workspace-first + lazy bg quit + sketchybar notify
 - **open-nordvpn** (`config/bin/open-nordvpn`): NordVPN multi-step launch
 - **brew-update** (`config/bin/brew-update`): Brew update/upgrade in WezTerm window
 - **empty-trash** (`config/bin/empty-trash`): Empty Finder trash + workspace switch
-- **sketchybar**: Leader HUD item (`items/leader.sh`, left-aligned) updated by `leader-hud` script
-- **aerospace**: Quit commands switch to designated workspace after quitting
+- **sketchybar**: Leader HUD item (`items/leader.sh`, left-aligned) updated by `leader-hud` script;
+  also reused by `quit-app` for transient quit notifications (green/red, 2s linger)
+- **aerospace**: Quit commands switch workspace first, then quit app in background
 - **nvim**: BufWritePost autocmd restarts kanata daemon on `*.kbd` save
 
 ## Installation
