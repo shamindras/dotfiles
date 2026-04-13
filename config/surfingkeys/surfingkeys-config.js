@@ -312,7 +312,10 @@ api.addSearchAlias('m', 'google-maps', 'https://www.google.com/maps?q=', 's', 'h
 });
 api.addSearchAlias('n', 'annas-archive', 'https://annas-archive.gl/search?index=&page=1&sort=newest&content=book_nonfiction&content=book_fiction&content=book_unknown&ext=pdf&ext=epub&lang=en&display=list_compact&q=');
 api.addSearchAlias('s', 'softarchive', 'https://softarchive.download/search?scope=title&category=5&q=', 's', 'https://softarchive.download/ajax/getSearchKeywords.ajax.php?q=', function(response) {
-    return JSON.parse(response.text);
+    var res = JSON.parse(response.text);
+    return res.map(function(item) {
+        return item.query;
+    });
 });
 api.addSearchAlias('w', 'wikipedia', 'https://www.wikipedia.org/w/index.php?title=Special:Search&search=', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
     var res = JSON.parse(response.text);
