@@ -1,0 +1,72 @@
+##? kr - restart or live-reload the kanata daemon
+##?
+##? Default: full daemon restart via launchctl kickstart. Destroys and
+##? recreates the virtual HID keyboard (~4s). A ZLE guard silently
+##? discards phantom CRs from the HID transition.
+##?
+##? --fast: live reload via SIGUSR1 — re-reads config without touching
+##? the virtual HID keyboard. Near-instant, no phantom CRs. Only
+##? reloads layers/aliases; defcfg and defsrc changes need a full restart.
+##?
+##? usage:
+##?   kr              # full daemon restart
+##?   kr --fast       # live reload (SIGUSR1)
+
+kr() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  if [[ "$1" == "--fast" ]]; then
+    echo "🔄 Reloading kanata config..."
+
+    if sudo kill -USR1 "$(pgrep -x kanata)" 2>/dev/null; then
+      echo "✅ Kanata config reloaded"
+    else
+      echo "❌ Kanata reload failed (is it running?)"
+      return 1
+    fi
+  else
+    echo "🔄 Restarting kanata daemon..."
+
+    # Cache sudo credentials with echo on (password prompt if needed).
+    # Then suppress echo BEFORE kickstart so phantom CRs from the HID
+    # transition can't be echoed by the TTY line discipline.
+    sudo -v || { echo "❌ sudo authentication failed"; return 1; }
+    stty -echo 2>/dev/null
+    local restart_status
+    sudo launchctl kickstart -k system/com.jtroo.kanata
+    restart_status=$?
+    sleep 0.5
+    while read -t 0.01 -k 1 2>/dev/null; do :; done
+    stty echo 2>/dev/null
+
+    if [[ $restart_status -eq 0 ]]; then
+      echo "✅ Kanata restarted successfully"
+    else
+      echo "❌ Kanata restart failed"
+      return 1
+    fi
+
+    # Full restart destroys the virtual HID keyboard. Phantom CRs leak
+    # from the transition. Guard accept-line to silently discard them.
+    typeset -g _kr_flush_remaining=20
+
+    _kr_guard_accept() {
+      if [[ -z "$BUFFER" ]] && (( _kr_flush_remaining > 0 )); then
+        (( _kr_flush_remaining-- ))
+        while read -t 0.01 -k 1 2>/dev/null; do :; done
+        (( _kr_flush_remaining <= 0 )) && {
+          zle -D accept-line 2>/dev/null
+          unset _kr_flush_remaining
+        }
+        return
+      fi
+      zle -D accept-line 2>/dev/null
+      unset _kr_flush_remaining
+      zle .accept-line
+    }
+
+    zle -N accept-line _kr_guard_accept
+  fi
+}
+
+# vim: ft=zsh
