@@ -1,5 +1,9 @@
 # XDG-compliant Python REPL history
 # Redirects ~/.python_history to $XDG_STATE_HOME/python_history
+#
+# Python 3.13+ respects the PYTHON_HISTORY env var natively (set in
+# 00-z1-env-vars-xdg.zsh), so the site module handles read/write.
+# For Python <3.13, this file manages readline history manually.
 # source: https://github.com/b3nj5m1n/xdg-ninja/issues/289#issuecomment-1666024202
 
 
@@ -11,8 +15,7 @@ def is_vanilla() -> bool:
 
 def setup_history():
     import os
-    import atexit
-    import readline
+    import sys
     from pathlib import Path
 
     if state_home := os.environ.get("XDG_STATE_HOME"):
@@ -21,13 +24,30 @@ def setup_history():
         state_home = Path.home() / ".local" / "state"
 
     history: Path = state_home / "python_history"
+    history.parent.mkdir(parents=True, exist_ok=True)
 
-    if not history.exists():
-        history.parent.mkdir(parents=True, exist_ok=True)
-        history.touch()
+    # Python 3.13+ reads PYTHON_HISTORY natively via the site module.
+    # Only manage readline history manually for older versions.
+    if sys.version_info >= (3, 13):
+        return
 
-    readline.read_history_file(str(history))
-    atexit.register(readline.write_history_file, str(history))
+    import atexit
+    import readline
+
+    readline.set_history_length(10000)
+
+    try:
+        readline.read_history_file(str(history))
+    except (FileNotFoundError, OSError):
+        pass
+
+    def write_history(hist_path: str) -> None:
+        try:
+            readline.write_history_file(hist_path)
+        except OSError:
+            pass
+
+    atexit.register(write_history, str(history))
 
 
 if is_vanilla():
