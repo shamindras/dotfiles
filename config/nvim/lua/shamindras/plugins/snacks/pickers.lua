@@ -5,6 +5,7 @@ local M = {}
 M.layout_config = {
   height = 0.7,
   preview_width = 0.6,
+  cycle = true,
 }
 
 -- }}}
@@ -45,6 +46,7 @@ M.ripgrep_args = {
 -- {{{ Ivy Layout Configuration
 
 M.ivy_layout = {
+  cycle = M.layout_config.cycle,
   layout = {
     box = 'vertical',
     backdrop = false,
@@ -274,6 +276,7 @@ function M.colorscheme_picker()
 
   -- Ivy layout without preview pane (live switching makes file preview unnecessary)
   local ivy_no_preview = {
+    cycle = M.layout_config.cycle,
     layout = {
       box = 'vertical',
       backdrop = false,
@@ -368,6 +371,7 @@ function M.buffers_picker(opts)
     },
     -- In case you want to override the layout for this keymap
     layout = 'ivy',
+    layouts = { ivy = M.ivy_layout },
   })
 end
 
