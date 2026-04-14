@@ -274,21 +274,24 @@ vim.api.nvim_create_autocmd('BufReadPre', {
 
 -- }}}
 
--- {{{ Window Separator Highlight
+-- {{{ Theme Separator / Border Highlights
 
--- theme-aware separator: looks up the active colorscheme in the theme registry
--- and applies its separator_fg color. Falls back to white if theme is unknown.
+-- Theme-aware separator & float border: resolved via the theme registry.
+-- Precedence for the fg color (see util/themes.lua):
+--   1. explicit per-theme `separator_fg` override (if set)
+--   2. central M.SEPARATOR_DARK_FG / M.SEPARATOR_LIGHT_FG based on
+--      theme.background ('dark' | 'light')
+--   3. 'white' fallback if the active colorscheme is not in the registry
+-- Tweak the two module globals in util/themes.lua to re-tune globally.
 vim.api.nvim_create_autocmd('ColorScheme', {
-  group = vim.api.nvim_create_augroup('WinSeparatorHighlight', { clear = true }),
+  group = vim.api.nvim_create_augroup('ThemeSeparatorHighlights', { clear = true }),
   pattern = '*',
   callback = function()
     local themes = require('shamindras.util.themes')
     local key = themes.scheme_to_key[vim.g.colors_name]
-    local fg = 'white'
-    if key and themes.themes[key] and themes.themes[key].separator_fg then
-      fg = themes.themes[key].separator_fg
-    end
+    local fg = themes.resolve_separator_fg(key)
     vim.api.nvim_set_hl(0, 'WinSeparator', { bg = 'None', fg = fg })
+    vim.api.nvim_set_hl(0, 'FloatBorder', { fg = fg })
   end,
 })
 
