@@ -247,6 +247,18 @@ end, { expr = true, desc = 'Exit insert (smart cursor)' })
 
 -- {{{ Folding
 
+-- Place cursor line near top (1 line of context), bypassing user's scrolloff.
+-- Pins scrolloff=1 globally across the zt call, then restores via vim.schedule
+-- so the next redraw uses scrolloff=1 before the user's value is reinstated.
+local function zt_hard()
+  local so = vim.o.scrolloff
+  vim.o.scrolloff = 1
+  vim.cmd('normal! zt')
+  vim.schedule(function()
+    vim.o.scrolloff = so
+  end)
+end
+
 -- Collect top-level fold start lines (where foldlevel transitions from 0 to >0)
 local function get_fold_starts()
   local starts = {}
@@ -316,7 +328,8 @@ local function cycle_fold(direction)
   local target = find_adjacent_fold_start(starts, cur, direction)
   vim.cmd('normal! zM')
   vim.api.nvim_win_set_cursor(0, { target, 0 })
-  vim.cmd('normal! zOzz')
+  vim.cmd('normal! zO')
+  zt_hard()
 end
 
 keymap('n', 'zv', function()
@@ -334,7 +347,7 @@ keymap('n', 'zv', function()
     vim.b.zv_saved_cursor = vim.api.nvim_win_get_cursor(0)
     vim.cmd('normal! zM')
     vim.api.nvim_win_set_cursor(0, { containing, 0 })
-    vim.cmd('normal! zz')
+    zt_hard()
     return
   end
 
@@ -351,16 +364,17 @@ keymap('n', 'zv', function()
       vim.cmd('normal! zO')
       vim.api.nvim_win_set_cursor(0, vim.b.zv_saved_cursor)
     end
-    vim.cmd('normal! zz')
+    zt_hard()
   else
     -- Closed fold → open, restore saved cursor
     vim.cmd('normal! zM')
     vim.api.nvim_win_set_cursor(0, { cur, 0 })
-    vim.cmd('normal! zOzz')
+    vim.cmd('normal! zO')
     if vim.b.zv_saved_cursor then
       vim.api.nvim_win_set_cursor(0, vim.b.zv_saved_cursor)
       vim.b.zv_saved_cursor = nil
     end
+    zt_hard()
   end
 end, { desc = 'Toggle fold / focus nearest' })
 

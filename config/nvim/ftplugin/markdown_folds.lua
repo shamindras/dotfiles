@@ -3,6 +3,18 @@
 
 -- {{{ Helpers
 
+-- Place cursor line near top (1 line of context), bypassing user's scrolloff.
+-- Pins scrolloff=1 globally across the zt call, then restores via vim.schedule
+-- so the next redraw uses scrolloff=1 before the user's value is reinstated.
+local function zt_hard()
+  local so = vim.o.scrolloff
+  vim.o.scrolloff = 1
+  vim.cmd('normal! zt')
+  vim.schedule(function()
+    vim.o.scrolloff = so
+  end)
+end
+
 -- Cache the treesitter query (parsed once per nvim session, not per keypress)
 local heading_query = vim.treesitter.query.parse('markdown', '(atx_heading) @heading')
 
@@ -269,7 +281,7 @@ local function focus_heading(headings, target_line)
     open_folds_in_range(1, preamble_end)
   end
 
-  vim.cmd('normal! zz')
+  zt_hard()
 end
 
 -- }}}
@@ -324,7 +336,7 @@ local function toggle_or_focus()
       collapse_all_headings(headings)
       vim.api.nvim_win_set_cursor(0, { containing, 0 })
     end
-    vim.cmd('normal! zz')
+    zt_hard()
     return
   end
 
@@ -339,7 +351,7 @@ local function toggle_or_focus()
       collapse_all_headings(headings)
       vim.api.nvim_win_set_cursor(0, { cur, 0 })
     end
-    vim.cmd('normal! zz')
+    zt_hard()
   else
     -- Closed heading → open, restore saved cursor
     focus_heading(headings, cur)
@@ -347,6 +359,7 @@ local function toggle_or_focus()
       vim.api.nvim_win_set_cursor(0, vim.b.zv_saved_cursor)
       vim.b.zv_saved_cursor = nil
     end
+    zt_hard()
   end
 end
 
