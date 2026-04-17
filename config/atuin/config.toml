@@ -29,3 +29,7 @@ history_filter = [
   "^export.*TOKEN",
   "^export.*PASSWORD",
 ]
+
+# Relocate logs out of ~/.atuin/logs (no env var; config only).
+[logs]
+dir = "~/.local/share/atuin/logs"
