@@ -113,6 +113,9 @@ function z1_aliases {
   # subversion
   alias svn="svn --config-dir ${XDG_CONFIG_HOME}/subversion"
   alias gpg='${aliases[gpg]:-gpg} --homedir "$GNUPGHOME"'
+  # Real fix is `hsts_file = ~/.local/share/wget-hsts` in config/wget/wgetrc,
+  # which covers non-interactive callers too. Alias kept as belt-and-suspenders
+  # for the interactive path in case WGETRC is ever unset or the wgetrc goes stale.
   alias wget='wget --hsts-file="$XDG_DATA_HOME/wget-hsts"'
 
   # Additional clean --

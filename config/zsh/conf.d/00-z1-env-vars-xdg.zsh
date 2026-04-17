@@ -37,6 +37,15 @@ export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
 
+# matplotlib
+# Collapses config + cache into one dir on macOS (default: ~/.matplotlib).
+# source: https://matplotlib.org/stable/install/environment_variables_faq.html#envvar-MPLCONFIGDIR
+export MPLCONFIGDIR="$XDG_CACHE_HOME/matplotlib"
+
+# scikit-learn
+# source: https://scikit-learn.org/stable/modules/generated/sklearn.datasets.get_data_home.html
+export SCIKIT_LEARN_DATA="$XDG_DATA_HOME/scikit_learn_data"
+
 # starship
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 export STARSHIP_CACHE="$XDG_CACHE_HOME/starship/cache"

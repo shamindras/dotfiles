@@ -110,8 +110,42 @@ XDG base directory variables are exported in `.zshenv` so they're available
 to all zsh invocations (interactive, scripts, cron, `zsh -c`).
 
 `00-z1-env-vars-xdg.zsh` sets XDG paths for tools including bat, zoxide,
-gh, npm, node, cargo, tmux, ipython, python, R. All tools use proper XDG base
-directories. HISTFILE uses `XDG_STATE_HOME/zsh/history`.
+gh, npm, node, cargo, tmux, ipython, python, R, matplotlib, scikit-learn.
+All tools use proper XDG base directories. HISTFILE uses
+`XDG_STATE_HOME/zsh/history`.
+
+For tools without an env var (atuin logs, wget HSTS), the XDG path is
+set in the tool's own config file instead: `config/atuin/config.toml`
+(`[logs] dir`) and `config/wget/wgetrc` (`hsts_file`).
+
+### Aliases are not a substitute for env vars
+
+Shell aliases only apply to interactive zsh. Subprocesses, scripts, cron,
+and launchd agents bypass them. Anything that must affect non-interactive
+`wget`/`python`/etc. invocations must be an **env var** (inherited by
+children) or a **config file** (read by the binary directly) — not an
+alias. The `wget --hsts-file` alias in `11-z1-aliases.zsh` remains only
+as defense-in-depth for the interactive path; the real fix is the
+`hsts_file` directive in `wgetrc`.
+
+### Residual non-XDG items (unfixable)
+
+`xdg-ninja` will always flag these. They are documented here to prevent
+re-investigation:
+
+| Path                     | Tool          | Reason                                                    |
+| ------------------------ | ------------- | --------------------------------------------------------- |
+| `~/.ssh`                 | openssh       | Hardcoded by ssh daemons (DropBear, OpenSSH).             |
+| `~/.Trash`               | macOS         | System directory; no override on macOS.                   |
+| `~/.dropbox`             | Dropbox       | App-controlled; [dropbox/nautilus-dropbox#5][iss-dropbox].|
+| `~/.vscode`              | VSCode        | [microsoft/vscode#3884][iss-vscode].                      |
+| `~/.positron`            | Positron      | VSCode fork; inherits the same limitation.                |
+| `~/.kindle`              | Amazon Kindle | Proprietary, no XDG support.                              |
+| `~/.duckdb`              | DuckDB CLI    | No env var or flag; upstream does not support relocation. |
+| `~/.Xauthority`, `~/.serverauth.*` | XQuartz / X11 | `XAUTHORITY` env var risky to set; xdg-ninja warns moving can break X11 sessions. |
+
+[iss-dropbox]: https://github.com/dropbox/nautilus-dropbox/issues/5
+[iss-vscode]: https://github.com/microsoft/vscode/issues/3884
 
 ## Editor & Keybindings (`05-z1-editor.zsh`)
 
