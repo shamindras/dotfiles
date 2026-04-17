@@ -1,0 +1,404 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# ==============================================================================
+# fix-stale-path-caches — Normalise cached directory paths to their on-disk case
+#
+# After the ~/DROPBOX -> ~/Dropbox rename, path-caching tools (zoxide, atuin,
+# sesh) retained entries with the old uppercase case. APFS is case-insensitive
+# so the paths still resolve, but UIs that surface raw cached paths (notably
+# yazi's tab bar) display the wrong case.
+#
+# This script is GENERIC: it does not rely on a hardcoded DROPBOX->Dropbox
+# table. For each cached path P, it computes canonical = $(readlink -f P) and
+# rewrites iff canonical != P. This catches any case drift, and avoids
+# substring-match hazards (e.g., "DROPBOX" mentioned in an atuin command line
+# stays intact; only the cwd column is rewritten).
+#
+# Scope:
+#   - zoxide  (~/.local/share/zoxide/db.zo)    — duplicates merged by summing scores
+#   - atuin   (~/.local/share/atuin/history.db) — per-cwd UPDATE (equality match)
+#   - sesh    (~/.config/sesh/sesh.toml)        — sed -i .bak per queued rewrite
+#
+# Usage:
+#   ./scripts/migrate/fix-stale-path-caches [--dry-run] [--keep-orphans]
+#   ./scripts/migrate/fix-stale-path-caches --revert <backup-dir>
+#
+# Options:
+#   --dry-run       Classify + report, no mutations. Prints categorised tables.
+#   --keep-orphans  Leave zoxide entries whose dir no longer exists on disk.
+#                   (Default: remove them. atuin/sesh orphans are never touched.)
+#   --revert <dir>  Restore from a prior backup root. Mutually exclusive with
+#                   --dry-run. Verifies sha256 before overwriting.
+# ==============================================================================
+
+DRY_RUN=false
+KEEP_ORPHANS=false
+REVERT_DIR=""
+
+usage() { sed -n 's/^# \{0,1\}//p' "$0" | sed -n '/^===/,/^===/p'; }
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)      DRY_RUN=true; shift ;;
+    --keep-orphans) KEEP_ORPHANS=true; shift ;;
+    --revert)       REVERT_DIR="${2:-}"; shift 2 || { echo "--revert requires a directory" >&2; exit 2; } ;;
+    -h|--help)      usage; exit 0 ;;
+    *)              echo "Unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+
+if [[ -n "$REVERT_DIR" && "$DRY_RUN" == true ]]; then
+  echo "error: --revert and --dry-run are mutually exclusive" >&2
+  exit 2
+fi
+
+# -----------------------------------------------------------------------------
+# Paths
+# -----------------------------------------------------------------------------
+ZOXIDE_DB="${_ZO_DATA_DIR:-$HOME/.local/share/zoxide}/db.zo"
+ATUIN_DB="$HOME/.local/share/atuin/history.db"
+SESH_TOML="$HOME/.config/sesh/sesh.toml"
+
+# -----------------------------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------------------------
+sha256() { shasum -a 256 "$1" | awk '{print $1}'; }
+
+manifest_add() {
+  # args: <backup_root> <abs_src> <rel_dest_in_backup>
+  local root="$1" src="$2" rel="$3"
+  printf '%s  %s  %s\n' "$(sha256 "$src")" "$src" "$rel" >> "$root/MANIFEST.txt"
+}
+
+# -----------------------------------------------------------------------------
+# Revert mode
+# -----------------------------------------------------------------------------
+if [[ -n "$REVERT_DIR" ]]; then
+  [[ -d "$REVERT_DIR" ]] || { echo "error: $REVERT_DIR is not a directory" >&2; exit 2; }
+  MANIFEST="$REVERT_DIR/MANIFEST.txt"
+  [[ -f "$MANIFEST" ]] || { echo "error: no MANIFEST.txt in $REVERT_DIR" >&2; exit 2; }
+
+  echo "=== fix-stale-path-caches --revert $REVERT_DIR ==="
+  restored=0
+  skipped=0
+  while IFS='  ' read -r expected src rel; do
+    [[ -n "$expected" && -n "$src" && -n "$rel" ]] || continue
+    backup_file="$REVERT_DIR/$rel"
+    [[ -f "$backup_file" ]] || { echo "  missing backup file: $backup_file" >&2; continue; }
+
+    if [[ -e "$src" ]] && [[ "$(sha256 "$src")" == "$expected" ]]; then
+      echo "  skip (already matches backup): $src"
+      ((skipped++)) || true
+      continue
+    fi
+
+    case "$rel" in
+      atuin/*)
+        sqlite3 "$src" ".restore '$backup_file'"
+        ;;
+      *)
+        cp -f "$backup_file" "$src"
+        ;;
+    esac
+    echo "  restored: $src"
+    ((restored++)) || true
+  done < "$MANIFEST"
+
+  log="$REVERT_DIR/REVERTED-AT-$(date -u +%Y%m%dT%H%M%SZ).txt"
+  printf 'restored=%d  skipped=%d\n' "$restored" "$skipped" > "$log"
+  echo "Revert log: $log"
+  echo "Note: zoxide db restored; run 'yazi --clear-cache' to refresh yazi tab bar."
+  exit 0
+fi
+
+# -----------------------------------------------------------------------------
+# Normal run: snapshot root
+# -----------------------------------------------------------------------------
+TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+BACKUP_ROOT="$HOME/.local/state/path-cache-migration/$TIMESTAMP"
+
+if [[ "$DRY_RUN" == false ]]; then
+  mkdir -p "$BACKUP_ROOT/zoxide" "$BACKUP_ROOT/atuin" "$BACKUP_ROOT/sesh"
+  : > "$BACKUP_ROOT/MANIFEST.txt"
+  echo "Backup root: $BACKUP_ROOT"
+else
+  echo "DRY-RUN MODE — no files will be modified"
+fi
+echo ""
+
+# =============================================================================
+# zoxide
+# =============================================================================
+echo "=== zoxide ==="
+if ! command -v zoxide >/dev/null 2>&1; then
+  echo "  zoxide not installed — skipping"
+elif [[ ! -f "$ZOXIDE_DB" ]]; then
+  echo "  no db at $ZOXIDE_DB — skipping"
+else
+  zoxide_before="$(mktemp -t zoxide-before.XXXXXX)"
+  zoxide query -l -s > "$zoxide_before"
+
+  if [[ "$DRY_RUN" == false ]]; then
+    cp "$ZOXIDE_DB" "$BACKUP_ROOT/zoxide/db.zo"
+    cp "$zoxide_before" "$BACKUP_ROOT/zoxide/query-before.txt"
+    manifest_add "$BACKUP_ROOT" "$ZOXIDE_DB" "zoxide/db.zo"
+  fi
+
+  declare -A target_score=()        # canonical -> summed score
+  declare -a zox_to_remove=()       # stored paths to remove
+  declare -a zox_orphans=()         # stored paths that don't exist
+  declare -A zox_clean=()           # canonical paths already present (as clean entry)
+  declare -A zox_clean_score=()     # canonical -> its own score
+
+  # First pass: classify each stored entry
+  while IFS= read -r line; do
+    # Strip leading whitespace
+    line="${line#"${line%%[![:space:]]*}"}"
+    [[ -z "$line" ]] && continue
+    score="${line%% *}"
+    path="${line#* }"
+
+    if [[ ! -e "$path" ]]; then
+      zox_orphans+=("$path|$score")
+      continue
+    fi
+
+    canonical="$(readlink -f "$path")"
+    if [[ "$canonical" == "$path" ]]; then
+      zox_clean["$canonical"]=1
+      zox_clean_score["$canonical"]="$score"
+      continue
+    fi
+
+    # case-mismatch
+    prev="${target_score[$canonical]:-0}"
+    target_score[$canonical]="$(awk -v a="$prev" -v b="$score" 'BEGIN{printf "%.1f", a+b}')"
+    zox_to_remove+=("$path")
+  done < "$zoxide_before"
+
+  # Second pass: a clean entry whose path is also a case-mismatch target must
+  # be folded into the sum AND queued for removal (so the final add lands at
+  # exactly the summed score — zoxide add --score increments if path exists).
+  for canon in "${!target_score[@]}"; do
+    if [[ -n "${zox_clean[$canon]:-}" ]]; then
+      own="${zox_clean_score[$canon]}"
+      target_score[$canon]="$(awk -v a="${target_score[$canon]}" -v b="$own" 'BEGIN{printf "%.1f", a+b}')"
+      zox_to_remove+=("$canon")
+      unset 'zox_clean[$canon]'
+      unset 'zox_clean_score[$canon]'
+    fi
+  done
+
+  # Orphan handling
+  declare -a zox_orphans_removing=()
+  if [[ "$KEEP_ORPHANS" == false ]]; then
+    for entry in "${zox_orphans[@]}"; do
+      zox_to_remove+=("${entry%%|*}")
+      zox_orphans_removing+=("$entry")
+    done
+  fi
+
+  # Report
+  echo "  total entries:         $(wc -l < "$zoxide_before" | tr -d ' ')"
+  echo "  clean (no rewrite):    ${#zox_clean[@]}"
+  echo "  case-mismatches:       $(( ${#zox_to_remove[@]} - ${#zox_orphans_removing[@]} ))"
+  echo "  duplicate merges:      <target paths with 2+ sources, listed below>"
+  echo "  orphans:               ${#zox_orphans[@]} (removing: ${#zox_orphans_removing[@]})"
+  echo ""
+
+  if (( ${#target_score[@]} > 0 )); then
+    echo "  proposed rewrites (target path <- summed score):"
+    for canon in "${!target_score[@]}"; do
+      printf '    %-10s  %s\n' "${target_score[$canon]}" "$canon"
+    done | sort -rn -k1
+    echo ""
+  fi
+
+  if (( ${#zox_orphans[@]} > 0 )); then
+    echo "  orphan entries (dir not on disk):"
+    for entry in "${zox_orphans[@]}"; do
+      local_score="${entry##*|}"
+      local_path="${entry%%|*}"
+      marker=$([[ "$KEEP_ORPHANS" == false ]] && echo "REMOVE" || echo "KEEP  ")
+      printf '    %s  %-10s  %s\n' "$marker" "$local_score" "$local_path"
+    done
+    echo ""
+  fi
+
+  if [[ "$DRY_RUN" == false && ${#zox_to_remove[@]} -gt 0 ]]; then
+    for p in "${zox_to_remove[@]}"; do
+      zoxide remove "$p"
+    done
+    for canon in "${!target_score[@]}"; do
+      zoxide add "$canon" --score "${target_score[$canon]}"
+    done
+    zoxide query -l -s > "$BACKUP_ROOT/zoxide/query-after.txt"
+    echo "  applied: ${#zox_to_remove[@]} removes, ${#target_score[@]} adds"
+  elif [[ "$DRY_RUN" == false ]]; then
+    echo "  no changes needed"
+  fi
+  rm -f "$zoxide_before"
+fi
+echo ""
+
+# =============================================================================
+# atuin
+# =============================================================================
+echo "=== atuin ==="
+if ! command -v atuin >/dev/null 2>&1; then
+  echo "  atuin not installed — skipping"
+elif [[ ! -f "$ATUIN_DB" ]]; then
+  echo "  no db at $ATUIN_DB — skipping"
+elif ! command -v sqlite3 >/dev/null 2>&1; then
+  echo "  sqlite3 not found — skipping (install sqlite3 to proceed)"
+else
+  if [[ "$DRY_RUN" == false ]]; then
+    # .backup respects the atuin daemon's WAL; cp would miss unflushed writes
+    sqlite3 "$ATUIN_DB" ".backup '$BACKUP_ROOT/atuin/history.db'"
+    manifest_add "$BACKUP_ROOT" "$ATUIN_DB" "atuin/history.db"
+  fi
+
+  declare -A atuin_rewrites=()      # old_cwd -> canonical_cwd
+  atuin_clean=0
+  atuin_orphans=0
+
+  while IFS= read -r cwd; do
+    [[ -z "$cwd" ]] && continue
+    if [[ ! -e "$cwd" ]]; then
+      ((atuin_orphans++)) || true
+      continue
+    fi
+    canonical="$(readlink -f "$cwd")"
+    if [[ "$canonical" == "$cwd" ]]; then
+      ((atuin_clean++)) || true
+      continue
+    fi
+    atuin_rewrites[$cwd]="$canonical"
+  done < <(sqlite3 "$ATUIN_DB" "SELECT DISTINCT cwd FROM history;")
+
+  echo "  distinct cwds total:   $(sqlite3 "$ATUIN_DB" "SELECT COUNT(DISTINCT cwd) FROM history;")"
+  echo "  clean:                 $atuin_clean"
+  echo "  orphans (kept as-is):  $atuin_orphans"
+  echo "  case-mismatches:       ${#atuin_rewrites[@]}"
+  echo ""
+
+  if (( ${#atuin_rewrites[@]} > 0 )); then
+    echo "  proposed rewrites (row count  old -> canonical):"
+    for old in "${!atuin_rewrites[@]}"; do
+      rowcnt="$(sqlite3 "$ATUIN_DB" "SELECT COUNT(*) FROM history WHERE cwd = '${old//\'/\'\'}';")"
+      printf '    %-6s  %s\n             -> %s\n' "$rowcnt" "$old" "${atuin_rewrites[$old]}"
+    done
+    echo ""
+  fi
+
+  if [[ "$DRY_RUN" == false && ${#atuin_rewrites[@]} -gt 0 ]]; then
+    # Build one transaction with one UPDATE per mismatched cwd.
+    sql="BEGIN IMMEDIATE;"
+    for old in "${!atuin_rewrites[@]}"; do
+      new="${atuin_rewrites[$old]}"
+      # SQL-escape single quotes by doubling them
+      old_q="${old//\'/\'\'}"
+      new_q="${new//\'/\'\'}"
+      sql+="UPDATE history SET cwd = '$new_q' WHERE cwd = '$old_q';"
+    done
+    sql+="COMMIT;"
+    sqlite3 "$ATUIN_DB" <<<"$sql"
+    echo "  applied: ${#atuin_rewrites[@]} cwd values rewritten"
+  elif [[ "$DRY_RUN" == false ]]; then
+    echo "  no changes needed"
+  fi
+fi
+echo ""
+
+# =============================================================================
+# sesh
+# =============================================================================
+echo "=== sesh ==="
+if [[ ! -f "$SESH_TOML" ]]; then
+  echo "  no config at $SESH_TOML — skipping"
+else
+  if [[ "$DRY_RUN" == false ]]; then
+    cp "$SESH_TOML" "$BACKUP_ROOT/sesh/sesh.toml"
+    manifest_add "$BACKUP_ROOT" "$SESH_TOML" "sesh/sesh.toml"
+  fi
+
+  declare -a sesh_rewrites_old=()
+  declare -a sesh_rewrites_new=()
+  sesh_clean=0
+  sesh_missing=0
+
+  # Extract each path = "..." value (one per line); record verbatim for sed
+  while IFS= read -r raw_value; do
+    [[ -z "$raw_value" ]] && continue
+    # Expand leading ~
+    expanded="${raw_value/#\~/$HOME}"
+    if [[ ! -e "$expanded" ]]; then
+      ((sesh_missing++)) || true
+      echo "  WARN: sesh path missing on disk: $raw_value" >&2
+      continue
+    fi
+    canonical="$(readlink -f "$expanded")"
+    # Re-apply ~ prefix if the original had one
+    if [[ "$raw_value" == "~"* ]]; then
+      canonical_with_tilde="${canonical/#$HOME/\~}"
+    else
+      canonical_with_tilde="$canonical"
+    fi
+    if [[ "$canonical_with_tilde" == "$raw_value" ]]; then
+      ((sesh_clean++)) || true
+      continue
+    fi
+    sesh_rewrites_old+=("$raw_value")
+    sesh_rewrites_new+=("$canonical_with_tilde")
+  done < <(awk -F'"' '/^[[:space:]]*path[[:space:]]*=[[:space:]]*"/ {print $2}' "$SESH_TOML")
+
+  echo "  path values total:     $((sesh_clean + sesh_missing + ${#sesh_rewrites_old[@]}))"
+  echo "  clean:                 $sesh_clean"
+  echo "  missing on disk:       $sesh_missing (warned, not rewritten)"
+  echo "  case-mismatches:       ${#sesh_rewrites_old[@]}"
+  echo ""
+
+  if (( ${#sesh_rewrites_old[@]} > 0 )); then
+    echo "  proposed rewrites:"
+    for ((i = 0; i < ${#sesh_rewrites_old[@]}; i++)); do
+      printf '    %s\n      -> %s\n' "${sesh_rewrites_old[$i]}" "${sesh_rewrites_new[$i]}"
+    done
+    echo ""
+  fi
+
+  if [[ "$DRY_RUN" == false && ${#sesh_rewrites_old[@]} -gt 0 ]]; then
+    for ((i = 0; i < ${#sesh_rewrites_old[@]}; i++)); do
+      old="${sesh_rewrites_old[$i]}"
+      new="${sesh_rewrites_new[$i]}"
+      # Quote for sed: replace exact "old" with "new" inside double quotes
+      sed -i .bak "s|\"${old}\"|\"${new}\"|g" "$SESH_TOML"
+    done
+    rm -f "${SESH_TOML}.bak"
+    echo "  applied: ${#sesh_rewrites_old[@]} paths rewritten"
+  elif [[ "$DRY_RUN" == false ]]; then
+    echo "  no changes needed"
+  fi
+fi
+echo ""
+
+# =============================================================================
+# Summary + verification hint
+# =============================================================================
+echo "=== summary ==="
+if [[ "$DRY_RUN" == true ]]; then
+  echo "Dry run complete. Re-run without --dry-run to apply."
+else
+  echo "Migration complete. Backup root: $BACKUP_ROOT"
+  echo ""
+  echo "To verify:"
+  echo "  zoxide query -l | while read -r p; do"
+  echo "    [[ \"\$(readlink -f \"\$p\" 2>/dev/null)\" == \"\$p\" ]] || echo \"STALE: \$p\""
+  echo "  done"
+  echo ""
+  echo "  ./scripts/migrate/verify-dropbox-rename        # regression guard"
+  echo "  yazi --clear-cache && yazi                     # tab bar visual check"
+  echo ""
+  echo "To revert:"
+  echo "  $0 --revert $BACKUP_ROOT"
+fi
