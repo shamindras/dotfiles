@@ -83,6 +83,12 @@ export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 
+# R
+# source: https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html
+# R expands %v to the R minor version (e.g. "4.5"). Dir must exist for R to
+# use it — install.conf.yaml creates it after R is installed.
+export R_LIBS_USER="$XDG_DATA_HOME/r/library/%v"
+
 # ripgrep
 # source: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
 export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"

@@ -17,6 +17,7 @@
     - "${XDG_STATE_HOME}"
     - "${XDG_RUNTIME_DIR}"
     - "${XDG_PROJECTS_DIR}"
+    - "${XDG_DATA_HOME}/r"
     - "${XDG_DATA_HOME}/tmux/plugins"
     - "${XDG_DATA_HOME}/tmux/resurrect"
 
@@ -107,6 +108,12 @@
 - brewfile:
     - config/brew/Brewfile
 
+# Update bat themes cache
+# NOTE: here we prefix with `command` to use the original `bat` command, without any alias.
+- shell:
+    - command: command bat cache --build
+      description: Build bat cache
+
 # Start borders and sketchybar as brew services (launchd: RunAtLoad + KeepAlive)
 - shell:
     - command: brew services start borders
@@ -114,31 +121,15 @@
     - command: brew services start sketchybar
       description: Start sketchybar as a brew service
 
+# Load espanso extension
+- shell:
+    - command: espanso service register
+      description: register espanso app
+
 # Setup Firefox user.js, userChrome.css, and policies.json
 - shell:
     - command: ./scripts/setup-firefox
       description: Setup Firefox user.js, userChrome.css, and policies.json
-
-# rust + cargo
-- shell:
-    - command: ./scripts/setup-upgrade-rust-cargo
-      description: install rust and cargo, or upgrade both
-
-# kanata (keyboard remapper with cmd feature — built from source)
-- shell:
-    - command: ./scripts/setup-upgrade-kanata
-      description: install kanata with cmd feature, or upgrade
-
-# Update bat themes cache
-# NOTE: here we prefix with `command` to use the original `bat` command, without any alias.
-- shell:
-    - command: command bat cache --build
-      description: Build bat cache
-
-# Update tldr cache
-- shell:
-    - command: tldr --update
-      description: Update tldr
 
 # Install gh-dash extension
 - shell:
@@ -150,15 +141,10 @@
     - command: gh extension upgrade --all
       description: upgrade gh extensions
 
-# Load espanso extension
+# kanata (keyboard remapper with cmd feature — built from source)
 - shell:
-    - command: espanso service register
-      description: register espanso app
-
-# Load ttyper
-- shell:
-    - command: ./scripts/setup-upgrade-ttyper
-      description: install ttyper, or upgrade to the latest version
+    - command: ./scripts/setup-upgrade-kanata
+      description: install kanata with cmd feature, or upgrade
 
 # Install npm packages
 - shell:
@@ -170,12 +156,34 @@
     - command: ./scripts/setup-nvim-treesitter
       description: Pre-install treesitter parsers
 
+# Create R user library dir (version-specific; R must be installed first)
+- shell:
+    - command: >-
+        R_VER=$(R --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+' | head -1) &&
+        mkdir -p "${XDG_DATA_HOME}/r/library/${R_VER}"
+      description: Create R version-specific user library directory
+
+# rust + cargo
+- shell:
+    - command: ./scripts/setup-upgrade-rust-cargo
+      description: install rust and cargo, or upgrade both
+
+# Update tldr cache
+- shell:
+    - command: tldr --update
+      description: Update tldr
+
 # Install tmux plugins via TPM
 - shell:
     - command: >-
         [ -x "${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins" ] &&
         "${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins" || true
       description: Install tmux plugins via TPM
+
+# Load ttyper
+- shell:
+    - command: ./scripts/setup-upgrade-ttyper
+      description: install ttyper, or upgrade to the latest version
 
 # macOS default settings
 - shell:

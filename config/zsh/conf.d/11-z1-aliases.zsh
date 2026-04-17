@@ -39,7 +39,7 @@ function z1_aliases {
   alias rcp='rsync -ah --info=progress2'
   alias rmi='rm -i'
   alias rmf='rm -rf'
-  alias rq='R -q --no-save'
+  alias rq='R -q --no-save --no-restore-data'
   alias bt='btm;clear;'
   alias top='tmux-resize;btop;clear;'
   alias t='task' # taskwarrior
