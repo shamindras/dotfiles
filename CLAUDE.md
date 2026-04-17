@@ -74,7 +74,7 @@ Major categories of tools configured:
 - **Development**: git, gh, lazygit, tmux
 - **System**: aerospace (window manager), kanata (keyboard remapper + leader sequences)
 - **CLI Tools**: bat, ripgrep, yazi, starship, atuin
-- **Languages**: rust/cargo, npm packages
+- **Languages**: R, rust/cargo, npm packages
 
 ### Installation Flow
 

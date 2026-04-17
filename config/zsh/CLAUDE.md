@@ -110,7 +110,7 @@ XDG base directory variables are exported in `.zshenv` so they're available
 to all zsh invocations (interactive, scripts, cron, `zsh -c`).
 
 `00-z1-env-vars-xdg.zsh` sets XDG paths for tools including bat, zoxide,
-gh, npm, node, cargo, tmux, ipython, python. All tools use proper XDG base
+gh, npm, node, cargo, tmux, ipython, python, R. All tools use proper XDG base
 directories. HISTFILE uses `XDG_STATE_HOME/zsh/history`.
 
 ## Editor & Keybindings (`05-z1-editor.zsh`)
@@ -127,7 +127,7 @@ directories. HISTFILE uses `XDG_STATE_HOME/zsh/history`.
 | Navigation | `cd=z`, `..=z ..`, `dots`, `reps`, `conf`                  |
 | System     | `c=clear+tmux`, `b=bat`, `l=ls -la`, `tree`                |
 | Brew       | `bu=update+upgrade(greedy-auto-updates)+cleanup`            |
-| Dev        | `n=nvim`, `lg=lazygit`, `ghd=gh dash`, `cl=claude`, `clr=claude --resume` |
+| Dev        | `n=nvim`, `lg=lazygit`, `ghd=gh dash`, `cl=claude`, `clr=claude --resume`, `rq=R(quiet,no .RData)` |
 | Zk         | `kd=daily`, `kis=idea`, `ks=search`                        |
 | Suffix     | `.pdf→Skim`, `.jpg→Preview`, `.mp4→VLC`                    |
 | Global     | `H=head`, `L=bat`, `G=rg`, `C=pbcopy`, `J=jq`             |
