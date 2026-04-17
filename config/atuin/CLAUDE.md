@@ -40,3 +40,6 @@ inline UI and vi keymap. Init cached via `__memoize_cmd` for fast startup.
 - **fzf**: Ctrl-R now handled by atuin; fzf retains Ctrl-T and Alt-C
 - Database: `~/.local/share/atuin/` (XDG_DATA_HOME)
 - Config: `~/.config/atuin/` (XDG_CONFIG_HOME, symlinked by dotbot)
+- Logs: `~/.local/share/atuin/logs/` — set via `[logs] dir` in
+  `config.toml` (atuin exposes no env var for this; default is
+  `~/.atuin/logs`).
