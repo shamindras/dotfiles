@@ -117,6 +117,53 @@ feature selection, out-of-scope triage), follow this interactive format:
   answer instead (e.g., "I'm assuming Catppuccin Mocha based on repo
   conventions — correct?").
 
+## 5b. Verification step format
+
+When the drafted prompt contains verification, validation, or testing
+steps, split them into two explicit buckets so that the receiving Claude
+Code session can do as much itself as possible and keep the user's time
+for things only a human can do.
+
+**Group 1 — Claude-executable verification (do first):**
+
+Anything Claude Code can run on its own — command-line validators,
+schema checks, parsers, type-checkers, linters, formatters, unit tests,
+`--help` / `--version` probes, config dry-runs, grep-for-regressions,
+headless reloads, log inspection, diffs, etc.
+
+Rules for this group in the drafted prompt:
+- State the exact commands Claude should run (copy-pasteable).
+- Bundle them into as few permission-prompt batches as possible — if
+  several commands share a tool family (e.g. `sesh list`, `sesh
+  connect --help`), group them in one step so one approval covers
+  the batch.
+- Call out the single permission the user should expect to grant
+  (e.g. "Claude will ask once to run `sudo launchctl kickstart`").
+- Claude reports the results back; the user does not run these.
+
+**Group 2 — Human-only interactive tests (present succinctly):**
+
+Anything that genuinely needs a human: visual UI review, keybinding
+feel, hover/focus states, leader-key chords, window-manager behavior
+after reload, audio/haptic feedback, browser interactions, multi-device
+behavior, anything requiring perception or physical input.
+
+Rules for this group in the drafted prompt:
+- Present as a short checklist (≤6 bullets where possible), each a
+  single imperative sentence.
+- Lead with the invocation ("Press `Cmd-Shift-P`, then ...") so the
+  user can execute without re-reading context.
+- State the expected observable outcome for each bullet.
+- Do **not** pad with things Claude could have verified itself —
+  those belong in Group 1.
+
+**Default ordering in the output:** Group 1 first (so Claude can
+self-verify before pausing), then Group 2 as the final hand-off to
+the user.
+
+If a step is genuinely ambiguous (could be either bucket depending on
+environment), default to Group 1 and note the fallback.
+
 ## 6. Write the Process section
 
 The Process section is always the final section. Its structure depends on
@@ -135,7 +182,10 @@ the `--full` flag:
 3. After all sections approved, present a consolidated file plan for
    final sign-off
 4. Write files **one at a time**, each presented for approval
-5. **Do not create or modify any files until I have given sign-off on
+5. **Verification**: run Claude-executable checks (commands,
+   validators, linters, tests) first and report the results; then
+   present the human-only interactive checklist for me to execute
+6. **Do not create or modify any files until I have given sign-off on
    each section**
 ```
 
@@ -148,7 +198,10 @@ the `--full` flag:
 2. Present a full implementation plan for approval
 3. After approval, implement section by section, presenting diffs at
    each step
-4. **Do not create or modify any files until I have given sign-off**
+4. **Verification**: run Claude-executable checks (commands,
+   validators, linters, tests) first and report the results; then
+   present the human-only interactive checklist for me to execute
+5. **Do not create or modify any files until I have given sign-off**
 ```
 
 ## 7. Apply repo-specific additions
@@ -186,6 +239,8 @@ mention but should:
 - **Bug fixes**: root cause vs. symptom, regression prevention
 - **Skills/commands**: sync compatibility, flag conventions, help text
 - **All tasks**: git hygiene (branch naming, commit scope), idempotency
+- **All tasks**: verification steps split into Claude-executable vs.
+  human-only buckets per step 5b
 
 Add these as sub-items in the appropriate sections — do not create a
 separate "suggestions" section.
