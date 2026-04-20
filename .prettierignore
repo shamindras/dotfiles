@@ -19,3 +19,5 @@ submods/
 
 # Exclude vendored theme files
 config/yazi/flavors/
+# Exclude ya pkg-managed plugins (except our hand-rolled ones are fine to touch)
+config/yazi/plugins/

@@ -151,11 +151,6 @@
     - command: npm install -g eslint_d prettier
       description: install eslint_d and prettier using npm
 
-# Pre-install treesitter parsers from ensure_installed (prevents race)
-- shell:
-    - command: ./scripts/setup-nvim-treesitter
-      description: Pre-install treesitter parsers
-
 # Create R user library dir (version-specific; R must be installed first)
 - shell:
     - command: >-
@@ -172,6 +167,18 @@
 - shell:
     - command: tldr --update
       description: Update tldr
+
+# ---- TUI tool plugin installs (require host tools from Brewfile) ----
+
+# Pre-install treesitter parsers from ensure_installed (prevents race)
+- shell:
+    - command: ./scripts/setup-nvim-treesitter
+      description: Pre-install treesitter parsers
+
+# Install yazi plugins + flavors (idempotent via package.toml)
+- shell:
+    - command: ya pkg install
+      description: Install yazi plugins and flavors via ya pkg
 
 # Install tmux plugins via TPM
 - shell:

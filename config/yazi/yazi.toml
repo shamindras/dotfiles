@@ -16,3 +16,20 @@ play = [
   { run = 'open -a VLC "$@"', orphan = true, desc = "VLC", for = "macos" },
   { run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
 ]
+
+# Plugin previewers (order matters — first match wins)
+[plugin]
+
+# DjVu via djvu-view.yazi (requires `djvulibre` brew package for ddjvu)
+[[plugin.prepend_previewers]]
+mime = "image/vnd.djvu"
+run  = "djvu-view"
+
+[[plugin.prepend_previewers]]
+url = "*.{djvu,djv}"
+run = "djvu-view"
+
+# Archive preview via ouch.yazi (requires `ouch` brew package)
+[[plugin.prepend_previewers]]
+mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}"
+run  = "ouch"
