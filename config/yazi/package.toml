@@ -1,7 +1,99 @@
-[plugin]
-deps = []
+[[plugin.deps]]
+use = "Shallow-Seek/djvu-view"
+rev = "f218aa6"
+hash = "522db0412d7839c8c343f9c733713d24"
+
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "406ce6c"
+hash = "f5afc904d5106ee368c8aa2ded43bd74"
+
+[[plugin.deps]]
+use = "dedukun/relative-motions"
+rev = "a603d9e"
+hash = "e02a788e5b8ae0fb47fd0193dda589cc"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "442d908"
+hash = "187cc58ba7ac3befd49c342129e6f1b6"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
 rev = "9511cb0"
 hash = "7dfe41c9c3d9be76da8a844263d0bbed"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-latte"
+rev = "0670801"
+hash = "b8f46853c27707115f25f3423a47bd38"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-frappe"
+rev = "0670801"
+hash = "1844f850b0c5d1af511c84399c95e3d7"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "0670801"
+hash = "67f2240fd9c98f21714527a24cd672f8"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:dracula"
+rev = "0670801"
+hash = "20624fcdfcf7e4e912de05e348065e5e"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "8e6296f"
+hash = "d9da921c3bd37ba32ee27a8a7a40461f"
+
+[[flavor.deps]]
+use = "dangooddd/kanagawa"
+rev = "04985d1"
+hash = "c69a63981e254a3a06a11c2bf0e6af1d"
+
+[[flavor.deps]]
+use = "marcosvnmelo/kanagawa-dragon"
+rev = "b9541e8"
+hash = "dc840cf225dbf6f0257617403ad43d8b"
+
+[[flavor.deps]]
+use = "muratoffalex/kanagawa-lotus"
+rev = "00dcc74"
+hash = "8fe01c79d91d7154ce231334cc7275f2"
+
+[[flavor.deps]]
+use = "bennyyip/gruvbox-dark"
+rev = "619fdc5"
+hash = "d4c7003ec6dc4efd5d3a050d5c2f2575"
+
+[[flavor.deps]]
+use = "matt-dong-123/gruvbox-material"
+rev = "6c36491"
+hash = "564f2335540ee2c440c3b671bc28ac60"
+
+[[flavor.deps]]
+use = "Chromium-3-Oxide/everforest-medium"
+rev = "a074b04"
+hash = "1ce814d637e7467ee0da757d509ac007"
+
+[[flavor.deps]]
+use = "Mintass/rose-pine"
+rev = "d91f8f2"
+hash = "87da3630653b6d272e43658418599188"
+
+[[flavor.deps]]
+use = "Mintass/rose-pine-moon"
+rev = "94385fe"
+hash = "edbe0dfb5db8ff37281dba62adc7e750"
+
+[[flavor.deps]]
+use = "Mintass/rose-pine-dawn"
+rev = "d82f54f"
+hash = "15ae5f83d3770b9ffc276af77f642e2b"
+
+[[flavor.deps]]
+use = "AdithyanA2005/nord"
+rev = "bdf0bd4"
+hash = "816970e00d643d3e8213b430d2148aec"

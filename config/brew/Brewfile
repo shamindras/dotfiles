@@ -42,6 +42,8 @@ brew "coreutils"
 brew "curl"
 # Load/unload environment variables based on $PWD
 brew "direnv"
+# DjVu viewer
+brew "djvulibre"
 # Embeddable SQL OLAP Database Management System
 brew "duckdb"
 # Disk Usage/Free Utility - a better 'df' alternative
@@ -84,8 +86,6 @@ brew "krb5"
 brew "proj"
 # Library and tools for dealing with GeoTIFF
 brew "libgeotiff"
-# Database of common MIME types
-brew "shared-mime-info"
 # ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
 brew "libheif"
 # Postgres C API library
@@ -100,6 +100,8 @@ brew "openblas"
 brew "numpy"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
+# Database of common MIME types
+brew "shared-mime-info"
 # Geospatial Data Abstraction Library
 brew "gdal"
 # GitHub command-line tool
@@ -166,6 +168,8 @@ brew "openldap"
 brew "openssh"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3.0"
+# Painless compression and decompression for your terminal
+brew "ouch"
 # Multithreaded PNG optimizer written in Rust
 brew "oxipng"
 # 7-Zip (high compression file archiver) implementation
@@ -321,8 +325,6 @@ cask "nordvpn"
 cask "notunes"
 # JDK from Oracle
 cask "oracle-jdk"
-# Data science IDE
-cask "positron"
 # Scientific and technical publishing system built on Pandoc
 cask "quarto"
 # Environment for statistical computing and graphics

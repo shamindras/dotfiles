@@ -9,7 +9,7 @@ include = [
     "**/yazi.toml",
     "**/theme.toml",
 ]
-exclude = ["config/yazi/themes/**", "submods/**"]
+exclude = ["config/yazi/flavors/**", "config/yazi/plugins/**", "submods/**"]
 
 [rule.formatting]
 align_entries = true

@@ -2,7 +2,7 @@ _default:
 	@just --choose
 
 # NOTE: we don't include update submods here
-all: clean stylua_config prettier_md update_brewfile firefox_sync firefox_audit treesitter_sync
+all: clean stylua_config prettier_md update_brewfile firefox_sync firefox_audit treesitter_sync yazi_plugins_upgrade
 
 clean:
 	@printf "🧹 Sweeping out .DS_Store, swap files, stale sessions...\n"
@@ -70,3 +70,25 @@ update_submods:
 	@printf "📦 Pulling latest submodules...\n"
 	git submodule update --recursive --remote
 	@printf "✅ Submodules up to date!\n"
+
+# Install yazi plugins + flavors from config/yazi/package.toml (idempotent)
+yazi_plugins_install:
+	@printf "🐱 Installing yazi plugins + flavors via ya pkg...\n"
+	@ya pkg install
+	@printf "✅ Yazi plugins installed!\n"
+
+# Upgrade all yazi plugins + flavors to latest revisions
+yazi_plugins_upgrade:
+	@printf "🐱 Upgrading yazi plugins + flavors via ya pkg...\n"
+	@ya pkg upgrade
+	@printf "✅ Yazi plugins upgraded!\n"
+
+# List installed yazi plugins + flavors
+yazi_plugins_list:
+	@ya pkg list
+
+# Clear yazi preview cache
+yazi_clear_cache:
+	@printf "🧹 Clearing yazi preview cache...\n"
+	@yazi --clear-cache
+	@printf "✅ Yazi cache cleared!\n"
