@@ -62,14 +62,14 @@ sync-all:
 prettier_md:
 	@printf "🎨 Formatting markdown files with prettier...\n"
 	@prettier --write . > /dev/null 2>&1
-	@printf "✅ Markdown files formatted!\n"
+	@printf "✅ Markdown files formatted\n"
 
 # Format all Lua config files with stylua.
 [group('format')]
 stylua_config:
 	@printf "🎨 Formatting all Lua config files with stylua...\n"
 	@fd . 'config/' -e lua -j 4 -x sh -c 'stylua "$1" > /dev/null 2>&1 || true' sh {}
-	@printf "✅ Lua files formatted!\n"
+	@printf "✅ Lua files formatted\n"
 
 # Dump current Homebrew packages to Brewfile.
 [group('packages')]
@@ -87,7 +87,7 @@ firefox_audit:
 firefox_sync:
 	@printf "🦊 Syncing Firefox config (user.js, chrome/, policies.json) to profile...\n"
 	@./scripts/ops/setup-firefox
-	@printf "✅ Firefox synced! Restart Firefox for changes.\n"
+	@printf "✅ Firefox synced (restart Firefox for changes)\n"
 
 # Show nvim-treesitter parser status (read-only).
 [group('treesitter')]
@@ -111,14 +111,14 @@ treesitter_update:
 yazi_clear_cache:
 	@printf "🧹 Clearing yazi preview cache...\n"
 	@yazi --clear-cache
-	@printf "✅ Yazi cache cleared!\n"
+	@printf "✅ Yazi cache cleared\n"
 
 # Install yazi plugins + flavors from package.toml (idempotent).
 [group('yazi')]
 yazi_plugins_install:
 	@printf "🐱 Installing yazi plugins + flavors via ya pkg...\n"
 	@ya pkg install
-	@printf "✅ Yazi plugins installed!\n"
+	@printf "✅ Yazi plugins installed\n"
 
 # List installed yazi plugins + flavors.
 [group('yazi')]
@@ -130,30 +130,26 @@ yazi_plugins_list:
 yazi_plugins_upgrade:
 	@printf "🐱 Upgrading yazi plugins + flavors via ya pkg...\n"
 	@ya pkg upgrade
-	@printf "✅ Yazi plugins upgraded!\n"
+	@printf "✅ Yazi plugins upgraded\n"
 
-# Open Raycast export dialog (save to config/raycast/Raycast.rayconfig).
+# Open Raycast export dialog. Save to config/raycast/Raycast.rayconfig (see config/raycast/CLAUDE.md).
 [group('raycast')]
 raycast_export:
-	@printf "📦 Opening Raycast export dialog...\n"
+	@printf "📤 Opening Raycast export dialog...\n"
 	@open "raycast://extensions/raycast/raycast/export-settings-data"
-	@printf "💡 Save to: config/raycast/Raycast.rayconfig\n"
-	@printf "📖 Full instructions: config/raycast/CLAUDE.md\n"
 
-# Open Raycast import dialog (select config/raycast/Raycast.rayconfig).
+# Open Raycast import dialog. Select config/raycast/Raycast.rayconfig (see config/raycast/CLAUDE.md).
 [group('raycast')]
 raycast_import:
 	@printf "📥 Opening Raycast import dialog...\n"
 	@open "raycast://extensions/raycast/raycast/import-settings-data"
-	@printf "💡 Select: config/raycast/Raycast.rayconfig\n"
-	@printf "📖 Full instructions: config/raycast/CLAUDE.md\n"
 
 # Pull latest submodule revisions.
 [group('submodules')]
 update_submods:
 	@printf "📦 Pulling latest submodules...\n"
 	git submodule update --recursive --remote
-	@printf "✅ Submodules up to date!\n"
+	@printf "✅ Submodules up to date\n"
 
 # Sweep .DS_Store, swap files, stale zsh sessions.
 [group('cleanup')]
