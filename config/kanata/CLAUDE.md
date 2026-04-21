@@ -137,7 +137,7 @@ after 2s via `on-idle-fakekey`.
 - **fastopen** (`config/bin/fastopen`): Centralized app launcher with path lookup
 - **quit-app** (`config/bin/quit-app`): Workspace-first + lazy bg quit + sketchybar notify
 - **open-nordvpn** (`config/bin/open-nordvpn`): NordVPN multi-step launch
-- **brew-update** (`config/bin/brew-update`): Brew update/upgrade in WezTerm window
+- **brew-update** (`config/bin/brew-update`): canonical Homebrew pipeline (sudo bootstrap → Caskroom sweep → tri-state mode detect → dump (steady + drift, not bootstrap) → upgrade --greedy (tolerant) → bundle install recovery → cleanup + emoji summary) in a WezTerm window
 - **empty-trash** (`config/bin/empty-trash`): Empty Finder trash + workspace switch
 - **sketchybar**: Leader HUD item (`items/leader.sh`, left-aligned) updated by `leader-hud` script;
   also reused by `quit-app` for transient quit notifications (green/red, 2s linger)
