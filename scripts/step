@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# step — thin wrapper around _lib/step.sh for inline justfile recipes.
+set -Eeuo pipefail
+
+# shellcheck source=_lib/step.sh
+source "$(dirname "$0")/_lib/step.sh"
+
+case ${1:-} in
+    outer) shift; step_outer "$@" ;;
+    inner) shift; step_inner "$@" ;;
+    done)  shift; step_done  "$@" ;;
+    *) printf 'usage: step {outer|inner|done} ...\n' >&2; exit 2 ;;
+esac
