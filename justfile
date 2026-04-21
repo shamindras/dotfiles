@@ -26,6 +26,37 @@ all:
 	@scripts/step outer 8 8 🐱 "Upgrading yazi plugins"
 	@just yazi_plugins_upgrade
 
+# Read-only audit: firefox drift, treesitter parser status, yazi plugin list.
+audit:
+	@scripts/step outer 1 3 🔍 "Auditing Firefox"
+	@just firefox_audit
+	@scripts/step outer 2 3 🔄 "Checking treesitter parsers"
+	@just treesitter_status
+	@scripts/step outer 3 3 🐱 "Listing yazi plugins"
+	@just yazi_plugins_list
+
+# Format all Lua + markdown configs.
+format:
+	@scripts/step outer 1 2 🎨 "Formatting Lua configs"
+	@just stylua_config
+	@scripts/step outer 2 2 🎨 "Formatting markdown"
+	@just prettier_md
+
+# Show all targets grouped.
+help:
+	@just --list
+
+# Sync firefox, treesitter, yazi plugins, submodules.
+sync-all:
+	@scripts/step outer 1 4 🦊 "Syncing Firefox"
+	@just firefox_sync
+	@scripts/step outer 2 4 🔄 "Syncing treesitter"
+	@just treesitter_sync
+	@scripts/step outer 3 4 🐱 "Upgrading yazi plugins"
+	@just yazi_plugins_upgrade
+	@scripts/step outer 4 4 📦 "Updating submodules"
+	@just update_submods
+
 # Format markdown files with prettier.
 [group('format')]
 prettier_md:
