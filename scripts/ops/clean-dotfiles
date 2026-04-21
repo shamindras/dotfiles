@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# clean-dotfiles — sweep .DS_Store, swap files, stale zsh sessions.
+set -Eeuo pipefail
+
+# shellcheck source=../_lib/step.sh
+source "$(dirname "$0")/../_lib/step.sh"
+
+step_inner 1 2 "Removing stale zsh sessions"
+rm -rf ./config/zsh/.zsh_sessions
+
+step_inner 2 2 "Deleting .DS_Store, swap, and backup files"
+fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
+
+step_done 🧹 "All clean"

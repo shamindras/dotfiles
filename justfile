@@ -74,12 +74,7 @@ stylua_config:
 # Dump current Homebrew packages to Brewfile.
 [group('packages')]
 update_brewfile:
-	@printf "🍺 Dumping current Homebrew packages to Brewfile...\n"
-	# Strip cargo from PATH so brew doesn't invoke the rustup shim, which
-	# errors in subprocesses where it can't resolve the default toolchain.
-	# Rust/cargo is managed separately via rustup, not the Brewfile.
-	@PATH="$(echo "$PATH" | tr ':' '\n' | grep -v cargo | tr '\n' ':')" brew bundle dump --describe --force --file=./config/brew/Brewfile
-	@printf "✅ Brewfile saved to ./config/brew/Brewfile\n"
+	@./scripts/ops/dump-brewfile
 
 # Audit Firefox config for drift against tracked user.js/policies.json.
 [group('firefox')]
@@ -102,10 +97,7 @@ treesitter_status:
 # Update nvim-treesitter plugin + parsers, then show status.
 [group('treesitter')]
 treesitter_sync:
-	@printf "🔄 Updating nvim-treesitter plugin...\n"
-	@nvim --headless -c 'lua require("lazy").update({plugins={"nvim-treesitter"}, wait=true})' -c 'qa' 2>/dev/null || true
-	@printf "✅ Plugin updated!\n"
-	@just treesitter_update
+	@./scripts/ops/treesitter-sync
 
 # Install missing + update outdated treesitter parsers, then show status.
 [group('treesitter')]
@@ -166,7 +158,4 @@ update_submods:
 # Sweep .DS_Store, swap files, stale zsh sessions.
 [group('cleanup')]
 clean:
-	@printf "🧹 Sweeping out .DS_Store, swap files, stale sessions...\n"
-	@rm -rf ./config/zsh/.zsh_sessions
-	@fd '\.(DS_Store|swo|swp)$|~$' -tf -u -X rm
-	@printf "✨ All clean!\n"
+	@./scripts/ops/clean-dotfiles
