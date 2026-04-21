@@ -8,8 +8,8 @@ set -Eeuo pipefail
 # (e.g., sesh-reset --common).
 #
 # Usage:
-#   ./scripts/setup-nvim-treesitter           # install missing + update outdated
-#   ./scripts/setup-nvim-treesitter --status   # show parser status table (read-only)
+#   ./scripts/ops/setup-nvim-treesitter           # install missing + update outdated
+#   ./scripts/ops/setup-nvim-treesitter --status   # show parser status table (read-only)
 #
 # Requires: nvim
 # Requires for install/update: tree-sitter-cli (brew install tree-sitter-cli)

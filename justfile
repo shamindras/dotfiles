@@ -30,12 +30,12 @@ update_brewfile:
 
 firefox_sync:
 	@printf "🦊 Syncing Firefox config (user.js, chrome/, policies.json) to profile...\n"
-	@./scripts/setup-firefox
+	@./scripts/ops/setup-firefox
 	@printf "✅ Firefox synced! Restart Firefox for changes.\n"
 
 firefox_audit:
 	@printf "🔍 Auditing Firefox config for drift...\n"
-	@./scripts/audit-firefox
+	@./scripts/ops/audit-firefox
 
 # Update nvim-treesitter plugin + install/update parsers, then show status
 treesitter_sync:
@@ -46,13 +46,13 @@ treesitter_sync:
 
 # Install missing + update outdated treesitter parsers, then show status
 treesitter_update:
-	@./scripts/setup-nvim-treesitter
+	@./scripts/ops/setup-nvim-treesitter
 	@printf "\n"
-	@./scripts/setup-nvim-treesitter --status
+	@./scripts/ops/setup-nvim-treesitter --status
 
 # Show treesitter parser status (read-only)
 treesitter_status:
-	@./scripts/setup-nvim-treesitter --status
+	@./scripts/ops/setup-nvim-treesitter --status
 
 raycast_export:
 	@printf "📦 Opening Raycast export dialog...\n"

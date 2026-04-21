@@ -65,4 +65,4 @@ git submodule update --init --recursive "${DOTBOT_DIR}"
 # Post-install reminders
 # ------------------------------------------------------------------------------
 
-./scripts/post-install-hints
+./scripts/setup/post-install-hints

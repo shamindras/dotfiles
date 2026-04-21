@@ -146,7 +146,7 @@ after 2s via `on-idle-fakekey`.
 
 ## Installation
 
-Setup script `scripts/setup-upgrade-kanata` handles everything:
+Setup script `scripts/setup/setup-upgrade-kanata` handles everything:
 1. Builds kanata from source with `cmd` feature (Homebrew lacks it)
 2. Copies plist to `/Library/LaunchDaemons/` and loads/restarts daemon
 3. Stops conflicting Karabiner-Elements services (keeps VirtualHIDDevice driver)

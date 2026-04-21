@@ -9,9 +9,9 @@ set -Eeuo pipefail
 # deployed to the app bundle's distribution/ directory (wiped on every Firefox
 # update, so this script re-creates it each run).
 #
-# Usage: ./scripts/setup-firefox
+# Usage: ./scripts/ops/setup-firefox
 
-DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+DOTFILES_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 FIREFOX_SRC="${DOTFILES_DIR}/config/firefox"
 FIREFOX_APP="/Applications/Firefox.app"
 PROFILES_INI="${HOME}/Library/Application Support/Firefox/profiles.ini"

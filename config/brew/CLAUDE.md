@@ -151,7 +151,7 @@ Adds and removes are **symmetric**: both propagate through the next
 - Manual Brewfile refresh (without upgrade pass): `just update_brewfile`.
 - Install from Brewfile (without upgrade or cleanup):
   `brew bundle --file=config/brew/Brewfile`.
-- Homebrew init handled by `scripts/setup-upgrade-homebrew`.
+- Homebrew init handled by `scripts/setup/setup-upgrade-homebrew`.
 - Brew env vars set in zsh `01-z1-env-vars-gen.zsh`:
   `HOMEBREW_UPGRADE_GREEDY=1`, `HOMEBREW_NO_ANALYTICS=1`,
   `HOMEBREW_NO_ENV_HINTS=1`. `HOMEBREW_AUTOREMOVE=1` is not set —

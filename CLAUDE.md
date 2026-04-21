@@ -59,11 +59,23 @@ just all              # Run clean, stylua_config, and update_brewfile
 
 ### Key Scripts
 
-- `scripts/setup-dropbox` - Dropbox installation and setup
-- `scripts/setup-macos` - macOS system defaults configuration
-- `scripts/setup-upgrade-homebrew` - Homebrew installation/upgrade
-- `scripts/setup-upgrade-rust-cargo` - Rust toolchain management
-- `scripts/setup-zk` - Zettelkasten (zk) setup
+Organized by runtime role:
+
+- `scripts/setup/` — one-time bootstrap scripts run by `./install`:
+  - `setup-dropbox` - Dropbox installation and setup
+  - `setup-macos` - macOS system defaults configuration
+  - `setup-upgrade-homebrew` - Homebrew installation/upgrade
+  - `setup-upgrade-rust-cargo` - Rust toolchain management
+  - `setup-upgrade-kanata` - Build kanata from source with cmd feature
+  - `setup-upgrade-ttyper` - Install/upgrade ttyper
+  - `setup-zk` - Zettelkasten (zk) setup
+  - `post-install-hints` - Print manual post-install steps
+- `scripts/ops/` — ongoing-use scripts invoked by justfile (also some by `./install`):
+  - `audit-firefox` - Audit Firefox prefs for drift
+  - `setup-firefox` - Sync Firefox user.js, chrome/, policies.json
+  - `setup-nvim-treesitter` - Install/update nvim-treesitter parsers
+- `scripts/_lib/` — sourced helpers (e.g., `step.sh` for two-tier progress)
+- `scripts/migrate/` — one-off migration utilities (unchanged)
 
 ### Supported Applications
 

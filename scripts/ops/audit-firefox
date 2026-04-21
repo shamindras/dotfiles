@@ -7,9 +7,9 @@ set -Eeuo pipefail
 # For each pref in user.js + policies.json, checks whether Firefox has it
 # with the expected value. Simple diff against what we've defined.
 #
-# Usage: ./scripts/audit-firefox
+# Usage: ./scripts/ops/audit-firefox
 
-DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+DOTFILES_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 FIREFOX_SRC="${DOTFILES_DIR}/config/firefox"
 FIREFOX_APP="/Applications/Firefox.app"
 PROFILES_INI="${HOME}/Library/Application Support/Firefox/profiles.ini"

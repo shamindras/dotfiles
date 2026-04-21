@@ -30,7 +30,7 @@
 
 # Install zk (zettlekasten)
 - shell:
-    - command: ./scripts/setup-zk
+    - command: ./scripts/setup/setup-zk
       description: Setup zk (zettlekasten)
 
 # Symlink locations for files / directories
@@ -96,7 +96,7 @@
 
 # Install homebrew
 - shell:
-    - command: ./scripts/setup-upgrade-homebrew
+    - command: ./scripts/setup/setup-upgrade-homebrew
       description: Installing homebrew
 
 # Canonical brew pipeline: sudo bootstrap → mode detect → dump (steady) →
@@ -131,7 +131,7 @@
 
 # Setup Firefox user.js, userChrome.css, and policies.json
 - shell:
-    - command: ./scripts/setup-firefox
+    - command: ./scripts/ops/setup-firefox
       description: Setup Firefox user.js, userChrome.css, and policies.json
 
 # Install gh-dash extension
@@ -146,7 +146,7 @@
 
 # kanata (keyboard remapper with cmd feature — built from source)
 - shell:
-    - command: ./scripts/setup-upgrade-kanata
+    - command: ./scripts/setup/setup-upgrade-kanata
       description: install kanata with cmd feature, or upgrade
 
 # Install npm packages
@@ -163,7 +163,7 @@
 
 # rust + cargo
 - shell:
-    - command: ./scripts/setup-upgrade-rust-cargo
+    - command: ./scripts/setup/setup-upgrade-rust-cargo
       description: install rust and cargo, or upgrade both
 
 # Update tldr cache
@@ -175,7 +175,7 @@
 
 # Pre-install treesitter parsers from ensure_installed (prevents race)
 - shell:
-    - command: ./scripts/setup-nvim-treesitter
+    - command: ./scripts/ops/setup-nvim-treesitter
       description: Pre-install treesitter parsers
 
 # Install yazi plugins + flavors (idempotent via package.toml)
@@ -192,10 +192,10 @@
 
 # Load ttyper
 - shell:
-    - command: ./scripts/setup-upgrade-ttyper
+    - command: ./scripts/setup/setup-upgrade-ttyper
       description: install ttyper, or upgrade to the latest version
 
 # macOS default settings
 - shell:
-    - command: ./scripts/setup-macos
+    - command: ./scripts/setup/setup-macos
       description: Set macOS default settings
