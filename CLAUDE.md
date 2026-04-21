@@ -23,12 +23,20 @@ make dotbot_install   # Alternative wrapper for ./install
 
 ### Development and Maintenance
 ```bash
-just clean            # Clean temporary files, .DS_Store, vim swap files
-just stylua_config    # Format all Lua config files using stylua
-just update_brewfile  # Update Homebrew bundle file from current packages
-just update_submods   # Update all git submodules
-just all              # Run clean, stylua_config, and update_brewfile
+just                  # Interactive recipe picker (fzf + preview)
+just help             # List all targets grouped by area
+just all              # Full pipeline: clean → format → brewfile → firefox → treesitter → yazi
+just format           # Format Lua (stylua) + markdown (prettier)
+just sync-all         # Sync firefox + treesitter + yazi plugins + submodules
+just audit            # Read-only audit: firefox drift + treesitter parsers + yazi plugins
+just clean            # Sweep .DS_Store, swap files, stale zsh sessions
+just update_brewfile  # Dump current Homebrew packages to Brewfile
+just update_submods   # Pull latest submodule revisions
 ```
+
+Recipes are grouped via `[group('<name>')]` attributes — see `just --list`.
+Composites emit two-tier progress: outer `▶ X/Y` across sub-targets and
+inner `├─ n/total` within each extracted script.
 
 ## Architecture
 
