@@ -154,8 +154,6 @@ brew "lua"
 brew "luacheck"
 # Package manager for the Lua programming language
 brew "luarocks"
-# Deep clean and optimize your Mac
-brew "mole"
 # Incremental parsing library
 brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
@@ -343,8 +341,6 @@ cask "shottr"
 cask "signal"
 # PDF reader and note-taking application
 cask "skim"
-# Team communication and collaboration software
-cask "slack"
 # Music streaming service
 cask "spotify"
 # Multimedia player
