@@ -1,13 +1,337 @@
-#!/bin/sh
-# brew-update — run brew update/upgrade in a new WezTerm window
+#!/usr/bin/env bash
+# brew-update — canonical Homebrew update pipeline.
 #
-# Uses run-as-user for root→user context switch (kanata launchd daemon).
+# Invoked by install.conf.yaml, the `bu` zsh alias, and the kanata `ar-b`
+# binding. Flow: sudo bootstrap → Caskroom sweep (*.upgrading orphans +
+# .metadata-only stubs) → tri-state mode detect (steady / drift /
+# bootstrap) → dump (steady + drift) → brew update → brew upgrade --greedy
+# (tolerant) → brew bundle install (recovery + bootstrap) → brew cleanup →
+# emoji summary. Drift mode lets `brew uninstall <name>` flow symmetrically
+# with `brew install <name>` — the dump captures both directions.
 
-set -eu
+set -Eeuo pipefail
 
-RUN="$HOME/.config/bin/run-as-user"
-WEZTERM="/Applications/WezTerm.app/Contents/MacOS/wezterm"
+# Resolve dotfiles root via the parent-dir symlink. The script file itself
+# is not symlinked — only ~/.config/bin (points at <repo>/config/bin).
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+DOTFILES_DIR="$(cd "$SCRIPT_DIR/../.." && pwd -P)"
+
 BREW="/opt/homebrew/bin/brew"
+BREWFILE="$DOTFILES_DIR/config/brew/Brewfile"
 
-"$RUN" "$WEZTERM" start -- /bin/zsh -c \
-  "$BREW update && $BREW upgrade --greedy && $BREW cleanup;"' printf "\n===[ BREW UPDATE END ]===\n"; printf "\nPress any key to close this window..."; read -k 1 -s'
+# Autoremove is the default in modern brew; setting HOMEBREW_AUTOREMOVE=1
+# triggers a deprecation warning. We drop it here in case a stale shell
+# still exports the value from before the env-vars config was updated.
+unset HOMEBREW_AUTOREMOVE
+
+# --- Root → WezTerm popup dispatch (kanata launchd) -----------------------
+if [ "$(id -u)" -eq 0 ]; then
+  RUN="$HOME/.config/bin/run-as-user"
+  WEZTERM="/Applications/WezTerm.app/Contents/MacOS/wezterm"
+  exec "$RUN" "$WEZTERM" start -- /bin/zsh -c \
+    "'$0'; printf '\n===[ BREW UPDATE END ]===\n'; printf '\nPress any key to close this window...'; read -k 1 -s"
+fi
+
+# --- Running as the console user with a TTY from here --------------------
+SECONDS=0
+RED=$'\033[0;31m'; YEL=$'\033[0;33m'; GRN=$'\033[0;32m'
+DIM=$'\033[2m';    NC=$'\033[0m'
+
+# Step 1 — Sudo bootstrap (upfront prompt; cached for the whole run).
+printf '🔐 [1/8] Authenticating sudo upfront (cached for the run)\n'
+if ! sudo -v; then
+  printf '%s❌ sudo authentication cancelled; aborting.%s\n' "$RED" "$NC" >&2
+  exit 1
+fi
+( while sudo -n true 2>/dev/null; do sleep 30; done ) &
+SUDO_PID=$!
+
+PRE_F=$(mktemp -t brew-update); PRE_C=$(mktemp -t brew-update)
+MID_F=$(mktemp -t brew-update); MID_C=$(mktemp -t brew-update)
+POST_C=$(mktemp -t brew-update); CLEAN_LOG=$(mktemp -t brew-update)
+INST_F=$(mktemp -t brew-update); INST_C=$(mktemp -t brew-update)
+PRE_BREWFILE=$(mktemp -t brew-update)
+
+cleanup_tmp() {
+  kill "$SUDO_PID" 2>/dev/null || true
+  rm -f "$PRE_F" "$PRE_C" "$MID_F" "$MID_C" "$POST_C" "$CLEAN_LOG" \
+        "$INST_F" "$INST_C" "$PRE_BREWFILE"
+}
+trap cleanup_tmp EXIT
+
+# Pre-step-2 — Sweep broken cask state that would mislead mode detection.
+# Two shapes of corruption to clean up first:
+#
+#   1. `*.upgrading` directories: `brew cask upgrade` renames
+#      `<VER>` → `<VER>.upgrading`, reinstalls, then removes the marker.
+#      A partial failure (typical for pkg-shaped auto_updates casks like
+#      nordvpn / zoom / xquartz / karabiner) leaves the marker behind,
+#      and every subsequent `brew upgrade --greedy` throws
+#      `No such file or directory @ rb_file_s_rename` on that cask.
+#
+#   2. Stub Caskroom dirs (only `.metadata`, no version subdir): a
+#      crashed uninstall or `brew update-reset` can leave this behind.
+#      `brew list --cask` still reports the cask as installed (directory
+#      exists) but `brew bundle dump` correctly skips it, so if step 2
+#      trusts `brew list`, mode is (wrongly) detected as steady and the
+#      dump silently removes the entry from the Brewfile.
+#
+# Wiping both here makes the installed-cask check in step 2 reflect the
+# true state — they become missing → drift mode fires → preview warns
+# the user with an actionable list.
+CASKROOM="/opt/homebrew/Caskroom"
+SWEEP=()
+if [ -d "$CASKROOM" ]; then
+  while IFS= read -r d; do
+    [ -n "$d" ] && SWEEP+=("$d|upgrading")
+  done < <(find "$CASKROOM" -name '*.upgrading' 2>/dev/null || true)
+  for d in "$CASKROOM"/*/; do
+    [ -d "$d" ] || continue
+    # Any non-.metadata entry means a real version is installed.
+    if ! find "$d" -mindepth 1 -maxdepth 1 ! -name '.metadata' \
+           2>/dev/null | grep -q .; then
+      SWEEP+=("$d|stub")
+    fi
+  done
+fi
+if [ "${#SWEEP[@]}" -eq 0 ]; then
+  printf '🧹 [2/8] Caskroom sweep: nothing to clean\n'
+else
+  printf '🧹 [2/8] Sweeping %d broken Caskroom dir(s)\n' "${#SWEEP[@]}"
+  for entry in "${SWEEP[@]}"; do
+    path="${entry%|*}"; kind="${entry##*|}"
+    if [ "$kind" = upgrading ]; then
+      printf '   %s✂  %s (orphaned .upgrading)%s\n' "$DIM" "$path" "$NC"
+    else
+      printf '   %s✂  %s (stub — only .metadata)%s\n' "$DIM" "$path" "$NC"
+    fi
+    sudo rm -rf "$path"
+  done
+fi
+
+# Step 3 — Tri-state mode detection.
+#   steady    : every declared formula/cask is present in `brew list`.
+#               Outdated versions are fine — step 5 handles upgrades.
+#   drift     : some declared entries are absent from `brew list`, but
+#               brew is populated (user ran `brew uninstall foo`, or a
+#               prior run crashed mid-pipeline and left something out).
+#   bootstrap : brew is (near-)empty relative to the Brewfile — fresh
+#               machine. Dump is skipped so we don't overwrite the
+#               canonical Brewfile with a nearly-empty snapshot.
+#
+# We check set membership against `brew list` directly rather than using
+# `brew bundle check`, because bundle check flags *both* missing AND
+# outdated packages as failing — lumping "user uninstalled this" together
+# with "needs a normal version bump" and causing false drift triggers on
+# every routine run. The pre-step-2 sweep above ensures `brew list`'s
+# view matches `brew bundle dump`'s stricter definition of installed.
+"$BREW" list --formula >"$INST_F" 2>/dev/null || true
+"$BREW" list --cask    >"$INST_C" 2>/dev/null || true
+
+MISSING_LIST=$(awk -v fpath="$INST_F" -v cpath="$INST_C" '
+  BEGIN {
+    while ((getline n < fpath) > 0) installed_f[n] = 1
+    close(fpath)
+    while ((getline n < cpath) > 0) installed_c[n] = 1
+    close(cpath)
+  }
+  /^brew "/ {
+    match($0, /"[^"]+"/)
+    full = substr($0, RSTART+1, RLENGTH-2)
+    name = full; sub(/^.*\//, "", name)
+    if (!(name in installed_f)) printf "       brew \"%s\"\n", full
+  }
+  /^cask "/ {
+    match($0, /"[^"]+"/)
+    full = substr($0, RSTART+1, RLENGTH-2)
+    name = full; sub(/^.*\//, "", name)
+    if (!(name in installed_c)) printf "       cask \"%s\"\n", full
+  }
+' "$BREWFILE")
+MISSING_COUNT=$(printf '%s' "$MISSING_LIST" | grep -c '^ ' || true)
+
+if [ "$MISSING_COUNT" -eq 0 ]; then
+  MODE=steady
+else
+  BREWFILE_ENTRIES=$(grep -cE '^(brew|cask) "' "$BREWFILE" 2>/dev/null || echo 0)
+  TOTAL_INSTALLED=$(($(wc -l <"$INST_F") + $(wc -l <"$INST_C")))
+  if [ "$BREWFILE_ENTRIES" -eq 0 ] || \
+     [ "$TOTAL_INSTALLED" -lt $((BREWFILE_ENTRIES / 2)) ]; then
+    MODE=bootstrap
+    MISSING_LIST=""
+  else
+    MODE=drift
+  fi
+fi
+printf '🧭 [3/8] Mode: %s\n' "$MODE"
+
+# Drift visibility: surface the pending Brewfile removals so the user
+# can Ctrl-C if any of them are unintentional losses (crashed run,
+# external uninstall) rather than deliberate user uninstalls.
+if [ "$MODE" = drift ] && [ -n "$MISSING_LIST" ]; then
+  printf '   Absent from brew — step 3 dump will drop from Brewfile:\n'
+  printf '%s' "$MISSING_LIST"
+  printf '   If any of these are unintentional, Ctrl-C now, run\n'
+  printf '   %sbrew install [--cask] <name>%s, then re-run bu.\n' "$DIM" "$NC"
+fi
+
+cp "$BREWFILE" "$PRE_BREWFILE" 2>/dev/null || true
+
+# Step 4 — Dump (steady + drift). Both modes are safe: brew is populated,
+# so the dump accurately reflects the user's intended state including
+# ad-hoc installs AND ad-hoc uninstalls. Bootstrap skips so we don't
+# overwrite the canonical Brewfile with a near-empty snapshot on a fresh
+# machine.
+#
+# --formula --cask --tap scopes the dump to brew's native package types.
+# Default dump also includes cargo/npm/go/vscode/uv/flatpak/krew; those are
+# managed by their own setup scripts (e.g. setup-upgrade-kanata builds
+# kanata from cargo WITH --features cmd — bundle install of the default
+# cargo entry would silently strip that feature).
+if [ "$MODE" != bootstrap ]; then
+  printf '📋 [4/8] brew bundle dump → Brewfile (brew-only scope)\n'
+  "$BREW" bundle dump --describe --force --file="$BREWFILE" \
+    --formula --cask --tap
+else
+  printf '📋 [4/8] Skipping dump (bootstrap mode)\n'
+fi
+
+"$BREW" list --versions --formula >"$PRE_F" || true
+"$BREW" list --versions --cask    >"$PRE_C" || true
+
+# Step 5 — Refresh taps.
+printf '🔄 [5/8] brew update\n'
+"$BREW" update
+
+# Step 6 — Greedy upgrade. Tolerated: pkg-shaped auto_updates casks
+# (karabiner-elements, nordvpn, xquartz, zoom) fail the uninstall→reinstall
+# cycle and exit non-zero; step 7 re-installs anything step 6 silently dropped.
+printf '⬆️  [6/8] brew upgrade --greedy (tolerant of individual cask failures)\n'
+UPGRADE_EXIT=0
+"$BREW" upgrade --greedy || UPGRADE_EXIT=$?
+
+"$BREW" list --versions --formula >"$MID_F" || true
+"$BREW" list --versions --cask    >"$MID_C" || true
+
+# Step 7 — Reconcile against Brewfile. Upgrade-by-default, so this both
+# bootstraps missing entries and recovers anything step 6 dropped.
+printf '🔧 [7/8] brew bundle install (recovery + bootstrap)\n'
+BUNDLE_EXIT=0
+"$BREW" bundle install --file="$BREWFILE" || BUNDLE_EXIT=$?
+
+"$BREW" list --versions --cask >"$POST_C" || true
+
+# Step 8 — Cleanup.
+printf '🧹 [8/8] brew cleanup\n'
+"$BREW" cleanup 2>&1 | tee "$CLEAN_LOG" || true
+
+# --- Summary -------------------------------------------------------------
+upgraded_count() {
+  awk 'NR==FNR { pre[$1]=$0; next }
+       { if (($1 in pre) && pre[$1] != $0) c++ } END { print c+0 }' "$1" "$2"
+}
+missing_names() {
+  awk 'NR==FNR { a[$1]=1; next } { delete a[$1] }
+       END { for (k in a) print k }' "$1" "$2" | sort -u
+}
+
+FORMULAE_UP=$(upgraded_count "$PRE_F" "$MID_F")
+CASKS_UP=$(upgraded_count "$PRE_C" "$MID_C")
+DROPPED=$(missing_names "$PRE_C" "$MID_C")
+RECOVERED=$(missing_names "$MID_C" "$POST_C")
+DROPPED_N=$(printf '%s' "$DROPPED"   | grep -c . || true)
+RECOVERED_N=$(printf '%s' "$RECOVERED" | grep -c . || true)
+
+# Line-level diff of brew/cask declarations only (ignores description
+# churn from --describe). Shows exactly which entries the dump added or
+# removed this run — so drift-mode drops (e.g. user ran `brew uninstall
+# slack`) are visible in the final summary alongside ad-hoc installs.
+ADDED_LINES=$(comm -13 \
+  <(grep -E '^(brew|cask) "' "$PRE_BREWFILE" 2>/dev/null | sort -u) \
+  <(grep -E '^(brew|cask) "' "$BREWFILE"     2>/dev/null | sort -u) || true)
+REMOVED_LINES=$(comm -23 \
+  <(grep -E '^(brew|cask) "' "$PRE_BREWFILE" 2>/dev/null | sort -u) \
+  <(grep -E '^(brew|cask) "' "$BREWFILE"     2>/dev/null | sort -u) || true)
+ADDED_N=$(printf '%s'   "$ADDED_LINES"   | grep -c . || true)
+REMOVED_N=$(printf '%s' "$REMOVED_LINES" | grep -c . || true)
+if [ "$ADDED_N" -eq 0 ] && [ "$REMOVED_N" -eq 0 ]; then
+  BREWFILE_DELTA="unchanged"
+else
+  BREWFILE_DELTA="updated"
+fi
+
+DISK_FREED=$(grep -oE 'freed approximately [0-9.]+ *[KMGT]?B' "$CLEAN_LOG" \
+  | sed -E 's/freed approximately *//' | tail -1 || true)
+DISK_FREED="${DISK_FREED:-0B}"
+
+UNRECOVERED=""
+if [ -n "$DROPPED" ]; then
+  UNRECOVERED=$(comm -23 <(printf '%s\n' "$DROPPED"   | sort -u) \
+                         <(printf '%s\n' "$RECOVERED" | sort -u) \
+                  | grep -v '^$' || true)
+fi
+
+# Single if-block (not `cmd && ZERO=0` chain) so set -e can't interact
+# with short-circuits — defensive, since the summary must always print.
+ZERO=1
+if [ "$FORMULAE_UP"    -gt 0 ]      \
+|| [ "$CASKS_UP"       -gt 0 ]      \
+|| [ "$DROPPED_N"      -gt 0 ]      \
+|| [ "$RECOVERED_N"    -gt 0 ]      \
+|| [ "$BREWFILE_DELTA" = updated ]  \
+|| [ "$ADDED_N"        -gt 0 ]      \
+|| [ "$REMOVED_N"      -gt 0 ]      \
+|| [ "$DISK_FREED"     != 0B ]; then
+  ZERO=0
+fi
+
+printf '\n'
+if [ "$ZERO" -eq 1 ] && [ "$UPGRADE_EXIT" -eq 0 ] && [ "$BUNDLE_EXIT" -eq 0 ]; then
+  printf '%s✅ Nothing to do (%ds)%s\n' "$GRN" "$SECONDS" "$NC"
+else
+  printf '🍺 brew-update summary\n'
+  printf '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+  printf '📋 Brewfile:          %s (mode: %s)\n' "$BREWFILE_DELTA" "$MODE"
+  # `|| [ -n "$line" ]` catches the last line when the piped string
+  # has no trailing newline (command substitution strips it).
+  if [ "$REMOVED_N" -gt 0 ]; then
+    printf '%s\n' "$REMOVED_LINES" | while IFS= read -r line || [ -n "$line" ]; do
+      [ -n "$line" ] && printf '   %s➖ %s%s\n' "$YEL" "$line" "$NC"
+    done
+  fi
+  if [ "$ADDED_N" -gt 0 ]; then
+    printf '%s\n' "$ADDED_LINES" | while IFS= read -r line || [ -n "$line" ]; do
+      [ -n "$line" ] && printf '   %s➕ %s%s\n' "$GRN" "$line" "$NC"
+    done
+  fi
+  printf '⬆️  Upgraded:          %s formulae, %s casks\n' "$FORMULAE_UP" "$CASKS_UP"
+  if [ "$DROPPED_N" -gt 0 ]; then
+    printf '%s⚠️  Silently dropped: %d (%s)%s\n' \
+      "$YEL" "$DROPPED_N" "$(printf '%s' "$DROPPED" | tr '\n' ' ')" "$NC"
+  else
+    printf '⚠️  Silently dropped: 0\n'
+  fi
+  if [ "$RECOVERED_N" -gt 0 ]; then
+    printf '🔧 Recovered:         %d (%s)\n' \
+      "$RECOVERED_N" "$(printf '%s' "$RECOVERED" | tr '\n' ' ')"
+  else
+    printf '🔧 Recovered:         0\n'
+  fi
+  printf '🧹 Cleanup freed:     %s\n' "$DISK_FREED"
+  printf '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+
+  if [ -n "$UNRECOVERED" ]; then
+    printf '%s⚠️  Unrecovered (needs manual fix): %s%s\n' \
+      "$RED" "$(printf '%s' "$UNRECOVERED" | tr '\n' ' ')" "$NC"
+  fi
+  if [ "$UPGRADE_EXIT" -ne 0 ]; then
+    printf '%s… upgrade step exited %d (tolerated)%s\n' \
+      "$DIM" "$UPGRADE_EXIT" "$NC"
+  fi
+  if [ "$BUNDLE_EXIT" -ne 0 ]; then
+    printf '%s❌ bundle install step exited %d%s\n' \
+      "$RED" "$BUNDLE_EXIT" "$NC"
+  fi
+
+  printf '%s✅ Done in %ds%s\n' "$GRN" "$SECONDS" "$NC"
+fi

@@ -7,7 +7,7 @@
 
 | File                  | Purpose                                                                |
 | --------------------- | ---------------------------------------------------------------------- |
-| `brew-update`         | Run brew update/upgrade/cleanup in a new WezTerm window                |
+| `brew-update`         | Canonical Homebrew pipeline (sudo bootstrap → Caskroom sweep (*.upgrading + stub dirs) → tri-state mode detect {steady/drift/bootstrap} → dump (steady + drift) → update → upgrade --greedy (tolerant) → bundle install recovery → cleanup + emoji summary); dispatches to WezTerm popup when invoked as root via kanata |
 | `btm-popup`           | Opens bottom (btm) monitor in popup terminal                           |
 | `close-notifications` | Dismisses all macOS Notification Center alerts (grouped and individual) |
 | `empty-trash`         | Empty Finder trash and switch to aerospace workspace B                 |

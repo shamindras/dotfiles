@@ -160,7 +160,7 @@ re-investigation:
 | ---------- | ----------------------------------------------------------- |
 | Navigation | `cd=z`, `..=z ..`, `dots`, `reps`, `conf`                  |
 | System     | `c=clear+tmux`, `b=bat`, `l=ls -la`, `tree`                |
-| Brew       | `bu=update+upgrade(greedy-auto-updates)+cleanup`            |
+| Brew       | `bu=~/.config/bin/brew-update` (canonical pipeline)         |
 | Dev        | `n=nvim`, `lg=lazygit`, `ghd=gh dash`, `cl=claude`, `clr=claude --resume`, `rq=R(quiet,no .RData)` |
 | Zk         | `kd=daily`, `kis=idea`, `ks=search`                        |
 | Suffix     | `.pdf→Skim`, `.jpg→Preview`, `.mp4→VLC`                    |
@@ -172,9 +172,8 @@ re-investigation:
 | ------------------------- | ------------------------ | ------------------------------------------- |
 | `HOMEBREW_NO_ANALYTICS`   | `1`                      | Disable analytics                           |
 | `HOMEBREW_CASK_OPTS`      | `--appdir=/Applications` | Default cask install location               |
-| `HOMEBREW_UPGRADE_GREEDY` | `1`                      | `brew upgrade` includes auto-updating casks |
+| `HOMEBREW_UPGRADE_GREEDY` | `1`                      | `brew upgrade` includes auto-updating casks; pkg-cask drop-outs recovered by `brew bundle install` step in `config/bin/brew-update` |
 | `HOMEBREW_NO_ENV_HINTS`   | `1`                      | Suppress "Hide these hints" boilerplate     |
-| `HOMEBREW_AUTOREMOVE`     | `1`                      | Auto-remove orphaned deps on upgrade        |
 
 ## Cross-Tool Integration
 

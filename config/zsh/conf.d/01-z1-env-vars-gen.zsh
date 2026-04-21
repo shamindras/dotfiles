@@ -35,12 +35,17 @@ if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   else
     HOMEBREW_PREFIX=/usr/local
   fi
-  # brew behavior: no telemetry, greedy upgrades, quiet output, auto-cleanup
+  # brew behavior: no telemetry, greedy upgrades, quiet output.
+  # Autoremove is now the default — setting HOMEBREW_AUTOREMOVE=1 is a
+  # no-op and emits a deprecation warning. Actively `unset` it here so
+  # any stale export inherited from a parent process (Terminal.app /
+  # tmux / wezterm started before this config was updated) gets scrubbed
+  # as soon as a new zsh sources the config.
+  unset HOMEBREW_AUTOREMOVE
   export HOMEBREW_NO_ANALYTICS=1
   export HOMEBREW_CASK_OPTS="--appdir=/Applications"
   export HOMEBREW_UPGRADE_GREEDY=1
   export HOMEBREW_NO_ENV_HINTS=1
-  export HOMEBREW_AUTOREMOVE=1
   export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar";
   export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX";
   export MANPATH="$HOMEBREW_PREFIX/share/man${MANPATH+:$MANPATH}:";

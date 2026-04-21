@@ -99,14 +99,17 @@
     - command: ./scripts/setup-upgrade-homebrew
       description: Installing homebrew
 
-# run brew update, upgrade, clean up
+# Canonical brew pipeline: sudo bootstrap → mode detect → dump (steady) →
+# update → upgrade --greedy (tolerant) → bundle install (recovery +
+# bootstrap) → cleanup → emoji summary. Replaces the previous
+# upgrade-then-brewfile two-step (bundle install now runs inside the script).
+# stdin: true is required so sudo -v can prompt for the password.
 - shell:
-    - command: brew update && brew upgrade --greedy && brew cleanup
-      description: Running brew update/upgrade/cleanup
-
-# Install brew packages
-- brewfile:
-    - config/brew/Brewfile
+    - command: ./config/bin/brew-update
+      description: Running brew-update pipeline (bootstrap-aware, pkg-cask recovery)
+      stdin: true
+      stdout: true
+      stderr: true
 
 # Update bat themes cache
 # NOTE: here we prefix with `command` to use the original `bat` command, without any alias.
