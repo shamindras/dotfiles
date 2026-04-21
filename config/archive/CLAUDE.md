@@ -52,7 +52,7 @@ Also remove the kanata shell step:
 # Remove this block:
 # kanata (keyboard remapper with cmd feature — built from source)
 - shell:
-    - command: ./scripts/setup-upgrade-kanata
+    - command: ./scripts/setup/setup-upgrade-kanata
       description: install kanata with cmd feature, or upgrade
 ```
 
@@ -69,7 +69,7 @@ Then run `brew bundle --file=config/brew/Brewfile` to install them.
 
 ### 5. Restore login items in setup-macos
 
-Add back to the `login_items` array in `scripts/setup-macos`:
+Add back to the `login_items` array in `scripts/setup/setup-macos`:
 
 ```bash
 "/Applications/Karabiner-Elements.app"
@@ -132,7 +132,7 @@ Files to remove if fully reverting:
 - `config/bin/open-nordvpn`
 - `config/bin/brew-update`
 - `config/bin/empty-trash`
-- `scripts/setup-upgrade-kanata`
+- `scripts/setup/setup-upgrade-kanata`
 - `config/archive/` (this directory, after restoring contents)
 
 The `quit-app` refactoring (pgrep, `_is_running`, `--activate-quit`,

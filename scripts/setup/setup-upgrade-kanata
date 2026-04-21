@@ -2,7 +2,7 @@
 
 # setup-upgrade-kanata — build kanata from source and configure launchd daemon
 #
-# Requires: cargo (installed via scripts/setup-upgrade-rust-cargo)
+# Requires: cargo (installed via scripts/setup/setup-upgrade-rust-cargo)
 # The cmd feature enables shell command execution from kanata configs.
 # Homebrew's kanata formula does NOT include this feature.
 #
@@ -30,7 +30,7 @@ WATCHER_LABEL="system/com.jtroo.kanata-watcher"
 # ── Build kanata ─────────────────────────────────────────────────────────────
 
 if ! command -v cargo >/dev/null 2>&1; then
-    echo "[ERROR] cargo not found. Run scripts/setup-upgrade-rust-cargo first."
+    echo "[ERROR] cargo not found. Run scripts/setup/setup-upgrade-rust-cargo first."
     exit 1
 fi
 

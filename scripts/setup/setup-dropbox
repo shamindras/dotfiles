@@ -9,7 +9,7 @@ echo ""
 
 # Install Homebrew if needed
 echo "Step 1: Installing/updating Homebrew..."
-./scripts/setup-upgrade-homebrew.sh
+./scripts/setup/setup-upgrade-homebrew
 
 # Install Dropbox
 echo ""

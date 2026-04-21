@@ -374,14 +374,14 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
   non-bundled parsers (bash, python, etc.). `auto_install` is disabled and
   `build = ':TSUpdate'` is removed to prevent races when multiple nvim
   instances start simultaneously (e.g., `sesh-reset --common`). Parsers are
-  managed by `scripts/setup-nvim-treesitter` (run during `./install` and via
+  managed by `scripts/ops/setup-nvim-treesitter` (run during `./install` and via
   justfile). Requires `tree-sitter-cli` (`brew install tree-sitter-cli`) for
   compilation. Compiled `.so` files live in
   `~/.local/share/nvim/site/parser/`, revision tracking in
   `~/.local/share/nvim/site/parser-info/<lang>.revision`.
-  - **Default mode**: `./scripts/setup-nvim-treesitter` — installs missing
+  - **Default mode**: `./scripts/ops/setup-nvim-treesitter` — installs missing
     parsers and updates outdated ones (compares installed vs wanted revision)
-  - **Status mode**: `./scripts/setup-nvim-treesitter --status` — read-only
+  - **Status mode**: `./scripts/ops/setup-nvim-treesitter --status` — read-only
     table showing parser status, revisions, file sizes, modified dates
   - **Justfile**: `just treesitter_update` (install+update, then status),
     `just treesitter_status` (status only)

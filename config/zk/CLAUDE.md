@@ -23,4 +23,4 @@
 
 - Zsh functions `k`/`ki` wrap zk with template sync from config to notebook
 - Nvim integration via zk-nvim plugin (`<leader>k` prefix)
-- Setup script: `scripts/setup-zk`
+- Setup script: `scripts/setup/setup-zk`

@@ -83,7 +83,7 @@ settings, update `post-install-checklist.md` to reflect the change.
 - Firefox's macOS sandbox blocks symlinks — files are **copied** (rsync)
   into the profile directory, not symlinked
 - After editing configs: `just firefox_sync` then restart Firefox
-- The setup script (`scripts/setup-firefox`) finds the default profile
+- The setup script (`scripts/ops/setup-firefox`) finds the default profile
   automatically from `profiles.ini`
 - `print.enabled` stays true (Cmd+P works); "Print..." context menu item
   is hidden via userChrome.css instead

@@ -1,7 +1,7 @@
 .PHONY: dotbot_install dotbot_install_quiet setup-dropbox
 
 setup-dropbox:
-	@bash scripts/setup-dropbox.sh
+	@bash scripts/setup/setup-dropbox
 
 dotbot_install:
 	@printf ">>> Starting dotfiles installation using dotbot...\n"
