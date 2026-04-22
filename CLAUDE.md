@@ -25,7 +25,7 @@ make dotbot_install   # Alternative wrapper for ./install
 ```bash
 just                  # Interactive recipe picker (fzf + preview)
 just help             # List all targets grouped by area
-just all              # Full pipeline: clean → format → brewfile → firefox → treesitter → yazi
+just all              # Write pipeline: clean → format → brewfile → firefox sync → treesitter → yazi (no audits)
 just format           # Format Lua (stylua) + markdown (prettier)
 just sync-all         # Sync firefox + treesitter + yazi plugins + submodules
 just audit            # Read-only audit: firefox drift + treesitter parsers + yazi plugins
