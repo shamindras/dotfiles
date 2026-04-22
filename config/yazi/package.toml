@@ -20,7 +20,7 @@ hash = "187cc58ba7ac3befd49c342129e6f1b6"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-mocha"
-rev = "9511cb0"
+rev = "0670801"
 hash = "7dfe41c9c3d9be76da8a844263d0bbed"
 
 [[flavor.deps]]
@@ -75,8 +75,8 @@ hash = "564f2335540ee2c440c3b671bc28ac60"
 
 [[flavor.deps]]
 use = "Chromium-3-Oxide/everforest-medium"
-rev = "a074b04"
-hash = "1ce814d637e7467ee0da757d509ac007"
+rev = "7d01892"
+hash = "f7dc46200e53da5e94858630184a9220"
 
 [[flavor.deps]]
 use = "Mintass/rose-pine"
