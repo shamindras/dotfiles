@@ -6,24 +6,23 @@ export JUST_CHOOSER := 'fzf --preview "just --show {}" --preview-window=right:60
 _default:
 	@just --choose
 
-# NOTE: we don't include update_submods here.
-# Run cleanup, format, brewfile dump, firefox sync+audit, treesitter sync, yazi upgrade.
+# NOTE: we don't include update_submods or firefox_audit here;
+# `just audit` is the home for read-only drift checks.
+# Run cleanup, format, brewfile dump, firefox sync, treesitter sync, yazi upgrade.
 all:
-	@scripts/step outer 1 8 🧹 "Cleaning artifacts"
+	@scripts/step outer 1 7 🧹 "Cleaning artifacts"
 	@just clean
-	@scripts/step outer 2 8 🎨 "Formatting Lua configs"
+	@scripts/step outer 2 7 🎨 "Formatting Lua configs"
 	@just stylua_config
-	@scripts/step outer 3 8 🎨 "Formatting markdown"
+	@scripts/step outer 3 7 🎨 "Formatting markdown"
 	@just prettier_md
-	@scripts/step outer 4 8 🍺 "Dumping Brewfile"
+	@scripts/step outer 4 7 🍺 "Dumping Brewfile"
 	@just update_brewfile
-	@scripts/step outer 5 8 🦊 "Syncing Firefox"
+	@scripts/step outer 5 7 🦊 "Syncing Firefox"
 	@just firefox_sync
-	@scripts/step outer 6 8 🔍 "Auditing Firefox"
-	@just firefox_audit
-	@scripts/step outer 7 8 🔄 "Syncing treesitter"
+	@scripts/step outer 6 7 🔄 "Syncing treesitter"
 	@just treesitter_sync
-	@scripts/step outer 8 8 🐱 "Upgrading yazi plugins"
+	@scripts/step outer 7 7 🐱 "Upgrading yazi plugins"
 	@just yazi_plugins_upgrade
 
 # Read-only audit: firefox drift, treesitter parser status, yazi plugin list.
