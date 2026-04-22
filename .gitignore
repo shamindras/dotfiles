@@ -292,6 +292,14 @@ rsconnect/
 config/brew/Brewfile.lock.json
 config/zsh/.zsh_sessions
 
+# yazi: ya pkg-managed plugins + flavors are reproduced from package.toml
+# (pinned revs + content hashes). Don't vendor upstream content — it
+# conflicts with stylua/prettier/gitattributes normalization and ya pkg's
+# own integrity check. flavor-picker.yazi is hand-rolled and kept.
+config/yazi/plugins/*
+!config/yazi/plugins/flavor-picker.yazi/
+config/yazi/flavors/*
+
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
