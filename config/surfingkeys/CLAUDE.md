@@ -41,8 +41,8 @@ keys spread the base and append their own:
 | `duckduckgo.com`   | `/`             | Other Sites      |
 | `containerstore.com` | `p`           | Other Sites      |
 | `walmart.wd5.myworkdayjobs.com` | `b,m,p` | Other Sites |
-| `localhost:2718`    | `a,m`           | Other Sites      |
 | `shamindras.com`   | `f`             | Other Sites      |
+| `localhost:\d+` (marimo) | see Marimo Notebooks section below | Marimo Notebooks |
 
 ## Gmail Shortcuts
 
@@ -66,7 +66,39 @@ Auto-detects account number from URL (`/u/0/`, `/u/1/`, etc.) via `gmailNavigate
 | -------- | --------- | -------------------------------- |
 | `ara`    | reply all | **a**ction → **r**eply → **a**ll |
 
+## Marimo Notebooks
+
+marimo uses vim-style keybindings when `[keymap].preset = "vim"` is set in
+`marimo.toml`. SK auto-disables inside focused cells, but its default
+bindings fire in marimo's **command mode** (no cell focused). The config
+surgically unmaps conflicting keys on any `localhost:\d+` URL — covers the
+default port `2718` and any custom `--port` override.
+
+Two constants drive the unmap:
+
+| Constant                | Keys unmapped                                            | Reason                               |
+| ----------------------- | -------------------------------------------------------- | ------------------------------------ |
+| `marimoUnmapKeys`       | `a, b, d, j, k, m, u, G, /, ?, ym, ya, yf, yp, yM, o, O` | marimo command-mode + yank/omnibar   |
+| `marimoCtrlUnmapKeys`   | `<Ctrl-b/g/k/l/m/n/s/w/y/z/e/q/d/t/x>`                   | SK search-engine shortcuts           |
+
+**Kept active on marimo pages**: tab/history navigation (`h`, `l`, `H`,
+`L`, `gh`, `gl`, `t`, `T`, `zz`, `zh`, `zl`, `J`, `K`), tab reorder
+(`<`, `>`), and **link hints** (`f`, `F`, `gf`, `Ctrl-f`) — link hints
+are how you focus a marimo cell from a cold notebook load (marimo has
+no keyboard-only "focus first cell" path; an SK hint over a CodeMirror
+editor lets you click into one).
+
+> **Why not `af`?** SK's default `af` (link hints in active new tab) is
+> a chord starting with `a`, but `a` is unmapped on marimo (collides
+> with marimo's "add cell above"). Use `f` (your remap = "hints in new
+> tab") instead.
+
+**Out of scope** (deferred; add if needed): `127.0.0.1:\d+`, `marimo.app`
+(WASM playground).
+
 ## Development Notes
 
 - JavaScript config; Vimium-compatible mappings for consistency
-- Load into Surfingkeys extension settings manually
+- Load into the Surfingkeys extension settings manually in **each browser
+  separately** (Firefox + Chrome) — there's no auto-sync from the dotfiles
+  repo to the extension storage
