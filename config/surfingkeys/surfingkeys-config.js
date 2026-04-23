@@ -649,13 +649,38 @@ api.unmap('p', /containerstore\.com/);
     api.unmap(key, /walmart\.wd5\.myworkdayjobs\.com/);
 });
 
-// Localhost:2718
-['a', 'm'].forEach(key => {
-    api.unmap(key, /localhost:2718/);
-});
-
 // shamindras.com - unmap f so native link hints don't interfere
 api.unmap('f', /shamindras\.com/);
+
+// ========== MARIMO NOTEBOOKS ==========
+
+// marimo notebooks — surgical unmap on any localhost port.
+// Keeps: tab/history nav (h, l, H, L, gh, gl, t, T, zz, zh, zl, J, K),
+//   link hints (f, F, gf, Ctrl-f) — needed to focus cells from cold start
+//   since marimo has no keyboard-only "focus first cell" path.
+// Unmaps: marimo command-mode keys + SK yank/omnibar/Ctrl-* search.
+const marimoUnmapKeys = [
+    // Marimo command-mode conflicts (fire when no cell is focused)
+    'a', 'b', 'd', 'j', 'k', 'm', 'u', 'G', '/', '?',
+    // SK yank commands
+    'ym', 'ya', 'yf', 'yp', 'yM',
+    // SK omnibar
+    'o', 'O',
+];
+marimoUnmapKeys.forEach(key => {
+    api.unmap(key, /localhost:\d+/);
+});
+
+// Ctrl-* search shortcuts disabled on marimo (Ctrl-f kept for link hints)
+const marimoCtrlUnmapKeys = [
+    '<Ctrl-b>', '<Ctrl-g>', '<Ctrl-k>', '<Ctrl-l>',
+    '<Ctrl-m>', '<Ctrl-n>', '<Ctrl-s>', '<Ctrl-w>', '<Ctrl-y>',
+    '<Ctrl-z>', '<Ctrl-e>', '<Ctrl-q>', '<Ctrl-d>', '<Ctrl-t>',
+    '<Ctrl-x>',
+];
+marimoCtrlUnmapKeys.forEach(key => {
+    api.unmap(key, /localhost:\d+/);
+});
 
 // ============================================
 // THEME: TOMORROW NIGHT (Foldex-style)
