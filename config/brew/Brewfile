@@ -100,8 +100,6 @@ brew "openblas"
 brew "numpy"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
-# Database of common MIME types
-brew "shared-mime-info"
 # Geospatial Data Abstraction Library
 brew "gdal"
 # GitHub command-line tool
@@ -190,7 +188,7 @@ brew "pipx"
 brew "qt@5"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler-qt5"
-# Pre-commit re-implemented in Rust
+# Fast Git hook manager written in Rust, drop-in alternative to pre-commit
 brew "prek"
 # Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
 brew "prettier"
@@ -208,6 +206,8 @@ brew "ripgrep-all"
 brew "rsync"
 # Smart session manager for the terminal
 brew "sesh"
+# Database of common MIME types
+brew "shared-mime-info"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Bash syntax highlighter that encourages/fixes variables quoting
