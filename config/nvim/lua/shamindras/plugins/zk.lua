@@ -73,6 +73,9 @@ return {
     local function create_note_with_notification(options, note_type)
       local zk_api = require('zk.api')
 
+      -- Captured before the call so we can tell creation from re-open by comparing mtime.
+      local started_at = os.time()
+
       zk_api.new(nil, options, function(err, res)
         if err then
           vim.notify(string.format('Failed to create %s: %s', note_type, tostring(err)), vim.log.levels.ERROR)
@@ -80,14 +83,24 @@ return {
         end
 
         if res and res.path then
+          local filename = vim.fn.fnamemodify(res.path, ':t')
+          local stat = vim.uv.fs_stat(res.path)
+          local verb = (stat and stat.mtime.sec >= started_at) and 'Created' or 'Opened'
+
+          -- Already on this note — skip `:edit` (would trip E37 on a modified buffer
+          -- even with `hidden=true`) but still notify so the keypress feels responsive.
+          if vim.fn.fnamemodify(res.path, ':p') == vim.api.nvim_buf_get_name(0) then
+            vim.notify(string.format('Already on %s: %s', note_type, filename), vim.log.levels.INFO, { timeout = 2000 })
+            return
+          end
+
           -- Open the file first
           vim.cmd.edit(res.path)
 
           -- Then show notification (with slight delay so it appears after buffer loads)
           vim.defer_fn(function()
-            local filename = vim.fn.fnamemodify(res.path, ':t')
             vim.notify(
-              string.format('Created %s: %s', note_type, filename),
+              string.format('%s %s: %s', verb, note_type, filename),
               vim.log.levels.INFO,
               { timeout = 2000 } -- Linger for 2 seconds
             )
