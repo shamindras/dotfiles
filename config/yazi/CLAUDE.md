@@ -56,7 +56,13 @@ Keybind `F` launches `plugins/flavor-picker.yazi/main.lua`:
 | `Shallow-Seek/djvu-view`       | DjVu inline preview (needs `djvulibre` brew)  | auto (previewer)|
 | `ndtoan96/ouch`                | Archive preview + compress/decompress         | `C` (compress)  |
 | `dedukun/relative-motions`     | Vim count motions (`3j`, `5dd`, `10gg`, …)    | digits `1`–`9`  |
-| `yazi-rs/plugins:smart-enter`  | Enter = cd into dirs, open files              | `<Enter>`       |
+
+## Hand-rolled local plugins (committed, NOT in `package.toml`)
+
+| Plugin                  | Purpose                                                       | Keybind   |
+| ----------------------- | ------------------------------------------------------------- | --------- |
+| `flavor-picker`         | fzf-based flavor picker; rewrites `theme.toml` and quits yazi | `F`       |
+| `smart-archive-enter`   | dirs = enter; archives = `unar -d` extract + auto-cd; files = open | `<Enter>` |
 
 ## Installed flavors (16 total, ya pkg)
 
@@ -71,7 +77,7 @@ Everforest Medium, Rosé Pine (default, moon, dawn), Nord.
 | `z`         | Jump to directory via zoxide plugin                              |
 | `Z`         | Jump to file/dir via fzf plugin                                  |
 | `F`         | Flavor picker (fzf-based, auto-quits for relaunch)               |
-| `<Enter>`   | smart-enter (dir = enter, file = open)                           |
+| `<Enter>`   | smart-archive-enter (dir = enter, archive = extract+cd, file = open) |
 | `C`         | Compress selection with ouch                                     |
 | `1`–`9`     | Count prefix for relative-motions (was tab switch in defaults)   |
 | `g1`–`g9`   | Switch to tab N (replaces default `1`–`9`)                       |
@@ -102,6 +108,8 @@ and content hash — commit this file to keep state reproducible.
 - **ripgrep/fd**: search integration
 - **djvulibre**: brew package — `djvu-view` calls `ddjvu`
 - **ouch**: brew package — CLI for compress/decompress
+- **unar**: brew package — backend for `smart-archive-enter`, invoked
+  with `-d` (always wrap) `-r` (rename on collision) `-o <cwd>`
 - **zsh**: `y` wrapper function preserves cwd on exit (also re-entry
   point after `F` flavor-picker quits yazi)
 - **tmux**: `prefix o y` launches yazi
