@@ -14,8 +14,8 @@ prepend_keymap = [
   # Plugin: flavor picker (hand-rolled, see plugins/flavor-picker.yazi)
   { on = "F", run = "plugin flavor-picker", desc = "Pick a flavor via fzf" },
 
-  # Plugin: smart-enter (cd into dirs, open files)
-  { on = "<Enter>", run = "plugin smart-enter", desc = "Enter directory / open file" },
+  # Plugin: smart-archive-enter (dirs = enter, archives = extract+cd, files = open)
+  { on = "<Enter>", run = "plugin smart-archive-enter", desc = "Enter dir / extract+cd archive / open file" },
 
   # Plugin: ouch compress/decompress
   { on = "C", run = "plugin ouch", desc = "Compress with ouch" },
