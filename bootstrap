@@ -20,18 +20,6 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/_lib/step.sh
 source "${BASEDIR}/scripts/_lib/step.sh"
 
-# Flags. --setup-only stops after Dropbox sign-in (phase 4) and does NOT
-# proceed to sync-wait or hand off to ./install. Used by `make setup-dropbox`.
-SETUP_ONLY=0
-PASSTHRU=()
-for arg in "$@"; do
-    case "$arg" in
-        --setup-only) SETUP_ONLY=1 ;;
-        *) PASSTHRU+=("$arg") ;;
-    esac
-done
-set -- "${PASSTHRU[@]+"${PASSTHRU[@]}"}"
-
 PHASES_TOTAL=6
 DROPBOX_INFO="${HOME}/.dropbox/info.json"
 WAIT_TIMEOUT=${BOOTSTRAP_WAIT_TIMEOUT:-1800}    # 30 min default
@@ -108,11 +96,6 @@ else
 EOF
     _wait_for "Dropbox sign-in (~/.dropbox/info.json)" test -f "$DROPBOX_INFO"
     step_done 🔑 "Dropbox sign-in detected"
-fi
-
-if (( SETUP_ONLY )); then
-    step_done ✅ "Dropbox setup complete (--setup-only; skipping sync-wait + install)"
-    exit 0
 fi
 
 DROPBOX_ROOT="$("${BASEDIR}/scripts/_lib/dropbox-info.py")"
