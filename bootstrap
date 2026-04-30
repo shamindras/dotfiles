@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+#
+# bootstrap — single-run dotfiles install for fresh macOS machines.
+#
+# Phases (idempotent; each detects-then-skips):
+#   1. Homebrew install/upgrade
+#   2. Dropbox cask install
+#   3. Launch Dropbox.app
+#   4. Wait for sign-in (~/.dropbox/info.json appears)
+#   5. Wait for the dotfiles repo to sync (sentinel file appears)
+#   6. exec ./install from the synced ~/Dropbox/repos/dotfiles
+#
+# Re-runs are safe at any time; Ctrl-C aborts cleanly and bootstrap resumes
+# at the unfinished phase on the next run. Sign-in is the only human step.
+
+set -Eeuo pipefail
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=scripts/_lib/step.sh
+source "${BASEDIR}/scripts/_lib/step.sh"
+
+# Flags. --setup-only stops after Dropbox sign-in (phase 4) and does NOT
+# proceed to sync-wait or hand off to ./install. Used by `make setup-dropbox`.
+SETUP_ONLY=0
+PASSTHRU=()
+for arg in "$@"; do
+    case "$arg" in
+        --setup-only) SETUP_ONLY=1 ;;
+        *) PASSTHRU+=("$arg") ;;
+    esac
+done
+set -- "${PASSTHRU[@]+"${PASSTHRU[@]}"}"
+
+PHASES_TOTAL=6
+DROPBOX_INFO="${HOME}/.dropbox/info.json"
+WAIT_TIMEOUT=${BOOTSTRAP_WAIT_TIMEOUT:-1800}    # 30 min default
+WAIT_INTERVAL=${BOOTSTRAP_WAIT_INTERVAL:-5}     # 5 sec default
+TICK_EVERY=30                                   # ~30s elapsed-time ticks during waits
+
+trap '_on_interrupt' INT
+
+_on_interrupt() {
+    printf '\n⚠️  bootstrap interrupted; re-run ./bootstrap to resume.\n' >&2
+    exit 130
+}
+
+# Poll until the given test command succeeds or WAIT_TIMEOUT elapses.
+# Emits an elapsed-time tick every TICK_EVERY seconds so the user sees progress.
+# Usage: _wait_for "<human description>" <test command...>
+_wait_for() {
+    local target=$1; shift
+    local elapsed=0 tick=0
+    while ! "$@" >/dev/null 2>&1; do
+        if (( elapsed >= WAIT_TIMEOUT )); then
+            printf '❌ Timed out after %ds waiting for %s.\n   Re-run ./bootstrap to resume once the issue is resolved.\n' \
+                "$WAIT_TIMEOUT" "$target" >&2
+            exit 1
+        fi
+        sleep "$WAIT_INTERVAL"
+        elapsed=$(( elapsed + WAIT_INTERVAL ))
+        tick=$(( tick + WAIT_INTERVAL ))
+        if (( tick >= TICK_EVERY )); then
+            step_inner "$elapsed" "$WAIT_TIMEOUT" "still waiting for ${target} (${elapsed}s elapsed)"
+            tick=0
+        fi
+    done
+}
+
+# ----- Phase 1: Homebrew -----
+if command -v brew >/dev/null 2>&1; then
+    step_outer 1 "$PHASES_TOTAL" 🍺 "Homebrew already present, skipping"
+else
+    step_outer 1 "$PHASES_TOTAL" 🍺 "Installing Homebrew"
+    "${BASEDIR}/scripts/setup/setup-upgrade-homebrew"
+    step_done 🍺 "Homebrew installed"
+fi
+
+# ----- Phase 2: Dropbox cask -----
+if brew list --cask dropbox >/dev/null 2>&1; then
+    step_outer 2 "$PHASES_TOTAL" 📦 "Dropbox cask already installed, skipping"
+else
+    step_outer 2 "$PHASES_TOTAL" 📦 "Installing Dropbox cask"
+    brew install --cask dropbox
+    step_done 📦 "Dropbox cask installed"
+fi
+
+# ----- Phase 3: Launch Dropbox -----
+if pgrep -x Dropbox >/dev/null 2>&1; then
+    step_outer 3 "$PHASES_TOTAL" 🚀 "Dropbox already running, skipping"
+else
+    step_outer 3 "$PHASES_TOTAL" 🚀 "Launching Dropbox"
+    open -a Dropbox
+    step_done 🚀 "Dropbox launched"
+fi
+
+# ----- Phase 4: Wait for sign-in -----
+if [[ -f $DROPBOX_INFO ]]; then
+    step_outer 4 "$PHASES_TOTAL" 🔑 "Dropbox already signed in, skipping"
+else
+    step_outer 4 "$PHASES_TOTAL" 🔑 "Waiting for Dropbox sign-in"
+    cat <<'EOF'
+
+  >>> Please sign in to Dropbox in the app window that just opened.
+  >>> This script will resume automatically once sign-in completes.
+  >>> Press Ctrl-C any time to abort; re-run ./bootstrap to resume.
+
+EOF
+    _wait_for "Dropbox sign-in (~/.dropbox/info.json)" test -f "$DROPBOX_INFO"
+    step_done 🔑 "Dropbox sign-in detected"
+fi
+
+if (( SETUP_ONLY )); then
+    step_done ✅ "Dropbox setup complete (--setup-only; skipping sync-wait + install)"
+    exit 0
+fi
+
+DROPBOX_ROOT="$("${BASEDIR}/scripts/_lib/dropbox-info.py")"
+DOTFILES_PATH="${DROPBOX_ROOT}/repos/dotfiles"
+SENTINEL="${DOTFILES_PATH}/install"
+
+# ----- Phase 5: Wait for sync of dotfiles repo -----
+if [[ -f $SENTINEL ]]; then
+    step_outer 5 "$PHASES_TOTAL" 🔄 "Dotfiles repo already synced, skipping"
+else
+    step_outer 5 "$PHASES_TOTAL" 🔄 "Waiting for ${DOTFILES_PATH} to sync"
+    _wait_for "dotfiles sync (${SENTINEL})" test -f "$SENTINEL"
+    step_done 🔄 "Dotfiles repo synced"
+fi
+
+# ----- Phase 6: Hand-off to ./install -----
+step_outer 6 "$PHASES_TOTAL" 🤝 "Handing off to ${DOTFILES_PATH}/install"
+cd "$DOTFILES_PATH"
+exec ./install "$@"

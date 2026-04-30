@@ -9,13 +9,24 @@ This is a personal macOS dotfiles repository that follows the XDG Base Directory
 ## Key Commands
 
 ### Initial Setup
-For first-time setup on a new macOS system:
+For first-time setup on a new macOS system, clone to a temp location and run
+`./bootstrap` — it installs Dropbox, waits for sign-in/sync, then re-execs
+`./install` from the synced `~/Dropbox/repos/dotfiles`:
 ```bash
-make setup-dropbox    # Setup Dropbox (required for full config)
-./install             # Install dotfiles after Dropbox sync completes
+git clone <repo-url> ~/dotfiles-bootstrap
+cd ~/dotfiles-bootstrap
+./bootstrap           # one command: Dropbox + ./install (single human pause for sign-in)
+```
+Re-runs are safe and idempotent; Ctrl-C aborts cleanly and `./bootstrap`
+resumes at the unfinished phase.
+
+To set up Dropbox without running `./install` afterwards:
+```bash
+./bootstrap --setup-only    # or: make setup-dropbox
 ```
 
 ### Installation and Updates
+Once `~/Dropbox/repos/dotfiles` exists (i.e., after the first bootstrap):
 ```bash
 ./install             # Install/update dotfiles using dotbot
 make dotbot_install   # Alternative wrapper for ./install
@@ -69,8 +80,11 @@ inner `├─ n/total` within each extracted script.
 
 Organized by runtime role:
 
+- `bootstrap` - top-level entry point for fresh-machine setup; orchestrates
+  Dropbox install/sign-in/sync, then re-execs `./install` from the synced
+  `~/Dropbox/repos/dotfiles`. Pass `--setup-only` to stop after sign-in.
 - `scripts/setup/` — one-time bootstrap scripts run by `./install`:
-  - `setup-dropbox` - Dropbox installation and setup
+  - `setup-dropbox` - thin wrapper around `./bootstrap --setup-only` (kept for `make setup-dropbox`)
   - `setup-macos` - macOS system defaults configuration
   - `setup-upgrade-homebrew` - Homebrew installation/upgrade
   - `setup-upgrade-rust-cargo` - Rust toolchain management
@@ -97,6 +111,10 @@ Major categories of tools configured:
 - **Languages**: R, rust/cargo, npm packages
 
 ### Installation Flow
+
+On a fresh machine, `./bootstrap` runs first: it installs Homebrew + the
+Dropbox cask, launches Dropbox, waits for sign-in (the only human step), waits
+for `~/Dropbox/repos/dotfiles` to sync, then re-execs `./install` from there.
 
 The install process (`install.conf.yaml`) follows this sequence:
 1. Create XDG directories

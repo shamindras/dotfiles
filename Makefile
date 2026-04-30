@@ -1,4 +1,7 @@
-.PHONY: dotbot_install dotbot_install_quiet setup-dropbox
+.PHONY: bootstrap dotbot_install dotbot_install_quiet setup-dropbox
+
+bootstrap:
+	@./bootstrap
 
 setup-dropbox:
 	@bash scripts/setup/setup-dropbox
