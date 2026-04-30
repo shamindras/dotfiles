@@ -1,32 +1,10 @@
 #!/usr/bin/env bash
+#
+# setup-dropbox — install Dropbox and wait for sign-in.
+# Thin wrapper around ./bootstrap --setup-only (phases 1-4, no install hand-off).
+# For the full bootstrap (Dropbox + ./install), run ./bootstrap directly.
 
-set -e
+set -Eeuo pipefail
 
-echo "=========================================="
-echo "Dropbox Setup for First Time Installation"
-echo "=========================================="
-echo ""
-
-# Install Homebrew if needed
-echo "Step 1: Installing/updating Homebrew..."
-./scripts/setup/setup-upgrade-homebrew
-
-# Install Dropbox
-echo ""
-echo "Step 2: Installing Dropbox..."
-brew install --cask dropbox
-
-echo ""
-echo "=========================================="
-echo "MANUAL STEPS REQUIRED"
-echo "=========================================="
-echo ""
-echo "1. Open Dropbox from Applications"
-echo "2. Sign in to your Dropbox account"
-echo "3. Wait for Dropbox to complete initial sync"
-echo "4. Verify that ~/Dropbox directory exists and contains your files"
-echo ""
-echo "Once Dropbox sync is complete, run:"
-echo "  ./install"
-echo ""
-echo "=========================================="
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+exec "${BASEDIR}/bootstrap" --setup-only "$@"

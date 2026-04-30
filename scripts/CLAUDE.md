@@ -16,7 +16,8 @@
 ```
 scripts/
 ├── CLAUDE.md                  # this file
-├── _lib/                      # sourced libraries (no direct invocation)
+├── _lib/                      # internal helpers (sourced libs + sibling-invoked utilities)
+│   ├── dropbox-info.py        # prints synced Dropbox root from ~/.dropbox/info.json
 │   └── step.sh                # two-tier progress helper
 ├── step                       # thin wrapper for inline recipes
 ├── migrate/                   # one-off migration utilities
@@ -41,7 +42,9 @@ Directories reflect *runtime role*, not install-only status:
   first-time bootstrap or upgrade. Safe to re-run but rarely called directly.
 - **`ops/`** — scripts invoked repeatedly via justfile targets *and/or* `./install`.
   Dual-use lands here (directory reflects runtime role, not who calls it).
-- **`_lib/`** — sourced libraries. Never invoked directly.
+- **`_lib/`** — internal helpers used only by other repo scripts: sourced bash
+  libs (e.g., `step.sh`) and sibling-invoked utilities in any language (e.g.,
+  `dropbox-info.py` called from `./bootstrap`). Not for direct user invocation.
 - **`migrate/`** — one-off migration helpers. Unchanged.
 
 Filenames keep the `setup-` / `audit-` prefix for greppability even though
@@ -54,7 +57,7 @@ the subdir already provides that context.
 | Script                       | Purpose                                                          |
 | ---------------------------- | ---------------------------------------------------------------- |
 | `setup-macos`                | macOS system defaults configuration                              |
-| `setup-dropbox`              | Dropbox installation and setup                                   |
+| `setup-dropbox`              | Wrapper around `./bootstrap --setup-only`                        |
 | `setup-upgrade-homebrew`     | Homebrew installation/upgrade                                    |
 | `setup-upgrade-rust-cargo`   | Rust toolchain management                                        |
 | `setup-upgrade-kanata`       | Build kanata from source with cmd feature                        |
