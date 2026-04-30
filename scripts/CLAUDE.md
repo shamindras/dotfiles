@@ -27,7 +27,6 @@ scripts/
 │   └── setup-nvim-treesitter  # dual-use: install.conf.yaml + just treesitter_*
 └── setup/                     # one-time bootstrap scripts (install-only)
     ├── post-install-hints
-    ├── setup-dropbox
     ├── setup-macos
     ├── setup-upgrade-homebrew
     ├── setup-upgrade-kanata
@@ -57,7 +56,6 @@ the subdir already provides that context.
 | Script                       | Purpose                                                          |
 | ---------------------------- | ---------------------------------------------------------------- |
 | `setup-macos`                | macOS system defaults configuration                              |
-| `setup-dropbox`              | Wrapper around `./bootstrap --setup-only`                        |
 | `setup-upgrade-homebrew`     | Homebrew installation/upgrade                                    |
 | `setup-upgrade-rust-cargo`   | Rust toolchain management                                        |
 | `setup-upgrade-kanata`       | Build kanata from source with cmd feature                        |

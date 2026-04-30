@@ -8,29 +8,25 @@ This is a personal macOS dotfiles repository that follows the XDG Base Directory
 
 ## Key Commands
 
-### Initial Setup
-For first-time setup on a new macOS system, clone to a temp location and run
-`./bootstrap` — it installs Dropbox, waits for sign-in/sync, then re-execs
-`./install` from the synced `~/Dropbox/repos/dotfiles`:
+### Two commands
+
+| Command       | Use it when                                                              |
+| ------------- | ------------------------------------------------------------------------ |
+| `./bootstrap` | Fresh Mac, OR you're not sure of state. Skip-checks make re-runs cheap.  |
+| `./install`   | You're already in `~/Dropbox/repos/dotfiles` and just want a dotbot refresh. |
+
+Both accept `--no-hints` to suppress post-install reminders. `make bootstrap`
+and `make dotbot_install` are aliases.
+
+`./bootstrap` is the canonical fresh-machine entry point: clone the repo to a
+temp location, then run it.
 ```bash
 git clone <repo-url> ~/dotfiles-bootstrap
 cd ~/dotfiles-bootstrap
-./bootstrap           # one command: Dropbox + ./install (single human pause for sign-in)
+./bootstrap
 ```
 Re-runs are safe and idempotent; Ctrl-C aborts cleanly and `./bootstrap`
 resumes at the unfinished phase.
-
-To set up Dropbox without running `./install` afterwards:
-```bash
-./bootstrap --setup-only    # or: make setup-dropbox
-```
-
-### Installation and Updates
-Once `~/Dropbox/repos/dotfiles` exists (i.e., after the first bootstrap):
-```bash
-./install             # Install/update dotfiles using dotbot
-make dotbot_install   # Alternative wrapper for ./install
-```
 
 ### Development and Maintenance
 ```bash
@@ -82,9 +78,8 @@ Organized by runtime role:
 
 - `bootstrap` - top-level entry point for fresh-machine setup; orchestrates
   Dropbox install/sign-in/sync, then re-execs `./install` from the synced
-  `~/Dropbox/repos/dotfiles`. Pass `--setup-only` to stop after sign-in.
+  `~/Dropbox/repos/dotfiles`. Idempotent on re-runs.
 - `scripts/setup/` — one-time bootstrap scripts run by `./install`:
-  - `setup-dropbox` - thin wrapper around `./bootstrap --setup-only` (kept for `make setup-dropbox`)
   - `setup-macos` - macOS system defaults configuration
   - `setup-upgrade-homebrew` - Homebrew installation/upgrade
   - `setup-upgrade-rust-cargo` - Rust toolchain management

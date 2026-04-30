@@ -2,10 +2,9 @@
 
 - [Dotfiles (macOS)](#dotfiles-macos)
   - [Personal dotfiles - philosophy](#personal-dotfiles---philosophy)
-  - [First Time Setup on New macOS](#first-time-setup-on-new-macos)
-  - [Installation](#installation)
-    - [Clone the repo and update and sync submodules](#clone-the-repo-and-update-and-sync-submodules)
-    - [Run installation using `dotbot`](#run-installation-using-dotbot)
+  - [Commands](#commands)
+  - [Fresh macOS setup](#fresh-macos-setup)
+  - [Day-to-day refresh](#day-to-day-refresh)
   - [Inspiration](#inspiration)
 
 ## Personal dotfiles - philosophy
@@ -18,55 +17,49 @@ This is a repo of my personal dotfiles for `macOS`. The main philosophy is to us
 - A [modern Unix](https://github.com/ibraheemdev/modern-unix) workflow.
 - The [`XDG`](https://wiki.archlinux.org/title/XDG_user_directories) directory specification.
 
-## First Time Setup on New macOS
+## Commands
 
-If this is your first time setting up these dotfiles on a new Mac:
+There are two commands. Both are idempotent; pick by where you are.
 
-1. **Setup Dropbox:**
+| Command       | Use it when                                                                  | What it does                                                                                                                                                                  |
+| ------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `./bootstrap` | Fresh Mac, OR not sure of state.                                             | Installs Homebrew + Dropbox cask, opens Dropbox, waits for sign-in (one human pause), waits for the dotfiles repo to sync, then `exec`s `./install` from the synced location. |
+| `./install`   | You're already in `~/Dropbox/repos/dotfiles` and just want a dotbot refresh. | Runs [`dotbot`](https://github.com/anishathalye/dotbot): symlinks, Brewfile, npm, macOS defaults.                                                                             |
 
-```bash
-   make setup-dropbox
-```
+Flags (both commands accept):
 
-Follow the on-screen instructions to:
+- `--no-hints` — suppress post-install reminders.
 
-- Sign in to your Dropbox account
-- Wait for initial sync to complete
-- Verify `~/Dropbox` directory exists and contains your files
+Make aliases (no behavioral difference): `make bootstrap`, `make dotbot_install`.
 
-2. **Install dotfiles** (after Dropbox sync completes):
+`./bootstrap` re-runs are cheap because every phase has a skip-check (Homebrew installed? Dropbox cask installed? app
+running? signed in? repo synced?). On an already-configured machine it will fast-forward through all five detection
+phases and hand off to `./install`. Ctrl-C is safe at any time; the next invocation resumes at the unfinished phase.
 
-```bash
-   ./install
-```
-
-For subsequent updates, just run `./install`.
-
----
-
-## Installation
-
-### Clone the repo and update and sync submodules
-
-In order to install these dotfiles, run the following commands:
+## Fresh macOS setup
 
 ```bash
-git clone --recurse-submodules --remote-submodules git@github.com:shamindras/dotfiles.git
+git clone --recurse-submodules --remote-submodules \
+  git@github.com:shamindras/dotfiles.git ~/dotfiles-bootstrap
+cd ~/dotfiles-bootstrap
+./bootstrap
 ```
 
-### Run installation using `dotbot`
+You'll be asked to sign in to Dropbox once, in the GUI window the script opens. After sign-in detection, `./bootstrap`
+waits for `~/Dropbox/repos/dotfiles` to sync, then runs `./install` from there. The temp clone at `~/dotfiles-bootstrap`
+is no longer needed afterward and can be removed.
 
-Now the installation script can be executed using [`dotbot`](https://github.com/anishathalye/dotbot) as follows:
+## Day-to-day refresh
+
+From the synced repo:
 
 ```bash
-make dotbot_install
+cd ~/Dropbox/repos/dotfiles
+./install              # or: make dotbot_install
 ```
 
-**NOTE:** The above `make dotbot_install` command is just a wrapper for `./install`, if you prefer to run this command
-directly from your terminal.
-
-**macOS defaults:** `./install` applies macOS system defaults (`scripts/setup/setup-macos`). This step requires
-administrator privileges and some changes need a logout or reboot to take effect.
+`./install` applies macOS system defaults (`scripts/setup/setup-macos`), which needs `sudo` and may require a
+logout/reboot for some changes to take effect.
 
 ## Inspiration
 
