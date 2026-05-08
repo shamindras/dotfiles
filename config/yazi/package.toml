@@ -49,11 +49,6 @@ rev = "04985d1"
 hash = "c69a63981e254a3a06a11c2bf0e6af1d"
 
 [[flavor.deps]]
-use = "marcosvnmelo/kanagawa-dragon"
-rev = "b9541e8"
-hash = "dc840cf225dbf6f0257617403ad43d8b"
-
-[[flavor.deps]]
 use = "muratoffalex/kanagawa-lotus"
 rev = "00dcc74"
 hash = "8fe01c79d91d7154ce231334cc7275f2"
