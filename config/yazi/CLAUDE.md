@@ -1,7 +1,7 @@
 # Yazi Configuration
 
 - **Docs**: https://yazi-rs.github.io/docs/configuration/overview/
-- **Installed version**: Yazi 26.1.22 (verified 2026-04-20)
+- **Installed version**: Yazi 26.5.6 (verified 2026-05-08)
 
 ## Overview
 
