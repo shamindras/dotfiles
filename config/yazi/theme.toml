@@ -3,5 +3,5 @@
 #:schema https://yazi-rs.github.io/schemas/theme.json
 
 [flavor]
-dark  = "everforest-medium"
-light = "everforest-medium"
+dark  = "gruvbox-dark"
+light = "gruvbox-dark"
