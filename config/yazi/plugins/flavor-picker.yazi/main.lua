@@ -35,7 +35,7 @@ local function write_theme(dark, light)
   end
   f:write('# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.\n')
   f:write('# If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.\n')
-  f:write('"$schema" = "https://yazi-rs.github.io/schemas/theme.json"\n\n')
+  f:write('#:schema https://yazi-rs.github.io/schemas/theme.json\n\n')
   f:write('[flavor]\n')
   f:write(string.format('dark  = "%s"\n', dark))
   f:write(string.format('light = "%s"\n', light))
