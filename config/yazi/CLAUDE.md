@@ -64,10 +64,10 @@ Keybind `F` launches `plugins/flavor-picker.yazi/main.lua`:
 | `flavor-picker`         | fzf-based flavor picker; rewrites `theme.toml` and quits yazi | `F`       |
 | `smart-archive-enter`   | dirs = enter; archives = `unar -d` extract + auto-cd; files = open | `<Enter>` |
 
-## Installed flavors (16 total, ya pkg)
+## Installed flavors (15 total, ya pkg)
 
 Catppuccin (mocha, latte, frappe, macchiato), Dracula, Tokyo Night,
-Kanagawa (default, dragon, lotus), Gruvbox (dark, material),
+Kanagawa (default, lotus), Gruvbox (dark, material),
 Everforest Medium, Rosé Pine (default, moon, dawn), Nord.
 
 ## Keybindings (custom only — preset bindings from yazi defaults still apply)
