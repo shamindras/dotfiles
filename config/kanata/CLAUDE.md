@@ -195,6 +195,50 @@ tail -f /tmp/kanata-watcher.stdout.log
   add `~/.local/share/cargo/bin/kanata` (required for keyboard interception,
   TCC/SIP protected — cannot be scripted)
 
+## Conflict with Karabiner-Elements
+
+Kanata uses Karabiner's DriverKit VirtualHIDDevice dext for output, but
+Karabiner-**Elements** (the user-facing app) ships a separate keyboard
+*grabber* (`Karabiner-Core-Service`) that competes with kanata for
+`IOHIDDeviceOpen` exclusive access. With both running, keystrokes get
+processed by both pipelines → keys appear doubled (`e` → `ee`).
+
+**Fingerprint** (in `/tmp/kanata.stderr.log`):
+```
+IOHIDDeviceOpen error: (iokit/common) exclusive access and device already open Apple Internal Keyboard / Trackpad
+```
+
+**Remediation**: re-run `scripts/setup/setup-upgrade-kanata` — its
+"Stop conflicting Karabiner-Elements services" block bootouts and `launchctl
+disable`s the full set across both legacy and v14+ (`-rev2`) labels.
+
+**Service labels** (Karabiner-Elements ≥14 uses the `-rev2` suffix):
+
+| Domain                  | Service                                                  | Action |
+| ----------------------- | -------------------------------------------------------- | ------ |
+| `gui/$UID/`             | `org.pqrs.service.agent.Karabiner-Core-Service-rev2`     | STOP   |
+| `gui/$UID/`             | `org.pqrs.service.agent.Karabiner-Menu`                  | STOP   |
+| `gui/$UID/`             | `org.pqrs.service.agent.Karabiner-NotificationWindow`    | STOP   |
+| `gui/$UID/`             | `org.pqrs.service.agent.karabiner_console_user_server`   | STOP   |
+| `gui/$UID/`             | `org.pqrs.service.agent.karabiner_session_monitor`       | STOP   |
+| `system/`               | `org.pqrs.service.daemon.Karabiner-Core-Service-rev2`    | STOP   |
+| `system/`               | `org.pqrs.service.daemon.karabiner_session_monitor`      | STOP   |
+| (process)               | `Karabiner-VirtualHIDDevice-Daemon` + dext (`_driverkit`) | **KEEP** |
+
+**Why it can recur**: Karabiner-Elements registers its agents via
+SMAppService; an upgrade or reinstall re-registers them. The setup script
+covers this by `launchctl disable`ing each label after bootout.
+
+**Most permanent fix** (optional): keep kanata only, remove Karabiner-Elements
+core but preserve the DriverKit dext kanata depends on:
+```bash
+sudo /Library/Application\ Support/org.pqrs/Karabiner-Elements/uninstall_core.sh
+```
+The `uninstall_core.sh` script does NOT touch the
+`Karabiner-DriverKit-VirtualHIDDevice` package (separate
+`/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice`
+tree).
+
 ## Development Notes
 
 - Requires Karabiner VirtualHIDDevice driver on macOS
