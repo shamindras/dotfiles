@@ -178,6 +178,14 @@ end, { desc = '[t]oggle [s]pell check' })
 
 -- }}}
 
+-- {{{ Spell
+
+-- Native z=/zg/zw/]s/[s remain primary; these compound jump-and-fix-first.
+keymap('n', ']S', ']s1z=', { desc = 'Next misspell + fix first suggestion' })
+keymap('n', '[S', '[s1z=', { desc = 'Prev misspell + fix first suggestion' })
+
+-- }}}
+
 -- {{{ Window Operations
 
 local function toggle_window_maximize()

@@ -337,6 +337,19 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
   + Ghostty atomic key codes = instant Esc-to-Normal. Do not increase
   `ttimeoutlen` above ~10ms or Esc will feel laggy.
 - **Commenting**: built-in `gc`/`gcc` (Neovim 0.10+), no plugin needed
+- **Spell corrections**: `]S` / `[S` jump to next/prev misspell and auto-apply
+  the first suggestion (compound for `]s1z=` / `[s1z=`). Native `1z=`, `z=`,
+  `zg`, `zw`, `]s`, `[s` remain primary; deliberately no `<leader>z*` namespace
+  to avoid shadowing vim's heavily-loaded `z` operator menu (folds, scroll,
+  spell). Toggle spell on/off with `<leader>ts`.
+- **Spell dictionary location**: `vim.o.spellfile` is pinned to
+  `stdpath('config') .. '/spell/en.utf-8.add'` (in `options.lua`), which
+  resolves through the `~/.config/nvim` → repo symlink to
+  `config/nvim/spell/en.utf-8.add`. This makes `zg`/`zw` writes
+  reproducible across machines (tracked in git). Default nvim behavior
+  would auto-pick `stdpath('data')/site/spell/...` — untracked and
+  per-machine. If `:set spell?` ever shows the data-dir path again,
+  check that `options.lua` was sourced.
 - **LSP progress**: mini.notify built-in `lsp_progress` (no fidget.nvim)
 - **Cursor word highlight**: two-tier system — LSP `documentHighlightProvider`
   (semantic, per-buffer) with mini.cursorword (lexical) as universal fallback.
