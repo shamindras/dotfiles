@@ -2,13 +2,21 @@
 # Shared helper functions for sesh startup scripts.
 # Source this file — do not execute directly.
 
-# Standard set of extra yazi tabs every session opens to the right of the
-# session WORK_DIR. Order is preserved as the on-screen tab order.
+# Books library tabs (used standalone by feed.sh; combined with Downloads
+# by SESH_DEFAULT_YAZI_TABS below for every other session).
 # shellcheck disable=SC2034
 SESH_BOOKS_TABS=(
   "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/reference_books"
   "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/current_reading/books/00_now_reading"
   "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/current_reading/books/01_next_up"
+)
+
+# Default extra-tab list for non-feed yazi windows: Downloads (active) then
+# the books library. Order matches on-screen tab order.
+# shellcheck disable=SC2034
+SESH_DEFAULT_YAZI_TABS=(
+  "$HOME/Downloads"
+  "${SESH_BOOKS_TABS[@]}"
 )
 
 # Window: items (renames window 1 — taskwarrior-tui with clear on exit)
@@ -45,12 +53,6 @@ sesh_window_nvim() {
 sesh_window_term() {
   local session="$1" work_dir="$2"
   tmux new-window -a -t "${session}:\$" -n "term" -c "${work_dir}"
-}
-
-# Window: yazi (direct command for correct PTY sizing)
-sesh_window_yazi() {
-  local session="$1" work_dir="$2"
-  tmux new-window -a -t "${session}:\$" -n "yazi" -c "${work_dir}" yazi
 }
 
 # Window: yazi with preloaded tabs.

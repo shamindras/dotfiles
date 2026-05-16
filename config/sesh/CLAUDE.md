@@ -57,13 +57,15 @@ take `session` and `work_dir` as positional args. Exception:
 | `sesh_window_claude_new` | New window "claude", clear + run `claude` (use when another window owns W1)        |
 | `sesh_window_nvim`       | New window "nvim", launch nvim with Snacks file picker                             |
 | `sesh_window_term`       | New window "term", plain shell                                                     |
-| `sesh_window_yazi`       | New window "yazi", run yazi as direct command (PTY sizing)                          |
-| `sesh_window_yazi_tabs`  | Like `_yazi`, plus preloaded tabs via `YAZI_STARTUP_TABS`/`YAZI_ACTIVE_TAB` env    |
+| `sesh_window_yazi_tabs`  | New window "yazi" w/ preloaded tabs via `YAZI_STARTUP_TABS`/`YAZI_ACTIVE_TAB` env  |
 | `sesh_focus_window`      | Select/focus a named window                                                        |
 
-The `SESH_BOOKS_TABS` array (defined at the top of `helpers.sh`) is the
-shared list of "books" paths every session opens to the right of its
-WORK_DIR tab. Update it in one place to change every session.
+Two arrays at the top of `helpers.sh` drive the yazi tab layout:
+
+| Array                     | Contents                                       | Used by                |
+|---------------------------|------------------------------------------------|------------------------|
+| `SESH_BOOKS_TABS`         | reference_books, 00_now_reading, 01_next_up    | feed.sh                |
+| `SESH_DEFAULT_YAZI_TABS`  | `~/Downloads` + `SESH_BOOKS_TABS`              | every other session    |
 
 Per-session scripts source helpers via:
 ```bash

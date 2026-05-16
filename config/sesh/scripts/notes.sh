@@ -13,7 +13,7 @@ source "${SCRIPT_DIR}/helpers.sh"
 tmux rename-window -t "${SESSION}:1" "journal"
 
 # Window 2: yazi with preloaded tabs (Downloads active)
-sesh_window_yazi_tabs "${SESSION}" "${WORK_DIR}" 1 "$HOME/Downloads" "${SESH_BOOKS_TABS[@]}"
+sesh_window_yazi_tabs "${SESSION}" "${WORK_DIR}" 1 "${SESH_DEFAULT_YAZI_TABS[@]}"
 
 # Window 3: ideas (nvim with file picker in ideas dir)
 tmux new-window -a -t "${SESSION}:\$" -n "ideas" -c "${IDEAS_DIR}"
