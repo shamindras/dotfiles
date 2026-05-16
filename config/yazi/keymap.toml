@@ -20,6 +20,12 @@ prepend_keymap = [
   # Plugin: ouch compress/decompress
   { on = "C", run = "plugin ouch", desc = "Compress with ouch" },
 
+  # Plugin: close-and-restore-tab — close routes through the plugin so its
+  # history is populated; T restores the last closed tab. <C-c> overrides
+  # yazi's preset close-tab so every close is observed by the plugin.
+  { on = "<C-c>", run = "plugin close-and-restore-tab close_to_left", desc = "Close current tab (history-aware), focus left" },
+  { on = "T",     run = "plugin close-and-restore-tab restore",       desc = "Restore last closed tab" },
+
   # Plugin: relative-motions — digits 1-9 trigger count motions (3j, 5dd, etc.)
   { on = "1", run = "plugin relative-motions 1", desc = "Move in relative steps" },
   { on = "2", run = "plugin relative-motions 2", desc = "Move in relative steps" },

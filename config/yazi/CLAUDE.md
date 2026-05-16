@@ -1,7 +1,7 @@
 # Yazi Configuration
 
 - **Docs**: https://yazi-rs.github.io/docs/configuration/overview/
-- **Installed version**: Yazi 26.5.6 (verified 2026-05-08)
+- **Installed version**: Yazi 26.5.6 (verified 2026-05-16)
 
 ## Overview
 
@@ -18,6 +18,7 @@ local plugin lives alongside the ya pkg-managed ones.
 | `yazi.toml`                       | Main config — only non-default `[mgr]`, openers, previewers    |
 | `keymap.toml`                     | `prepend_keymap` only — yazi merges with its preset            |
 | `theme.toml`                      | Flavor selection (`dark`/`light` slots)                        |
+| `init.lua`                        | Startup hook — reads `YAZI_STARTUP_TABS` env var (see below)   |
 | `package.toml`                    | Pinned plugin + flavor revisions (committed for reproducibility)|
 | `flavors/*.yazi/`                 | Deployed flavors (managed by `ya pkg`)                         |
 | `plugins/*.yazi/`                 | Deployed plugins (managed by `ya pkg`)                         |
@@ -51,11 +52,12 @@ Keybind `F` launches `plugins/flavor-picker.yazi/main.lua`:
 
 ## Installed plugins (ya pkg)
 
-| Plugin                         | Purpose                                       | Keybind         |
-| ------------------------------ | --------------------------------------------- | --------------- |
-| `Shallow-Seek/djvu-view`       | DjVu inline preview (needs `djvulibre` brew)  | auto (previewer)|
-| `ndtoan96/ouch`                | Archive preview + compress/decompress         | `C` (compress)  |
-| `dedukun/relative-motions`     | Vim count motions (`3j`, `5dd`, `10gg`, …)    | digits `1`–`9`  |
+| Plugin                              | Purpose                                       | Keybind         |
+| ----------------------------------- | --------------------------------------------- | --------------- |
+| `Shallow-Seek/djvu-view`            | DjVu inline preview (needs `djvulibre` brew)  | auto (previewer)|
+| `ndtoan96/ouch`                     | Archive preview + compress/decompress         | `C` (compress)  |
+| `dedukun/relative-motions`          | Vim count motions (`3j`, `5dd`, `10gg`, …)    | digits `1`–`9`  |
+| `MasouShizuka/close-and-restore-tab`| Close-tab w/ history; restore last closed tab | `<C-c>` / `T`   |
 
 ## Hand-rolled local plugins (committed, NOT in `package.toml`)
 
@@ -79,6 +81,8 @@ Everforest Medium, Rosé Pine (default, moon, dawn), Nord.
 | `F`         | Flavor picker (fzf-based, auto-quits for relaunch)               |
 | `<Enter>`   | smart-archive-enter (dir = enter, archive = extract+cd, file = open) |
 | `C`         | Compress selection with ouch                                     |
+| `<C-c>`     | Close current tab via close-and-restore-tab (history-aware, focus-left) |
+| `T`         | Restore last closed tab (close-and-restore-tab)                  |
 | `1`–`9`     | Count prefix for relative-motions (was tab switch in defaults)   |
 | `g1`–`g9`   | Switch to tab N (replaces default `1`–`9`)                       |
 
@@ -114,6 +118,23 @@ and content hash — commit this file to keep state reproducible.
   point after `F` flavor-picker quits yazi)
 - **tmux**: `prefix o y` launches yazi
 - **wezterm**: `CMD+Y` launches yazi
+
+## Startup hook (`init.lua`)
+
+`init.lua` runs at yazi startup and reads two env vars to optionally
+preload tabs:
+
+| Env var             | Purpose                                                          |
+| ------------------- | ---------------------------------------------------------------- |
+| `YAZI_STARTUP_TABS` | Colon-separated absolute paths; one extra tab created per path   |
+| `YAZI_ACTIVE_TAB`   | 0-based index of the tab to activate after creation (default 0)  |
+
+The initial tab (index 0) is the launch cwd. Extra tabs from
+`YAZI_STARTUP_TABS` are appended in order. Paths must not contain `:`.
+
+Used by `config/sesh/scripts/helpers.sh:sesh_window_yazi_tabs` to give
+each sesh session a yazi window with a curated set of tabs (Downloads,
+books library, …) without manual `cd`-ing.
 
 ## Development Notes
 
