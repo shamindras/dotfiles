@@ -2,6 +2,15 @@
 # Shared helper functions for sesh startup scripts.
 # Source this file — do not execute directly.
 
+# Standard set of extra yazi tabs every session opens to the right of the
+# session WORK_DIR. Order is preserved as the on-screen tab order.
+# shellcheck disable=SC2034
+SESH_BOOKS_TABS=(
+  "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/reference_books"
+  "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/current_reading/books/00_now_reading"
+  "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/current_reading/books/01_next_up"
+)
+
 # Window: items (renames window 1 — taskwarrior-tui with clear on exit)
 sesh_window_items() {
   local session="$1" work_dir="$2"
@@ -42,6 +51,22 @@ sesh_window_term() {
 sesh_window_yazi() {
   local session="$1" work_dir="$2"
   tmux new-window -a -t "${session}:\$" -n "yazi" -c "${work_dir}" yazi
+}
+
+# Window: yazi with preloaded tabs.
+#   $1  session name
+#   $2  work_dir (becomes tab 0)
+#   $3  0-based index of the tab to activate after launch
+#   $4+ additional tab paths (in order, appended after tab 0)
+# Extra tabs are passed to yazi via YAZI_STARTUP_TABS / YAZI_ACTIVE_TAB
+# env vars, consumed by ~/.config/yazi/init.lua. Paths must not contain ':'.
+sesh_window_yazi_tabs() {
+  local session="$1" work_dir="$2" active_idx="$3"
+  shift 3
+  local IFS=':'
+  local extra_tabs="$*"
+  tmux new-window -a -t "${session}:\$" -n "yazi" -c "${work_dir}" \
+    "env YAZI_STARTUP_TABS='${extra_tabs}' YAZI_ACTIVE_TAB='${active_idx}' yazi"
 }
 
 # Focus a named window

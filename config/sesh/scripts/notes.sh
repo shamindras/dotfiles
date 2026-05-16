@@ -12,13 +12,15 @@ source "${SCRIPT_DIR}/helpers.sh"
 # Window 1: journal (rename default window, defer send-keys until all windows exist)
 tmux rename-window -t "${SESSION}:1" "journal"
 
-# Window 2: ideas (nvim with file picker in ideas dir)
+# Window 2: yazi with preloaded tabs (Downloads active)
+sesh_window_yazi_tabs "${SESSION}" "${WORK_DIR}" 1 "$HOME/Downloads" "${SESH_BOOKS_TABS[@]}"
+
+# Window 3: ideas (nvim with file picker in ideas dir)
 tmux new-window -a -t "${SESSION}:\$" -n "ideas" -c "${IDEAS_DIR}"
 tmux send-keys -l -t "${SESSION}:ideas" \
   "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.files)';clear"
 tmux send-keys -t "${SESSION}:ideas" Enter
-sesh_window_term       "${SESSION}" "${WORK_DIR}"   # Window 3
-sesh_window_yazi       "${SESSION}" "${WORK_DIR}"   # Window 4
+sesh_window_term       "${SESSION}" "${WORK_DIR}"   # Window 4
 sesh_window_claude_new "${SESSION}" "${WORK_DIR}"   # Window 5
 
 # Now send journal startup command.
