@@ -100,6 +100,16 @@ o.foldmethod = 'marker'
 
 -- }}}
 
+-- {{{ Spell
+
+-- Pin zg/zw writes to the tracked dict in this repo (~/.config/nvim is
+-- symlinked to the dotfiles checkout, so this resolves through the symlink
+-- to config/nvim/spell/en.utf-8.add). Default behavior would write to
+-- stdpath('data')/site/spell/... — untracked and per-machine.
+o.spellfile = vim.fn.stdpath('config') .. '/spell/en.utf-8.add'
+
+-- }}}
+
 -- {{{ Miscellaneous
 
 o.joinspaces = false -- don't use 2 spaces when joining sentences
