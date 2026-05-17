@@ -181,8 +181,10 @@ end, { desc = '[t]oggle [s]pell check' })
 -- {{{ Spell
 
 -- Native z=/zg/zw/]s/[s remain primary; these compound jump-and-fix-first.
-keymap('n', ']S', ']s1z=', { desc = 'Next misspell + fix first suggestion' })
-keymap('n', '[S', '[s1z=', { desc = 'Prev misspell + fix first suggestion' })
+-- Trailing `zz` centers the line so wrap-around jumps are visible (noice can
+-- silently swallow the "search hit TOP/BOTTOM" message).
+keymap('n', ']S', ']s1z=zz', { desc = 'Next misspell + fix first suggestion' })
+keymap('n', '[S', '[s1z=zz', { desc = 'Prev misspell + fix first suggestion' })
 
 -- }}}
 
