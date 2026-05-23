@@ -1,9 +1,5 @@
 tap "felixkratz/formulae"
 tap "nikitabobko/tap"
-# Color management engine supporting ICC profiles
-brew "little-cms2"
-# New file format for still image compression
-brew "jpeg-xl"
 # Codec library for encoding and decoding AV1 video streams
 brew "aom"
 # Next generation open source RPC library and framework
@@ -66,6 +62,10 @@ brew "unixodbc"
 brew "freetds"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Color management engine supporting ICC profiles
+brew "little-cms2"
+# New file format for still image compression
+brew "jpeg-xl"
 # Image format providing lossless and lossy compression for web images
 brew "webp"
 # Geometry Engine
