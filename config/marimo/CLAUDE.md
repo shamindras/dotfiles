@@ -28,10 +28,25 @@
 - **Escape**: raw `Esc` for insert → normal. No `jj`/`jk` remap, no `vimrc`
   file. CodeMirror's vim implementation can't parse nvim Lua config, so
   reuse is not possible; a bespoke vimrc is deferred until actually needed.
-- **Double-Esc exits cell** (Jupyter-style): the override
-  `"command.vimEnterCommandMode" = "Escape"` means first `Esc` is consumed
-  by CodeMirror-vim (insert → normal), second `Esc` bubbles up and blurs
-  the cell into marimo command mode. Default `Mod-Escape` still works too.
+- **No `Esc` override for cell blur**: marimo's hotkey parser only accepts
+  single-key combos (e.g. `Mod-Escape`, `Shift-Escape`) — chord syntax
+  like `"Escape Escape"` is silently invalid, and a plain `"Escape"`
+  override races CodeMirror-vim for the same key (marimo's global hotkey
+  layer wins, so the first `Esc` blurs the cell and skips normal mode
+  entirely, requiring a click back in). Verified against marimo `0.23.1`
+  by inspecting `cell.vimEnterCommandMode` default key in the bundled JS
+  (`useEventListener-*.js`); all key strings use single combinations.
+- **Insert → Normal → Cell-focus flow** (the working alternative):
+  - `Esc` → insert → normal (CodeMirror-vim, no contention since marimo
+    has no `Escape` override).
+  - `Cmd-Esc` (marimo default for `command.vimEnterCommandMode`) →
+    normal → cell focus mode (Jupyter-style).
+  - `Enter` from cell focus → re-enters the cell; CodeMirror-vim restores
+    its last mode, so if you went through normal first you land back in
+    normal (not insert).
+  - **Discipline**: always press `Esc` (to normal) *before* `Cmd-Esc` (to
+    blur). Going `Insert → Cmd-Esc` directly skips normal, so re-entry
+    drops you back into insert.
 - **`destructive_delete = true`**: `dd` in command mode deletes cells
   containing code (no confirmation prompt).
 - **Surfingkeys coexistence**: SK auto-disables inside focused cells, so

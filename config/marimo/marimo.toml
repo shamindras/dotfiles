@@ -44,7 +44,6 @@ destructive_delete = true
 preset = "vim"
 
 [keymap.overrides]
-"command.vimEnterCommandMode" = "Escape"
 # Firefox claims Cmd-Shift-{J,K,G} for devtools/find; rebind to Ctrl-Shift-*
 "cell.focusDown" = "Ctrl-Shift-j"
 "cell.focusUp" = "Ctrl-Shift-k"
