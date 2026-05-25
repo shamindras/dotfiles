@@ -8,9 +8,12 @@ command_exists() {
 # Function to install rustup
 install_rustup() {
     echo "Installing Rust and Cargo..."
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    # --no-modify-path: rustup-init otherwise appends `. "$CARGO_HOME/env"` to
+    # ~/.zshenv (a symlink to the tracked dotfile). Cargo's bin dir is already
+    # on PATH via config/zsh/conf.d/01-z1-env-vars-gen.zsh.
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
     # Source the environment for the current session
-    source "$HOME/.cargo/env"
+    source "${CARGO_HOME:-$HOME/.cargo}/env"
     echo "[SUCCESS] Rust and Cargo have been installed successfully!"
 }
 

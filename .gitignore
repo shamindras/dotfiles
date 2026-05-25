@@ -292,6 +292,11 @@ rsconnect/
 config/brew/Brewfile.lock.json
 config/zsh/.zsh_sessions
 
+# Zsh history should land at $XDG_STATE_HOME/zsh/history (set in
+# config/zsh/conf.d/06-z1-history.zsh). Belt-and-braces in case a shell
+# starts before .zshenv exports XDG_STATE_HOME.
+.zsh_history
+
 # Claude Code ephemeral session state
 .claude/scheduled_tasks.lock
 
