@@ -109,7 +109,20 @@ Major categories of tools configured:
 
 On a fresh machine, `./bootstrap` runs first: it installs Homebrew + the
 Dropbox cask, launches Dropbox, waits for sign-in (the only human step), waits
-for `~/Dropbox/repos/dotfiles` to sync, then re-execs `./install` from there.
+for `~/Dropbox/repos/dotfiles` to sync, ensures the `~/Dropbox` symlink, then
+re-execs `./install` from there.
+
+#### `~/Dropbox` is a managed invariant
+
+On modern macOS, Dropbox stores files under `~/Library/CloudStorage/Dropbox`.
+`./bootstrap` (Phase 6) ensures a `~/Dropbox` symlink to that canonical path
+exists, because both shell-aware references (`$DROPBOX_DIR`) and inert config
+files (`sesh.toml`, `gh-dash/config.yml`, `gh/config.yml`, `rstudio-prefs.json`)
+rely on `~/Dropbox` resolving correctly. `./install` fails fast if the symlink
+is missing or broken. Manual repair without a full bootstrap re-run:
+`scripts/ops/ensure-dropbox-link`. The script handles five pre-existing
+states safely (already-correct symlink, wrong-target symlink, nothing there,
+real-directory collision, and storage canonically at `~/Dropbox`).
 
 The install process (`install.conf.yaml`) follows this sequence:
 1. Create XDG directories

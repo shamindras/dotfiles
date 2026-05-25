@@ -8,7 +8,8 @@
 #   3. Launch Dropbox.app
 #   4. Wait for sign-in (~/.dropbox/info.json appears)
 #   5. Wait for the dotfiles repo to sync (sentinel file appears)
-#   6. exec ./install from the synced ~/Dropbox/repos/dotfiles
+#   6. Ensure ~/Dropbox -> $DROPBOX_ROOT symlink (canonical storage path)
+#   7. exec ./install from the synced ~/Dropbox/repos/dotfiles
 #
 # Re-runs are safe at any time; Ctrl-C aborts cleanly and bootstrap resumes
 # at the unfinished phase on the next run. Sign-in is the only human step.
@@ -20,7 +21,7 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/_lib/step.sh
 source "${BASEDIR}/scripts/_lib/step.sh"
 
-PHASES_TOTAL=6
+PHASES_TOTAL=7
 DROPBOX_INFO="${HOME}/.dropbox/info.json"
 WAIT_TIMEOUT=${BOOTSTRAP_WAIT_TIMEOUT:-1800}    # 30 min default
 WAIT_INTERVAL=${BOOTSTRAP_WAIT_INTERVAL:-5}     # 5 sec default
@@ -111,7 +112,12 @@ else
     step_done 🔄 "Dotfiles repo synced"
 fi
 
-# ----- Phase 6: Hand-off to ./install -----
-step_outer 6 "$PHASES_TOTAL" 🤝 "Handing off to ${DOTFILES_PATH}/install"
+# ----- Phase 6: Ensure ~/Dropbox symlink -----
+step_outer 6 "$PHASES_TOTAL" 🔗 "Ensuring ~/Dropbox -> ${DROPBOX_ROOT}"
+"${BASEDIR}/scripts/ops/ensure-dropbox-link" "$DROPBOX_ROOT"
+step_done 🔗 "~/Dropbox managed"
+
+# ----- Phase 7: Hand-off to ./install -----
+step_outer 7 "$PHASES_TOTAL" 🤝 "Handing off to ${DOTFILES_PATH}/install"
 cd "$DOTFILES_PATH"
 exec ./install "$@"

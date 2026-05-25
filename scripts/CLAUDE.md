@@ -68,6 +68,7 @@ the subdir already provides that context.
 | Script                       | Purpose                                                          |
 | ---------------------------- | ---------------------------------------------------------------- |
 | `audit-firefox`              | Check tracked Firefox prefs against live profile state           |
+| `ensure-dropbox-link`        | Ensure `~/Dropbox` symlink points at the canonical CloudStorage path; called by bootstrap (Phase 6) and re-runnable for manual repair |
 | `setup-firefox`              | Sync user.js, chrome/, policies.json into active Firefox profile |
 | `setup-nvim-treesitter`      | Install/update treesitter parsers (`--status` for read-only table) |
 

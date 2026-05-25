@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+#
+# ensure-dropbox-link — manage the ~/Dropbox symlink to the canonical Dropbox
+# storage path. On modern macOS, Dropbox stores files under
+# ~/Library/CloudStorage/Dropbox; both shell-aware references ($DROPBOX_DIR)
+# and inert config files (sesh.toml, gh-dash/config.yml, gh/config.yml,
+# rstudio-prefs.json) rely on ~/Dropbox resolving to that path.
+#
+# Usage:
+#   ensure-dropbox-link              # resolve $DROPBOX_ROOT from ~/.dropbox/info.json
+#   ensure-dropbox-link <path>       # use the given path as $DROPBOX_ROOT
+#
+# Called from bootstrap (Phase 6) with the path argument; runnable standalone
+# for manual repair when the symlink gets clobbered.
+#
+# Exit codes:
+#   0 — ~/Dropbox now points to the canonical path (no-op, repaired, or created),
+#       or storage is canonically at ~/Dropbox itself.
+#   1 — collision with a real file/dir at ~/Dropbox, info.json missing/malformed,
+#       or resolved path missing.
+
+set -Eeuo pipefail
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+TARGET="$HOME/Dropbox"
+
+if [[ $# -ge 1 && -n "${1:-}" ]]; then
+    DROPBOX_ROOT="$1"
+else
+    DROPBOX_ROOT="$("${BASEDIR}/scripts/_lib/dropbox-info.py")"
+fi
+
+if [[ ! -d "$DROPBOX_ROOT" ]]; then
+    printf '❌ DROPBOX_ROOT (%s) is not an existing directory.\n' "$DROPBOX_ROOT" >&2
+    printf '   Refusing to create a stale symlink. Check ~/.dropbox/info.json.\n' >&2
+    exit 1
+fi
+
+# -L must precede -e because -e follows symlinks (a symlink to a missing target
+# would look like "nothing there" to -e alone).
+if [[ -L "$TARGET" ]]; then
+    current=$(readlink "$TARGET")
+    if [[ "$current" == "$DROPBOX_ROOT" ]]; then
+        printf '  ├─ ~/Dropbox -> %s (already correct)\n' "$DROPBOX_ROOT"
+        exit 0
+    fi
+    ln -sfn "$DROPBOX_ROOT" "$TARGET"
+    printf '  ├─ ~/Dropbox -> %s (repointed from %s)\n' "$DROPBOX_ROOT" "$current"
+    exit 0
+fi
+
+if [[ -e "$TARGET" ]]; then
+    # Real file or directory. If it IS the canonical storage location (no
+    # CloudStorage indirection), no symlink is needed — accept and exit clean.
+    if [[ "$TARGET" -ef "$DROPBOX_ROOT" ]]; then
+        printf '  ├─ ~/Dropbox is the canonical storage path, no symlink needed\n'
+        exit 0
+    fi
+    cat >&2 <<EOF
+❌ ~/Dropbox exists but is not a symlink, and is not the canonical Dropbox
+   storage location. Refusing to overwrite.
+
+   Detected: $(stat -f '%N (%HT, %z bytes)' "$TARGET")
+   Wanted:   ~/Dropbox -> ${DROPBOX_ROOT}
+
+   Move or rename ~/Dropbox manually, then re-run this script (or ./bootstrap).
+EOF
+    exit 1
+fi
+
+ln -sfn "$DROPBOX_ROOT" "$TARGET"
+printf '  ├─ ~/Dropbox -> %s (created)\n' "$DROPBOX_ROOT"

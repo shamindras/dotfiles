@@ -42,6 +42,24 @@ export TMUX_PLUGIN_MANAGER_PATH="${XDG_DATA_HOME}/tmux/plugins"
 export DROPBOX_DIR="${DROPBOX_DIR:-$HOME/Dropbox}"
 export ZK_NOTEBOOK_DIR="${ZK_NOTEBOOK_DIR:-$DROPBOX_DIR/notes/zk}"
 
+# Fail fast if ~/Dropbox is missing or broken. bootstrap (Phase 6) manages
+# this symlink; setup-zk and sesh scripts silently misbehave if it's wrong.
+if [[ ! -d $DROPBOX_DIR ]]; then
+    cat >&2 <<EOF
+❌ DROPBOX_DIR=${DROPBOX_DIR} does not exist or is not a directory.
+
+The ~/Dropbox symlink that ./install depends on is missing or broken.
+Run ./bootstrap to re-create it (idempotent, safe to re-run):
+
+    ${BASEDIR}/bootstrap
+
+Or fix only the symlink without re-running the rest of bootstrap:
+
+    ${BASEDIR}/scripts/ops/ensure-dropbox-link
+EOF
+    exit 1
+fi
+
 # ------------------------------------------------------------------------------
 # Acquire sudo credentials (needed by setup-macos, setup-upgrade-kanata, etc.)
 # ------------------------------------------------------------------------------
