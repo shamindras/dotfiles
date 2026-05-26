@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+#
+# disable-kanata-for-soak — stop kanata daemons + prevent auto-load on boot
+#
+# *** TEMPORARY — DELETE AT PHASE 3 ***
+# This script is Phase 2 scaffolding only. Once Phase 3 lands and
+# scripts/migrate/decommission-kanata-karabiner has been run, the
+# kanata plists no longer exist and this script becomes dead code.
+# Delete it (and this file's mention in the plan) when committing the
+# Phase 3 PR.
+#
+# Stops both kanata LaunchDaemons immediately AND disables them so they
+# don't auto-load at next reboot. The plists at
+# /Library/LaunchDaemons/com.jtroo.kanata*.plist are left in place, so
+# rolling back to kanata during soak is one `--enable` away.
+#
+# When Phase 3 lands, scripts/migrate/decommission-kanata-karabiner will
+# fully remove the plists along with the rest of the kanata + Karabiner-
+# Elements stack — and this script too.
+#
+# Usage:
+#   sudo ./scripts/migrate/disable-kanata-for-soak             Stop + disable
+#   sudo ./scripts/migrate/disable-kanata-for-soak --enable    Re-enable + start
+#   sudo ./scripts/migrate/disable-kanata-for-soak --status    Show current state
+#
+# Requires sudo because every launchctl op on `system/` needs root.
+
+set -Eeuo pipefail
+
+DAEMONS=(
+  com.jtroo.kanata
+  com.jtroo.kanata-watcher
+)
+PLIST_DIR="/Library/LaunchDaemons"
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+require_root() {
+  if [ "$(id -u)" -ne 0 ]; then
+    echo "[ERROR] Must run with sudo." >&2
+    echo "        Try: sudo $0 ${MODE}" >&2
+    exit 1
+  fi
+}
+
+target_for() {
+  printf 'system/%s' "$1"
+}
+
+is_loaded() {
+  launchctl print "$(target_for "$1")" >/dev/null 2>&1
+}
+
+# Returns 0 if marked disabled in /var/db/com.apple.xpc.launchd/disabled.plist
+is_disabled() {
+  launchctl print-disabled system 2>/dev/null | grep -qE "\"$1\" => (true|disabled)"
+}
+
+# ── Modes ─────────────────────────────────────────────────────────────────────
+
+do_disable() {
+  echo "[INFO] Disabling kanata daemons (rollback: re-run with --enable)"
+  for label in "${DAEMONS[@]}"; do
+    local target
+    target="$(target_for "$label")"
+
+    if is_loaded "$label"; then
+      echo "[INFO]   stopping  $target"
+      launchctl bootout "$target" || true
+    else
+      echo "[INFO]   (not loaded) $target"
+    fi
+
+    echo "[INFO]   disabling $target (no auto-load on next boot)"
+    launchctl disable "$target"
+  done
+  echo
+  echo "[INFO] Done. kanata will NOT auto-start on next reboot."
+  echo "[INFO] To rollback:  sudo $0 --enable"
+}
+
+do_enable() {
+  echo "[INFO] Re-enabling kanata daemons (rollback to kanata)"
+  for label in "${DAEMONS[@]}"; do
+    local target plist
+    target="$(target_for "$label")"
+    plist="${PLIST_DIR}/${label}.plist"
+
+    echo "[INFO]   enabling $target"
+    launchctl enable "$target"
+
+    if [ ! -f "$plist" ]; then
+      echo "[WARN]   plist missing: $plist — rollback skipped for this daemon" >&2
+      continue
+    fi
+
+    if is_loaded "$label"; then
+      echo "[INFO]   (already loaded) $target"
+    else
+      echo "[INFO]   bootstrapping $plist"
+      launchctl bootstrap system "$plist"
+    fi
+  done
+  echo
+  echo "[INFO] Done. kanata is running and will auto-load on boot."
+  echo "[WARN] Hammerspoon is now competing with kanata for the same keys."
+  echo "[WARN] Either stop Hammerspoon (osascript -e 'tell application \"Hammerspoon\" to quit')"
+  echo "[WARN] or re-disable kanata when soak testing resumes."
+}
+
+do_status() {
+  printf '%-32s  %-10s  %-10s  %s\n' DAEMON LOADED DISABLED PLIST
+  printf '%-32s  %-10s  %-10s  %s\n' -------- ------ -------- -----
+  for label in "${DAEMONS[@]}"; do
+    local loaded disabled plist plist_status
+    if is_loaded "$label"; then loaded=yes; else loaded=no; fi
+    if is_disabled "$label"; then disabled=yes; else disabled=no; fi
+    plist="${PLIST_DIR}/${label}.plist"
+    if [ -f "$plist" ]; then plist_status=present; else plist_status=ABSENT; fi
+    printf '%-32s  %-10s  %-10s  %s\n' "$label" "$loaded" "$disabled" "$plist_status"
+  done
+}
+
+# ── Dispatch ──────────────────────────────────────────────────────────────────
+
+MODE="${1:-disable}"
+
+case "$MODE" in
+  disable | --disable)
+    require_root
+    do_disable
+    ;;
+  enable | --enable)
+    require_root
+    do_enable
+    ;;
+  status | --status)
+    # --status is read-only; no root needed for `launchctl print` /
+    # `print-disabled` against system targets in modern launchctl, but
+    # some queries return less data without root. We allow either.
+    do_status
+    ;;
+  -h | --help | help)
+    sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'
+    ;;
+  *)
+    echo "Usage: $0 [disable | enable | status]" >&2
+    exit 2
+    ;;
+esac
