@@ -342,6 +342,26 @@ defaults write NSGlobalDomain _HIHideMenuBar -bool true
 sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "If found, please call +61 417 222 107 to return it."
 
 ###############################################################################
+# Remote Login (SSH)                                                          #
+###############################################################################
+# SSH is the only defensive measure that survives a fully-frozen keyboard
+# — see RECOVERY.md. Enabling it by default is non-negotiable for this
+# machine: a single Karabiner-DriverKit / kanata wedge once cost a full day
+# of work because no physical keyboard (including a wired Nuphy) could
+# reach the lock screen. With SSH enabled, the phone-as-keyboard escape
+# hatch is one `ssh user@<lan-ip>` away regardless of HID state.
+echo "  Remote Login (SSH)..."
+
+remote_login_status="$(sudo systemsetup -getremotelogin 2>/dev/null || true)"
+if [[ "${remote_login_status}" != *"On"* ]]; then
+  echo "    Enabling Remote Login (SSH)..."
+  # `-f` skips the "this will allow remote users to access your computer" prompt.
+  sudo systemsetup -f -setremotelogin on
+else
+  echo "    Remote Login already enabled."
+fi
+
+###############################################################################
 # Login Items (launch at login)                                               #
 ###############################################################################
 echo "  Login items..."
