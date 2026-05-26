@@ -94,45 +94,56 @@ else
   echo "  ${KANATA_BIN} not present — nothing to remove"
 fi
 
-# ── 3. Karabiner DriverKit dext ──────────────────────────────────────────────
+# ── 3. Homebrew cask FIRST ───────────────────────────────────────────────────
+# Order matters: brew's karabiner-elements uninstall stanza runs the same
+# pqrs deactivate_driver.sh + uninstall.sh + remove_files.sh scripts that
+# we'd otherwise call directly. If we ran them ourselves first, brew's
+# stanza fails ("remove_files.sh does not exist") and leaves stale
+# Caskroom metadata. Let brew drive the pqrs scripts; steps 4-5 below are
+# now belt-and-suspenders for the case where brew has nothing to do
+# (e.g., karabiner-elements was already uninstalled out-of-band).
 
-step "3/6  Deactivating Karabiner DriverKit VirtualHIDDevice"
-if [ -x "$KARABINER_DEXT_UNINSTALL" ]; then
-  echo "  running pqrs deactivate_driver.sh"
-  "$KARABINER_DEXT_UNINSTALL" || echo "  (deactivate_driver.sh returned non-zero — may already be deactivated)"
-else
-  echo "  ${KARABINER_DEXT_UNINSTALL} not found — dext likely already removed"
-fi
-
-# ── 4. Karabiner-Elements ────────────────────────────────────────────────────
-
-step "4/6  Uninstalling Karabiner-Elements"
-if [ -x "$KARABINER_UNINSTALL" ]; then
-  echo "  running pqrs uninstall.sh"
-  "$KARABINER_UNINSTALL" || echo "  (uninstall.sh returned non-zero)"
-else
-  echo "  ${KARABINER_UNINSTALL} not found — already uninstalled"
-fi
-
-# ── 5. Homebrew cask (best-effort; may already be removed) ───────────────────
-
-step "5/6  Removing karabiner-elements cask"
+step "3/6  Removing karabiner-elements cask (drives pqrs uninstall via brew)"
 if sudo -u "$REAL_USER" brew list --cask 2>/dev/null | grep -q '^karabiner-elements$'; then
   echo "  brew uninstall --cask karabiner-elements (as ${REAL_USER})"
-  sudo -u "$REAL_USER" brew uninstall --cask karabiner-elements 2>&1 || true
+  sudo -u "$REAL_USER" brew uninstall --cask karabiner-elements 2>&1 \
+    || sudo -u "$REAL_USER" brew uninstall --cask --force karabiner-elements 2>&1 \
+    || true
 else
   echo "  karabiner-elements not in brew cask list — nothing to remove"
+fi
+
+# ── 4. Karabiner DriverKit dext (belt-and-suspenders) ────────────────────────
+
+step "4/6  Confirming Karabiner DriverKit deactivation"
+if [ -x "$KARABINER_DEXT_UNINSTALL" ]; then
+  echo "  running pqrs deactivate_driver.sh"
+  "$KARABINER_DEXT_UNINSTALL" || echo "  (returned non-zero — likely already deactivated by step 3)"
+else
+  echo "  ${KARABINER_DEXT_UNINSTALL} not found — already removed (step 3 did its job)"
+fi
+
+# ── 5. Karabiner-Elements (belt-and-suspenders) ──────────────────────────────
+
+step "5/6  Confirming Karabiner-Elements removal"
+if [ -x "$KARABINER_UNINSTALL" ]; then
+  echo "  running pqrs uninstall.sh"
+  "$KARABINER_UNINSTALL" || echo "  (returned non-zero — likely already uninstalled by step 3)"
+else
+  echo "  ${KARABINER_UNINSTALL} not found — already uninstalled (step 3 did its job)"
 fi
 
 # ── 6. /Library/Application Support residuals ────────────────────────────────
 
 step "6/6  Sweeping /Library/Application Support residuals"
-if [ -e "$KANATA_APPSUP" ]; then
-  echo "  rm -rf  $KANATA_APPSUP"
-  rm -rf "$KANATA_APPSUP"
-else
-  echo "  rm -rf  $KANATA_APPSUP (already absent)"
-fi
+for path in "$KANATA_APPSUP" "/Library/Application Support/org.pqrs"; do
+  if [ -e "$path" ]; then
+    echo "  rm -rf  $path"
+    rm -rf "$path"
+  else
+    echo "  rm -rf  $path (already absent)"
+  fi
+done
 
 # ── Manual checklist (TCC-protected, cannot be scripted) ─────────────────────
 
