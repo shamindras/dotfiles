@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+#
+# decommission-kanata-karabiner — tear down the kanata + Karabiner stack
+#
+# Phase 3 of the Hammerspoon migration. Idempotent and safe to re-run
+# after a partial failure: every step guards on the presence of its
+# target, so the second run is a no-op on already-cleaned bits.
+#
+# What this script does:
+#   1. Stops and disables the kanata LaunchDaemons (system/com.jtroo.kanata
+#      and -watcher) and removes their plists from /Library/LaunchDaemons.
+#   2. Uninstalls the cargo-built kanata binary at ~/.local/share/cargo/bin/kanata.
+#   3. Deactivates the Karabiner DriverKit VirtualHIDDevice system extension
+#      (the root cause of the macOS 26 Tahoe keyboard-freeze incidents).
+#   4. Uninstalls the Karabiner-Elements user binary.
+#   5. Removes the karabiner-elements Homebrew cask.
+#   6. Sweeps any stray /Library/Application Support/kanata artifacts.
+#
+# What this script CANNOT do (printed as a manual checklist at the end):
+#   - Remove TCC entries from System Settings → Privacy & Security
+#     (Input Monitoring, Full Disk Access, Driver Extensions). These are
+#     protected by macOS and can only be cleared via the GUI.
+#
+# After this runs and the user clears the TCC entries by hand:
+#   - kanata is gone from the system.
+#   - Karabiner DriverKit dext is deactivated; it fully unloads on reboot.
+#   - Hammerspoon is the sole keyboard remapper (already installed in
+#     Phase 1, soaked in Phase 2).
+#
+# Usage:
+#   sudo ./scripts/migrate/decommission-kanata-karabiner
+#
+# Requires sudo for launchctl/bootstrap/rm under /Library and for the
+# pqrs deactivate_driver.sh + uninstall.sh scripts.
+
+set -Eeuo pipefail
+
+# ── Preflight ────────────────────────────────────────────────────────────────
+
+if [ "$(id -u)" -ne 0 ]; then
+  echo "[ERROR] Must run with sudo." >&2
+  echo "        Try: sudo $0" >&2
+  exit 1
+fi
+
+REAL_USER="$(stat -f '%Su' /dev/console)"
+REAL_HOME="$(eval echo "~${REAL_USER}")"
+
+KANATA_BIN="${REAL_HOME}/.local/share/cargo/bin/kanata"
+KARABINER_DEXT_UNINSTALL="/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/scripts/uninstall/deactivate_driver.sh"
+KARABINER_UNINSTALL="/Library/Application Support/org.pqrs/Karabiner-Elements/uninstall.sh"
+KANATA_APPSUP="/Library/Application Support/kanata"
+
+DAEMONS=(com.jtroo.kanata com.jtroo.kanata-watcher)
+PLIST_DIR="/Library/LaunchDaemons"
+
+step() {
+  printf '\n▶ %s\n' "$*"
+}
+
+# ── 1. kanata LaunchDaemons ──────────────────────────────────────────────────
+
+step "1/6  Stopping and disabling kanata LaunchDaemons"
+for label in "${DAEMONS[@]}"; do
+  target="system/${label}"
+  plist="${PLIST_DIR}/${label}.plist"
+
+  if launchctl print "$target" >/dev/null 2>&1; then
+    echo "  bootout  $target"
+    launchctl bootout "$target" || true
+  else
+    echo "  bootout  $target (not loaded)"
+  fi
+
+  echo "  disable  $target"
+  launchctl disable "$target" 2>/dev/null || true
+
+  if [ -f "$plist" ]; then
+    echo "  rm       $plist"
+    rm -f "$plist"
+  else
+    echo "  rm       $plist (already absent)"
+  fi
+done
+
+# ── 2. kanata binary ─────────────────────────────────────────────────────────
+
+step "2/6  Uninstalling kanata cargo binary"
+if [ -x "$KANATA_BIN" ]; then
+  echo "  cargo uninstall kanata (as ${REAL_USER})"
+  sudo -u "$REAL_USER" cargo uninstall kanata 2>/dev/null \
+    || sudo -u "$REAL_USER" rm -f "$KANATA_BIN"
+else
+  echo "  ${KANATA_BIN} not present — nothing to remove"
+fi
+
+# ── 3. Karabiner DriverKit dext ──────────────────────────────────────────────
+
+step "3/6  Deactivating Karabiner DriverKit VirtualHIDDevice"
+if [ -x "$KARABINER_DEXT_UNINSTALL" ]; then
+  echo "  running pqrs deactivate_driver.sh"
+  "$KARABINER_DEXT_UNINSTALL" || echo "  (deactivate_driver.sh returned non-zero — may already be deactivated)"
+else
+  echo "  ${KARABINER_DEXT_UNINSTALL} not found — dext likely already removed"
+fi
+
+# ── 4. Karabiner-Elements ────────────────────────────────────────────────────
+
+step "4/6  Uninstalling Karabiner-Elements"
+if [ -x "$KARABINER_UNINSTALL" ]; then
+  echo "  running pqrs uninstall.sh"
+  "$KARABINER_UNINSTALL" || echo "  (uninstall.sh returned non-zero)"
+else
+  echo "  ${KARABINER_UNINSTALL} not found — already uninstalled"
+fi
+
+# ── 5. Homebrew cask (best-effort; may already be removed) ───────────────────
+
+step "5/6  Removing karabiner-elements cask"
+if sudo -u "$REAL_USER" brew list --cask 2>/dev/null | grep -q '^karabiner-elements$'; then
+  echo "  brew uninstall --cask karabiner-elements (as ${REAL_USER})"
+  sudo -u "$REAL_USER" brew uninstall --cask karabiner-elements 2>&1 || true
+else
+  echo "  karabiner-elements not in brew cask list — nothing to remove"
+fi
+
+# ── 6. /Library/Application Support residuals ────────────────────────────────
+
+step "6/6  Sweeping /Library/Application Support residuals"
+if [ -e "$KANATA_APPSUP" ]; then
+  echo "  rm -rf  $KANATA_APPSUP"
+  rm -rf "$KANATA_APPSUP"
+else
+  echo "  rm -rf  $KANATA_APPSUP (already absent)"
+fi
+
+# ── Manual checklist (TCC-protected, cannot be scripted) ─────────────────────
+
+cat <<'EOF'
+
+────────────────────────────────────────────────────────────────────────────────
+✅ Automatable steps complete. The following must be done manually in
+   System Settings — macOS protects these against terminal manipulation.
+────────────────────────────────────────────────────────────────────────────────
+
+   🔒 System Settings → Privacy & Security → Input Monitoring
+        - Remove entries for `kanata` and `Karabiner-Elements` (if present)
+
+   🔒 System Settings → Privacy & Security → Full Disk Access
+        - Remove `kanata` entry (only if granted during debugging)
+
+   🔄 System Settings → General → Login Items & Extensions
+        - "Allow in the Background" section: confirm `kanata` and
+          `kanata-keyboard-watcher` rows are gone (they may need a logout
+          or reboot to drop off the list)
+        - "Driver Extensions": confirm Karabiner-DriverKit shows as
+          uninstalled or "waiting to uninstall on reboot"
+
+   🔁 Reboot once everything above is done. Post-reboot:
+        - `systemextensionsctl list` should be empty of Karabiner entries
+        - `pgrep -f kanata` and `pgrep -f karabiner` should both be empty
+        - Hammerspoon should auto-launch (Login Items entry) and the
+          hidutil Caps→F18 LaunchAgent should fire automatically
+
+   📖 If anything goes wrong: RECOVERY.md at the repo root has the
+      SSH-from-phone escape hatch.
+
+────────────────────────────────────────────────────────────────────────────────
+EOF
