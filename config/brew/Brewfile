@@ -238,6 +238,8 @@ brew "television"
 brew "tmux"
 # Parser generator tool
 brew "tree-sitter-cli"
+# Markup-based typesetting system
+brew "typst"
 # Command-line unarchiving tools supporting multiple formats
 brew "unar"
 # Validating, recursive, caching DNS resolver
