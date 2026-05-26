@@ -191,6 +191,10 @@ return {
     {
       '<leader>bd',
       function()
+        if vim.fn.getcmdwintype() ~= '' then
+          vim.notify('bufdelete: not allowed in cmdline window', vim.log.levels.WARN)
+          return
+        end
         local is_last = #vim.fn.getbufinfo({ buflisted = 1 }) <= 1
         Snacks.bufdelete()
         if is_last then
@@ -202,6 +206,10 @@ return {
     {
       '<leader>bo',
       function()
+        if vim.fn.getcmdwintype() ~= '' then
+          vim.notify('bufdelete: not allowed in cmdline window', vim.log.levels.WARN)
+          return
+        end
         Snacks.bufdelete.other()
         require('shamindras.plugins.snacks.pickers').picker_with_fd(Snacks.picker.files)
       end,
