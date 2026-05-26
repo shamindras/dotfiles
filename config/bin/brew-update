@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # brew-update — canonical Homebrew update pipeline.
 #
-# Invoked by install.conf.yaml, the `bu` zsh alias, and the kanata `ar-b`
-# binding. Flow: sudo bootstrap → Caskroom sweep (*.upgrading orphans +
+# Invoked by install.conf.yaml, the `bu` zsh alias, and the Hammerspoon
+# leader `RCmd → r → b`. Flow: sudo bootstrap → Caskroom sweep (*.upgrading orphans +
 # .metadata-only stubs) → tri-state mode detect (steady / drift /
 # bootstrap) → dump (steady + drift) → brew update → brew upgrade --greedy
 # (tolerant) → brew bundle install (recovery + bootstrap) → brew cleanup →
@@ -25,11 +25,12 @@ BREWFILE="$DOTFILES_DIR/config/brew/Brewfile"
 unset HOMEBREW_AUTOREMOVE
 
 # --- No-TTY → WezTerm popup dispatch --------------------------------------
-# Triggered when invoked without a controlling TTY — covers both the kanata
-# launchd path (uid=0, no tty) and the Hammerspoon hs.task path (uid=$user,
-# no tty). The Brewfile pipeline requires interactive `sudo -v`, which
-# silently fails without a TTY. run-as-user is a no-op when already
-# running as the console user, so the same dispatch works in both cases.
+# Triggered when invoked without a controlling TTY — Hammerspoon's hs.task
+# spawns subprocesses with no TTY (Raycast scripts, cron, etc. would
+# behave the same way), and the Brewfile pipeline requires interactive
+# `sudo -v` which silently fails without one. run-as-user is kept in the
+# call chain as a no-op so this dispatch still works in the (now-defunct)
+# root-LaunchDaemon era preserved at config/archive/kanata.
 if [ "$(id -u)" -eq 0 ] || ! [ -t 0 ]; then
   RUN="$HOME/.config/bin/run-as-user"
   WEZTERM="/Applications/WezTerm.app/Contents/MacOS/wezterm"
@@ -70,7 +71,7 @@ trap cleanup_tmp EXIT
 #   1. `*.upgrading` directories: `brew cask upgrade` renames
 #      `<VER>` → `<VER>.upgrading`, reinstalls, then removes the marker.
 #      A partial failure (typical for pkg-shaped auto_updates casks like
-#      nordvpn / zoom / xquartz / karabiner) leaves the marker behind,
+#      nordvpn / zoom / xquartz) leaves the marker behind,
 #      and every subsequent `brew upgrade --greedy` throws
 #      `No such file or directory @ rb_file_s_rename` on that cask.
 #
@@ -190,9 +191,8 @@ cp "$BREWFILE" "$PRE_BREWFILE" 2>/dev/null || true
 #
 # --formula --cask --tap scopes the dump to brew's native package types.
 # Default dump also includes cargo/npm/go/vscode/uv/flatpak/krew; those are
-# managed by their own setup scripts (e.g. setup-upgrade-kanata builds
-# kanata from cargo WITH --features cmd — bundle install of the default
-# cargo entry would silently strip that feature).
+# managed by their own setup scripts where feature flags or repo-pinned
+# versions would be lost by a vanilla bundle entry.
 if [ "$MODE" != bootstrap ]; then
   printf '📋 [4/8] brew bundle dump → Brewfile (brew-only scope)\n'
   "$BREW" bundle dump --describe --force --file="$BREWFILE" \
@@ -209,8 +209,8 @@ printf '🔄 [5/8] brew update\n'
 "$BREW" update
 
 # Step 6 — Greedy upgrade. Tolerated: pkg-shaped auto_updates casks
-# (karabiner-elements, nordvpn, xquartz, zoom) fail the uninstall→reinstall
-# cycle and exit non-zero; step 7 re-installs anything step 6 silently dropped.
+# (nordvpn, xquartz, zoom) fail the uninstall→reinstall cycle and exit
+# non-zero; step 7 re-installs anything step 6 silently dropped.
 printf '⬆️  [6/8] brew upgrade --greedy (tolerant of individual cask failures)\n'
 UPGRADE_EXIT=0
 "$BREW" upgrade --greedy || UPGRADE_EXIT=$?

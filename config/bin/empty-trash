@@ -1,7 +1,8 @@
 #!/bin/sh
 # empty-trash — empty Finder trash and switch aerospace workspace
 #
-# Uses run-as-user for root→user context switch (kanata launchd daemon).
+# Uses run-as-user as a no-op wrapper (preserved from the kanata-as-root
+# era; Hammerspoon runs as the console user, so no context switch needed).
 
 set -eu
 

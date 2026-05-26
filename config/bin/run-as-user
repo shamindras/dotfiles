@@ -1,9 +1,11 @@
 #!/bin/sh
 # run-as-user — execute a command as the console user
 #
-# When run as root (e.g., from kanata launchd daemon), re-executes the
-# given command as the logged-in console user. No-op when already running
-# as a regular user.
+# When run as root, re-executes the given command as the logged-in
+# console user. No-op when already running as a regular user (the
+# common path now that Hammerspoon has replaced kanata-as-root). Kept
+# around because shared scripts (leader-hud, empty-trash, fastopen)
+# still call it as a no-op for forward/backward compatibility.
 #
 # Usage: run-as-user <command> [args...]
 
