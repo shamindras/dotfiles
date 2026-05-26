@@ -24,8 +24,13 @@ BREWFILE="$DOTFILES_DIR/config/brew/Brewfile"
 # still exports the value from before the env-vars config was updated.
 unset HOMEBREW_AUTOREMOVE
 
-# --- Root → WezTerm popup dispatch (kanata launchd) -----------------------
-if [ "$(id -u)" -eq 0 ]; then
+# --- No-TTY → WezTerm popup dispatch --------------------------------------
+# Triggered when invoked without a controlling TTY — covers both the kanata
+# launchd path (uid=0, no tty) and the Hammerspoon hs.task path (uid=$user,
+# no tty). The Brewfile pipeline requires interactive `sudo -v`, which
+# silently fails without a TTY. run-as-user is a no-op when already
+# running as the console user, so the same dispatch works in both cases.
+if [ "$(id -u)" -eq 0 ] || ! [ -t 0 ]; then
   RUN="$HOME/.config/bin/run-as-user"
   WEZTERM="/Applications/WezTerm.app/Contents/MacOS/wezterm"
   exec "$RUN" "$WEZTERM" start -- /bin/zsh -c \

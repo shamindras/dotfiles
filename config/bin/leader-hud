@@ -1,13 +1,22 @@
 #!/bin/sh
 # leader-hud — update sketchybar leader key HUD
 #
-# Called by kanata at each layer transition to show available keys or
+# Called at each leader-layer transition to show available keys or
 # dismiss the HUD. Handles root→user context switch internally via
-# run-as-user (kanata runs as root, sketchybar runs as the user).
+# run-as-user (works whether the caller is root, e.g., the legacy
+# kanata LaunchDaemon, or the console user, e.g., Hammerspoon's hs.task).
 #
 # Usage:
 #   leader-hud show <group>   Show HUD label for group
 #   leader-hud hide           Hide HUD
+
+# Caller-agnostic PATH. hs.task spawns subprocesses with the minimal
+# default PATH (/usr/bin:/bin:/usr/sbin:/sbin), so /opt/homebrew/bin
+# isn't searched — sketchybar then can't be located and the script
+# silently exits 127. Prepending Homebrew makes the script portable
+# across launch contexts (Hammerspoon, kanata-root, direct shell).
+PATH="/opt/homebrew/bin:$PATH"
+export PATH
 
 set -eu
 
