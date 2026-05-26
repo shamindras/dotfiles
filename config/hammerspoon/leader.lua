@@ -1,20 +1,17 @@
 -- leader.lua — modal leader-key scaffold
 --
--- Replicates the kanata leader system from config/kanata/layers.kbd:
---
---   F18 tap (Right Cmd via taphold.lua → F18 via hidutil)
+--   Right Cmd tap (via taphold.lua) or F18 tap (Caps via hidutil)
 --     → leader modal
 --       → group modal (o/q/c/r/s/g/u)
 --         → action → exec shell + return to base
 --
--- Semantics ported from kanata:
+-- Semantics:
 --   * 2s idle at any modal level → return to base + hide HUD
 --   * Quit-group actions arm a 10s idle override (see actions.lua) so the
 --     sketchybar quit notification has room to surface
 --   * Escape from a sub-group → back to leader (HUD re-shows "leader")
 --   * Escape from leader      → return to base + hide HUD
---   * Any unbound letter in a sub-group → return to base + hide HUD
---     (fail-safe — matches the kanata @bas slot pattern)
+--   * Any unbound letter in a sub-group → return to base + hide HUD (fail-safe)
 
 local actions = require('actions')
 local hud = require('hud')
@@ -122,8 +119,7 @@ local function fire_action(action)
     m:exit()
   end
   hud.hide()
-  -- /bin/sh -c lets us chain commands via ' ; ' in actions.lua exactly as
-  -- the kanata cmd: stanzas did.
+  -- /bin/sh -c lets actions.lua chain commands via ' ; '.
   hs.task
     .new('/bin/sh', nil, function()
       return false
@@ -143,10 +139,9 @@ local function build_group_modal(spec)
     bound[action.key] = true
     m:bind({}, action.key, function()
       -- Quit actions need a longer post-fire idle so sketchybar quit
-      -- notifications don't get stomped. Re-arming here would normally
-      -- be moot because fire_action exits the modal, but we keep the
-      -- semantics aligned with the kanata aq-* on-idle-fakekey 10000
-      -- behaviour in case future actions stay in-modal.
+      -- notifications don't get stomped. Re-arming here is normally moot
+      -- because fire_action exits the modal, but kept in case future
+      -- actions stay in-modal.
       cancel_idle()
       if action.idle then
         arm_idle(action.idle, to_base)
@@ -155,13 +150,12 @@ local function build_group_modal(spec)
     end)
   end
 
-  -- Escape → back to leader (the @bkl alias in layers.kbd).
+  -- Escape → back to leader.
   m:bind({}, 'escape', function()
     to_leader(true)
   end)
 
-  -- Every other letter → fail-safe return to base, matching the @bas
-  -- slot that kanata fills in every unbound deflayer position.
+  -- Every other letter → fail-safe return to base.
   for _, letter in ipairs(LETTERS) do
     if not bound[letter] then
       m:bind({}, letter, function()
@@ -189,8 +183,7 @@ local function build_leader_modal()
     to_base('leader-modal escape')
   end)
 
-  -- Every other letter in the leader layer → return to base (the @bas
-  -- catch-all in deflayer leader).
+  -- Every other letter in the leader layer → return to base.
   for _, letter in ipairs(LETTERS) do
     if not bound[letter] then
       m:bind({}, letter, function()

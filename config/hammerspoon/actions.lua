@@ -1,14 +1,13 @@
 -- actions.lua — leader action table
 --
--- Mirrors the alias inventory from config/kanata/layers.kbd. Each leaf is
--- { key, label, cmd, idle? }:
+-- Each leaf is { key, label, cmd, idle? }:
 --   key   — single character bound inside the sub-modal
 --   label — short name surfaced in errors / hs.console (not the HUD label;
 --           HUD labels come from config/bin/leader-hud)
 --   cmd   — shell command appended to "$HOME/.config/bin/"
 --   idle  — optional override of the 2s timeout. Quit actions use 10s to let
 --           sketchybar's quit notification finish drawing before another
---           leader sequence stomps it (kanata aq-* aliases set 10000 ms).
+--           leader sequence stomps it.
 
 local M = {}
 
@@ -22,11 +21,10 @@ local function bin(cmd)
 end
 
 -- run-as-user prefix for actions that need to escape Hammerspoon's user
--- context to invoke something like /usr/bin/open via the console user. In
--- userspace Hammerspoon this is a no-op (we already run as the console
--- user), but we keep the indirection because config/bin/leader-hud +
--- friends still rely on $SUDO_USER detection and the existing scripts have
--- not been reworked. Preserves the kanata-era contract verbatim.
+-- context to invoke something like /usr/bin/open via the console user.
+-- Hammerspoon already runs as the console user, so this is a no-op
+-- wrapper; the indirection stays because config/bin/leader-hud + friends
+-- still rely on $SUDO_USER detection.
 local function as_user(cmd)
   return bin('run-as-user ') .. cmd
 end
@@ -144,8 +142,6 @@ M.run = {
         ),
       }, ' ; '),
     },
-    -- Reload Hammerspoon. Replaces kanata's `sudo launchctl kickstart -k
-    -- system/com.jtroo.kanata` — no sudo needed.
     { key = 'r', label = 'reload-hs', cmd = '/opt/homebrew/bin/hs -c "hs.reload()"' },
     { key = 't', label = 'empty-trash', cmd = bin('empty-trash') },
     {
@@ -220,10 +216,9 @@ M.urls = {
 
 -- {{{ Top-level leader: maps single letter → sub-group
 
--- Keys here mirror the kanata `leader` layer (sl-o, sl-q, sl-c, sl-r, sl-s,
--- sl-g, sl-u). Every other letter in the leader layer falls back to "bas"
--- (return to base + hide HUD), which leader.lua handles via the unbound-key
--- fallback so we do not enumerate it here.
+-- Every other letter in the leader layer falls back to "return to base +
+-- hide HUD", which leader.lua handles via the unbound-key fallback so we
+-- do not enumerate it here.
 M.leader_groups = {
   { key = 'o', name = 'open', target = M.open },
   { key = 'q', name = 'quit', target = M.quit },

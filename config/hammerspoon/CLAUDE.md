@@ -6,15 +6,12 @@
 
 ## Overview
 
-Userspace keyboard remapper + modal leader system. Replaces the
-kanata LaunchDaemon + Karabiner DriverKit dext that previously
-handled tap-hold remaps, the right-cmd leader sequence, and the
-F-row media-key mappings.
+Userspace keyboard remapper + modal leader system covering tap-hold
+remaps, the right-cmd leader sequence, and Caps→F18 at the HID layer.
 
 Hammerspoon requires only an Accessibility grant — no root, no
 kernel extension, no DriverKit. The most defensive escape hatch
-on a fully-frozen keyboard is now SSH-from-phone (see `RECOVERY.md`),
-not USB-keyboard fallback.
+on a fully-frozen keyboard is SSH-from-phone (see `RECOVERY.md`).
 
 ## File Structure
 
@@ -76,7 +73,7 @@ Implementation notes:
 `hs.hotkey.modal` scaffold with one modal for the leader layer and
 one per sub-group. `hs.timer.doAfter` arms an idle-exit (2 s default,
 10 s for `quit` actions so SketchyBar's quit notification has room
-to surface — matches the kanata `on-idle-fakekey` 10000 ms aliases).
+to surface).
 
 | Group  | Key | Count | Purpose                                          |
 | ------ | --- | ----- | ------------------------------------------------ |
@@ -96,14 +93,12 @@ State transitions:
   a detached `hs.task` so a slow process can't trap the modal.
 - Escape from sub-group → back to leader.
 - Escape from leader → exit + HUD hides.
-- Any unbound letter in any modal → exit + HUD hides (fail-safe; mirrors
-  the kanata `@bas` slot filling every unbound deflayer position).
+- Any unbound letter in any modal → exit + HUD hides (fail-safe).
 - 2 s idle at any level → exit + HUD hides.
 
-### Cross-tool contracts (preserved verbatim from kanata era)
+### Cross-tool contracts
 
-All three remain **unchanged** — Hammerspoon shells out to the same
-scripts with identical argv:
+Hammerspoon shells out to these scripts with the argv they expect:
 
 - `config/bin/{fastopen, quit-app, leader-hud, brew-update,
   empty-trash, open-nordvpn, run-as-user, close-notifications}`
@@ -125,13 +120,13 @@ Payload remaps (v1):
   (firmware Caps Lock is invisible to event taps).
 
 F-row remaps (F1–F12 → media keys) are **deliberately not included**
-in v1. The Apple-vendor codes for Spotlight (kanata's F4), Dictation
-(F5), and Do Not Disturb (F6) are not reliably mappable through
-`hidutil`'s standard `UserKeyMapping` schema. macOS's native F-row
-behaviour covers most of the parity (brightness, Mission Control,
-prev/play/next, mute, volume); add specific entries once the exact
-codes are verified on the installed macOS version (Apple TN2450 +
-`hidutil property --get UserKeyMapping`).
+in v1. The Apple-vendor codes for Spotlight, Dictation, and Do Not
+Disturb are not reliably mappable through `hidutil`'s standard
+`UserKeyMapping` schema. macOS's native F-row behaviour covers most
+of the parity (brightness, Mission Control, prev/play/next, mute,
+volume); add specific entries once the exact codes are verified on
+the installed macOS version (Apple TN2450 + `hidutil property --get
+UserKeyMapping`).
 
 `hs.usb.watcher` re-fires the agent on USB attach/detach (see
 taphold.lua). On long-uptime drift, a manual nudge is also:
@@ -148,9 +143,8 @@ launchctl kickstart -k "gui/$(id -u)/com.local.hidutil-remap"
 | Manual reload                               | `hs -c "hs.reload()"`                        |
 | `RCmd → r → r` (leader: run → reload-hs)    | `hs.reload()`                                |
 
-`hs.reload()` is in-process — no daemon, no sudo. Compared to the
-kanata-era `sudo launchctl kickstart -k system/com.jtroo.kanata`,
-this avoids the password prompt and the SecureInput-while-typing risk.
+`hs.reload()` is in-process — no daemon, no sudo, no password prompt,
+no SecureInput-while-typing risk.
 
 ## Persistence across reboot
 
@@ -170,17 +164,6 @@ All of the following survive reboot automatically:
 - **eventtaps (leader + tap-hold)** — re-installed by `init.lua` on
   every Hammerspoon launch (which the auto-launch entry triggers).
 
-What does NOT persist automatically:
-
-- A `launchctl bootout` of a kanata daemon. The plist in
-  `/Library/LaunchDaemons/com.jtroo.kanata*.plist` reloads at next boot
-  unless you also `launchctl disable system/com.jtroo.kanata` (and
-  similarly for `-watcher`). Phase 3's
-  `scripts/migrate/decommission-kanata-karabiner` handles this
-  idempotently; during the Phase 2 soak you can `disable` without
-  removing the plist to prevent auto-reload while keeping the rollback
-  path intact.
-
 ## Manual setup steps (cannot be automated)
 
 - **Accessibility grant**: System Settings → Privacy & Security →
@@ -189,7 +172,7 @@ What does NOT persist automatically:
 - **fn key behaviour**: System Settings → Keyboard → "Press 🌐 key to" →
   set to **Do Nothing** (default is "Show Emoji & Symbols", which
   hijacks the fn key). Required for native `fn + Backspace →
-  ForwardDelete`, which replaces the kanata `ralt-nav` layer.
+  ForwardDelete`.
 
 ## Hammerspoon API surfaces used
 

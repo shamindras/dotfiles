@@ -1,8 +1,7 @@
 -- hud.lua — SketchyBar leader HUD bridge
 --
--- Wraps the existing `config/bin/leader-hud show|hide <group>` interface so
--- group names match the kanata-era contract verbatim. Names recognised by
--- config/sketchybar/items/leader.sh / config/bin/leader-hud:
+-- Wraps the `config/bin/leader-hud show|hide <group>` interface. Group
+-- names recognised by config/sketchybar/items/leader.sh / config/bin/leader-hud:
 --   leader, open, quit, claude, run, search, github, urls
 
 local M = {}

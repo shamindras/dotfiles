@@ -15,9 +15,9 @@
   to mitigate documented long-uptime drift.
 
   F-row remaps (F1..F12 → media keys) are intentionally NOT included here:
-  the Apple-vendor codes for Spotlight/Dictation/DND (F4/F5/F6 in the old
-  kanata mapping) are not reliably mappable through hidutil's standard
-  UserKeyMapping schema. macOS's native F-row behaviour covers the majority
+  the Apple-vendor codes for Spotlight, Dictation, and Do Not Disturb are
+  not reliably mappable through hidutil's standard UserKeyMapping schema.
+  macOS's native F-row behaviour covers the majority
   (brightness, mission control, prev/play/next, mute, volume); add specific
   entries here once the exact codes are verified on the installed macOS
   version (Apple TN2450 + `hidutil property --get UserKeyMapping`).

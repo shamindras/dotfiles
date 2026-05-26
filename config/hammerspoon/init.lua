@@ -1,7 +1,6 @@
 -- init.lua — Hammerspoon entry point
 --
--- Replaces kanata as the keyboard remapper + leader system. See
--- config/hammerspoon/CLAUDE.md for the architecture overview.
+-- See config/hammerspoon/CLAUDE.md for the architecture overview.
 --
 -- Lives at $XDG_CONFIG_HOME/hammerspoon/init.lua via the
 -- `defaults write org.hammerspoon.Hammerspoon MJConfigFile ...`
@@ -37,8 +36,8 @@ local taphold = require('taphold')
 leader.setup()
 taphold.setup()
 
--- Tiny confirmation that reload completed — matches the kanata daemon
--- restart notification path so the nvim BufWritePost reload feels the same.
+-- Tiny confirmation that reload completed — visible feedback after the
+-- nvim BufWritePost reload or a manual `hs -c "hs.reload()"`.
 hs.notify
   .new({
     title = 'Hammerspoon',

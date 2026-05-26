@@ -1,15 +1,9 @@
 -- taphold.lua — dual-function key remaps
 --
--- Replicates three of the kanata aliases from config/kanata/aliases-base.kbd:
---   @cap  (tap-hold-press   200 200 esc  lctl)  Caps Lock  → Esc / LCtrl
---   @lc   (tap-hold-press   200 200 esc  lctl)  LCtrl      → Esc / LCtrl
---   @rmc  (tap-hold-release 200 200 ldr  rmet)  RCmd       → leader / RCmd
---
--- The kanata @rao alias (ROpt → ralt-nav layer for "ROpt+Bspc → ForwardDelete")
--- is intentionally dropped: macOS already emits ForwardDelete natively for
--- fn+Backspace at the firmware layer, so the ralt-nav layer is redundant
--- once the "Press 🌐 key to" preference is set to "Do Nothing" (System
--- Settings → Keyboard).
+-- Three tap-hold pairs, all at a 200 ms threshold:
+--   Caps Lock  → Esc on tap / LCtrl on hold
+--   LCtrl      → Esc on tap / LCtrl on hold
+--   RCmd       → leader on tap / RCmd on hold (release-decided)
 --
 -- Caps Lock is invisible to hs.eventtap at the firmware layer, so the
 -- companion LaunchAgent (config/hammerspoon/launchagents/com.local.hidutil-remap.plist)
@@ -20,12 +14,15 @@
 -- flag state (the synthetic event is delivered but apps don't see
 -- "ctrl-held"). Instead, while F18 is held, we mutate the flags of every
 -- subsequent key event in-place via event:setFlags() — apps see Ctrl+key
--- with the correct modifier bits. This matches the technique Karabiner-
--- Elements uses internally, but at the user-event-tap layer (no kext).
+-- with the correct modifier bits.
 --
 -- The LCtrl / RCmd remaps target real modifier keys, so the OS handles
 -- their "hold" behaviour natively; we only synthesise the tap action on
 -- quick release with no interleaved keypress.
+--
+-- macOS emits ForwardDelete natively for fn+Backspace once the "Press 🌐
+-- key to" preference is set to "Do Nothing" (System Settings → Keyboard),
+-- so no nav-layer is needed for that.
 
 local leader = require('leader')
 
@@ -33,7 +30,7 @@ local M = {}
 
 -- {{{ Constants
 
-local TAP_THRESHOLD = 0.2 -- 200 ms, matches kanata tap-time / hold-time
+local TAP_THRESHOLD = 0.2 -- 200 ms
 
 local KC = hs.keycodes.map
 
