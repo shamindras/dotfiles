@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.local.hidutil-remap.plist
+  ─────────────────────────────
+  Per-user LaunchAgent that re-applies firmware-level keyboard remaps at
+  every login. The single mapping today: Caps Lock (HID 0x700000039) →
+  F18 (HID 0x70000006D), because firmware-level Caps Lock is invisible
+  to hs.eventtap and Hammerspoon needs to see a regular keycode to
+  drive the Caps tap-hold logic in config/hammerspoon/taphold.lua.
+
+  RunAtLoad=true is the only persistence we need — hidutil is a one-shot
+  property setter, so KeepAlive would crash-loop. config/hammerspoon/taphold.lua
+  additionally kickstarts this agent on USB attach/detach via hs.usb.watcher
+  to mitigate documented long-uptime drift.
+
+  F-row remaps (F1..F12 → media keys) are intentionally NOT included here:
+  the Apple-vendor codes for Spotlight/Dictation/DND (F4/F5/F6 in the old
+  kanata mapping) are not reliably mappable through hidutil's standard
+  UserKeyMapping schema. macOS's native F-row behaviour covers the majority
+  (brightness, mission control, prev/play/next, mute, volume); add specific
+  entries here once the exact codes are verified on the installed macOS
+  version (Apple TN2450 + `hidutil property --get UserKeyMapping`).
+
+  Reload after editing:
+      launchctl kickstart -k "gui/$(id -u)/com.local.hidutil-remap"
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.hidutil-remap</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/hidutil</string>
+        <string>property</string>
+        <string>--set</string>
+        <string>{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x70000006D}]}</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/hidutil-remap.stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/hidutil-remap.stderr.log</string>
+</dict>
+</plist>

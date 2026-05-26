@@ -62,24 +62,22 @@ brew "unixodbc"
 brew "freetds"
 # Command-line fuzzy finder written in Go
 brew "fzf"
-# Color management engine supporting ICC profiles
-brew "little-cms2"
-# New file format for still image compression
-brew "jpeg-xl"
 # Image format providing lossless and lossy compression for web images
 brew "webp"
 # Geometry Engine
 brew "geos"
 # International domain name library (IDNA2008, Punycode and TR46)
 brew "libidn2"
-# Validating, recursive, caching DNS resolver
-brew "unbound"
 # GNU Transport Layer Security (TLS) Library
 brew "gnutls"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
 # File format designed to store large amounts of data
 brew "hdf5"
+# Color management engine supporting ICC profiles
+brew "little-cms2"
+# New file format for still image compression
+brew "jpeg-xl"
 # Network authentication protocol
 brew "krb5"
 # Cartographic Projections Library
@@ -242,6 +240,8 @@ brew "tmux"
 brew "tree-sitter-cli"
 # Command-line unarchiving tools supporting multiple formats
 brew "unar"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # Internet file retriever
@@ -307,6 +307,8 @@ cask "font-victor-mono"
 cask "ghostty"
 # Web browser
 cask "google-chrome"
+# Desktop automation application
+cask "hammerspoon"
 # Vector graphics editor
 cask "inkscape"
 # Download manager
@@ -317,8 +319,6 @@ cask "karabiner-elements"
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications
 cask "mactex"
-# VPN client for secure internet access and private browsing
-cask "nordvpn"
 # Simple application that will prevent iTunes or Apple Music from launching
 cask "notunes"
 # JDK from Oracle
@@ -333,8 +333,6 @@ cask "raycast"
 cask "rstudio"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
-# Tool for sending personal documents to Kindles from Macs
-cask "send-to-kindle"
 # Screenshot measurement and annotation tool
 cask "shottr"
 # Instant messaging application focusing on security

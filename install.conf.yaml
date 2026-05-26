@@ -50,6 +50,7 @@
     ${XDG_CONFIG_HOME}/gh: config/gh
     ${XDG_CONFIG_HOME}/gh-dash: config/gh-dash
     ${XDG_CONFIG_HOME}/ghostty: config/ghostty
+    ${XDG_CONFIG_HOME}/hammerspoon: config/hammerspoon
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
     ${XDG_CONFIG_HOME}/kanata: config/kanata
@@ -85,6 +86,15 @@
     ${HOME}/Library/Application Support/espanso: config/espanso
     ${HOME}/Library/Application Support/Code/User/keybindings.json: config/vscode/keybindings.json
     ${HOME}/Library/Application Support/Code/User/settings.json: config/vscode/settings.json
+
+    # NOTE: ~/Library/LaunchAgents/com.local.hidutil-remap.plist is NOT
+    # symlinked here. macOS loads LaunchAgents very early at user login,
+    # before Dropbox/CloudStorage mounts — a symlink whose target lives
+    # under ~/Library/CloudStorage/Dropbox would silently fail to resolve
+    # and launchd would skip it. setup-hammerspoon copies the plist as a
+    # regular file instead, so login-time loading works without any
+    # cloud-sync dependency. Re-run scripts/setup/setup-hammerspoon
+    # after editing the repo plist to refresh the deployed copy.
 
 # Make sketchybar plugins executable
 - shell:
@@ -148,6 +158,11 @@
 - shell:
     - command: ./scripts/setup/setup-upgrade-kanata
       description: install kanata with cmd feature, or upgrade
+
+# Hammerspoon (userspace keyboard remapper + leader system — replacing kanata)
+- shell:
+    - command: ./scripts/setup/setup-hammerspoon
+      description: configure Hammerspoon MJConfigFile + load hidutil LaunchAgent
 
 # Install npm packages
 - shell:

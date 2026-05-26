@@ -71,6 +71,12 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   command = "execute 'silent !sudo launchctl kickstart -k system/com.jtroo.kanata'",
 })
 
+-- hammerspoon config (reload via the in-app hs CLI; no sudo)
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = { '*/hammerspoon/*.lua' },
+  command = "execute 'silent !hs -c \"hs.reload()\" >/dev/null 2>&1'",
+})
+
 -- borders config
 vim.api.nvim_create_autocmd('BufWritePost', {
   pattern = { 'bordersrc' },

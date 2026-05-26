@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+
+# setup-hammerspoon — post-install wiring for Hammerspoon
+#
+# Idempotent. Safe to re-run from ./install / ./bootstrap.
+#
+# Hammerspoon defaults to ~/.hammerspoon for its config. We keep it in
+# $XDG_CONFIG_HOME/hammerspoon via the (undocumented but stable)
+# `defaults write org.hammerspoon.Hammerspoon MJConfigFile ...` key.
+# See https://github.com/Hammerspoon/hammerspoon/discussions/3730 — this
+# is the only XDG mechanism that exists today.
+#
+# Steps:
+#   1. Sanity-check that Hammerspoon is installed (Brewfile owns this).
+#   2. Ensure MJConfigFile points at the XDG path. If the value is wrong
+#      and Hammerspoon is running, quit it first — Hammerspoon reads the
+#      defaults key at launch and won't pick up a change until then.
+#   3. Load the per-user hidutil LaunchAgent (Caps→F18). Re-kickstart on
+#      every run so a stale launchd registration doesn't go unnoticed.
+#   4. Open Hammerspoon if it isn't running.
+#
+# Accessibility (System Settings → Privacy & Security → Accessibility →
+# enable Hammerspoon) is TCC-gated and cannot be scripted. See the
+# post-install-hints script.
+
+set -Eeuo pipefail
+
+HS_APP="/Applications/Hammerspoon.app"
+HS_BUNDLE_ID="org.hammerspoon.Hammerspoon"
+HS_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/hammerspoon/init.lua"
+HIDUTIL_AGENT_LABEL="com.local.hidutil-remap"
+HIDUTIL_AGENT_PATH="$HOME/Library/LaunchAgents/${HIDUTIL_AGENT_LABEL}.plist"
+
+# Source plist in the repo. We COPY this into ~/Library/LaunchAgents
+# (rather than dotbot-symlink) because macOS scans for LaunchAgents at
+# user login BEFORE Dropbox/CloudStorage mounts — a symlink whose target
+# lives under ~/Library/CloudStorage/Dropbox/... resolves to nothing at
+# that moment and launchd silently skips it, so Caps Lock won't get
+# remapped at boot. A real file in ~/Library/LaunchAgents has no such
+# cloud-sync dependency.
+HIDUTIL_AGENT_SRC="$(cd "$(dirname "$0")/.." && pwd)/../config/hammerspoon/launchagents/${HIDUTIL_AGENT_LABEL}.plist"
+HIDUTIL_AGENT_SRC="$(cd "$(dirname "$HIDUTIL_AGENT_SRC")" && pwd)/$(basename "$HIDUTIL_AGENT_SRC")"
+
+# ── 1. Hammerspoon installed? ─────────────────────────────────────────────────
+
+if [[ ! -d "${HS_APP}" ]]; then
+  echo "[ERROR] Hammerspoon not installed. Run brew-update to fetch via the Brewfile."
+  exit 1
+fi
+
+echo "[INFO] Hammerspoon found at ${HS_APP}"
+
+# ── 2. MJConfigFile defaults key ──────────────────────────────────────────────
+
+current_mjconfig="$(defaults read "${HS_BUNDLE_ID}" MJConfigFile 2>/dev/null || true)"
+
+if [[ "${current_mjconfig}" != "${HS_CONFIG}" ]]; then
+  if [[ -n "${current_mjconfig}" ]]; then
+    echo "[INFO] MJConfigFile currently '${current_mjconfig}' — updating to '${HS_CONFIG}'"
+  else
+    echo "[INFO] MJConfigFile unset — pointing at '${HS_CONFIG}'"
+  fi
+
+  # If Hammerspoon is running, quit it so the new path takes effect on
+  # next launch. (defaults are read at launch.)
+  if pgrep -x Hammerspoon >/dev/null 2>&1; then
+    echo "[INFO] Quitting running Hammerspoon to pick up new MJConfigFile..."
+    osascript -e 'tell application "Hammerspoon" to quit' 2>/dev/null || true
+    # Give it a moment to wind down before relaunch later.
+    sleep 1
+  fi
+
+  defaults write "${HS_BUNDLE_ID}" MJConfigFile "${HS_CONFIG}"
+else
+  echo "[INFO] MJConfigFile already set to '${HS_CONFIG}'"
+fi
+
+# ── 3. hidutil LaunchAgent (Caps Lock → F18) ──────────────────────────────────
+
+if [[ ! -f "${HIDUTIL_AGENT_SRC}" ]]; then
+  echo "[ERROR] Source plist missing at ${HIDUTIL_AGENT_SRC}" >&2
+  exit 1
+fi
+
+mkdir -p "$(dirname "${HIDUTIL_AGENT_PATH}")"
+
+# If a previous install symlinked the plist (Phase 1 initial behaviour),
+# remove the dangling symlink before copying. Cloud-sync symlinks here
+# break auto-load at login.
+if [[ -L "${HIDUTIL_AGENT_PATH}" ]]; then
+  echo "[INFO] Removing stale symlink at ${HIDUTIL_AGENT_PATH}"
+  rm -f "${HIDUTIL_AGENT_PATH}"
+fi
+
+# Copy only when source and destination differ — keeps the run idempotent
+# and the inode stable across re-runs that didn't change the plist.
+if ! cmp -s "${HIDUTIL_AGENT_SRC}" "${HIDUTIL_AGENT_PATH}" 2>/dev/null; then
+  echo "[INFO] Copying ${HIDUTIL_AGENT_LABEL}.plist into ~/Library/LaunchAgents"
+  cp "${HIDUTIL_AGENT_SRC}" "${HIDUTIL_AGENT_PATH}"
+else
+  echo "[INFO] ${HIDUTIL_AGENT_LABEL}.plist already up-to-date"
+fi
+
+domain_target="gui/$(id -u)/${HIDUTIL_AGENT_LABEL}"
+
+# bootstrap is idempotent in the "already bootstrapped" sense (it returns
+# 17/EEXIST), which we tolerate. We always kickstart after to re-apply
+# the hidutil property in case the system has drifted.
+if /bin/launchctl print "${domain_target}" >/dev/null 2>&1; then
+  echo "[INFO] LaunchAgent ${HIDUTIL_AGENT_LABEL} already bootstrapped"
+else
+  echo "[INFO] Bootstrapping LaunchAgent ${HIDUTIL_AGENT_LABEL}"
+  /bin/launchctl bootstrap "gui/$(id -u)" "${HIDUTIL_AGENT_PATH}" || true
+fi
+
+echo "[INFO] Kickstarting ${HIDUTIL_AGENT_LABEL} to re-apply Caps→F18 mapping"
+/bin/launchctl kickstart -k "${domain_target}" || true
+
+# ── 4. Open Hammerspoon if not running ────────────────────────────────────────
+
+if pgrep -x Hammerspoon >/dev/null 2>&1; then
+  echo "[INFO] Hammerspoon already running"
+else
+  echo "[INFO] Launching Hammerspoon..."
+  open -a Hammerspoon
+fi
+
+# ── 5. Assert auto-launch at login (belt-and-suspenders) ──────────────────────
+# init.lua also calls hs.autoLaunch(true), but that only runs if Hammerspoon
+# successfully loads init.lua — which requires Accessibility on first launch.
+# Calling it via the hs CLI here ensures the Login Items entry is registered
+# even when init.lua hasn't fully loaded yet (Accessibility grant is a
+# separate manual step). hs.ipc is loaded by init.lua, so we poll briefly
+# for the CLI to come up before giving up. Failure is non-fatal — the next
+# successful init.lua load re-asserts it.
+
+echo "[INFO] Waiting for hs CLI (up to 5s)..."
+for _ in $(seq 1 10); do
+  if hs -c 'return 1' >/dev/null 2>&1; then
+    echo "[INFO] Asserting hs.autoLaunch(true) via CLI..."
+    hs -c 'hs.autoLaunch(true); return "ok"' >/dev/null 2>&1 || true
+    break
+  fi
+  sleep 0.5
+done
+
+echo "[INFO] setup-hammerspoon done."
+echo "[INFO] Reminder: System Settings → Privacy & Security → Accessibility → enable Hammerspoon (one-time)."
