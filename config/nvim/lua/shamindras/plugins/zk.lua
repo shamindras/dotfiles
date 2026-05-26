@@ -148,6 +148,37 @@ return {
       end
     end
 
+    -- Open an existing note at `path` with notification, or fall through.
+    -- zk.new errors with InvalidRequest when the target file already exists,
+    -- so for notes with a deterministic path (daily journal) we short-circuit.
+    local function open_if_exists(path, note_type)
+      if vim.uv.fs_stat(path) == nil then
+        return false
+      end
+
+      local filename = vim.fn.fnamemodify(path, ':t')
+      if vim.fn.fnamemodify(path, ':p') == vim.api.nvim_buf_get_name(0) then
+        vim.notify(string.format('Already on %s: %s', note_type, filename), vim.log.levels.INFO, { timeout = 2000 })
+        return true
+      end
+
+      vim.cmd.edit(path)
+      vim.defer_fn(function()
+        vim.notify(string.format('Opened %s: %s', note_type, filename), vim.log.levels.INFO, { timeout = 2000 })
+      end, 100)
+      return true
+    end
+
+    -- Today's daily-journal path, mirroring `[group.journal.note]` in zk config.toml
+    -- (filename = "{{format-date now}}"). Keep in sync if that template changes.
+    local function daily_journal_path()
+      local notebook_dir = get_notebook_dir()
+      if not notebook_dir then
+        return nil
+      end
+      return notebook_dir .. '/journal/' .. os.date('%Y-%m-%d') .. '.md'
+    end
+
     -- }}}
 
     -- {{{ Interactive Note Creation
@@ -222,11 +253,19 @@ return {
 
     -- Daily journal (uses template with yyyy-mm-dd format)
     commands.add('ZkDaily', function(options)
+      local path = daily_journal_path()
+      if path and open_if_exists(path, 'daily journal') then
+        return
+      end
       create_note_with_sync('journal', 'daily journal', false, options)
     end)
 
     -- Daily journal with template sync
     commands.add('ZkDailySync', function(options)
+      local path = daily_journal_path()
+      if path and open_if_exists(path, 'daily journal') then
+        return
+      end
       create_note_with_sync('journal', 'daily journal', true, options)
     end)
 
