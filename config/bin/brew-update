@@ -29,8 +29,8 @@ unset HOMEBREW_AUTOREMOVE
 # spawns subprocesses with no TTY (Raycast scripts, cron, etc. would
 # behave the same way), and the Brewfile pipeline requires interactive
 # `sudo -v` which silently fails without one. run-as-user is kept in the
-# call chain as a no-op so this dispatch still works in the (now-defunct)
-# root-LaunchDaemon era preserved at config/archive/kanata.
+# call chain so the dispatch also works when the script is invoked under
+# sudo (a no-op as the console user).
 if [ "$(id -u)" -eq 0 ] || ! [ -t 0 ]; then
   RUN="$HOME/.config/bin/run-as-user"
   WEZTERM="/Applications/WezTerm.app/Contents/MacOS/wezterm"

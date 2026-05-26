@@ -2,8 +2,8 @@
 # leader-hud — update sketchybar leader key HUD
 #
 # Called at each leader-layer transition by Hammerspoon to show the
-# available keys or dismiss the HUD. Uses run-as-user as a no-op
-# wrapper (preserved from the kanata-as-root era; harmless now).
+# available keys or dismiss the HUD. run-as-user is a no-op wrapper
+# here (Hammerspoon already runs as the console user).
 #
 # Usage:
 #   leader-hud show <group>   Show HUD label for group

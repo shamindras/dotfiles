@@ -1,8 +1,8 @@
 #!/bin/sh
 # empty-trash — empty Finder trash and switch aerospace workspace
 #
-# Uses run-as-user as a no-op wrapper (preserved from the kanata-as-root
-# era; Hammerspoon runs as the console user, so no context switch needed).
+# run-as-user is a no-op wrapper here (Hammerspoon already runs as the
+# console user); kept so the script tolerates being invoked under sudo.
 
 set -eu
 
