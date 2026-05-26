@@ -27,9 +27,9 @@ scripts/
 │   └── setup-nvim-treesitter  # dual-use: install.conf.yaml + just treesitter_*
 └── setup/                     # one-time bootstrap scripts (install-only)
     ├── post-install-hints
+    ├── setup-hammerspoon
     ├── setup-macos
     ├── setup-upgrade-homebrew
-    ├── setup-upgrade-kanata
     ├── setup-upgrade-rust-cargo
     ├── setup-upgrade-ttyper
     └── setup-zk
@@ -58,7 +58,7 @@ the subdir already provides that context.
 | `setup-macos`                | macOS system defaults configuration                              |
 | `setup-upgrade-homebrew`     | Homebrew installation/upgrade                                    |
 | `setup-upgrade-rust-cargo`   | Rust toolchain management                                        |
-| `setup-upgrade-kanata`       | Build kanata from source with cmd feature                        |
+| `setup-hammerspoon`          | Configure Hammerspoon MJConfigFile + hidutil Caps→F18 LaunchAgent |
 | `setup-upgrade-ttyper`       | Install/upgrade ttyper                                           |
 | `setup-zk`                   | Zettelkasten (zk) setup                                          |
 | `post-install-hints`         | Print manual post-install steps; suppressed by `DOTFILES_NO_HINTS=1` |
@@ -128,7 +128,7 @@ mechanism. Cleans up redundant login items for apps that do.
 | Dropbox              | Login Item                 | `setup-macos`       |
 | Espanso              | `espanso service register` | `install.conf.yaml` |
 | Flux                 | Login Item                 | `setup-macos`       |
-| Kanata               | LaunchDaemon               | `com.jtroo.kanata.plist` |
+| Hammerspoon          | Login Item (hs.autoLaunch) | `setup-hammerspoon` |
 | noTunes              | Login Item                 | `setup-macos`       |
 | Raycast              | Login Item                 | `setup-macos`       |
 | Scroll Reverser      | Login Item                 | `setup-macos`       |

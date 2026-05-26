@@ -65,12 +65,6 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   command = "execute 'silent !aerospace reload-config'",
 })
 
--- kanata config (restart daemon to reload)
-vim.api.nvim_create_autocmd('BufWritePost', {
-  pattern = { '*.kbd' },
-  command = "execute 'silent !sudo launchctl kickstart -k system/com.jtroo.kanata'",
-})
-
 -- hammerspoon config (reload via the in-app hs CLI; no sudo)
 vim.api.nvim_create_autocmd('BufWritePost', {
   pattern = { '*/hammerspoon/*.lua' },

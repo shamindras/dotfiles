@@ -313,8 +313,6 @@ cask "hammerspoon"
 cask "inkscape"
 # Download manager
 cask "jdownloader"
-# Keyboard customiser
-cask "karabiner-elements"
 # Free cross-platform office suite, fresh version
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications

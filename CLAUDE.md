@@ -83,7 +83,7 @@ Organized by runtime role:
   - `setup-macos` - macOS system defaults configuration
   - `setup-upgrade-homebrew` - Homebrew installation/upgrade
   - `setup-upgrade-rust-cargo` - Rust toolchain management
-  - `setup-upgrade-kanata` - Build kanata from source with cmd feature
+  - `setup-hammerspoon` - Configure Hammerspoon MJConfigFile + hidutil LaunchAgent
   - `setup-upgrade-ttyper` - Install/upgrade ttyper
   - `setup-zk` - Zettelkasten (zk) setup
   - `post-install-hints` - Print manual post-install steps
@@ -101,7 +101,7 @@ Major categories of tools configured:
 - **Editors**: neovim, vscode configurations
 - **Terminals**: ghostty, wezterm
 - **Development**: git, gh, lazygit, tmux
-- **System**: aerospace (window manager), kanata (keyboard remapper + leader sequences)
+- **System**: aerospace (window manager), hammerspoon (userspace keyboard remapper + leader sequences)
 - **CLI Tools**: bat, ripgrep, yazi, starship, atuin
 - **Languages**: R, rust/cargo, npm packages
 
@@ -171,7 +171,7 @@ run the corresponding command:
 | ----------- | -------------------------------------------- | ------------------------------------------------------------------- |
 | aerospace   | `aerospace.toml`                             | `aerospace reload-config`                                           |
 | borders     | `bordersrc`                                  | `brew services restart borders`                                     |
-| kanata      | `*.kbd`                                      | `sudo launchctl kickstart -k system/com.jtroo.kanata`               |
+| hammerspoon | `config/hammerspoon/*.lua`                   | `hs -c "hs.reload()"`                                               |
 | sketchybar  | `sketchybarrc`, `colors.sh`, `items/*.sh`    | `sketchybar --reload`                                               |
 | yazi        | `yazi.toml`                                  | `yazi --clear-cache`                                                |
 

@@ -53,7 +53,6 @@
     ${XDG_CONFIG_HOME}/hammerspoon: config/hammerspoon
     ${XDG_CONFIG_HOME}/git: config/git
     ${XDG_CONFIG_HOME}/glow: config/glow
-    ${XDG_CONFIG_HOME}/kanata: config/kanata
     ${XDG_CONFIG_HOME}/lazygit: config/lazygit
     ${XDG_CONFIG_HOME}/marimo: config/marimo
     ${XDG_CONFIG_HOME}/newsboat: config/newsboat
@@ -154,12 +153,7 @@
     - command: gh extension upgrade --all
       description: upgrade gh extensions
 
-# kanata (keyboard remapper with cmd feature — built from source)
-- shell:
-    - command: ./scripts/setup/setup-upgrade-kanata
-      description: install kanata with cmd feature, or upgrade
-
-# Hammerspoon (userspace keyboard remapper + leader system — replacing kanata)
+# Hammerspoon (userspace keyboard remapper + leader system)
 - shell:
     - command: ./scripts/setup/setup-hammerspoon
       description: configure Hammerspoon MJConfigFile + load hidutil LaunchAgent

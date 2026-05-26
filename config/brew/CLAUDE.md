@@ -13,15 +13,16 @@
 
 - **Taps**: felixkratz/formulae, nikitabobko/tap
 - **Formulas**: 100+ CLI tools and libraries
-- **Casks**: GUI apps (aerospace, karabiner, wezterm, etc.)
+- **Casks**: GUI apps (aerospace, hammerspoon, wezterm, etc.)
 
 ## Update Strategy
 
 **Policy**: Homebrew originates all updates. In-app update prompts are
 closed; upgrades are triggered by running the canonical pipeline
 (`config/bin/brew-update`, invoked by `./install`, the `bu` alias, and
-kanata leader `r b`). `HOMEBREW_UPGRADE_GREEDY=1` is set in
-`config/zsh/conf.d/01-z1-env-vars-gen.zsh` to align with this policy.
+the Hammerspoon leader `RCmd → r → b`). `HOMEBREW_UPGRADE_GREEDY=1`
+is set in `config/zsh/conf.d/01-z1-env-vars-gen.zsh` to align with
+this policy.
 
 **Canonical pipeline** (`config/bin/brew-update`):
 
@@ -58,15 +59,14 @@ kanata leader `r b`). `HOMEBREW_UPGRADE_GREEDY=1` is set in
 
 ### Known limitation: pkg-shaped auto-updating casks
 
-Four casks in the current Brewfile are `.pkg` installers with
+Three casks in the current Brewfile are `.pkg` installers with
 `auto_updates: true`:
 
 | Cask                 | Artifact | Failure mode under `--greedy`          |
 | -------------------- | -------- | -------------------------------------- |
-| `karabiner-elements` | pkg      | uninstall stanza runs; reinstall needs |
-| `nordvpn`            | pkg      | sudo/TTY and can fail non-interactively |
-| `xquartz`            | pkg      | — app vanishes until recovered.         |
-| `zoom`               | pkg      |                                        |
+| `nordvpn`            | pkg      | uninstall stanza runs; reinstall needs |
+| `xquartz`            | pkg      | sudo/TTY and can fail non-interactively |
+| `zoom`               | pkg      | — app vanishes until recovered.         |
 
 The script's step 7 (`brew bundle install`) fresh-installs whatever step
 6 dropped. After a failed greedy cycle, the cask is reinstalled at the
@@ -116,10 +116,9 @@ drop.
 `brew-update` calls `brew bundle dump` with `--formula --cask --tap` so
 only brew's native package types land in the Brewfile. Brew's default
 dump also covers cargo/npm/go/vscode/uv/flatpak/krew; those are left to
-their own setup scripts (e.g. `setup-upgrade-kanata` installs kanata
-with `cargo install kanata --features "default,cmd"` — a default
-`cargo "kanata"` Brewfile entry would silently reinstall it without the
-`cmd` feature and break every leader sequence that shells out).
+their own setup scripts where the cargo/uv/etc. invocation needs
+specific feature flags or repo-pinned versions that a vanilla brew
+bundle entry would silently break.
 
 ## Adding and Removing Packages
 

@@ -61,7 +61,7 @@ EOF
 fi
 
 # ------------------------------------------------------------------------------
-# Acquire sudo credentials (needed by setup-macos, setup-upgrade-kanata, etc.)
+# Acquire sudo credentials (needed by setup-macos, brew bootstrap, etc.)
 # ------------------------------------------------------------------------------
 
 sudo -v

@@ -346,7 +346,8 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "
 ###############################################################################
 # SSH is the only defensive measure that survives a fully-frozen keyboard
 # — see RECOVERY.md. Enabling it by default is non-negotiable for this
-# machine: a single Karabiner-DriverKit / kanata wedge once cost a full day
+# machine: a single Karabiner-DriverKit wedge (the failure mode driving the
+# Hammerspoon migration) once cost a full day
 # of work because no physical keyboard (including a wired Nuphy) could
 # reach the lock screen. With SSH enabled, the phone-as-keyboard escape
 # hatch is one `ssh user@<lan-ip>` away regardless of HID state.
@@ -375,7 +376,7 @@ done
 # Register login items for apps that rely on macOS Login Items to start at boot.
 # Apps with their own mechanism are excluded:
 #   - Espanso (LaunchAgent), borders/sketchybar (brew services)
-#   - Kanata (LaunchDaemon: /Library/LaunchDaemons/com.jtroo.kanata.plist)
+#   - Hammerspoon (registers itself via hs.autoLaunch(true) in init.lua)
 login_items=(
   "/Applications/AeroSpace.app"
   "/Applications/Dropbox.app"

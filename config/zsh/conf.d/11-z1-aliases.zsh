@@ -27,7 +27,6 @@ function z1_aliases {
   alias er='espanso restart'
   alias ghd='tmux-resize;gh dash;clear;'
   alias ghup='gh extension upgrade --all'
-  alias kl='launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server'
   alias ls='eza --color=always --group-directories-first --icons --git-ignore'
   alias l='ls -la'
   alias lg='tmux-resize;lazygit;clear;'
