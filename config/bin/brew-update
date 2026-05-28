@@ -2,12 +2,15 @@
 # brew-update — canonical Homebrew update pipeline.
 #
 # Invoked by install.conf.yaml, the `bu` zsh alias, and the Hammerspoon
-# leader `RCmd → r → b`. Flow: sudo bootstrap → Caskroom sweep (*.upgrading orphans +
+# leader `RCmd → r → b`. Flow: Caskroom sweep (*.upgrading orphans +
 # .metadata-only stubs) → tri-state mode detect (steady / drift /
 # bootstrap) → dump (steady + drift) → brew update → brew upgrade --greedy
 # (tolerant) → brew bundle install (recovery + bootstrap) → brew cleanup →
-# emoji summary. Drift mode lets `brew uninstall <name>` flow symmetrically
-# with `brew install <name>` — the dump captures both directions.
+# emoji summary. Sudo is invoked lazily — only when the Caskroom sweep has
+# orphans to remove or when brew itself escalates for a pkg-shaped cask —
+# so quiet runs never prompt for a password. Drift mode lets
+# `brew uninstall <name>` flow symmetrically with `brew install <name>` —
+# the dump captures both directions.
 
 set -Eeuo pipefail
 
@@ -27,10 +30,11 @@ unset HOMEBREW_AUTOREMOVE
 # --- No-TTY → WezTerm popup dispatch --------------------------------------
 # Triggered when invoked without a controlling TTY — Hammerspoon's hs.task
 # spawns subprocesses with no TTY (Raycast scripts, cron, etc. would
-# behave the same way), and the Brewfile pipeline requires interactive
-# `sudo -v` which silently fails without one. run-as-user is kept in the
-# call chain so the dispatch also works when the script is invoked under
-# sudo (a no-op as the console user).
+# behave the same way). brew shells out to interactive `sudo` for
+# pkg-shaped cask installs, and step 1's Caskroom sweep does the same;
+# both silently fail without a TTY to read the password from. run-as-user
+# is kept in the call chain so the dispatch also works when the script is
+# invoked under sudo (a no-op as the console user).
 if [ "$(id -u)" -eq 0 ] || ! [ -t 0 ]; then
   RUN="$HOME/.config/bin/run-as-user"
   WEZTERM="/Applications/WezTerm.app/Contents/MacOS/wezterm"
@@ -43,15 +47,6 @@ SECONDS=0
 RED=$'\033[0;31m'; YEL=$'\033[0;33m'; GRN=$'\033[0;32m'
 DIM=$'\033[2m';    NC=$'\033[0m'
 
-# Step 1 — Sudo bootstrap (upfront prompt; cached for the whole run).
-printf '🔐 [1/8] Authenticating sudo upfront (cached for the run)\n'
-if ! sudo -v; then
-  printf '%s❌ sudo authentication cancelled; aborting.%s\n' "$RED" "$NC" >&2
-  exit 1
-fi
-( while sudo -n true 2>/dev/null; do sleep 30; done ) &
-SUDO_PID=$!
-
 PRE_F=$(mktemp -t brew-update); PRE_C=$(mktemp -t brew-update)
 MID_F=$(mktemp -t brew-update); MID_C=$(mktemp -t brew-update)
 POST_C=$(mktemp -t brew-update); CLEAN_LOG=$(mktemp -t brew-update)
@@ -59,13 +54,12 @@ INST_F=$(mktemp -t brew-update); INST_C=$(mktemp -t brew-update)
 PRE_BREWFILE=$(mktemp -t brew-update)
 
 cleanup_tmp() {
-  kill "$SUDO_PID" 2>/dev/null || true
   rm -f "$PRE_F" "$PRE_C" "$MID_F" "$MID_C" "$POST_C" "$CLEAN_LOG" \
         "$INST_F" "$INST_C" "$PRE_BREWFILE"
 }
 trap cleanup_tmp EXIT
 
-# Pre-step-2 — Sweep broken cask state that would mislead mode detection.
+# Step 1 — Sweep broken cask state that would mislead mode detection.
 # Two shapes of corruption to clean up first:
 #
 #   1. `*.upgrading` directories: `brew cask upgrade` renames
@@ -82,9 +76,9 @@ trap cleanup_tmp EXIT
 #      trusts `brew list`, mode is (wrongly) detected as steady and the
 #      dump silently removes the entry from the Brewfile.
 #
-# Wiping both here makes the installed-cask check in step 2 reflect the
-# true state — they become missing → drift mode fires → preview warns
-# the user with an actionable list.
+# Wiping both here makes the installed-cask check in step 2 (mode
+# detection) reflect the true state — they become missing → drift mode
+# fires → preview warns the user with an actionable list.
 CASKROOM="/opt/homebrew/Caskroom"
 SWEEP=()
 if [ -d "$CASKROOM" ]; then
@@ -101,9 +95,9 @@ if [ -d "$CASKROOM" ]; then
   done
 fi
 if [ "${#SWEEP[@]}" -eq 0 ]; then
-  printf '🧹 [2/8] Caskroom sweep: nothing to clean\n'
+  printf '🧹 [1/7] Caskroom sweep: nothing to clean\n'
 else
-  printf '🧹 [2/8] Sweeping %d broken Caskroom dir(s)\n' "${#SWEEP[@]}"
+  printf '🧹 [1/7] Sweeping %d broken Caskroom dir(s)\n' "${#SWEEP[@]}"
   for entry in "${SWEEP[@]}"; do
     path="${entry%|*}"; kind="${entry##*|}"
     if [ "$kind" = upgrading ]; then
@@ -115,7 +109,7 @@ else
   done
 fi
 
-# Step 3 — Tri-state mode detection.
+# Step 2 — Tri-state mode detection.
 #   steady    : every declared formula/cask is present in `brew list`.
 #               Outdated versions are fine — step 5 handles upgrades.
 #   drift     : some declared entries are absent from `brew list`, but
@@ -169,7 +163,7 @@ else
     MODE=drift
   fi
 fi
-printf '🧭 [3/8] Mode: %s\n' "$MODE"
+printf '🧭 [2/7] Mode: %s\n' "$MODE"
 
 # Drift visibility: surface the pending Brewfile removals so the user
 # can Ctrl-C if any of them are unintentional losses (crashed run,
@@ -183,7 +177,7 @@ fi
 
 cp "$BREWFILE" "$PRE_BREWFILE" 2>/dev/null || true
 
-# Step 4 — Dump (steady + drift). Both modes are safe: brew is populated,
+# Step 3 — Dump (steady + drift). Both modes are safe: brew is populated,
 # so the dump accurately reflects the user's intended state including
 # ad-hoc installs AND ad-hoc uninstalls. Bootstrap skips so we don't
 # overwrite the canonical Brewfile with a near-empty snapshot on a fresh
@@ -194,40 +188,40 @@ cp "$BREWFILE" "$PRE_BREWFILE" 2>/dev/null || true
 # managed by their own setup scripts where feature flags or repo-pinned
 # versions would be lost by a vanilla bundle entry.
 if [ "$MODE" != bootstrap ]; then
-  printf '📋 [4/8] brew bundle dump → Brewfile (brew-only scope)\n'
+  printf '📋 [3/7] brew bundle dump → Brewfile (brew-only scope)\n'
   "$BREW" bundle dump --describe --force --file="$BREWFILE" \
     --formula --cask --tap
 else
-  printf '📋 [4/8] Skipping dump (bootstrap mode)\n'
+  printf '📋 [3/7] Skipping dump (bootstrap mode)\n'
 fi
 
 "$BREW" list --versions --formula >"$PRE_F" || true
 "$BREW" list --versions --cask    >"$PRE_C" || true
 
-# Step 5 — Refresh taps.
-printf '🔄 [5/8] brew update\n'
+# Step 4 — Refresh taps.
+printf '🔄 [4/7] brew update\n'
 "$BREW" update
 
-# Step 6 — Greedy upgrade. Tolerated: pkg-shaped auto_updates casks
+# Step 5 — Greedy upgrade. Tolerated: pkg-shaped auto_updates casks
 # (nordvpn, xquartz, zoom) fail the uninstall→reinstall cycle and exit
-# non-zero; step 7 re-installs anything step 6 silently dropped.
-printf '⬆️  [6/8] brew upgrade --greedy (tolerant of individual cask failures)\n'
+# non-zero; step 6 re-installs anything step 5 silently dropped.
+printf '⬆️  [5/7] brew upgrade --greedy (tolerant of individual cask failures)\n'
 UPGRADE_EXIT=0
 "$BREW" upgrade --greedy || UPGRADE_EXIT=$?
 
 "$BREW" list --versions --formula >"$MID_F" || true
 "$BREW" list --versions --cask    >"$MID_C" || true
 
-# Step 7 — Reconcile against Brewfile. Upgrade-by-default, so this both
-# bootstraps missing entries and recovers anything step 6 dropped.
-printf '🔧 [7/8] brew bundle install (recovery + bootstrap)\n'
+# Step 6 — Reconcile against Brewfile. Upgrade-by-default, so this both
+# bootstraps missing entries and recovers anything step 5 dropped.
+printf '🔧 [6/7] brew bundle install (recovery + bootstrap)\n'
 BUNDLE_EXIT=0
 "$BREW" bundle install --file="$BREWFILE" || BUNDLE_EXIT=$?
 
 "$BREW" list --versions --cask >"$POST_C" || true
 
-# Step 8 — Cleanup.
-printf '🧹 [8/8] brew cleanup\n'
+# Step 7 — Cleanup.
+printf '🧹 [7/7] brew cleanup\n'
 "$BREW" cleanup 2>&1 | tee "$CLEAN_LOG" || true
 
 # --- Summary -------------------------------------------------------------
