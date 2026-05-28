@@ -1,6 +1,24 @@
 #!/usr/bin/env bash
+#
+# setup-zk — bootstrap the zk (zettelkasten) notebook on a fresh or existing
+# machine. Idempotent on re-runs; safe as ad-hoc recovery via
+# `./scripts/setup/setup-zk` from the repo root.
+#
+# Responsibilities:
+#   1. Verify Dropbox is set up (notebook lives at $ZK_NOTEBOOK_DIR under Dropbox).
+#   2. Create notebook dir structure (journal/, ideas/, .zk/templates/).
+#   3. Mark $ZK_NOTEBOOK_DIR/.zk/ as Dropbox-ignored (com.dropbox.ignored=1).
+#      The .zk/ tree holds notebook.db (SQLite) + transient -wal/-shm
+#      sidecars + a templates/ cache rsync'd from the dotfiles repo. None of
+#      it is canonical: markdown files under journal/ and ideas/ are the
+#      source of truth and stay Dropbox-synced. Keeping .zk/ local-only
+#      prevents Dropbox from racing SQLite writes (the Tahoe File Provider
+#      can serve partially-materialised files mid-write → B-tree corruption).
+#   4. Seed starter templates from config/zk/templates/ if .zk/templates/ is empty.
+#   5. If an existing notebook.db is corrupt, back it up to /tmp and remove it.
+#      The zk-nvim LSP rebuilds the index lazily on next markdown buffer open.
 
-set -e # Exit on error
+set -Eeuo pipefail
 
 echo "Setting up zk (zettelkasten) configuration..."
 
@@ -18,13 +36,40 @@ mkdir -p "$ZK_NOTEBOOK_DIR/journal"
 mkdir -p "$ZK_NOTEBOOK_DIR/ideas"
 mkdir -p "$ZK_NOTEBOOK_DIR/.zk/templates"
 
-# 3. Copy starter templates ONLY if none exist
+# 3. Mark .zk/ as Dropbox-ignored BEFORE anything else writes to it, so the
+#    notebook.db that zk-nvim creates lazily is born inside an unsynced dir.
+current_ignored="$(xattr -p com.dropbox.ignored "$ZK_NOTEBOOK_DIR/.zk" 2>/dev/null || true)"
+if [ "$current_ignored" != "1" ]; then
+  xattr -w com.dropbox.ignored 1 "$ZK_NOTEBOOK_DIR/.zk"
+  echo "✓ Marked .zk/ as Dropbox-ignored"
+else
+  echo "✓ .zk/ already Dropbox-ignored"
+fi
+
+# 4. Copy starter templates ONLY if none exist
 if [ -z "$(ls -A "$ZK_NOTEBOOK_DIR/.zk/templates/"*.md 2>/dev/null)" ]; then
-  echo "No templates found in Dropbox, copying starter templates..."
+  echo "No templates found, copying starter templates..."
   cp config/zk/templates/*.md "$ZK_NOTEBOOK_DIR/.zk/templates/"
   echo "✓ Starter templates copied successfully"
 else
-  echo "✓ Templates already exist in Dropbox, skipping copy"
+  echo "✓ Templates already present, skipping copy"
+fi
+
+# 5. Detect + recover from a corrupt notebook.db (rare; happens after a clean
+#    macOS reset when Dropbox materialised the synced db while SQLite was
+#    writing). Missing db is fine — zk-nvim LSP rebuilds on first use.
+db="$ZK_NOTEBOOK_DIR/.zk/notebook.db"
+if [ -f "$db" ]; then
+  integrity="$(sqlite3 "$db" 'PRAGMA integrity_check;' 2>&1 | head -1 || true)"
+  if [ "$integrity" = "ok" ]; then
+    echo "✓ notebook.db integrity verified"
+  else
+    backup="/tmp/notebook.db.corrupt-$(date +%Y%m%d-%H%M%S).bak"
+    cp "$db" "$backup"
+    rm "$db"
+    echo "⚠ Corrupt notebook.db backed up to $backup and removed."
+    echo "  zk-nvim LSP will rebuild the index on next markdown buffer open."
+  fi
 fi
 
 echo "✓ zk setup complete!"
