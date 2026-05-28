@@ -116,6 +116,16 @@ Aerospace, and third-party apps (Skim, Preview). Manages Login Items for
 apps that need to start at login. Requires `sudo` for some settings.
 Restarts Dock, Finder, and SystemUIServer at the end.
 
+For Skim and Preview, also sets PDF view defaults and `NSUserKeyEquivalents`
+for page navigation (`Ctrl+H/L/N/P`) and layout (`Cmd+1` / `Cmd+2`). Skim
+gets full two-up non-continuous + zoom-to-fit via
+`SKDefaultPDFDisplaySettings`. Preview is partial on macOS 26.5: sidebar
+default closes via `PVSidebarViewModeForNewDocuments = 0`, but
+`PVPDFDefaultPageViewModeOption` is inert in Tahoe (verified on fresh
+PDFs — no value produces Two Pages on open), so `Cmd+2` is the
+per-session workaround. Preview also lacks First/Last-page menu items,
+so `Ctrl+H/L` can't be bound there.
+
 ### Login Items
 
 Registers macOS Login Items for apps that don't have their own startup
