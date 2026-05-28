@@ -196,6 +196,8 @@ brew "prettierd"
 brew "proselint"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
+# Tools for and transforming and inspecting PDF files
+brew "qpdf"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Wrapper around ripgrep that adds multiple rich file types
