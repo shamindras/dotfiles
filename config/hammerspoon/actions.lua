@@ -209,6 +209,13 @@ M.urls = {
       cmd = as_user("/usr/bin/open -na Firefox --args -private-window 'https://youtube.com'"),
     },
     { key = 'k', label = 'google-keep', cmd = url('https://keep.google.com/u/0/') },
+    {
+      key = 'w',
+      label = 'brisbane-weather',
+      cmd = url(
+        'https://www.google.com/search?q=brisbane+weather&client=firefox-b-d&sca_esv=1a8f6c894285d156&sxsrf=AE3TifOl2N5wGjvwsTLrqZrmQoaHkX7GvA%3A1763829993058&ei=6eghafijA6u0qtsPvNGRkAY&ved=0ahUKEwi4vLjhmoaRAxUrmmoFHbxoBGIQ4dUDCBE&uact=5&oq=brisbane+weather&gs_lp=Egxnd3Mtd2l6LXNlcnAiEGJyaXNiYW5lIHdlYXRoZXIyCxAAGIAEGJECGIoFMggQABiABBixAzIGEAAYBxgeMgYQABgHGB4yBhAAGAcYHjIGEAAYBxgeMgYQABgHGB4yBRAAGIAEMgUQABiABDIGEAAYBxgeSK8SUMADWNUPcAJ4AZABAJgBswKgAfAQqgEFMi03LjG4AQPIAQD4AQGYAgSgArQEwgIKEAAYsAMY1gQYR8ICDRAAGIAEGLADGEMYigXCAhAQLhiABBiwAxhDGNQCGIoFmAMAiAYBkAYKkgcFMi4wLjKgB98xsgcDMi0yuAewBMIHBTAuMi4yyAcM&sclient=gws-wiz-serp'
+      ),
+    },
   },
 }
 

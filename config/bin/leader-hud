@@ -50,7 +50,7 @@ case "$ACTION" in
         LABEL="(g)▸ b:󰖟 c:󰗀 d:󰉋 g:󰊤 n:󰎐"
         ;;
       urls)
-        LABEL="(u)▸ b:󰖟 h:󰋜 i:󰗃 k:󰷐"
+        LABEL="(u)▸ b:󰖟 h:󰋜 i:󰗃 k:󰷐 w:󰖙"
         ;;
       *)
         echo "leader-hud: unknown group '$GROUP'" >&2
