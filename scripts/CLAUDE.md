@@ -60,7 +60,7 @@ the subdir already provides that context.
 | `setup-upgrade-rust-cargo`   | Rust toolchain management                                        |
 | `setup-hammerspoon`          | Configure Hammerspoon MJConfigFile + hidutil Caps→F18 LaunchAgent |
 | `setup-upgrade-ttyper`       | Install/upgrade ttyper                                           |
-| `setup-zk`                   | Zettelkasten (zk) setup                                          |
+| `setup-zk`                   | Zettelkasten (zk) setup: notebook dirs, Dropbox-ignore xattr on `.zk/`, starter template seed, corrupt-`notebook.db` recovery |
 | `post-install-hints`         | Print manual post-install steps; suppressed by `DOTFILES_NO_HINTS=1` |
 
 ### ops/
