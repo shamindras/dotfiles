@@ -336,6 +336,69 @@ defaults write net.sourceforge.skim-app.skim \
   "TB Is Shown" -bool false \
   "TB Size Mode" -int 1
 
+###############################################################################
+# Skim & Preview PDF defaults                                                 #
+###############################################################################
+echo "  Skim & Preview PDF defaults..."
+
+if [[ -d /Applications/Skim.app ]]; then
+  echo "    Skim defaults..."
+  osascript -e 'tell application "Skim" to quit' 2>/dev/null || true
+
+  # Two-up non-continuous layout, zoom-to-fit. PDFKit displayMode:
+  # 0=single, 1=single-continuous, 2=two-up, 3=two-up-continuous.
+  defaults write net.sourceforge.skim-app.skim SKDefaultPDFDisplaySettings -dict \
+    autoScales          -bool true \
+    displayBox          -int  1 \
+    displayMode         -int  2 \
+    displaysAsBook      -bool false \
+    displaysPageBreaks  -bool true
+
+  # Navigation keybinds via NSUserKeyEquivalents (@=Cmd, ^=Ctrl).
+  # Keys must match Skim's Go/View menu-item titles exactly.
+  defaults write net.sourceforge.skim-app.skim NSUserKeyEquivalents -dict \
+    "First"       "^h" \
+    "Last"        "^l" \
+    "Next"        "^n" \
+    "Previous"    "^p" \
+    "Single Page" "@1" \
+    "Two Pages"   "@2"
+else
+  echo "    Skim not installed — skipping Skim defaults."
+fi
+
+if [[ -d /System/Applications/Preview.app ]]; then
+  echo "    Preview defaults..."
+  osascript -e 'tell application "Preview" to quit' 2>/dev/null || true
+
+  # Default sidebar view for new documents: 0 = closed (verified on macOS
+  # 26.5). Only applies to PDFs Preview has never opened before; per-doc
+  # state takes over on subsequent opens.
+  defaults write com.apple.Preview PVSidebarViewModeForNewDocuments -int 0
+
+  # Preview limitations on macOS 26.5 Tahoe (verified by diffing
+  # ~/Library/Containers/com.apple.Preview/.../com.apple.Preview.plist
+  # vs Preview.ViewState.plist before/after a View → Two Pages toggle):
+  #  - Layout is per-document state stored in Preview.ViewState.plist
+  #    under UI_Additions_Windowed_Properties.pageViewMode (0=single,
+  #    1=single-continuous, 2=two-up, 3=two-up-continuous). The popup
+  #    PVPDFDefaultPageViewModeOption in the main plist is inert — no
+  #    value (0/1/2/3) produces Two Pages on first open. There is no
+  #    PVPageViewModeForNewDocuments analogue to the sidebar key below.
+  #    Cmd+2 is the per-session workaround.
+  #  - No global PDF zoom default; zoom is per-document, remembered.
+  #  - No First/Last-page menu items exist, so Ctrl+H / Ctrl+L can't be
+  #    bound via NSUserKeyEquivalents. System shortcuts Fn+Left /
+  #    Fn+Right (Home/End) still jump first/last page.
+  defaults write com.apple.Preview NSUserKeyEquivalents -dict \
+    "Next Item"     "^n" \
+    "Previous Item" "^p" \
+    "Single Page"   "@1" \
+    "Two Pages"     "@2"
+else
+  echo "    Preview not installed — skipping Preview defaults."
+fi
+
 # Auto-hide native menu bar (for SketchyBar)
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
 
