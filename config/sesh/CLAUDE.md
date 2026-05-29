@@ -128,8 +128,7 @@ Resurrect/continuum is a background safety net, not part of the normal workflow.
 Continuum auto-restore is OFF. Sesh recreates sessions fresh from sesh.toml.
 
 ```
-sesh-reset --common         # notes, dots, play, blog, feed
-sesh-reset --all            # common + career
+sesh-reset --all            # notes, dots, play, blog, feed, career
 ```
 
 Or connect one at a time: `sesh connect notes`, or use `prefix+s` picker.
