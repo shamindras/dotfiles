@@ -90,7 +90,7 @@ All scripts use:
 | play     | claude   | yazi    | nvim    | term (uv venv) | — | claude   |
 | career   | claude   | yazi    | nvim    | term   | —      | nvim     |
 | blog     | claude   | yazi    | nvim    | preview| term   | nvim     |
-| notes    | journal  | ideas   | yazi    | term   | claude | journal  |
+| notes    | journal  | yazi    | ideas   | term   | claude | journal  |
 | feed     | newsboat | yazi    | term    | —      | —      | newsboat |
 
 Every `yazi` window opens with these tabs (left → right):
