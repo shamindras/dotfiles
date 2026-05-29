@@ -7,18 +7,15 @@
 ##? usage:
 ##?   sesh-reset <session-name> [<session-name> ...]
 ##?   sesh-reset --all
-##?   sesh-reset --common
 ##?
 ##? options:
-##?   --all       Reset common sessions + career
-##?   --common    Reset predefined set: notes dots play blog feed
+##?   --all       Reset all predefined sessions: notes dots play blog feed career
 ##?   -h, --help  Show this help
 ##?
 ##? examples:
 ##?   sesh-reset notes              # recreate notes session
 ##?   sesh-reset notes feed dots    # recreate multiple sessions
-##?   sesh-reset --common           # recreate notes, dots, play, blog, feed
-##?   sesh-reset --all              # recreate common + career
+##?   sesh-reset --all              # recreate notes, dots, play, blog, feed, career
 
 sesh-reset() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
@@ -87,9 +84,6 @@ sesh-reset() {
   case "$1" in
     --all)
       sessions=(notes dots play blog feed career)
-      ;;
-    --common)
-      sessions=(notes dots play blog feed)
       ;;
     "")
       echo "sesh-reset: session name required (use -h for help)" >&2
