@@ -421,9 +421,28 @@ if [[ -d /Applications/DjView.app ]]; then
   # Fit-to-page (djview encodes "fit page" as -1, stored as a string).
   defaults write org.djvu.DjView "forStandalone.zoom" -string "-1"
 
+  # Page navigation via NSUserKeyEquivalents (@=Cmd, ^=Ctrl). Same scheme as
+  # Skim & Preview (c64663a). Keys match Qt menu-item titles with the "&"
+  # Windows-style mnemonic stripped (macOS NSMenu drops it when translating
+  # Qt's QMenuBar). Additive to djview's native Cmd+Home / Cmd+End / PgUp /
+  # PgDown / Opt+Left / Opt+Right — those keep working.
+  #
+  # Note on the '"@["' quoting for Cmd+[/Cmd+]: the `defaults` CLI's plist
+  # mini-language treats `@[` as a literal-array opener, so a bare "@[" or
+  # "\@[" fails with "Could not parse". Wrapping in shell single-quotes
+  # around literal plist double-quotes forces a string. Same trick for "@]".
+  defaults write org.djvu.DjView NSUserKeyEquivalents -dict \
+    "First Page"    "^h" \
+    "Last Page"     "^l" \
+    "Next Page"     "^n" \
+    "Previous Page" "^p" \
+    "Backward"      '"@["' \
+    "Forward"       '"@]"'
+
   # forStandalone.remember = 1 means DjView rewrites these options on quit.
   # Defaults apply on next launch after this script runs; UI tweaks during a
-  # session override until setup-macos is re-run.
+  # session override until setup-macos is re-run. (NSUserKeyEquivalents is
+  # not touched by djview at quit, so the keybinds persist independently.)
 else
   echo "    DjView not installed — skipping DjView defaults."
 fi

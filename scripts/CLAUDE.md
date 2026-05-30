@@ -128,13 +128,22 @@ so `Ctrl+H/L` can't be bound there.
 
 For DjView (`org.djvu.DjView`), sets windowed defaults to two-pages-side-by-side,
 fit-to-page, sidebar hidden via `forStandalone.options` + `forStandalone.zoom`.
+Also sets `NSUserKeyEquivalents`: `Ctrl+H/L/N/P` for first/last/next/previous
+page (same scheme as Skim/Preview) plus `Cmd+[`/`Cmd+]` for `Backward`/`Forward`
+(matches the macOS-wide back/forward convention used by Preview and Skim
+defaults — additive to djview's native `Opt+Left`/`Opt+Right`). Qt's QMenuBar
+translates to native NSMenu on macOS so the override works, with the `&`
+mnemonic in titles like `&First Page` stripped during translation (match
+against `First Page`). The `Cmd+[`/`Cmd+]` values need `'"@["'` shell quoting
+to avoid the `defaults` plist mini-language treating `@[` as an array opener.
 `forStandalone.remember = 1` means UI tweaks during a session persist over the
-defaults until the next `setup-macos` run. The `djview` Homebrew cask is
-deprecated upstream (auto-disabled 2026-09-01 — Gatekeeper signature failure);
-the installed binary at `/Applications/DjView.app` keeps working past that
-date, and the existence guard makes the block a silent no-op if the cask
-eventually vanishes. Alternatives surveyed (none drop-in): `ddjvu -format=pdf`
-→ Skim; MacPorts `okular`; Calibre's transcoding viewer; `mupdf-tools`.
+defaults until the next `setup-macos` run; `NSUserKeyEquivalents` is independent
+and persists across launches. The `djview` Homebrew cask is deprecated upstream
+(auto-disabled 2026-09-01 — Gatekeeper signature failure); the installed binary
+at `/Applications/DjView.app` keeps working past that date, and the existence
+guard makes the block a silent no-op if the cask eventually vanishes.
+Alternatives surveyed (none drop-in): `ddjvu -format=pdf` → Skim; MacPorts
+`okular`; Calibre's transcoding viewer; `mupdf-tools`.
 
 ### Login Items
 
