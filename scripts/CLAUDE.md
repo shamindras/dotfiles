@@ -112,8 +112,8 @@ standalone entry point).
 ## setup-macos
 
 Applies `defaults write` commands for system preferences, Finder, Dock,
-Aerospace, and third-party apps (Skim, Preview). Manages Login Items for
-apps that need to start at login. Requires `sudo` for some settings.
+Aerospace, and third-party apps (Skim, Preview, DjView). Manages Login Items
+for apps that need to start at login. Requires `sudo` for some settings.
 Restarts Dock, Finder, and SystemUIServer at the end.
 
 For Skim and Preview, also sets PDF view defaults and `NSUserKeyEquivalents`
@@ -125,6 +125,16 @@ default closes via `PVSidebarViewModeForNewDocuments = 0`, but
 PDFs — no value produces Two Pages on open), so `Cmd+2` is the
 per-session workaround. Preview also lacks First/Last-page menu items,
 so `Ctrl+H/L` can't be bound there.
+
+For DjView (`org.djvu.DjView`), sets windowed defaults to two-pages-side-by-side,
+fit-to-page, sidebar hidden via `forStandalone.options` + `forStandalone.zoom`.
+`forStandalone.remember = 1` means UI tweaks during a session persist over the
+defaults until the next `setup-macos` run. The `djview` Homebrew cask is
+deprecated upstream (auto-disabled 2026-09-01 — Gatekeeper signature failure);
+the installed binary at `/Applications/DjView.app` keeps working past that
+date, and the existence guard makes the block a silent no-op if the cask
+eventually vanishes. Alternatives surveyed (none drop-in): `ddjvu -format=pdf`
+→ Skim; MacPorts `okular`; Calibre's transcoding viewer; `mupdf-tools`.
 
 ### Login Items
 

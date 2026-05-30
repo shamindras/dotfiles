@@ -399,6 +399,35 @@ else
   echo "    Preview not installed — skipping Preview defaults."
 fi
 
+###############################################################################
+# DjView DjVu defaults                                                        #
+###############################################################################
+echo "  DjView DjVu defaults..."
+
+if [[ -d /Applications/DjView.app ]]; then
+  echo "    DjView defaults..."
+  osascript -e 'tell application "DjView" to quit' 2>/dev/null || true
+
+  # Pipe-separated flag string. Diff vs djview's out-of-box default:
+  #   - drop SHOW_SIDEBAR        → sidebar hidden
+  #   - swap LAYOUT_CONTINUOUS → LAYOUT_SIDEBYSIDE (two-up, non-continuous)
+  # Available flags (from `strings /Applications/DjView.app/Contents/MacOS/djview`):
+  #   Layout: CONTINUOUS | SIDEBYSIDE | COVERPAGE | RIGHTTOLEFT
+  #   Show:   TOOLBAR | SIDEBAR | STATUSBAR | SCROLLBARS | FRAME | MAPAREAS | MENUBAR
+  #   Handle: MOUSE | KEYBOARD | LINKS | CONTEXTMENU
+  defaults write org.djvu.DjView "forStandalone.options" -string \
+    "SHOW_TOOLBAR|SHOW_STATUSBAR|SHOW_SCROLLBARS|SHOW_FRAME|SHOW_MAPAREAS|LAYOUT_SIDEBYSIDE|HANDLE_MOUSE|HANDLE_KEYBOARD|HANDLE_LINKS|HANDLE_CONTEXTMENU"
+
+  # Fit-to-page (djview encodes "fit page" as -1, stored as a string).
+  defaults write org.djvu.DjView "forStandalone.zoom" -string "-1"
+
+  # forStandalone.remember = 1 means DjView rewrites these options on quit.
+  # Defaults apply on next launch after this script runs; UI tweaks during a
+  # session override until setup-macos is re-run.
+else
+  echo "    DjView not installed — skipping DjView defaults."
+fi
+
 # Auto-hide native menu bar (for SketchyBar)
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
 
