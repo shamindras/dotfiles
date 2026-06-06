@@ -39,6 +39,7 @@ function z1_aliases {
   alias rmi='rm -i'
   alias rmf='rm -rf'
   alias rq='R -q --no-save --no-restore-data'
+  alias sra='sesh-reset --all' # recreate all sesh-managed tmux sessions
   alias bt='btm;clear;'
   alias top='tmux-resize;btop;clear;'
   alias t='task' # taskwarrior
