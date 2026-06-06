@@ -16,6 +16,20 @@ play = [
   { run = 'open -a VLC "$@"', orphan = true, desc = "VLC", for = "macos" },
   { run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
 ]
+# macOS Preview opener — wired to PDFs via [open].prepend_rules below.
+# Default `o` keeps using the first opener in `use` (system `open` → Skim);
+# `O` (open --interactive) surfaces this as an additional menu entry.
+preview = [
+  { run = 'open -a Preview "$@"', orphan = true, desc = "Preview", for = "macos" },
+]
+
+# File-type → opener mappings. prepend_rules wins over preset rules; the
+# PDF fallback below adds Preview to the `O` chooser without disturbing
+# any other mime (djvu/images/etc. still resolve to preset rules).
+[open]
+prepend_rules = [
+  { mime = "application/pdf", use = [ "open", "preview", "reveal" ] },
+]
 
 # Plugin previewers (order matters — first match wins)
 [plugin]

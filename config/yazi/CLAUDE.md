@@ -31,6 +31,10 @@ local plugin lives alongside the ya pkg-managed ones.
 - **Show hidden files**: always enabled
 - **Linemode**: `size` (shows file sizes)
 - **Previewers**: djvu-view for `.djvu`/`.djv`, ouch for archive mimes
+- **Openers**: `play` (VLC + mediainfo) for media; `preview` (macOS Preview)
+  attached to `application/pdf` via `[open].prepend_rules` so it appears
+  only in the `O` interactive chooser for PDFs (default `o` still goes to
+  Skim via system `open`)
 
 ## Theme
 
