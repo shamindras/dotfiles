@@ -50,6 +50,8 @@ brew "dust"
 brew "exiftool"
 # Modern, maintained replacement for ls
 brew "eza"
+# Powerful, lightweight programming language
+brew "lua"
 # Like neofetch, but much faster because written mostly in C
 brew "fastfetch"
 # Simple, fast and user-friendly alternative to find
@@ -144,8 +146,6 @@ brew "libass"
 brew "libmng"
 # Library for reading RAW files from digital photo cameras
 brew "libraw"
-# Powerful, lightweight programming language
-brew "lua"
 # Tool for linting and static analysis of Lua code
 brew "luacheck"
 # Package manager for the Lua programming language
@@ -321,6 +321,8 @@ cask "jdownloader"
 cask "libreoffice"
 # Full TeX Live distribution with GUI applications
 cask "mactex"
+# Meet, chat, call, and collaborate in just one place
+cask "microsoft-teams"
 # Simple application that will prevent iTunes or Apple Music from launching
 cask "notunes"
 # JDK from Oracle
