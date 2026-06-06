@@ -153,5 +153,8 @@ Adds and removes are **symmetric**: both propagate through the next
 - Homebrew init handled by `scripts/setup/setup-upgrade-homebrew`.
 - Brew env vars set in zsh `01-z1-env-vars-gen.zsh`:
   `HOMEBREW_UPGRADE_GREEDY=1`, `HOMEBREW_NO_ANALYTICS=1`,
-  `HOMEBREW_NO_ENV_HINTS=1`. `HOMEBREW_AUTOREMOVE=1` is not set —
-  autoremove is the default; setting it emits a deprecation warning.
+  `HOMEBREW_NO_ENV_HINTS=1`, `HOMEBREW_NO_UPDATE_REPORT_NEW=1` (hides
+  the "New Formulae" / "New Casks" advertising list that `brew update`
+  prints when taps gain entries — display-only, no behavioral change).
+  `HOMEBREW_AUTOREMOVE=1` is not set — autoremove is the default;
+  setting it emits a deprecation warning.

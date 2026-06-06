@@ -46,6 +46,11 @@ if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   export HOMEBREW_CASK_OPTS="--appdir=/Applications"
   export HOMEBREW_UPGRADE_GREEDY=1
   export HOMEBREW_NO_ENV_HINTS=1
+  # Suppress the "New Formulae" / "New Casks" list that brew update prints
+  # whenever a tap has gained entries since the last fetch — pure
+  # advertising noise (none of those packages are installed) that adds
+  # dozens of lines to every `bu` run.
+  export HOMEBREW_NO_UPDATE_REPORT_NEW=1
   export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar";
   export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX";
   export MANPATH="$HOMEBREW_PREFIX/share/man${MANPATH+:$MANPATH}:";
