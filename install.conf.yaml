@@ -126,12 +126,16 @@
     - command: command bat cache --build
       description: Build bat cache
 
-# Start borders and sketchybar as brew services (launchd: RunAtLoad + KeepAlive)
+# Start borders and sketchybar as brew services (launchd: RunAtLoad + KeepAlive).
+# Use `restart` (not `start`): `start` is a no-op when already running, which
+# leaves the running PID on a stale binary after `brew-update` upgrades the
+# formula. `restart` acts as start-if-down and restart-if-up — idempotent on
+# fresh installs, recovery on existing ones.
 - shell:
-    - command: brew services start borders
-      description: Start borders as a brew service
-    - command: brew services start sketchybar
-      description: Start sketchybar as a brew service
+    - command: brew services restart borders
+      description: Restart borders as a brew service (picks up upgraded binary)
+    - command: brew services restart sketchybar
+      description: Restart sketchybar as a brew service (picks up upgraded binary)
 
 # Load espanso extension
 - shell:

@@ -61,6 +61,14 @@ This prevents stale data (clock, battery, wifi, etc.) after waking from sleep.
 The clock additionally subscribes to `display_change` to catch lid-open scenarios
 that may not trigger a full sleep/wake cycle.
 
+`wake_refresh.sh` also self-heals the "binary upgraded under a running PID"
+wedge: if `mtime(/opt/homebrew/opt/sketchybar/bin/sketchybar)` is newer than
+the parent process's start time, child bash spawns are likely failing silently
+with TCC `EPERM` (bar visible but frozen — clock, battery, volume stop
+updating). In that case the script runs `brew services restart sketchybar`
+(detached, so the child exits before SIGTERM) instead of `--update`. Triggered
+on the next `system_woke` (lock/unlock, lid-close/open).
+
 | Item           | Event subscriptions                                  |
 | -------------- | ---------------------------------------------------- |
 | wake_refresh   | `system_woke` (forces global `--update`)             |
