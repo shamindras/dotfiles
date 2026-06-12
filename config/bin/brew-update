@@ -247,10 +247,23 @@ missing_names() {
 
 FORMULAE_UP=$(upgraded_count "$PRE_F" "$MID_F")
 CASKS_UP=$(upgraded_count "$PRE_C" "$MID_C")
+# Truth-anchored cask diffs:
+#   DROPPED      = PRE \ MID  (briefly absent during the upgrade window)
+#   UNRECOVERED  = PRE \ POST (still absent at the end — the REAL loss)
+#   RECOVERED    = DROPPED \ UNRECOVERED (dropped, came back by POST)
+# Anchoring UNRECOVERED to PRE→POST (not DROPPED→RECOVERED) makes the
+# summary robust to transient mid-pipeline snapshot anomalies. Brew 6.x
+# `brew upgrade --greedy` can rewrite cask metadata such that an
+# immediately-following `brew list --cask` momentarily returns empty —
+# without this anchoring, every cask in PRE would be flagged as needing
+# manual recovery even though POST is fine.
 DROPPED=$(missing_names "$PRE_C" "$MID_C")
-RECOVERED=$(missing_names "$MID_C" "$POST_C")
-DROPPED_N=$(printf '%s' "$DROPPED"   | grep -c . || true)
-RECOVERED_N=$(printf '%s' "$RECOVERED" | grep -c . || true)
+UNRECOVERED=$(missing_names "$PRE_C" "$POST_C")
+RECOVERED=$(comm -23 <(printf '%s\n' "$DROPPED"     | sort -u) \
+                     <(printf '%s\n' "$UNRECOVERED" | sort -u) \
+              | grep -v '^$' || true)
+DROPPED_N=$(printf '%s' "$DROPPED"       | grep -c . || true)
+RECOVERED_N=$(printf '%s' "$RECOVERED"   | grep -c . || true)
 
 # Line-level diff of brew/cask declarations only (ignores description
 # churn from --describe). Shows exactly which entries the dump added or
@@ -273,13 +286,6 @@ fi
 DISK_FREED=$(grep -oE 'freed approximately [0-9.]+ *[KMGT]?B' "$CLEAN_LOG" \
   | sed -E 's/freed approximately *//' | tail -1 || true)
 DISK_FREED="${DISK_FREED:-0B}"
-
-UNRECOVERED=""
-if [ -n "$DROPPED" ]; then
-  UNRECOVERED=$(comm -23 <(printf '%s\n' "$DROPPED"   | sort -u) \
-                         <(printf '%s\n' "$RECOVERED" | sort -u) \
-                  | grep -v '^$' || true)
-fi
 
 # Single if-block (not `cmd && ZERO=0` chain) so set -e can't interact
 # with short-circuits — defensive, since the summary must always print.
