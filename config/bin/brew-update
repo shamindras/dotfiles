@@ -25,7 +25,18 @@ BREWFILE="$DOTFILES_DIR/config/brew/Brewfile"
 # Autoremove is the default in modern brew; setting HOMEBREW_AUTOREMOVE=1
 # triggers a deprecation warning. We drop it here in case a stale shell
 # still exports the value from before the env-vars config was updated.
+#
+# The remaining exports mirror the brew behavior vars set in
+# config/zsh/conf.d/01-z1-env-vars-gen.zsh so the Hammerspoon → wezterm →
+# `zsh -c` dispatch path (non-interactive, .zshrc not sourced) gets the
+# same brew env as `bu` from an interactive shell. The zsh config remains
+# authoritative for interactive shells; this block is a self-containment
+# shim for the no-TTY path.
 unset HOMEBREW_AUTOREMOVE
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_UPDATE_REPORT_NEW=1
+export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_UPGRADE_GREEDY=1
 
 # --- No-TTY → WezTerm popup dispatch --------------------------------------
 # Triggered when invoked without a controlling TTY — Hammerspoon's hs.task
@@ -189,7 +200,7 @@ cp "$BREWFILE" "$PRE_BREWFILE" 2>/dev/null || true
 # versions would be lost by a vanilla bundle entry.
 if [ "$MODE" != bootstrap ]; then
   printf '📋 [3/7] brew bundle dump → Brewfile (brew-only scope)\n'
-  "$BREW" bundle dump --describe --force --file="$BREWFILE" \
+  "$BREW" bundle dump --force --file="$BREWFILE" \
     --formula --cask --tap
 else
   printf '📋 [3/7] Skipping dump (bootstrap mode)\n'
