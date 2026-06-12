@@ -37,6 +37,12 @@ export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_UPDATE_REPORT_NEW=1
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_UPGRADE_GREEDY=1
+# Script-local (not mirrored from zsh): brew 6.x prompts for confirmation
+# before each `brew upgrade` batch ("Do you want to proceed? [y/n]"). The
+# bu pipeline is always-yes by design — the dump/upgrade/bundle-install
+# sequence is the canonical brew-state refresh. Setting NO_ASK only here
+# keeps ad-hoc `brew upgrade` calls from a normal shell still prompting.
+export HOMEBREW_NO_ASK=1
 
 # --- No-TTY → WezTerm popup dispatch --------------------------------------
 # Triggered when invoked without a controlling TTY — Hammerspoon's hs.task
