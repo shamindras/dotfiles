@@ -1,5 +1,5 @@
-tap "felixkratz/formulae"
-tap "nikitabobko/tap"
+tap "felixkratz/formulae", trusted: true
+tap "nikitabobko/tap", trusted: true
 # Codec library for encoding and decoding AV1 video streams
 brew "aom"
 # Next generation open source RPC library and framework
