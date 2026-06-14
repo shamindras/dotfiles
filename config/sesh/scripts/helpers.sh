@@ -4,12 +4,17 @@
 
 # Books library tabs (used standalone by feed.sh; combined with Downloads
 # by SESH_DEFAULT_YAZI_TABS below for every other session).
+_SESH_BOOKS_DIR="${DROPBOX_DIR:-$HOME/Dropbox}/resources/books"
+_SESH_CURRENT_DIR="${_SESH_BOOKS_DIR}/current_reading/books"
 # shellcheck disable=SC2034
 SESH_BOOKS_TABS=(
-  "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/reference_books"
-  "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/current_reading/books/00_now_reading"
-  "${DROPBOX_DIR:-$HOME/Dropbox}/resources/books/current_reading/books/01_next_up"
+  "${_SESH_BOOKS_DIR}/reference_books"
+  "${_SESH_CURRENT_DIR}/00_now_reading"
+  "${_SESH_CURRENT_DIR}/01_next_up"
+  "${_SESH_CURRENT_DIR}/02_on_deck"
+  "${_SESH_CURRENT_DIR}/03_backlog"
 )
+unset _SESH_BOOKS_DIR _SESH_CURRENT_DIR
 
 # Default extra-tab list for non-feed yazi windows: Downloads (active) then
 # the books library. Order matches on-screen tab order.
