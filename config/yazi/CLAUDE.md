@@ -29,7 +29,10 @@ local plugin lives alongside the ya pkg-managed ones.
 - **Panel ratio**: `[1, 3, 2]` (parent, current, preview)
 - **Sort**: by modification time, reversed (newest first)
 - **Show hidden files**: always enabled
-- **Linemode**: `size` (shows file sizes)
+- **Linemode**: `size_and_mtime` (custom, defined in `init.lua`) — renders
+  `<size>  <mm/dd HH:MM>` for files, `<mm/dd HH:MM>` for directories.
+  Yazi preset `m*` prefix (`ms`, `mt`, `mb`, `mp`, `mo`, `mn`) still cycles
+  through built-in linemodes mid-session; relaunch resets to this default.
 - **Previewers**: djvu-view for `.djvu`/`.djv`, ouch for archive mimes
 - **Openers**: `play` (VLC + mediainfo) for media; `preview` (macOS Preview)
   attached to `application/pdf` via `[open].prepend_rules` so it appears

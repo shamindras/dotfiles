@@ -7,7 +7,7 @@
 ratio        = [1, 3, 2] # Custom panel layout
 sort_by      = "mtime"   # Sort by modification time (not alphabetical)
 sort_reverse = true      # Newest first
-linemode     = "size"    # Show file sizes
+linemode     = "size_and_mtime" # Custom linemode (init.lua): "12.9M  06/02 18:47"
 show_hidden  = true      # Show hidden files
 
 # Custom video player opener (macOS + Unix only)
