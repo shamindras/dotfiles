@@ -1,5 +1,19 @@
 -- Yazi startup hook (~/.config/yazi/init.lua, auto-loaded at launch).
---
+
+-- Custom linemode: file size followed by mtime ("12.9M  06/02 18:47").
+-- Selected via [mgr].linemode = "size_and_mtime" in yazi.toml.
+-- Directories (no intrinsic size) show only mtime.
+function Linemode:size_and_mtime()
+  local time = math.floor(self._file.cha.mtime or 0)
+  local time_str = time > 0 and os.date('%m/%d %H:%M', time) or ''
+  local size = self._file:size()
+  if size then
+    return ui.Line(string.format(' %s  %s ', ya.readable_size(size), time_str))
+  else
+    return ui.Line(string.format(' %s ', time_str))
+  end
+end
+
 -- Reads two env vars set by sesh's `sesh_window_yazi_tabs` helper:
 --   YAZI_STARTUP_TABS  colon-separated list of absolute paths to open as
 --                      additional tabs after the initial WORK_DIR tab.
