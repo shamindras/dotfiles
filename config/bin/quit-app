@@ -23,6 +23,7 @@ RUN="$HOME/.config/bin/run-as-user"
 # Catppuccin Mocha colors (ARGB hex)
 COLOR_GREEN=0xffa6e3a1
 COLOR_RED=0xfff38ba8
+COLOR_YELLOW=0xfff9e2af
 COLOR_LAVENDER=0xffb4befe
 
 # --- Parse arguments ---------------------------------------------------------
@@ -31,12 +32,14 @@ APP_NAME=""
 WORKSPACE=""
 CHECK_PROCESS=""
 FALLBACK_WS=""
+SAVE_CHECK_WS=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --activate-quit) ACTIVATE_QUIT=true; shift ;;
     --check)         CHECK_PROCESS="$2"; shift 2 ;;
     --fallback)      FALLBACK_WS="$2"; shift 2 ;;
+    --save-check)    SAVE_CHECK_WS="$2"; shift 2 ;;
     *)
       if [[ -z "$APP_NAME" ]]; then
         APP_NAME="$1"
@@ -49,7 +52,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$APP_NAME" || -z "$WORKSPACE" ]]; then
-  echo "Usage: quit-app [--activate-quit] <app-name> <workspace> [--check <process> --fallback <workspace>]" >&2
+  echo "Usage: quit-app [--activate-quit] <app-name> <workspace> [--check <process> --fallback <workspace>] [--save-check <home-workspace>]" >&2
   exit 1
 fi
 
@@ -97,6 +100,22 @@ _poll_exit() {
   done
 }
 
+_modified_count() {
+  # Number of open documents with unsaved changes. Empty string on error
+  # (e.g. Automation permission denied) — callers treat that as "unsaved"
+  # so a flaky query never sends an off-screen save dialog.
+  "$RUN" osascript -e \
+    "tell application \"$APP_NAME\" to return (count of (documents whose modified is true))" \
+    2>/dev/null
+}
+
+_notify_unsaved() {
+  "$RUN" "$SKETCHYBAR" --set leader label="⚠ $APP_NAME unsaved" \
+    label.color="$COLOR_YELLOW" drawing=on
+  sleep 2
+  "$RUN" "$SKETCHYBAR" --set leader drawing=off label.color="$COLOR_LAVENDER"
+}
+
 _notify() {
   if ! _is_running; then
     "$RUN" "$SKETCHYBAR" --set leader label="✓ $APP_NAME quit" \
@@ -128,6 +147,38 @@ if [[ "$ACTIVATE_QUIT" == true ]]; then
   fi
   _switch_workspace "$WORKSPACE"
 else
+  # Save-check: if the app has unsaved documents, surface the native save
+  # dialog on the app's own workspace instead of switching away with the
+  # dialog left off-screen. Switch to <home-workspace>, activate the app,
+  # then fire the quit — which presents the save dialog because docs are
+  # dirty. In the background, wait for the user to resolve it: if the app
+  # exits (Save / Don't Save) switch to the destination workspace; if it
+  # stays (Cancel) stay put. Only an exact count of "0" is clean; an
+  # empty/error result is treated as unsaved (fail safe).
+  if [[ -n "$SAVE_CHECK_WS" ]] && _is_running; then
+    if [[ "$(_modified_count)" != "0" ]]; then
+      _switch_workspace "$SAVE_CHECK_WS"
+      "$RUN" osascript -e "tell application \"$APP_NAME\" to activate" 2>/dev/null || true
+      {
+        _do_quit
+        # User-paced wait — the save dialog blocks until resolved (~120s cap).
+        sn=0
+        while _is_running && [[ $sn -lt 1200 ]]; do
+          sleep "$POLL_INTERVAL"
+          sn=$((sn + 1))
+        done
+        if _is_running; then
+          _notify_unsaved            # cancelled / still editing — stay on home workspace
+        else
+          _switch_workspace "$WORKSPACE"
+          _notify
+        fi
+      } &
+      disown
+      exit 0
+    fi
+  fi
+
   # Workspace-first: switch instantly, quit in background.
   # macOS window server pulls focus back to the dying app's workspace if
   # the switch was too recent — a longer settle window prevents this.
