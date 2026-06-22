@@ -107,6 +107,13 @@ Hammerspoon shells out to these scripts with the argv they expect:
 - Group names recognised by the HUD (`leader`, `open`, `quit`,
   `claude`, `run`, `search`, `github`, `urls`)
 
+The TextEdit quit leaf (`quit → q`) passes `--save-check Q`: if the
+document has unsaved changes, `quit-app` switches to TextEdit's own
+workspace `Q` (where aerospace assigns it) and fires the quit there, so
+the save dialog shows on-screen instead of off on Firefox's workspace
+`W`. Once the dialog resolves, it switches to `W` if TextEdit actually
+quit, or stays on `Q` if cancelled.
+
 ## hidutil LaunchAgent
 
 `launchagents/com.local.hidutil-remap.plist` is symlinked to

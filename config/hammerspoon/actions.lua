@@ -84,7 +84,7 @@ M.quit = {
       cmd = bin('quit-app Ghostty W --check wezterm-gui --fallback B'),
       idle = QUIT_IDLE,
     },
-    { key = 'q', label = 'TextEdit', cmd = bin('quit-app TextEdit W'), idle = QUIT_IDLE },
+    { key = 'q', label = 'TextEdit', cmd = bin('quit-app TextEdit W --save-check Q'), idle = QUIT_IDLE },
     { key = 's', label = 'VSCode', cmd = bin('quit-app Code W'), idle = QUIT_IDLE },
     { key = 'v', label = 'VLC', cmd = bin('quit-app VLC B'), idle = QUIT_IDLE },
     {
