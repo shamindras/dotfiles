@@ -32,16 +32,30 @@ notification.
 If the app isn't running, workspace-first mode switches workspace and
 exits immediately (idempotent, no notification).
 
+**`--save-check <home-workspace>`** (TextEdit): before switching away,
+query the app for documents with unsaved changes
+(`count of (documents whose modified is true)` via osascript). If any are
+dirty — or the query errors (fail safe) — switch to `<home-workspace>`,
+activate the app, and fire the quit there, which presents the native save
+dialog on-screen instead of on the destination workspace. A background
+watcher then waits (user-paced, ~120s cap) for the dialog to resolve: if
+the app exits (Save / Don't Save) it switches to the destination workspace
+and posts the green quit notification; if it stays running (Cancel) it
+leaves you on `<home-workspace>` with a yellow `⚠ <app> unsaved` notice.
+Only an exact count of `0` is treated as clean and proceeds with the normal
+workspace-first quit.
+
 ### Flags
 
-| Flag                        | Description                                            |
-| --------------------------- | ------------------------------------------------------ |
-| `--pkill <process>`         | Kill via `pkill -x` instead of osascript               |
-| `--pkill-f <pattern>`       | Kill via `pkill -f` for pattern-based matching          |
-| `--activate-quit`           | Activate app then send Cmd+Q (quit-first, no bg)       |
-| `--delay <seconds>`         | Override POST_EXIT_DELAY (default 0.3, use 0 to skip)  |
-| `--check <process>`         | If process is running, use primary workspace            |
-| `--fallback <workspace>`    | Otherwise switch to this workspace (requires --check)   |
+| Flag                       | Description                                           |
+| -------------------------- | ----------------------------------------------------- |
+| `--pkill <process>`        | Kill via `pkill -x` instead of osascript              |
+| `--pkill-f <pattern>`      | Kill via `pkill -f` for pattern-based matching        |
+| `--activate-quit`          | Activate app then send Cmd+Q (quit-first, no bg)      |
+| `--delay <seconds>`        | Override POST_EXIT_DELAY (default 0.3, use 0 to skip) |
+| `--check <process>`        | If process is running, use primary workspace          |
+| `--fallback <workspace>`   | Otherwise switch to this workspace (requires --check) |
+| `--save-check <workspace>` | Unsaved docs: quit on its workspace (save dialog)     |
 
 ## Development Notes
 
