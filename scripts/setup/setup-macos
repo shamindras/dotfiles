@@ -327,6 +327,14 @@ defaults write -app Preview AppleWindowTabbingMode never
 # TextEdit: open a new blank document instead of the file picker dialog
 defaults write com.apple.TextEdit NSShowAppCentricOpenPanelInsteadOfUntitledFile -bool false
 
+# TextEdit: default new rich-text documents to Helvetica 36pt.
+# AppKit's "user font" (what TextEdit uses for the rich-text default, via
+# [NSFont userFontOfSize:]) is keyed by NSFont / NSFontSize in the app's own
+# domain — the same keys [NSFont setUser:] writes. Verified on macOS 26.5 by
+# round-tripping NSFont.setUser(Helvetica 36) through NSUserDefaults.
+defaults write com.apple.TextEdit NSFont -string "Helvetica"
+defaults write com.apple.TextEdit NSFontSize -int 36
+
 # Hide Skim document toolbar by default (toggle back with Cmd+Opt+T)
 defaults write net.sourceforge.skim-app.skim \
   "NSToolbar Configuration SKDocumentToolbar" \
