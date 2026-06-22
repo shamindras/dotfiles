@@ -160,10 +160,19 @@ else
       _switch_workspace "$SAVE_CHECK_WS"
       "$RUN" osascript -e "tell application \"$APP_NAME\" to activate" 2>/dev/null || true
       {
-        _do_quit
-        # User-paced wait — the save dialog blocks until resolved (~120s cap).
+        # Fire the quit in its own background: the quit Apple Event blocks
+        # until its reply, and an app that dies via "Don't Save" often never
+        # replies — so a foreground _do_quit would stall on the Apple Event
+        # timeout (~2 min) before we could detect the exit. Backgrounding it
+        # lets us poll the process independently and react the instant it
+        # goes away.
+        _do_quit &
+        quit_pid=$!
+        # User-paced wait — the save dialog is resolved on the user's clock.
         sn=0
         while _is_running && [[ $sn -lt 1200 ]]; do
+          # Quit request finished but app still alive → user hit Cancel.
+          kill -0 "$quit_pid" 2>/dev/null || break
           sleep "$POLL_INTERVAL"
           sn=$((sn + 1))
         done
