@@ -116,6 +116,12 @@ Aerospace, and third-party apps (Skim, Preview, DjView). Manages Login Items
 for apps that need to start at login. Requires `sudo` for some settings.
 Restarts Dock, Finder, and SystemUIServer at the end.
 
+For TextEdit, sets new documents to open blank and defaults the rich-text
+font to Helvetica 36pt via `NSFont`/`NSFontSize` (the keys AppKit's
+`[NSFont userFontOfSize:]` reads; verified by round-tripping
+`NSFont.setUser` through `NSUserDefaults` on macOS 26.5). A running TextEdit
+caches the default at launch, so the size only applies to the next launch.
+
 For Skim and Preview, also sets PDF view defaults and `NSUserKeyEquivalents`
 for page navigation (`Ctrl+H/L/N/P`) and layout (`Cmd+1` / `Cmd+2`). Skim
 gets full two-up non-continuous + zoom-to-fit via
