@@ -53,6 +53,7 @@ M.open = {
     { key = 't', label = 'ghostty', cmd = bin('fastopen ghostty') },
     { key = 'q', label = 'textedit', cmd = bin('fastopen textedit') },
     { key = 's', label = 'vscode', cmd = bin('fastopen vscode') },
+    { key = 'u', label = 'opensuperwhisper', cmd = bin('fastopen opensuperwhisper --fullscreen U --return B') },
     { key = 'v', label = 'vlc', cmd = bin('fastopen vlc') },
     { key = 'w', label = 'wezterm', cmd = bin('fastopen wezterm') },
     { key = 'x', label = 'jdownloader', cmd = bin('fastopen jdownloader') },
@@ -86,6 +87,7 @@ M.quit = {
     },
     { key = 'q', label = 'TextEdit', cmd = bin('quit-app TextEdit W --save-check Q'), idle = QUIT_IDLE },
     { key = 's', label = 'VSCode', cmd = bin('quit-app Code W'), idle = QUIT_IDLE },
+    { key = 'u', label = 'OpenSuperWhisper', cmd = bin('quit-app OpenSuperWhisper W'), idle = QUIT_IDLE },
     { key = 'v', label = 'VLC', cmd = bin('quit-app VLC B'), idle = QUIT_IDLE },
     {
       key = 'w',
