@@ -32,10 +32,10 @@ case "$ACTION" in
         LABEL="▸ o:󰏋 q:󰅖 r:󰜎 c:󰚩 s:󰍉 g:󰊤 u:󰌷"
         ;;
       open)
-        LABEL="(o)▸ a:󰈔 b:󰈹 d:󰋩 e:󰉋 g:󰭹 i:󰂽 m:󰓇 n:󰤨 p:󰈙 q:󰏫 s:󰨞 t:󰊠 v:󰕼 w:󰆍 x:󰇚 1:󰌋"
+        LABEL="(o)▸ a:󰈔 b:󰈹 d:󰋩 e:󰉋 g:󰭹 i:󰂽 m:󰓇 n:󰤨 p:󰈙 q:󰏫 s:󰨞 t:󰊠 u:󰍬 v:󰕼 w:󰆍 x:󰇚 1:󰌋"
         ;;
       quit)
-        LABEL="(q)▸ a:󰈔 b:󰈹 d:󰋩 e:󰉋 g:󰭹 i:󰂽 m:󰓇 n:󰤨 p:󰈙 q:󰏫 s:󰨞 t:󰊠 v:󰕼 w:󰆍 x:󰇚 1:󰌋"
+        LABEL="(q)▸ a:󰈔 b:󰈹 d:󰋩 e:󰉋 g:󰭹 i:󰂽 m:󰓇 n:󰤨 p:󰈙 q:󰏫 s:󰨞 t:󰊠 u:󰍬 v:󰕼 w:󰆍 x:󰇚 1:󰌋"
         ;;
       claude)
         LABEL="(c)▸ n:󰎔 r:󰋚 u:󰄨"

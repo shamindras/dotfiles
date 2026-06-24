@@ -36,6 +36,7 @@ case "$APP" in
   textedit)     "$RUN" /usr/bin/open /System/Applications/TextEdit.app ;;
   vscode)       "$RUN" /usr/bin/open "/Applications/Visual Studio Code.app" ;;
   vlc)          "$RUN" /usr/bin/open /Applications/VLC.app ;;
+  opensuperwhisper) "$RUN" /usr/bin/open /Applications/OpenSuperWhisper.app ;;
   wezterm)      "$RUN" /usr/bin/open /Applications/WezTerm.app ;;
   jdownloader)  "$RUN" /usr/bin/open "/Applications/JDownloader 2/JDownloader2.app" ;;
   *) echo "fastopen: unknown app '$1'" >&2; exit 1 ;;

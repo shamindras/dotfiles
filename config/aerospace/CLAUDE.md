@@ -37,6 +37,7 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **vscode**: assigned to workspace S
 - **vlc**: assigned to workspace V
 - **textedit**: assigned to workspace Q
+- **opensuperwhisper**: assigned to workspace U
 
 ## Reserved Alt Keys (Non-Workspace)
 
@@ -63,16 +64,18 @@ letter — do not silently shadow the existing binding.
 
 ## Workspace ↔ Leader-Key Alignment
 
-Aerospace workspace letters and leader-key open/quit keys should stay in
-sync. When an app's workspace letter changes here, update these in
-`config/leader-key/config.json`:
+Aerospace workspace letters and the Hammerspoon leader-key open/quit keys
+should stay in sync. When an app's workspace letter changes here, update
+these in `config/hammerspoon/actions.lua`:
 
-1. **open group**: the key that launches the app
-2. **quit group**: the key that quits the app AND the fallback workspace
-   in the quit command
+1. **open group** (`M.open`): the key that launches the app
+2. **quit group** (`M.quit`): the key that quits the app AND the fallback
+   workspace in the quit command
 
-See `config/leader-key/CLAUDE.md` § "Workspace Alignment" for the
-matching table.
+Also update the matching per-key icon legend in `config/bin/leader-hud`
+(the `open` and `quit` group labels).
+
+See `config/hammerspoon/CLAUDE.md` § "Leader system" for the group table.
 
 ## Development Notes
 

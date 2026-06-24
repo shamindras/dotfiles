@@ -77,8 +77,8 @@ to surface).
 
 | Group  | Key | Count | Purpose                                          |
 | ------ | --- | ----- | ------------------------------------------------ |
-| open   | o   | 16    | Launch apps via `config/bin/fastopen`            |
-| quit   | q   | 16    | Quit apps via `config/bin/quit-app` (10s idle)   |
+| open   | o   | 17    | Launch apps via `config/bin/fastopen`            |
+| quit   | q   | 17    | Quit apps via `config/bin/quit-app` (10s idle)   |
 | claude | c   | 3     | Claude URLs                                      |
 | run    | r   | 9     | Run utilities (brew, trash, mute, …)             |
 | search | s   | 3     | Raycast extensions                               |
