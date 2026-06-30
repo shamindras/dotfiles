@@ -325,6 +325,8 @@ cask "mactex"
 cask "microsoft-teams"
 # Simple application that will prevent iTunes or Apple Music from launching
 cask "notunes"
+# Whisper dictation/transcription app
+cask "opensuperwhisper"
 # JDK from Oracle
 cask "oracle-jdk"
 # Scientific and technical publishing system built on Pandoc
