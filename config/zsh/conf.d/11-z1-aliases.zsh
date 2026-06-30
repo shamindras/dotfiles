@@ -9,7 +9,8 @@ function z1_aliases {
   alias ...='z ../..'
   alias ....='z ../../..'
   alias asl='aerospace list-apps'
-  alias asr='aerospace reload-config;clear;'
+  # asr is a function (config/zsh/functions/asr): reload-config, self-healing
+  # the post-upgrade stale-server case. asf below is the forced restart.
   alias asf='(killall AeroSpace || true) && open -a AeroSpace;clear;' # [a]eroSpace [f]orced [r]estart
   alias b='bat'
   alias bu='$HOME/.config/bin/brew-update'

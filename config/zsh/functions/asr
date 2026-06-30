@@ -1,0 +1,46 @@
+##? asr - reload AeroSpace config, auto-restarting the app on version mismatch
+##?
+##? Runs `aerospace reload-config` for the common case (you just edited
+##? aerospace.toml). If the reload fails because the CLI client and the
+##? running server have incompatible versions — which happens after
+##? `brew upgrade aerospace` swaps the binary while the old server keeps
+##? running — it quits and relaunches AeroSpace.app so the new server takes
+##? over. Any other reload failure (e.g. a syntax error in aerospace.toml)
+##? is printed and left on screen; the app is NOT restarted.
+##?
+##? Contrast with `asf` (forced restart, no reload attempt). `asr` is the
+##? everyday command: reload, and self-heal only when the server is stale.
+##?
+##? usage:
+##?   asr [-h|--help]
+##?
+##? options:
+##?   -h, --help  show help
+##?
+##? examples:
+##?   asr    # reload after a config edit; self-heals a post-upgrade stale server
+
+asr() {
+  emulate -L zsh
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  local out
+  if out="$(aerospace reload-config 2>&1)"; then
+    # Normal path: config re-read succeeded, just freshen the screen.
+    clear
+  elif print -r -- "$out" | grep -q 'incompatible'; then
+    # Stale server after `brew upgrade aerospace`: client/server protocol
+    # versions differ. reload-config can't fix this — only relaunching the
+    # .app swaps in the upgraded server binary.
+    print -r -- "AeroSpace server is stale (post-upgrade version mismatch) — restarting…"
+    osascript -e 'quit app "AeroSpace"' 2>/dev/null
+    open -a AeroSpace
+  else
+    # Genuine config error (e.g. bad aerospace.toml): surface it, change
+    # nothing, do NOT restart — a restart won't fix a syntax typo.
+    print -r -- "$out" >&2
+    return 1
+  fi
+}
+
+# vim: ft=zsh
