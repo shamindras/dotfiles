@@ -27,11 +27,23 @@ return {
     require('mini.operators').setup()
 
     vim.keymap.set({ 'n', 'x' }, '<leader>xo', function()
-      local gx_keymap = vim.fn.maparg('gX', 'n', false, true)
-      if gx_keymap.callback then
-        gx_keymap.callback()
-      else
-        vim.cmd('normal! gx')
+      -- Neovim's stock `gx` opens every entry from vim.ui._get_urls(), which
+      -- aggregates LSP documentLink + extmark + treesitter URLs without
+      -- deduping. In markdown both marksman (LSP) and treesitter report the
+      -- same link, so stock gx opens two identical tabs. Dedupe first.
+      local seen, opened = {}, false
+      for _, url in ipairs(require('vim.ui')._get_urls()) do
+        if not seen[url] then
+          seen[url] = true
+          opened = true
+          local _, err = vim.ui.open(url)
+          if err then
+            vim.notify(err, vim.log.levels.ERROR)
+          end
+        end
+      end
+      if not opened then
+        vim.notify('No URL under cursor', vim.log.levels.WARN)
       end
     end, { desc = 'e[x]ecute [o]pen URL' })
 
