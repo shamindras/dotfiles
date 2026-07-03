@@ -161,7 +161,12 @@ M.run = {
     {
       key = 'w',
       label = 'wipe-ds-store',
-      cmd = as_user('/opt/homebrew/bin/fd -HI -t f .DS_Store $HOME/Dropbox/resources/books $HOME/Downloads -x rm'),
+      cmd = table.concat({
+        as_user(
+          '/opt/homebrew/bin/fd -HI -t f .DS_Store $HOME/Dropbox/resources/books $HOME/Downloads $HOME/Documents -x rm'
+        ),
+        as_user('/opt/homebrew/bin/fd -HI -d 1 -t f .DS_Store $HOME -x rm'),
+      }, ' ; '),
     },
   },
 }
