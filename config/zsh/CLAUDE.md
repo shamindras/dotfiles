@@ -194,6 +194,36 @@ re-investigation:
 | uv     | `ua` activates nearest Python venv                 |
 | aerospace | `asr` reloads config + self-heals post-upgrade stale server; `asf` forced restart |
 
+## Startup Performance
+
+Documented to prevent re-investigation. Startup is ~27–33ms; the cost is
+dominated by **execution, not parsing**, so byte-compiling buys little.
+
+Where the time goes (from `ZSH_PROFILE=1 zsh`, per fresh shell):
+
+| Cost                                              | ~Time  | Reducible?                          |
+| ------------------------------------------------- | ------ | ----------------------------------- |
+| `atuin uuid` fork (`ATUIN_SESSION=$(atuin uuid)`) | ~4ms   | No — see below                      |
+| `compinit`                                        | ~3.4ms | Already backgrounds `.zwc` compile  |
+| plugin widget/hook binding (autosugg + syntax-hl) | ~2–3ms | No — execution, not parse           |
+| parse of the 3 memoized init caches               | ~1ms   | Yes — now `.zwc`-compiled            |
+
+- **`atuin uuid` is unavoidable, incl. in tmux panes.** atuin's init forks
+  `atuin uuid` whenever `ATUIN_SHLVL != SHLVL`. A new tmux pane inherits
+  `ATUIN_SHLVL` from the server env but its zsh increments `SHLVL`, so the
+  guard always fires — every new pane re-forks (verified: a fresh pane gets a
+  new `ATUIN_SESSION`, not the inherited one). This is by design (one atuin
+  session per shell-nesting level). Pinning the session or hacking the cached
+  init to skip it would break history semantics / silently revert on the 20h
+  cache regen — not worth ~4ms.
+- **Compiling config files gives 0ms** (verified, interleaved bench):
+  `conf.d/*.zsh`, `.zshrc`, `.zshenv` cost is execution, not parse, and
+  compiling them would drop `.zwc` into the repo (`~/.config/zsh` symlinks to
+  `config/zsh/`). Only the memoized caches are compiled (they live in
+  `~/.cache`; see Memoization in File Conventions).
+- `tzsh` benchmarks a fresh top-level shell; treat its variance skeptically
+  (a busy system easily adds 5–10ms — hyperfine will warn about outliers).
+
 ## Development Notes
 
 - Reload: `zr` function (tmux-aware, refreshes all panes)
