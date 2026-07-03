@@ -20,6 +20,11 @@ function __memoize_cmd {
       return 1
     fi
   fi
+  # Byte-compile so later startups source the .zwc digest, not the text file.
+  # Idempotent: only (re)compiles when the .zwc is missing or stale (e.g. after
+  # the 20h cache regen). `source` transparently prefers an up-to-date
+  # $memofile.zwc over the text, and falls back to text if compilation fails.
+  [[ $memofile.zwc -nt $memofile ]] || zcompile $memofile 2>/dev/null
   source $memofile || true
 }
 

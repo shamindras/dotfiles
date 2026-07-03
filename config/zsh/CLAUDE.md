@@ -69,11 +69,16 @@ one or more `z1_*` functions called by `.zshrc`.
 - **Lazy autoload**: functions in `fpath` not loaded until called
 - **Background compinit**: `.zcompdump.zwc` compiled async (`&!`)
 - **Memoization**: `__memoize_cmd` caches command output for 20 hours
-  (used for fzf init, zoxide init, atuin init)
+  (used for fzf init, zoxide init, atuin init) and byte-compiles each cache
+  to `.zwc` so subsequent startups source the digest, not the text (~1ms)
 - **Plugin system**: zsh_unplugged-based `plugin-load/update/compile` functions;
   plugins stored at `$__zsh_user_data_dir/plugins` (`~/.local/share/zsh/plugins`)
-- **No .zwc pre-compilation**: tested and found negligible benefit (~1ms)
-  for these small config files; the fork overhead outweighed savings
+- **No .zwc pre-compilation of config files**: compiling `conf.d/*.zsh`,
+  `.zshrc`, `.zshenv` gives 0ms (verified, interleaved bench) — their cost is
+  execution (env exports, function defs), not parse — and would drop `.zwc`
+  build artifacts into the repo (`~/.config/zsh` symlinks to `config/zsh/`).
+  The memoized caches ARE compiled (see Memoization above): they're large,
+  sourced every startup, and live in `~/.cache` (no repo pollution).
 
 ### Env Var Assignment Convention
 
