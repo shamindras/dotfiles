@@ -116,7 +116,7 @@ revisit adopting the native defaults.
 **Syntax & Editing**: treesitter, mini.ai, mini.surround, mini.pairs, mini.move (built-in `gc`/`gcc` for commenting)
 **Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, mini.cursorword, mini.hipatterns, noice.nvim
 **Markdown**: markdown.nvim (editing/motions), render-markdown.nvim (rendering), marksman (LSP, non-zk files)
-**Special**: zk-nvim (notes), tmux-resurrect awareness
+**Special**: zk-nvim (notes)
 
 ## Cross-Tool Integration
 
