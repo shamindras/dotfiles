@@ -142,9 +142,13 @@ translates to native NSMenu on macOS so the override works, with the `&`
 mnemonic in titles like `&First Page` stripped during translation (match
 against `First Page`). The `Cmd+[`/`Cmd+]` values need `'"@["'` shell quoting
 to avoid the `defaults` plist mini-language treating `@[` as an array opener.
-`forStandalone.remember = 1` means UI tweaks during a session persist over the
-defaults until the next `setup-macos` run; `NSUserKeyEquivalents` is independent
-and persists across launches. The `djview` Homebrew cask is deprecated upstream
+`forStandalone.remember = 0` stops djview rewriting the options/zoom/state
+group at quit (`saveRemembered()` gates on the flag), so session tweaks stay
+per-session and every launch starts from the configured defaults. Trade-offs
+(same flag in `updateSaved()`): window size is not remembered, and reopened
+files still restore their own last page/zoom from the recent-files list
+(`restoreRecentDocument()` is unconditional) — only first-time files get the
+defaults. `NSUserKeyEquivalents` is independent and persists across launches. The `djview` Homebrew cask is deprecated upstream
 (auto-disabled 2026-09-01 — Gatekeeper signature failure); the installed binary
 at `/Applications/DjView.app` keeps working past that date, and the existence
 guard makes the block a silent no-op if the cask eventually vanishes.
