@@ -2,38 +2,36 @@
 
 ## Overview
 sesh (by Josh Medeski) is a tmux session manager that discovers sessions from
-active tmux sessions, zoxide records, and `sesh.toml` config. It complements
-resurrect/continuum: sesh handles intentional session creation with layouts,
-while resurrect/continuum handles crash recovery.
+active tmux sessions, zoxide records, and `sesh.toml` config. It is the
+**single source of truth** for session persistence: layouts are declared in
+`sesh.toml` + startup scripts, so any session can be recreated from scratch.
+tmux-resurrect/continuum were removed 2026-07 — snapshot restores were never
+exercised (auto-restore off, real programs not whitelisted) and the plugins
+only added stale-state failure modes.
 
 Docs: https://github.com/joshmedeski/sesh
-Installed version: sesh 2.24.1 (verified 2026-02-22)
+Installed version: sesh 2.26.2 (verified 2026-07-04)
 
-## Persistence Layers
+## Persistence Model
 
-| Tool | Owns | When it runs |
-|------|------|--------------|
-| sesh | **New** session creation (layouts from `startup_command`) | `sesh connect` when no matching session exists |
-| resurrect | **Existing** session snapshots (window/pane state to disk) | Every 2 min (continuum) or `prefix+Ctrl-s` |
-| continuum | Auto-trigger resurrect saves; auto-restore on tmux start | Server start + periodic |
+The tmux **server** is a daemon independent of WezTerm: quitting the
+terminal app kills only the tmux *client* (the viewer), never the sessions
+or the processes inside them. Attaching to any one session reaches the
+whole server — every other session is one picker away.
 
-### Interaction
+| Layer | Owns | Survives |
+|-------|------|----------|
+| tmux server | Live sessions + running processes | WezTerm quits, client detaches |
+| sesh (`sesh.toml` + scripts) | Declarative layouts for (re)creation | Everything, incl. reboots |
 
-Startup scripts only run when sesh creates a **new** session. After that,
-resurrect owns state: continuum snapshots the session periodically, and
-auto-restores it on the next cold start (`tmux kill-server` → reopen
-terminal). On reconnect to a live session, sesh just switches — no re-run.
+Startup scripts only run when sesh creates a **new** session. On reconnect
+to a live session, sesh just attaches/switches — no re-run.
 
-**Bug scenario:** if a startup script is broken, sesh creates a malformed
-session → resurrect faithfully snapshots it → continuum auto-restores the
-broken state on every cold start, preventing sesh from ever recreating it.
-
-**Recovery:** use `sesh-reset <name>` (zsh function) to break the cycle:
+**Recovery for a broken session:** `sesh-reset <name>` (zsh function):
 1. Kills the tmux session(s)
-2. Removes session entries from the resurrect save file
-3. Creates detached tmux sessions + runs startup scripts (bypasses `sesh connect`
+2. Creates detached tmux sessions + runs startup scripts (bypasses `sesh connect`
    to avoid blocking on attach)
-4. Attaches/switches to the first session
+3. Attaches/switches to the first session
 
 ## File Structure
 
@@ -120,46 +118,51 @@ so its yazi has 6 tabs instead of 7.
 
 ## Workflow Guide (tldr)
 
-Sesh is the **single source of truth** for session creation.
-Resurrect/continuum is a background safety net, not part of the normal workflow.
+Three scenarios, three commands. Mental model: you attach to the tmux
+*server*, not a session — landing anywhere makes every session reachable.
+
+| Situation                          | Command             | Effect                                          |
+| ---------------------------------- | ------------------- | ----------------------------------------------- |
+| Quit WezTerm, back to work         | `sc` (or `tmux attach`) | Reattach — everything intact, nothing re-run |
+| After a reboot, stand up all six   | `sra`               | Recreate all sessions fresh from sesh.toml      |
+| One session is broken              | `sesh-reset <name>` | Kill + recreate just that session               |
+
+### Closed WezTerm but tmux is still running (the common case)
+
+The server and all processes are still alive. Reopen WezTerm and run:
+```
+sc                          # fzf-pick a session, attach (nothing killed)
+tmux attach                 # or: name-free, lands in most-recent session
+```
+Do NOT run `sra` here — it kills the live sessions and rebuilds defaults.
+
+`sc` is `sesh connect "$(sesh list | fzf)"` (alias in
+`config/zsh/conf.d/11-z1-aliases.zsh`): attaches if the session is alive,
+creates it from sesh.toml if not. Note `sesh connect` requires a session
+name — there is no built-in name-free mode.
 
 ### Computer restart / cold start
 
-Continuum auto-restore is OFF. Sesh recreates sessions fresh from sesh.toml.
+A reboot kills the tmux server and every process in it — running programs
+are not recoverable, by any tool. Recreate fresh:
 
 ```
-sesh-reset --all            # notes, dots, play, blog, feed, career
+sesh-reset --all            # alias sra: notes, dots, play, blog, feed, career
 ```
 
-Or connect one at a time: `sesh connect notes`, or use `prefix+s` picker.
+Or connect one at a time: `sc`, `sesh connect notes`, or the picker.
 
 ### Reset a broken session
 
 ```
-sesh-reset notes            # kill + prune resurrect + recreate from sesh.toml
+sesh-reset notes            # kill + recreate from sesh.toml
 sesh-reset notes feed       # multiple sessions
 ```
-
-### Closed WezTerm but tmux is still running
-
-tmux runs as a server independent of WezTerm. Just reopen WezTerm and run:
-```
-tmux attach                 # reattach to last session
-```
-All sessions and processes are still alive — no sesh-reset needed.
 
 ### Day-to-day
 
 - Switch sessions: `prefix+s` (or `CMD+Shift+K`)
-- Connect to config session: `sesh connect <name>`
-
-### About resurrect/continuum
-
-Continuum auto-saves every 2 min (keeps 10 snapshots). This is a background
-safety net. Since auto-restore is OFF, snapshots are not used on cold start.
-After a restart, continuum will overwrite the `last` snapshot within ~2 min
-with the current (empty) state, so manual `prefix+Ctrl-r` is unreliable.
-Stick with `sesh-reset` for all recovery.
+- Connect to config session: `sesh connect <name>` or `sc`
 
 ## Adding a New Session
 
