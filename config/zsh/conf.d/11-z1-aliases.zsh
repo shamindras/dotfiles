@@ -40,6 +40,7 @@ function z1_aliases {
   alias rmi='rm -i'
   alias rmf='rm -rf'
   alias rq='R -q --no-save --no-restore-data'
+  alias sc='sesh connect "$(sesh list | fzf)"' # fzf-pick a session; attach if alive, create if not
   alias sra='sesh-reset --all' # recreate all sesh-managed tmux sessions
   alias bt='btm;clear;'
   alias top='tmux-resize;btop;clear;'
