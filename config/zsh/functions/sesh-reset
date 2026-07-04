@@ -1,8 +1,7 @@
 ##? sesh-reset - force-recreate sesh-managed tmux sessions from scratch
 ##?
-##? Kills existing tmux sessions, removes their entries from the
-##? tmux-resurrect save file (so continuum won't auto-restore stale
-##? state), and recreates fresh sessions from sesh.toml startup scripts.
+##? Kills existing tmux sessions and recreates fresh sessions from
+##? sesh.toml startup scripts.
 ##?
 ##? usage:
 ##?   sesh-reset <session-name> [<session-name> ...]
@@ -20,33 +19,10 @@
 sesh-reset() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
 
-  # --- Inner function: kill session + prune resurrect ---
-  _sesh_kill_and_prune() {
+  # --- Inner function: kill session (ignore error if it doesn't exist) ---
+  _sesh_kill() {
     local session="$1"
-
-    # 1. Kill the existing tmux session (ignore error if it doesn't exist)
     tmux kill-session -t "$session" 2>/dev/null || true
-
-    # 2. Remove session from the resurrect save file so continuum won't
-    #    auto-restore the stale state on next cold start.
-    local resurrect_dir="${XDG_DATA_HOME:-$HOME/.local/share}/tmux/resurrect"
-    local last_save="${resurrect_dir}/last"
-
-    if [[ -L "$last_save" ]]; then
-      local save_file
-      save_file="$(readlink "$last_save")"
-      # Resolve relative symlink
-      [[ "$save_file" != /* ]] && save_file="${resurrect_dir}/${save_file}"
-
-      if [[ -f "$save_file" ]]; then
-        # Resurrect lines are tab-delimited: <type>\t<session_name>\t...
-        # Remove all lines where the second field matches the session name.
-        local tmp="${save_file}.tmp.$$"
-        awk -F'\t' -v s="$session" '$2 != s' "$save_file" > "$tmp" \
-          && mv "$tmp" "$save_file"
-        echo "Pruned '$session' from resurrect save: ${save_file##*/}"
-      fi
-    fi
   }
 
   # --- Inner function: create session detached + run startup script ---
@@ -96,10 +72,10 @@ sesh-reset() {
 
   echo "Resetting ${#sessions} session(s): ${sessions[*]}"
 
-  # Phase 1: Kill all sessions + prune resurrect
+  # Phase 1: Kill all sessions
   local s
   for s in "${sessions[@]}"; do
-    _sesh_kill_and_prune "$s"
+    _sesh_kill "$s"
   done
 
   # Phase 2: Recreate all sessions (detached — no blocking)
@@ -114,7 +90,7 @@ sesh-reset() {
     tmux attach-session -t "${sessions[1]}"
   fi
 
-  unfunction _sesh_kill_and_prune _sesh_create_detached 2>/dev/null
+  unfunction _sesh_kill _sesh_create_detached 2>/dev/null
 }
 
 # vim: ft=zsh

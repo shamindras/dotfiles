@@ -190,7 +190,7 @@ re-investigation:
 | fzf    | Ctrl-T (files), Ctrl-R (history), Alt-C (dirs)    |
 | yazi   | `y` wrapper preserves cwd on exit                  |
 | zk     | `k`/`ki` functions with template sync              |
-| sesh   | `sesh-reset` for session recovery (alias `sra` = `sesh-reset --all`) |
+| sesh   | `sc` fzf-pick + connect (safe reattach); `sesh-reset` to force-recreate (alias `sra` = `sesh-reset --all`) |
 | uv     | `ua` activates nearest Python venv                 |
 | aerospace | `asr` reloads config + self-heals post-upgrade stale server; `asf` forced restart |
 
