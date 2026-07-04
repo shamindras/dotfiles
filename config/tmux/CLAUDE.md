@@ -32,7 +32,6 @@ use `#{E:...}` lazy expansion so they resolve at render time.
 | TPM itself | `submods/plugins/tpm` | Yes (submodule ref) |
 | TPM symlink | `~/.config/tmux/plugins/tpm` | No (dotbot symlink) |
 | Other plugins | `~/.local/share/tmux/plugins/<plugin>/` | No (TPM managed) |
-| Resurrect data | `~/.local/share/tmux/resurrect/` | No (session data) |
 
 `TMUX_PLUGIN_MANAGER_PATH` is set in `config/zsh/conf.d/00-z1-env-vars-xdg.zsh`
 to `$XDG_DATA_HOME/tmux/plugins` — TPM installs all non-TPM plugins there.
@@ -43,10 +42,13 @@ to `$XDG_DATA_HOME/tmux/plugins` — TPM installs all non-TPM plugins there.
 |--------|---------|
 | `tmux-plugins/tmux-sensible` | Universal baseline defaults |
 | `tmux-plugins/tmux-yank` | System clipboard integration |
-| `tmux-plugins/tmux-resurrect` | Session/window/pane persistence |
-| `tmux-plugins/tmux-continuum` | Auto-save (15 min) + auto-restore |
 | `catppuccin/tmux#v2.1.3` | Catppuccin mocha theme (version-pinned) |
 | `wfxr/tmux-fzf-url` | Open URLs from scrollback via fzf |
+
+Session persistence is deliberately NOT plugin-based: sesh (`config/sesh/`)
+is the single source of truth for session layouts. tmux-resurrect/continuum
+were removed 2026-07 — see `config/sesh/CLAUDE.md` § Workflow Guide for the
+recovery model (attach vs `sesh-reset`).
 
 TPM itself is managed as a git submodule — do NOT declare it as `@plugin`.
 
@@ -185,5 +187,4 @@ theme is version-pinned in `plugins.conf`.
 - Debug options: `tmux show-options -g` / `tmux show-options -s`
 - List bindings: `tmux list-keys`
 - Check key conflicts: `tmux list-keys | grep <key>`
-- Session save: `prefix + Ctrl-s` / restore: `prefix + Ctrl-r`
 - URL picker: `prefix + u` (tmux-fzf-url default)
