@@ -19,7 +19,6 @@
     - "${XDG_PROJECTS_DIR}"
     - "${XDG_DATA_HOME}/r"
     - "${XDG_DATA_HOME}/tmux/plugins"
-    - "${XDG_DATA_HOME}/tmux/resurrect"
 
 # remove existing symlinks
 - clean:
