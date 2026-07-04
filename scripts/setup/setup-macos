@@ -426,8 +426,21 @@ if [[ -d /Applications/DjView.app ]]; then
   defaults write org.djvu.DjView "forStandalone.options" -string \
     "SHOW_TOOLBAR|SHOW_STATUSBAR|SHOW_SCROLLBARS|SHOW_FRAME|SHOW_MAPAREAS|LAYOUT_SIDEBYSIDE|HANDLE_MOUSE|HANDLE_KEYBOARD|HANDLE_LINKS|HANDLE_CONTEXTMENU"
 
-  # Fit-to-page (djview encodes "fit page" as -1, stored as a string).
-  defaults write org.djvu.DjView "forStandalone.zoom" -string "-1"
+  # Fit-to-page: whole spread visible, so Next Page advances a full spread.
+  # Zoom constants (qdjvuwidget.h): -1 = FitWidth, -2 = FitPage,
+  # -3 = one2one, -4 = stretch. Stored as a string.
+  defaults write org.djvu.DjView "forStandalone.zoom" -string "-2"
+
+  # forStandalone.remember = 0: djview's saveRemembered() rewrites the
+  # options/zoom/state group at quit only when this flag is set, so with it
+  # off, session tweaks (zoom, layout) stay per-session and every launch
+  # starts from the defaults above. UI equivalent: Preferences → Interface →
+  # uncheck "Remember initial state from last invocation". Trade-offs, both
+  # gated on the same flag in djview's updateSaved(): window size is no
+  # longer remembered, and reopened files still restore their own last
+  # page/zoom from the recent-files list (restoreRecentDocument() runs
+  # unconditionally) — only files opened for the first time get the defaults.
+  defaults write org.djvu.DjView "forStandalone.remember" -bool false
 
   # Page navigation via NSUserKeyEquivalents (@=Cmd, ^=Ctrl). Same scheme as
   # Skim & Preview (c64663a). Keys match Qt menu-item titles with the "&"
@@ -447,10 +460,8 @@ if [[ -d /Applications/DjView.app ]]; then
     "Backward"      '"@["' \
     "Forward"       '"@]"'
 
-  # forStandalone.remember = 1 means DjView rewrites these options on quit.
-  # Defaults apply on next launch after this script runs; UI tweaks during a
-  # session override until setup-macos is re-run. (NSUserKeyEquivalents is
-  # not touched by djview at quit, so the keybinds persist independently.)
+  # NSUserKeyEquivalents is macOS-level, never touched by djview at quit,
+  # so the keybinds persist independently of the remember flag above.
 else
   echo "    DjView not installed — skipping DjView defaults."
 fi
