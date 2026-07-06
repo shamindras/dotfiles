@@ -12,7 +12,7 @@ set -Eeuo pipefail
 
 DROPBOX_DIR="${DROPBOX_DIR:-$HOME/Dropbox}"
 DIRS_LIST="${XDG_CONFIG_HOME:-$HOME/.config}/sesh/dirs.list"
-FD_MAX_DEPTH=4
+FD_MAX_DEPTH=6
 
 [[ -r "$DIRS_LIST" ]] || { echo "sesh-dir-picker: $DIRS_LIST not found" >&2; exit 1; }
 
