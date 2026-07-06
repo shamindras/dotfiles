@@ -190,7 +190,7 @@ re-investigation:
 | tmux   | `tmux-resize` before TUI apps, `c` clears history |
 | zoxide | Replaces `cd`, used in all nav aliases             |
 | fzf    | Ctrl-T (files), Ctrl-R (history), Alt-C (dirs)    |
-| yazi   | `y` wrapper preserves cwd on exit                  |
+| yazi   | `y` wrapper preserves cwd on exit; `R w`/`R c` in yazi run `wash`/`clean` on cwd via `zsh -ic` |
 | zk     | `k`/`ki` functions with template sync              |
 | sesh   | `sc` connect: fzf-pick or `sc <name>` direct (safe reattach); `sn` ad-hoc session from dirs.list; `sesh-reset` force-recreate (`sra` = `--all`, derived from sesh.toml) |
 | uv     | `ua` activates nearest Python venv                 |

@@ -47,4 +47,10 @@ prepend_keymap = [
   { on = ["g", "7"], run = "tab_switch 6", desc = "Switch to the 7th tab" },
   { on = ["g", "8"], run = "tab_switch 7", desc = "Switch to the 8th tab" },
   { on = ["g", "9"], run = "tab_switch 8", desc = "Switch to the 9th tab" },
+
+  # Run scripts on cwd (R family) — via `zsh -ic` so autoload functions
+  # and aliases resolve (yazi's shell runs plain `sh -c` otherwise).
+  # --interactive = confirm prompt: Enter runs, Esc cancels, editable.
+  { on = ["R", "w"], run = "shell --interactive -- zsh -ic wash",             desc = "Wash cwd (recursive junk cleanup)" },
+  { on = ["R", "c"], run = "shell --interactive -- zsh -ic 'wash --current'", desc = "Clean cwd (top level only)" },
 ]

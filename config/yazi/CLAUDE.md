@@ -92,8 +92,21 @@ Everforest Medium, Rosé Pine (default, moon, dawn), Nord.
 | `T`         | Restore last closed tab (close-and-restore-tab)                  |
 | `1`–`9`     | Count prefix for relative-motions (was tab switch in defaults)   |
 | `g1`–`g9`   | Switch to tab N (replaces default `1`–`9`)                       |
+| `R` `w`     | Wash cwd — recursive junk cleanup via `zsh -ic wash`             |
+| `R` `c`     | Clean cwd — top level only via `zsh -ic 'wash --current'`        |
 
 All other keybindings are yazi's preset defaults (see `~` help overlay).
+
+### Run-scripts family (`R`)
+
+Two-key chords for running zsh helpers on yazi's cwd (the shell's working
+directory is set to the active tab's directory). Commands are wrapped in
+`zsh -ic` because yazi's `shell` runs plain `sh -c`, which cannot see zsh
+autoload functions or aliases. `--interactive` acts as the confirm step:
+the command is prefilled in yazi's input box — Enter runs it, Esc cancels,
+and it can be edited first (e.g. append `-p` for a preview). Runs are
+silent background tasks; yazi's filesystem watcher refreshes the listing,
+and output is inspectable in the task view (`w`).
 
 ## Package management (ya pkg)
 
@@ -122,7 +135,8 @@ and content hash — commit this file to keep state reproducible.
 - **unar**: brew package — backend for `smart-archive-enter`, invoked
   with `-d` (always wrap) `-r` (rename on collision) `-o <cwd>`
 - **zsh**: `y` wrapper function preserves cwd on exit (also re-entry
-  point after `F` flavor-picker quits yazi)
+  point after `F` flavor-picker quits yazi); `wash` autoload function
+  invoked by the `R` run-scripts family via `zsh -ic`
 - **tmux**: `prefix o y` launches yazi
 - **wezterm**: `CMD+Y` launches yazi
 
@@ -150,6 +164,8 @@ books library, …) without manual `cd`-ing.
   `prepend_keymap`) would REPLACE the preset — don't.
 - **theme.toml NOT live-reloaded**: flavor switch requires yazi restart.
   This is why the flavor-picker emits `quit`.
+- **keymap.toml NOT live-reloaded**: keybinding changes require
+  relaunching yazi (no cache clear needed).
 - **Schema**: https://yazi-rs.github.io/schemas/yazi.json
 - **Help overlay**: press `~` in yazi
 - Nvim autocmd clears yazi cache on `yazi.toml` save.
