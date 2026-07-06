@@ -17,3 +17,4 @@ ${DROPBOX_DIR}/resources/**
 ${DROPBOX_DIR}/entertainment/**
 
 # --- exact entries (auto-appended by the picker) ---
+${DROPBOX_DIR}/entertainment/audio/spiritual/recordings/swami_sridharanandaji/lectures/patanjali_yoga_sutra
