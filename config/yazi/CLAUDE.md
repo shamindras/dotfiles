@@ -102,11 +102,10 @@ All other keybindings are yazi's preset defaults (see `~` help overlay).
 Two-key chords for running zsh helpers on yazi's cwd (the shell's working
 directory is set to the active tab's directory). Commands are wrapped in
 `zsh -ic` because yazi's `shell` runs plain `sh -c`, which cannot see zsh
-autoload functions or aliases. `--interactive` acts as the confirm step:
-the command is prefilled in yazi's input box — Enter runs it, Esc cancels,
-and it can be edited first (e.g. append `-p` for a preview). Runs are
-silent background tasks; yazi's filesystem watcher refreshes the listing,
-and output is inspectable in the task view (`w`).
+autoload functions or aliases. Commands run immediately on the second
+keypress (no confirm prompt) as silent background tasks; yazi's filesystem
+watcher refreshes the listing, and output is inspectable in the task
+view (`w`).
 
 ## Package management (ya pkg)
 
