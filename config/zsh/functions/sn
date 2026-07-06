@@ -1,0 +1,24 @@
+##? sn - spin up an ad-hoc sesh session from a curated directory
+##?
+##? fzf-picks a directory from ~/.config/sesh/dirs.list (exact entries +
+##? root globs, sesh.toml-owned paths excluded) and connects: attaches if
+##? the session is alive, creates it with the default layout
+##? (claude/yazi/nvim/term) if not. Untracked picks are appended to
+##? dirs.list automatically (graduation).
+##?
+##? usage:
+##?   sn
+##?
+##? options:
+##?   -h, --help  Show this help
+##?
+##? examples:
+##?   sn          # pick a directory, launch/attach its session
+
+sn() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  ~/.config/bin/sesh-dir-picker
+}
+
+# vim: ft=zsh
