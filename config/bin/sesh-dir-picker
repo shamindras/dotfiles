@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# fzf directory picker for ad-hoc sesh sessions.
+#
+# Expands ~/.config/sesh/dirs.list (exact paths, /* and /*/* globs, /** fd
+# scans), excludes directories already owned by [[session]] entries in
+# sesh.toml, fzf-picks one, appends untracked picks back to dirs.list as
+# exact entries (graduation), then hands off to `sesh connect` (switches
+# inside tmux, attaches outside). The [default_session] startup_command in
+# sesh.toml furnishes the window layout.
+
+DROPBOX_DIR="${DROPBOX_DIR:-$HOME/Dropbox}"
+DIRS_LIST="${XDG_CONFIG_HOME:-$HOME/.config}/sesh/dirs.list"
+FD_MAX_DEPTH=4
+
+[[ -r "$DIRS_LIST" ]] || { echo "sesh-dir-picker: $DIRS_LIST not found" >&2; exit 1; }
+
+# ~/Dropbox is a symlink to ~/Library/CloudStorage/Dropbox; sesh may report
+# either spelling. Prefix normalization (one realpath, no per-dir forks)
+# stands in for full realpath comparison — ~/Dropbox is the only symlink in
+# play (managed invariant, see root CLAUDE.md).
+DROPBOX_REAL="$(realpath -q "$DROPBOX_DIR" 2>/dev/null || echo "$DROPBOX_DIR")"
+norm() {
+  local p="$1"
+  p="${p/#"$DROPBOX_DIR"/$DROPBOX_REAL}"
+  printf '%s\n' "$p"
+}
+
+# --- Expand list patterns into candidate dirs (absolute, symlink form) ---
+candidates=()
+while IFS= read -r line; do
+  line="${line%%#*}"                       # strip comments
+  line="${line#"${line%%[![:space:]]*}"}"  # ltrim
+  line="${line%"${line##*[![:space:]]}"}"  # rtrim
+  [[ -z "$line" ]] && continue
+  line="${line//\$\{DROPBOX_DIR\}/$DROPBOX_DIR}"
+  line="${line//\$\{HOME\}/$HOME}"
+  if [[ "$line" == */'**' ]]; then
+    base="${line%/\*\*}"
+    [[ -d "$base" ]] || continue
+    while IFS= read -r d; do candidates+=("${d%/}"); done \
+      < <(fd --type d --max-depth "$FD_MAX_DEPTH" \
+             --exclude .git --exclude node_modules . "$base" | sort)
+  elif [[ "$line" == *'*'* ]]; then
+    while IFS= read -r d; do candidates+=("${d%/}"); done \
+      < <(compgen -G "${line}/" || true)
+  else
+    [[ -d "$line" ]] && candidates+=("$line")
+  fi
+done < "$DIRS_LIST"
+
+[[ ${#candidates[@]} -gt 0 ]] \
+  || { echo "sesh-dir-picker: no directories found from $DIRS_LIST" >&2; exit 1; }
+
+# --- Exclude sesh.toml-owned paths; dedup ---
+declare -A skip seen
+while IFS= read -r p; do
+  [[ -n "$p" ]] || continue
+  skip["$(norm "${p/#\~/$HOME}")"]=1
+done < <(sesh list -c --json | jq -r '(. // [])[].Path')
+
+rows=()
+for d in "${candidates[@]}"; do
+  key="$(norm "$d")"
+  [[ -n "${skip[$key]:-}" || -n "${seen[$key]:-}" ]] && continue
+  seen["$key"]=1
+  rows+=("${d/#"$HOME"/\~}")
+done
+
+# --- Pick (Esc exits silently; colors embedded — popup shell lacks
+#     FZF_DEFAULT_OPTS, values match config/zsh/conf.d/10-z1-brew-apps.zsh) ---
+sel="$(printf '%s\n' "${rows[@]}" | fzf \
+  --exact --no-sort --reverse --border \
+  --border-label=' new session ' \
+  --prompt='⊕ ' \
+  --color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
+  --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
+  --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
+  --color=selected-bg:#45475A \
+  --color=border:#6C7086,label:#CDD6F4)" || exit 0
+[[ -n "$sel" ]] || exit 0
+sel_abs="${sel/#\~/$HOME}"
+
+# --- Graduation: append untracked picks as exact entries (normalized to
+#     env-var literals; append-only — the file is Dropbox-synced) ---
+lit="$sel_abs"
+lit="${lit/#"$DROPBOX_REAL"/\$\{DROPBOX_DIR\}}"
+lit="${lit/#"$DROPBOX_DIR"/\$\{DROPBOX_DIR\}}"
+lit="${lit/#"$HOME"/\$\{HOME\}}"
+if ! grep -Fxq "$lit" "$DIRS_LIST" && ! grep -Fxq "$sel_abs" "$DIRS_LIST"; then
+  printf '%s\n' "$lit" >>"$DIRS_LIST"
+fi
+
+exec sesh connect "$sel_abs"
