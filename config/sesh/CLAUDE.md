@@ -27,6 +27,14 @@ whole server — every other session is one picker away.
 Startup scripts only run when sesh creates a **new** session. On reconnect
 to a live session, sesh just attaches/switches — no re-run.
 
+**Session tiers:**
+
+| Tier    | Source                              | Layout                        | Reboot recovery              |
+|---------|-------------------------------------|-------------------------------|------------------------------|
+| sra     | `sesh.toml` `[[session]]`           | per-session script            | `sra`                        |
+| ad-hoc  | `dirs.list` (exact paths + globs)   | `default.sh` via `[default_session]` | re-pick (`Cmd-Ctrl-K` / `sn`) |
+| promote | `/sesh-promote` skill (ad-hoc → sra)| custom generated script       | joins `sra` automatically    |
+
 **Recovery for a broken session:** `sesh-reset <name>` (zsh function):
 1. Kills the tmux session(s)
 2. Creates detached tmux sessions + runs startup scripts (bypasses `sesh connect`
@@ -37,8 +45,10 @@ to a live session, sesh just attaches/switches — no re-run.
 
 | File | Purpose |
 |------|---------|
-| `sesh.toml` | Session definitions (name, path, startup_command) |
+| `sesh.toml` | Session definitions + `[default_session]` fallback layout |
+| `dirs.list` | Ad-hoc launchable directories (read by `sesh-dir-picker`) |
 | `scripts/helpers.sh` | Shared helper functions (sourceable library, not executable) |
+| `scripts/default.sh` | Generic ad-hoc layout (`[default_session]` startup) |
 | `scripts/*.sh` | Per-session startup scripts (window layouts) |
 | `CLAUDE.md` | This documentation file |
 
@@ -84,6 +94,7 @@ All scripts use:
 
 | Session  | W1       | W2      | W3      | W4     | W5     | Focus    |
 |----------|----------|---------|---------|--------|--------|----------|
+| (ad-hoc) | claude   | yazi    | nvim    | term   | —      | claude   |
 | dots     | claude   | yazi    | nvim    | term   | —      | claude   |
 | play     | claude   | yazi    | nvim    | term (uv venv) | — | claude   |
 | career   | claude   | yazi    | nvim    | term   | —      | nvim     |
@@ -111,20 +122,24 @@ so its yazi has 6 tabs instead of 7.
 
 ## tmux / WezTerm Integration
 
-- `prefix+s` (or CMD+Shift+K via WezTerm) opens sesh fzf picker popup
+- `prefix+N s` (or CMD+Shift+K via WezTerm) opens sesh fzf picker popup
 - Filter keys in picker: `ctrl-a` all, `ctrl-t` tmux, `ctrl-g` config,
   `ctrl-x` zoxide, `ctrl-d` kill session
-- CMD+Shift+K sends `C-a s` via WezTerm; CMD+K sends `C-a w` (session/window tree)
+- `prefix+N d` (or CMD+Ctrl+K) opens the ad-hoc directory picker
+  (`~/.config/bin/sesh-dir-picker`)
+- WezTerm K-column: CMD+K = `N w` tree, CMD+Shift+K = `N s` existing
+  sessions, CMD+Ctrl+K = `N d` new session from directory
 
 ## Workflow Guide (tldr)
 
-Three scenarios, three commands. Mental model: you attach to the tmux
+Four scenarios, four commands. Mental model: you attach to the tmux
 *server*, not a session — landing anywhere makes every session reachable.
 
 | Situation                          | Command             | Effect                                          |
 | ---------------------------------- | ------------------- | ----------------------------------------------- |
 | Quit WezTerm, back to work         | `sc` (or `tmux attach`) | Reattach — everything intact, nothing re-run |
-| After a reboot, stand up all six   | `sra`               | Recreate all sessions fresh from sesh.toml      |
+| Work in a non-sra directory        | `Cmd-Ctrl-K` / `sn` | Pick from dirs.list → session w/ default layout |
+| After a reboot, stand up all       | `sra`               | Recreate all sesh.toml sessions fresh           |
 | One session is broken              | `sesh-reset <name>` | Kill + recreate just that session               |
 
 ### Closed WezTerm but tmux is still running (the common case)
@@ -136,10 +151,10 @@ tmux attach                 # or: name-free, lands in most-recent session
 ```
 Do NOT run `sra` here — it kills the live sessions and rebuilds defaults.
 
-`sc` is `sesh connect "$(sesh list | fzf)"` (alias in
-`config/zsh/conf.d/11-z1-aliases.zsh`): attaches if the session is alive,
-creates it from sesh.toml if not. Note `sesh connect` requires a session
-name — there is no built-in name-free mode.
+`sc` is a zsh autoloaded function (`config/zsh/functions/sc`): bare `sc`
+fzf-picks a session, `sc <name>` connects directly — attaches if the
+session is alive, creates it from sesh.toml if not. Note `sesh connect`
+requires a session name — there is no built-in name-free mode.
 
 ### Computer restart / cold start
 
@@ -147,7 +162,8 @@ A reboot kills the tmux server and every process in it — running programs
 are not recoverable, by any tool. Recreate fresh:
 
 ```
-sesh-reset --all            # alias sra: notes, dots, play, blog, feed, career
+sesh-reset --all            # alias sra: every sesh.toml session (derived
+                            # via `sesh list -c`; lands in the first entry)
 ```
 
 Or connect one at a time: `sc`, `sesh connect notes`, or the picker.
@@ -164,11 +180,47 @@ sesh-reset notes feed       # multiple sessions
 - Switch sessions: `prefix+s` (or `CMD+Shift+K`)
 - Connect to config session: `sesh connect <name>` or `sc`
 
+## Ad-hoc Sessions (dirs.list + default layout)
+
+`~/.config/bin/sesh-dir-picker` (bound to `Cmd-Ctrl-K` / `prefix N d`;
+zsh function `sn` from a bare shell) fzf-picks a directory from
+`dirs.list` and `sesh connect`s it. Because the directory has no
+`[[session]]` entry, sesh applies `[default_session].startup_command` →
+`scripts/default.sh` (self-derives session/path; per-session
+startup_commands always win).
+
+`dirs.list` format — env-var literals (`${DROPBOX_DIR}`, `${HOME}`)
+expanded at read time, `#` comments:
+
+| Pattern     | Meaning                                              |
+|-------------|------------------------------------------------------|
+| `<path>`    | exact entry (auto-appended on first launch)          |
+| `<path>/*`  | every child dir launchable (`/*/*` for grandchildren) |
+| `<path>/**` | recursive fd scan (depth ≤4, hidden/.git excluded)   |
+
+Behaviors to know:
+
+- Paths owned by `[[session]]` entries are auto-excluded from the picker.
+- Picking an untracked dir appends it to dirs.list (graduation) —
+  append-only, `${DROPBOX_DIR}`-normalized, deduped.
+- `[default_session]` also furnishes plain `sesh connect <dir>` and the
+  old picker's `ctrl-x` zoxide connects — intended consistency. Opt a
+  session out with `disable_startup_command = true` in its `[[session]]`.
+- Ad-hoc sessions survive WezTerm quits (tmux server owns them) but die
+  on reboot and are NOT part of `sra` — recovery is one re-pick.
+
 ## Adding a New Session
 
-1. Add a `[[session]]` block to `sesh.toml` with name, path, startup_command
+Run `/sesh-promote <dir>` to graduate an ad-hoc directory interactively
+(generates the block, script, and doc updates). Manual steps:
+
+1. Add a `[[session]]` block to `sesh.toml` with name, path,
+   startup_command — **before** the `[default_session]` table
 2. Create matching script in `scripts/` — source `helpers.sh` and use shared
    functions for standard windows (nvim, claude, term, yazi)
 3. Add session-specific windows inline after the shared calls
 4. `chmod +x` the new script
 5. Run `sesh connect <name>` to test
+
+Promoted/added sessions join `sesh-reset --all` automatically (derived
+from `sesh list -c`).
