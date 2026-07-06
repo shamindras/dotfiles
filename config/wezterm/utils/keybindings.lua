@@ -181,6 +181,7 @@ function M.setup(config)
     -- Session management — N (Navigate) key table
     tmux_table('k', 'CMD|SHIFT', 'N', 's'),   -- CMD+Shift+K = sesh picker
     tmux_table('k', 'CMD', 'N', 'w'),         -- CMD+K       = session/window tree
+    tmux_table('k', 'CMD|CTRL', 'N', 'd'),    -- CMD+Ctrl+K  = new session from dir
     tmux_table('j', 'CMD', 'N', 'j'),         -- CMD+J       = last session
     tmux_table('n', 'CMD', 'N', 'n'),         -- CMD+N       = new session
     tmux_table('h', 'CMD|CTRL', 'N', 'h'),    -- CMD+Ctrl+H  = previous session
