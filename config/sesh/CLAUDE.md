@@ -196,7 +196,7 @@ expanded at read time, `#` comments:
 |-------------|------------------------------------------------------|
 | `<path>`    | exact entry (auto-appended on first launch)          |
 | `<path>/*`  | every child dir launchable (`/*/*` for grandchildren) |
-| `<path>/**` | recursive fd scan (depth ≤6, hidden/.git excluded)   |
+| `<path>/**` | recursive fd scan (depth ≤4, hidden/.git excluded)   |
 
 Behaviors to know:
 
