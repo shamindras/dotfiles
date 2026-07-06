@@ -5,7 +5,7 @@
 Modular zsh config with custom "Z1" framework. Numbered `conf.d/` files ensure
 deterministic load order. Plugin system based on
 [zsh_unplugged](https://github.com/mattmc3/zsh_unplugged) (git-based, 2 plugins:
-zsh-autosuggestions, zsh-syntax-highlighting). 18 autoloaded functions in `functions/`.
+zsh-autosuggestions, zsh-syntax-highlighting). 20 autoloaded functions in `functions/`.
 
 - **Docs**: https://zsh.sourceforge.io/Doc/
 - **Installed version**: zsh 5.9 (system `/bin/zsh`, verified 2026-03-25)
@@ -33,13 +33,14 @@ config/zsh/
 │   ├── 10-z1-brew-apps.zsh          # zoxide, fzf, atuin (cached via __memoize_cmd)
 │   ├── 11-z1-aliases.zsh            # 90+ aliases (regular, suffix, global)
 │   └── 12-z1-prompt.zsh             # Simple vcs_info prompt
-└── functions/                        # Autoloaded functions (18 files)
+└── functions/                        # Autoloaded functions (20 files)
     ├── k, ki                         # Zettelkasten (zk) wrappers
     ├── y                             # Yazi wrapper (preserves cwd)
     ├── ua                            # Activate nearest uv Python venv
     ├── wash                          # Clean .DS_Store, swap, backup files
     ├── mcd                           # mkdir + cd via zoxide
     ├── colormap                      # Print terminal 256-color map
+    ├── sc                            # Sesh connect (fzf picker or by name)
     ├── sesh-reset                    # Force-recreate sesh tmux session
     ├── tmux-resize                   # Pre-resize tmux for TUI apps
     ├── convcomm                      # Conventional commit helper (gum)
@@ -190,7 +191,7 @@ re-investigation:
 | fzf    | Ctrl-T (files), Ctrl-R (history), Alt-C (dirs)    |
 | yazi   | `y` wrapper preserves cwd on exit                  |
 | zk     | `k`/`ki` functions with template sync              |
-| sesh   | `sc` fzf-pick + connect (safe reattach); `sesh-reset` to force-recreate (alias `sra` = `sesh-reset --all`) |
+| sesh   | `sc` connect: fzf-pick or `sc <name>` direct (safe reattach); `sesh-reset` to force-recreate (alias `sra` = `sesh-reset --all`) |
 | uv     | `ua` activates nearest Python venv                 |
 | aerospace | `asr` reloads config + self-heals post-upgrade stale server; `asf` forced restart |
 
