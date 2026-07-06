@@ -27,3 +27,9 @@ startup_command = "~/.config/sesh/scripts/notes.sh"
 name = "feed"
 path = "~/Downloads"
 startup_command = "~/.config/sesh/scripts/feed.sh"
+
+# Applies ONLY to sessions with no [[session]] entry above (ad-hoc
+# directories from sesh-dir-picker or zoxide connects). Per-session
+# startup_command wins; opt a session out with disable_startup_command.
+[default_session]
+startup_command = "~/.config/sesh/scripts/default.sh"

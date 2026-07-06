@@ -1,0 +1,18 @@
+# sesh ad-hoc directory list — read by ~/.config/bin/sesh-dir-picker.
+#
+# One pattern per line; blank lines and '#' comments ignored. Env vars
+# (${DROPBOX_DIR}, ${HOME}) are expanded at read time. Pattern kinds:
+#   <path>        exact entry — always shown (if the dir exists)
+#   <path>/*      every child directory is launchable
+#   <path>/*/*    grandchildren too (patterns are cumulative)
+#   <path>/**     recursive scan (fd, depth-capped, hidden/.git excluded)
+#
+# Paths already owned by [[session]] entries in sesh.toml are excluded
+# automatically. Picking an untracked directory in the picker appends it
+# to the exact-entries section below (graduation).
+
+# --- roots ---
+${DROPBOX_DIR}/repos/*
+${DROPBOX_DIR}/resources/**
+
+# --- exact entries (auto-appended by the picker) ---
