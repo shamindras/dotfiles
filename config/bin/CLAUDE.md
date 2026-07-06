@@ -17,6 +17,7 @@
 | `open-nordvpn`        | Launch NordVPN with aerospace workspace integration                    |
 | `quit-app`            | Switch workspace first, then lazy-quit app in background with notify   |
 | `run-as-user`         | Execute a command as the console user (root→user context switch)       |
+| `sesh-dir-picker`     | fzf picker for ad-hoc sesh sessions from `config/sesh/dirs.list`       |
 | `tmux-session-picker` | fzf-based tmux session switcher (exact match)                          |
 
 ## quit-app
@@ -59,7 +60,8 @@ workspace-first quit.
 
 ## Development Notes
 
-- Symlinked to `~/.local/bin` during install (XDG_BIN_HOME)
+- Symlinked to `~/.config/bin` during install (`${XDG_CONFIG_HOME}/bin` in
+  `install.conf.yaml`) — NOT on `PATH`; callers use absolute paths
 - Scripts must have executable permissions (`chmod +x`)
 - `fastopen` uses POSIX sh (not zsh) for minimal overhead
 - `open-nordvpn` uses POSIX sh with multi-step aerospace integration
