@@ -14,5 +14,6 @@
 # --- roots ---
 ${DROPBOX_DIR}/repos/*
 ${DROPBOX_DIR}/resources/**
+${DROPBOX_DIR}/entertainment/**
 
 # --- exact entries (auto-appended by the picker) ---
