@@ -8,13 +8,14 @@
 ##?   sesh-reset --all
 ##?
 ##? options:
-##?   --all       Reset all predefined sessions: notes dots play blog feed career
+##?   --all       Reset every session defined in sesh.toml (derived via
+##?               `sesh list -c`, so promoted sessions are included)
 ##?   -h, --help  Show this help
 ##?
 ##? examples:
 ##?   sesh-reset notes              # recreate notes session
 ##?   sesh-reset notes feed dots    # recreate multiple sessions
-##?   sesh-reset --all              # recreate notes, dots, play, blog, feed, career
+##?   sesh-reset --all              # recreate all sesh.toml sessions
 
 sesh-reset() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
@@ -59,7 +60,11 @@ sesh-reset() {
 
   case "$1" in
     --all)
-      sessions=(notes dots play blog feed career)
+      sessions=("${(@f)$(sesh list -c --json | jq -r '(. // [])[].Name')}")
+      if (( ${#sessions} == 0 )) || [[ -z "${sessions[1]}" ]]; then
+        echo "sesh-reset: no sessions found in sesh config" >&2
+        return 1
+      fi
       ;;
     "")
       echo "sesh-reset: session name required (use -h for help)" >&2
