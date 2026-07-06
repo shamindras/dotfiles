@@ -121,16 +121,17 @@ sequences after prefix. This avoids colliding with tmux built-in defaults.
 
 **N (Navigate) — session management** (`prefix + N + <key>`):
 
-| Key | Action                          |
-|-----|---------------------------------|
-| `s` | Sesh session picker (fzf popup) |
-| `w` | Session/window tree (fzf popup) |
-| `n` | New session                     |
-| `k` | Kill session (with confirmation)|
-| `j` | Last session (toggle)           |
-| `h` | Previous session                |
-| `l` | Next session                    |
-| `e` | Rename session                  |
+| Key | Action                                |
+|-----|---------------------------------------|
+| `s` | Sesh session picker (fzf popup)       |
+| `w` | Session/window tree (fzf popup)       |
+| `d` | New session from curated dir (popup)  |
+| `n` | New session                           |
+| `k` | Kill session (with confirmation)      |
+| `j` | Last session (toggle)                 |
+| `h` | Previous session                      |
+| `l` | Next session                          |
+| `e` | Rename session                        |
 
 ### Copy mode
 - `prefix + v` enters copy mode
