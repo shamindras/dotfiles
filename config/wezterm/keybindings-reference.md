@@ -54,16 +54,17 @@ Note: All tmux bindings in this reference (including former core defaults like `
 
 ## Session Management — N (Navigate) key table
 
-| WezTerm key   | tmux key | Action              |
-| ------------- | -------- | ------------------- |
-| `CMD+K`       | `N w`    | Session/window tree |
-| `CMD+SHIFT+K` | `N s`    | Sesh picker         |
-| `CMD+J`       | `N j`    | Last session        |
-| `CMD+N`       | `N n`    | New session         |
-| `CMD+CTRL+H`  | `N h`    | Previous session    |
-| `CMD+CTRL+L`  | `N l`    | Next session        |
-| `CMD+CTRL+E`  | `N e`    | Rename session      |
-| `CMD+CTRL+W`  | `N k`    | Kill session        |
+| WezTerm key   | tmux key | Action                   |
+| ------------- | -------- | ------------------------ |
+| `CMD+K`       | `N w`    | Session/window tree      |
+| `CMD+SHIFT+K` | `N s`    | Sesh picker              |
+| `CMD+CTRL+K`  | `N d`    | New session from dir     |
+| `CMD+J`       | `N j`    | Last session             |
+| `CMD+N`       | `N n`    | New session              |
+| `CMD+CTRL+H`  | `N h`    | Previous session         |
+| `CMD+CTRL+L`  | `N l`    | Next session             |
+| `CMD+CTRL+E`  | `N e`    | Rename session           |
+| `CMD+CTRL+W`  | `N k`    | Kill session             |
 
 ## Tool Launchers — O (Open) key table
 
