@@ -71,7 +71,7 @@ Note: All tmux bindings in this reference (including former core defaults like `
 | WezTerm key   | tmux key | Action                       |
 | ------------- | -------- | ---------------------------- |
 | `CMD+G`       | `O g`    | Lazygit popup                |
-| `CMD+Y`       | `O y`    | Yazi window (yazi, yazi-1…)  |
+| `CMD+Y`       | `O y`    | Yazi window w/ preloaded tabs, Downloads active (yazi, yazi-1…) |
 | `CMD+I`       | `O i`    | Items (taskwarrior-tui)      |
 | `CMD+B`       | `O b`    | Btm                          |
 | `CMD+C`       | `O C`    | Claude Code window (claude…) |
