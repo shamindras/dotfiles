@@ -38,18 +38,20 @@ sesh_window_term() {
   tmux new-window -a -t "${session}:\$" -n "term" -c "${work_dir}"
 }
 
-# Window: yazi with preloaded tabs.
+# Window: yazi with preloaded tabs (persistent — yazi runs inside the
+# window's shell via the autoloaded `yt` function, so quitting yazi drops
+# to the prompt instead of closing the window; relaunch with `yt`).
 #   $1  session name
-#   $2  work_dir (becomes tab 1, yazi's launch cwd)
-#   $3+ extra args for yazi-tabs (e.g. active tab name, --profile books)
+#   $2  work_dir (becomes tab 1 — the window's shell starts there)
+#   $3+ extra args for yt (e.g. active tab name, --profile books)
+# -W skips yt's interactive wash (sesh windows have never washed).
 # Tab data and resolution live in ~/.config/bin/yazi-tabs (single source
-# of truth); it feeds YAZI_STARTUP_TABS / YAZI_ACTIVE_TAB to
-# ~/.config/yazi/init.lua. Run `yazi-tabs --help` for the interface.
+# of truth). Run `yazi-tabs --help` for the interface.
 sesh_window_yazi_tabs() {
   local session="$1" work_dir="$2"
   shift 2
-  tmux new-window -a -t "${session}:\$" -n "yazi" -c "${work_dir}" \
-    "$HOME/.config/bin/yazi-tabs --cwd '${work_dir}' $*"
+  tmux new-window -a -t "${session}:\$" -n "yazi" -c "${work_dir}"
+  tmux send-keys -t "${session}:yazi" "yt -W $*" Enter
 }
 
 # Focus a named window
