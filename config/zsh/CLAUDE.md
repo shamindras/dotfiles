@@ -5,7 +5,7 @@
 Modular zsh config with custom "Z1" framework. Numbered `conf.d/` files ensure
 deterministic load order. Plugin system based on
 [zsh_unplugged](https://github.com/mattmc3/zsh_unplugged) (git-based, 2 plugins:
-zsh-autosuggestions, zsh-syntax-highlighting). 21 autoloaded functions in `functions/`.
+zsh-autosuggestions, zsh-syntax-highlighting). 22 autoloaded functions in `functions/`.
 
 - **Docs**: https://zsh.sourceforge.io/Doc/
 - **Installed version**: zsh 5.9 (system `/bin/zsh`, verified 2026-03-25)
@@ -33,9 +33,10 @@ config/zsh/
 │   ├── 10-z1-brew-apps.zsh          # zoxide, fzf, atuin (cached via __memoize_cmd)
 │   ├── 11-z1-aliases.zsh            # 90+ aliases (regular, suffix, global)
 │   └── 12-z1-prompt.zsh             # Simple vcs_info prompt
-└── functions/                        # Autoloaded functions (21 files)
+└── functions/                        # Autoloaded functions (22 files)
     ├── k, ki                         # Zettelkasten (zk) wrappers
     ├── y                             # Yazi wrapper (preserves cwd)
+    ├── yt                            # Yazi with preloaded tabs (wash + cwd-follow shim over ~/.config/bin/yazi-tabs)
     ├── ua                            # Activate nearest uv Python venv
     ├── wash                          # Clean .DS_Store, swap, backup files
     ├── mcd                           # mkdir + cd via zoxide
@@ -190,7 +191,7 @@ re-investigation:
 | tmux   | `tmux-resize` before TUI apps, `c` clears history |
 | zoxide | Replaces `cd`, used in all nav aliases             |
 | fzf    | Ctrl-T (files), Ctrl-R (history), Alt-C (dirs)    |
-| yazi   | `y` wrapper preserves cwd on exit; `R w`/`R c` in yazi run `wash`/`clean` on cwd via `zsh -ic` |
+| yazi   | `y` wrapper preserves cwd on exit; `yt` launches with preloaded tabs (wash by default, `-W` skips; logic in `~/.config/bin/yazi-tabs`); `yh` = home variant; `R w`/`R c` in yazi run `wash`/`clean` on cwd via `zsh -ic` |
 | zk     | `k`/`ki` functions with template sync              |
 | sesh   | `sc` connect: fzf-pick or `sc <name>` direct (safe reattach); `sn` ad-hoc session from dirs.list; `sesh-reset` force-recreate (`sra` = `--all`, derived from sesh.toml) |
 | uv     | `ua` activates nearest Python venv                 |

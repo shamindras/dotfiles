@@ -1,0 +1,55 @@
+##? yt - launch yazi with preloaded tabs (Downloads + books library),
+##?      washing junk files first and following yazi's cwd on exit.
+##?      All tab logic lives in ~/.config/bin/yazi-tabs — run
+##?      `yazi-tabs --help` (or `yt -h`) for tabs, profiles, and flags.
+##?
+##? usage:
+##?   yt [-W|--no-wash] [yazi-tabs args...]
+##?
+##? options:
+##?   -W, --no-wash  skip the pre-launch wash of Downloads + books dirs
+##?
+##? examples:
+##?   yt             # cwd + curated tabs, cwd active
+##?   yt now         # 00_now_reading tab active
+##?   yt -W refs     # reference_books active, no wash
+##?   yt --cwd ~ 1   # home as tab 1, active
+
+yt() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && {
+    grep "^##?" "${(%):-%x}" | cut -c 5-
+    print
+    "$HOME/.config/bin/yazi-tabs" --help
+    return 0
+  }
+
+  local do_wash=1
+  local -a args
+  local arg
+  for arg in "$@"; do
+    case "$arg" in
+      -W | --no-wash) do_wash=0 ;;
+      *) args+=("$arg") ;;
+    esac
+  done
+
+  if (( do_wash )); then
+    wash "$HOME/Downloads"
+    wash "${DROPBOX_BOOKS_DIR:-$HOME/Dropbox/resources/books}"
+  fi
+
+  local tmp cwd
+  tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+
+  tmux-resize
+  "$HOME/.config/bin/yazi-tabs" "${args[@]}" --cwd-file="$tmp"
+
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+
+  clear
+}
+
+# vim: ft=zsh
