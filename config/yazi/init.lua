@@ -14,7 +14,9 @@ function Linemode:size_and_mtime()
   end
 end
 
--- Reads two env vars set by sesh's `sesh_window_yazi_tabs` helper:
+-- Reads two env vars set by `~/.config/bin/yazi-tabs` (the single
+-- launcher used by the zsh `yt` function, tmux `prefix O y`, and sesh's
+-- `sesh_window_yazi_tabs` helper):
 --   YAZI_STARTUP_TABS  colon-separated list of absolute paths to open as
 --                      additional tabs after the initial WORK_DIR tab.
 --   YAZI_ACTIVE_TAB    0-based index of the tab to activate (default: 0).
@@ -24,8 +26,8 @@ if startup_tabs and startup_tabs ~= '' then
   for path in string.gmatch(startup_tabs, '[^:]+') do
     ya.emit('tab_create', { path })
   end
+  -- tab_create focuses each new tab, so always switch back to the
+  -- requested tab — including 0 (the cwd tab).
   local active = tonumber(os.getenv('YAZI_ACTIVE_TAB') or '0') or 0
-  if active > 0 then
-    ya.emit('tab_switch', { active })
-  end
+  ya.emit('tab_switch', { active })
 end

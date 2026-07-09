@@ -19,6 +19,7 @@
 | `run-as-user`         | Execute a command as the console user (root→user context switch)       |
 | `sesh-dir-picker`     | fzf picker for ad-hoc sesh sessions from `config/sesh/dirs.list`       |
 | `tmux-session-picker` | fzf-based tmux session switcher (exact match)                          |
+| `yazi-tabs`           | Launch yazi with curated preloaded tabs (Downloads + books library); single source of truth for tab data + name/index resolution, called by zsh `yt`, tmux `prefix O y`, and sesh scripts; feeds `YAZI_STARTUP_TABS`/`YAZI_ACTIVE_TAB` to `config/yazi/init.lua` |
 
 ## quit-app
 
