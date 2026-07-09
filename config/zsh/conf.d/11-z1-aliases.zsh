@@ -55,18 +55,13 @@ function z1_aliases {
   alias tzsh="hyperfine --warmup=20 '/usr/bin/time zsh -i -c true 2>/dev/null'"
   alias uac="ua;clear" # run `ua` function and clear screen
 
-  # wash hidden files in downloads and refs, change into directory and launch yazi
-  alias yd="wash ~/Downloads && wash $DROPBOX_BOOKS_DIR;z ~/Downloads;y"
-  alias yh="clean ~;z ~;y"
-  alias yr="wash ~/Downloads && wash $DROPBOX_BOOKS_DIR;z $DROPBOX_BOOKS_DIR/reference_books;y"
-  alias y0="wash ~/Downloads && wash $DROPBOX_BOOKS_DIR;z $DROPBOX_BOOKS_DIR/current_reading/books/00_now_reading;y"
+  # yazi with preloaded tabs: yt (autoloaded function; see `yt -h`).
+  # Home variant keeps its top-level clean before launching.
+  alias yh="clean ~;yt --cwd ~"
 
   # ============================================================================
   # zk (zettelkasten) aliases
   # ============================================================================
-
-  # launch zk (zettlekasten) directory in yazi
-  alias yk="wash $ZK_NOTEBOOK_DIR;z $ZK_NOTEBOOK_DIR;y"
 
   # Search notes interactively
   alias ks='tmux-resize;k edit --interactive;clear'
