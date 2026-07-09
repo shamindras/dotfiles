@@ -134,10 +134,12 @@ and content hash — commit this file to keep state reproducible.
 - **unar**: brew package — backend for `smart-archive-enter`, invoked
   with `-d` (always wrap) `-r` (rename on collision) `-o <cwd>`
 - **zsh**: `y` wrapper function preserves cwd on exit (also re-entry
-  point after `F` flavor-picker quits yazi); `wash` autoload function
+  point after `F` flavor-picker quits yazi); `yt` launches with preloaded
+  tabs via `~/.config/bin/yazi-tabs`; `wash` autoload function
   invoked by the `R` run-scripts family via `zsh -ic`
-- **tmux**: `prefix o y` launches yazi
-- **wezterm**: `CMD+Y` launches yazi
+- **tmux**: `prefix O y` launches yazi with preloaded tabs (Downloads
+  active) via `~/.config/bin/yazi-tabs`
+- **wezterm**: `CMD+Y` launches yazi (same tabbed launcher via tmux)
 
 ## Startup hook (`init.lua`)
 
@@ -152,9 +154,12 @@ preload tabs:
 The initial tab (index 0) is the launch cwd. Extra tabs from
 `YAZI_STARTUP_TABS` are appended in order. Paths must not contain `:`.
 
-Used by `config/sesh/scripts/helpers.sh:sesh_window_yazi_tabs` to give
-each sesh session a yazi window with a curated set of tabs (Downloads,
-books library, …) without manual `cd`-ing.
+Producer: `~/.config/bin/yazi-tabs` (`config/bin/yazi-tabs`) — the single
+launcher holding the curated tab set (Downloads, books library) and
+name/index resolution. It is invoked by the zsh `yt` function, the tmux
+`prefix O y` binding, and sesh's `sesh_window_yazi_tabs` helper, so every
+entry point gets the same tabs without manual `cd`-ing. Run
+`yazi-tabs --help` for the interface.
 
 ## Development Notes
 

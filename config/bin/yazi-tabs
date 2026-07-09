@@ -1,0 +1,221 @@
+#!/usr/bin/env bash
+#
+# yazi-tabs — launch yazi with a curated set of preloaded tabs.
+#
+# Producer half of an env-var contract: builds YAZI_STARTUP_TABS (colon-
+# separated EXTRA tab paths) and YAZI_ACTIVE_TAB (0-based index over
+# [cwd tab + extras]), consumed at yazi startup by the hook in
+# config/yazi/init.lua. Paths must not contain ':' (the separator).
+# The first tab is yazi's launch cwd — this script cd's there before exec.
+#
+# Callers: zsh `yt` function (interactive), tmux `prefix O y` binding,
+# and sesh session scripts via sesh_window_yazi_tabs (helpers.sh).
+#
+##? yazi-tabs - launch yazi with preloaded tabs (Downloads + books library)
+##?
+##? usage:
+##?   yazi-tabs [options] [ACTIVE] [-- yazi-args...]
+##?
+##? arguments:
+##?   ACTIVE              tab to activate: exact name, unambiguous name
+##?                       prefix, or 1-based tab number as displayed
+##?                       (default: 1, the cwd tab)
+##?
+##? options:
+##?   -p, --profile NAME  tab set: default | books (default: default)
+##?   -c, --cwd DIR       first-tab directory (default: current directory)
+##?   -l, --list          print resolved tabs (number, name, path) and exit
+##?       --dry-run       print env vars and command without launching
+##?   -h, --help          show this help
+##?
+##? Unrecognized --flags are forwarded to yazi (e.g. --cwd-file=...).
+##?
+##? examples:
+##?   yazi-tabs                  # cwd + curated tabs, cwd active
+##?   yazi-tabs downloads        # Downloads tab active
+##?   yazi-tabs back             # prefix match -> backlog
+##?   yazi-tabs 4                # 4th tab as displayed in yazi
+##?   yazi-tabs -p books         # books-only tab set
+
+set -Eeuo pipefail
+
+# ── Tab definitions — edit here to change the curated tab set ──────────
+# Parallel arrays (bash-3.2-safe): index i of TAB_NAMES maps to TAB_PATHS.
+_dropbox="${DROPBOX_DIR:-$HOME/Dropbox}"
+_books="${DROPBOX_BOOKS_DIR:-${_dropbox}/resources/books}"
+_current="${_books}/current_reading/books"
+
+TAB_NAMES=(downloads refs now next deck backlog)
+TAB_PATHS=(
+  "$HOME/Downloads"
+  "${_books}/reference_books"
+  "${_current}/00_now_reading"
+  "${_current}/01_next_up"
+  "${_current}/02_on_deck"
+  "${_current}/03_backlog"
+)
+
+PROFILE_DEFAULT="downloads refs now next deck backlog"
+PROFILE_BOOKS="refs now next deck backlog"
+# ── Logic below; no data past this point ────────────────────────────────
+
+usage() { grep '^##?' "$0" | cut -c 5-; }
+die() { printf 'yazi-tabs: %s\n' "$*" >&2; exit 1; }
+
+# Print the path registered for tab name $1 (fails if unknown).
+tab_path_for() {
+  local i
+  for i in "${!TAB_NAMES[@]}"; do
+    if [[ "${TAB_NAMES[$i]}" == "$1" ]]; then
+      printf '%s\n' "${TAB_PATHS[$i]}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# ── Argument parsing ─────────────────────────────────────────────────────
+profile="default"
+cwd="$PWD"
+list=false
+dry_run=false
+active=""
+yazi_args=()
+
+while (($# > 0)); do
+  case "$1" in
+    -p | --profile)
+      [[ $# -ge 2 ]] || die "$1 requires a value"
+      profile="$2"
+      shift 2
+      ;;
+    -c | --cwd)
+      [[ $# -ge 2 ]] || die "$1 requires a value"
+      cwd="$2"
+      shift 2
+      ;;
+    -l | --list)
+      list=true
+      shift
+      ;;
+    --dry-run)
+      dry_run=true
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      yazi_args+=("$@")
+      break
+      ;;
+    -*)
+      # Unknown flag: forward to yazi verbatim (e.g. --cwd-file=...).
+      yazi_args+=("$1")
+      shift
+      ;;
+    *)
+      [[ -z "$active" ]] || die "unexpected argument '$1' (ACTIVE already set to '$active')"
+      active="$1"
+      shift
+      ;;
+  esac
+done
+
+case "$profile" in
+  default) profile_names="$PROFILE_DEFAULT" ;;
+  books) profile_names="$PROFILE_BOOKS" ;;
+  *) die "unknown profile '$profile' (available: default, books)" ;;
+esac
+
+# ── Resolve the tab list: tab 1 = cwd, then profile tabs (deduped) ──────
+cwd="${cwd%/}"
+[[ -n "$cwd" ]] || cwd="/"
+[[ -d "$cwd" ]] || die "cwd directory not found: $cwd"
+[[ "$cwd" != *:* ]] || die "path contains ':' (YAZI_STARTUP_TABS separator): $cwd"
+
+names=(cwd)
+paths=("$cwd")
+extras=()
+read -ra profile_list <<<"$profile_names"
+for name in "${profile_list[@]}"; do
+  path="$(tab_path_for "$name")" || die "profile references unknown tab '$name'"
+  path="${path%/}"
+  [[ "$path" != *:* ]] || die "path contains ':' (YAZI_STARTUP_TABS separator): $path"
+  [[ -d "$path" ]] || die "tab '$name' directory not found: $path"
+  if [[ "$path" == "$cwd" ]]; then
+    names[0]="$name" # cwd tab takes this name; skip the duplicate
+    continue
+  fi
+  names+=("$name")
+  paths+=("$path")
+  extras+=("$path")
+done
+
+# ── Resolve ACTIVE → 0-based YAZI_ACTIVE_TAB ─────────────────────────────
+active_idx=0
+if [[ -n "$active" ]]; then
+  if [[ "$active" =~ ^[0-9]+$ ]]; then
+    ((10#$active >= 1 && 10#$active <= ${#paths[@]})) ||
+      die "tab number $active out of range 1-${#paths[@]}"
+    active_idx=$((10#$active - 1))
+  else
+    matches=()
+    for i in "${!names[@]}"; do
+      if [[ "${names[$i]}" == "$active" ]]; then
+        matches=("$i")
+        break
+      fi
+    done
+    if ((${#matches[@]} == 0)); then
+      for i in "${!names[@]}"; do
+        [[ "${names[$i]}" == "$active"* ]] && matches+=("$i")
+      done
+    fi
+    if ((${#matches[@]} == 0)); then
+      die "unknown tab '$active' (tabs: ${names[*]})"
+    elif ((${#matches[@]} > 1)); then
+      candidates=""
+      for i in ${matches[@]+"${matches[@]}"}; do
+        candidates+="${candidates:+, }${names[$i]}"
+      done
+      die "ambiguous tab '$active' (matches: $candidates)"
+    fi
+    active_idx="${matches[0]}"
+  fi
+fi
+
+startup_tabs=""
+if ((${#extras[@]} > 0)); then
+  startup_tabs="$(
+    IFS=:
+    printf '%s' "${extras[*]}"
+  )"
+fi
+
+# ── Output modes ─────────────────────────────────────────────────────────
+if $list; then
+  for i in "${!names[@]}"; do
+    marker=" "
+    ((i == active_idx)) && marker="*"
+    printf '%s %d  %-10s %s\n' "$marker" "$((i + 1))" "${names[$i]}" "${paths[$i]}"
+  done
+  exit 0
+fi
+
+if $dry_run; then
+  printf 'cwd              : %s\n' "$cwd"
+  printf 'YAZI_STARTUP_TABS: %s\n' "$startup_tabs"
+  printf 'YAZI_ACTIVE_TAB  : %s\n' "$active_idx"
+  printf 'command          : yazi'
+  for a in ${yazi_args[@]+"${yazi_args[@]}"}; do printf ' %q' "$a"; done
+  printf '\n'
+  exit 0
+fi
+
+# ── Launch ───────────────────────────────────────────────────────────────
+cd "$cwd"
+exec env YAZI_STARTUP_TABS="$startup_tabs" YAZI_ACTIVE_TAB="$active_idx" \
+  yazi ${yazi_args[@]+"${yazi_args[@]}"}
