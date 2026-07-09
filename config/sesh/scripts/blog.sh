@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/helpers.sh"
 
 sesh_window_claude    "${SESSION}" "${WORK_DIR}"                                  # Window 1
-sesh_window_yazi_tabs "${SESSION}" "${WORK_DIR}" 1 "${SESH_DEFAULT_YAZI_TABS[@]}"  # Window 2
+sesh_window_yazi_tabs "${SESSION}" "${WORK_DIR}" downloads  # Window 2
 sesh_window_nvim      "${SESSION}" "${WORK_DIR}"                                  # Window 3
 
 # Window 4: quarto preview server (session-specific)
