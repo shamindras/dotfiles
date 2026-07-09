@@ -112,7 +112,7 @@ sequences after prefix. This avoids colliding with tmux built-in defaults.
 | Key | Action                                                     |
 |-----|------------------------------------------------------------|
 | `g` | Lazygit popup (100x100%)                                   |
-| `y` | Yazi window (incrementing: yazi, yazi-1, yazi-2…)          |
+| `y` | Yazi window w/ preloaded tabs, Downloads active (incrementing: yazi, yazi-1…) via `~/.config/bin/yazi-tabs` |
 | `i` | Items: switch to existing or create after current (tw-tui) |
 | `b` | Btm in new window after current                            |
 | `C` | Claude Code window (incrementing: claude, claude-1…)       |
