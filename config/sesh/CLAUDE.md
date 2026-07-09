@@ -65,15 +65,14 @@ take `session` and `work_dir` as positional args. Exception:
 | `sesh_window_claude_new` | New window "claude", clear + run `claude` (use when another window owns W1)        |
 | `sesh_window_nvim`       | New window "nvim", launch nvim with Snacks file picker                             |
 | `sesh_window_term`       | New window "term", plain shell                                                     |
-| `sesh_window_yazi_tabs`  | New window "yazi" w/ preloaded tabs via `YAZI_STARTUP_TABS`/`YAZI_ACTIVE_TAB` env  |
+| `sesh_window_yazi_tabs`  | New window "yazi" w/ preloaded tabs via `~/.config/bin/yazi-tabs`                  |
 | `sesh_focus_window`      | Select/focus a named window                                                        |
 
-Two arrays at the top of `helpers.sh` drive the yazi tab layout:
-
-| Array                    | Contents                                                            | Used by             |
-|--------------------------|---------------------------------------------------------------------|---------------------|
-| `SESH_BOOKS_TABS`        | reference_books, 00_now_reading, 01_next_up, 02_on_deck, 03_backlog | feed.sh             |
-| `SESH_DEFAULT_YAZI_TABS` | `~/Downloads` + `SESH_BOOKS_TABS`                                   | every other session |
+Yazi tab data (names, paths, profiles) lives in `~/.config/bin/yazi-tabs`
+(`config/bin/yazi-tabs`), the single launcher shared with the zsh `yt`
+function and tmux `prefix O y`. `sesh_window_yazi_tabs SESSION WORK_DIR
+[yazi-tabs args...]` forwards extra args verbatim: most sessions pass
+`downloads` (active tab); `feed.sh` passes `--profile books`.
 
 Per-session scripts source helpers via:
 ```bash
@@ -115,7 +114,7 @@ so its yazi has 6 tabs instead of 7.
 | `claude`   | `sesh_window_claude` (renames W1) or `sesh_window_claude_new` (new window)              |
 | `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker                                       |
 | `term`     | `sesh_window_term` — plain terminal                                                     |
-| `yazi`     | `sesh_window_yazi` — direct command for correct PTY sizing                               |
+| `yazi`     | `sesh_window_yazi_tabs` — preloaded tabs via `~/.config/bin/yazi-tabs`                   |
 | `preview`  | `quarto preview` (`blog` session only, inline)                                           |
 | `journal`  | Explicit cd + rsync + `zk daily` (`notes` session only, inline — avoids alias race)      |
 | `newsboat` | `newsboat` (`feed` session only, inline)                                                 |
