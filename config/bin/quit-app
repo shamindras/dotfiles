@@ -82,7 +82,9 @@ _is_running() {
 
 _do_quit() {
   if [[ "$ACTIVATE_QUIT" == true ]]; then
-    # Activate app then send Cmd+Q (for apps like Finder that ignore quit events)
+    # Activate app then send Cmd+Q — escape hatch for apps that ignore the
+    # quit Apple Event. No current callers (Finder was thought to need it,
+    # but it responds to the plain quit event fine).
     "$RUN" osascript -e "tell application \"$APP_NAME\" to activate" 2>/dev/null || true
     sleep 0.3
     "$RUN" osascript -e 'tell application "System Events" to keystroke "q" using command down' 2>/dev/null || true

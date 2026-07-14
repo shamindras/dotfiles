@@ -11,7 +11,7 @@
 | `btm-popup`           | Opens bottom (btm) monitor in popup terminal                           |
 | `close-notifications` | Dismisses all macOS Notification Center alerts (grouped and individual) |
 | `empty-trash`         | Empty Finder trash and switch to aerospace workspace B                 |
-| `fastopen`            | Launch macOS apps by short name (centralized path lookup, POSIX sh)    |
+| `fastopen`            | Launch macOS apps by short name (centralized path lookup, POSIX sh); Finder is special-cased via AppleScript `reopen` (always running, often windowless — plain `open` activates without creating a window, so no aerospace switch) |
 | `gc`                  | Git-related utility script                                             |
 | `leader-hud`          | Update sketchybar leader key HUD (show/hide with group labels)         |
 | `open-nordvpn`        | Launch NordVPN with aerospace workspace integration                    |
@@ -27,9 +27,11 @@
 workspace instantly → background { quit app → poll exit → sketchybar
 notification (green ✓ success / red ✗ failure, 2s linger) }.
 
-**`--activate-quit` flow** (Finder): quit first (needs app in focus) →
+**`--activate-quit` flow**: quit first (activate app, then Cmd+Q) →
 poll exit → animation delay → switch workspace. No background, no
-notification.
+notification. Escape hatch for apps that ignore the quit Apple Event —
+no current callers (Finder was thought to need it, but it responds to
+the plain quit event, so it now uses the default workspace-first flow).
 
 If the app isn't running, workspace-first mode switches workspace and
 exits immediately (idempotent, no notification).
