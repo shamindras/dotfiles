@@ -73,7 +73,7 @@ M.quit = {
     { key = 'a', label = 'DjView', cmd = bin('quit-app DjView W'), idle = QUIT_IDLE },
     { key = 'b', label = 'Firefox', cmd = bin('quit-app Firefox W'), idle = QUIT_IDLE },
     { key = 'd', label = 'Preview', cmd = bin('quit-app Preview W'), idle = QUIT_IDLE },
-    { key = 'e', label = 'Finder', cmd = bin('quit-app --activate-quit Finder W'), idle = QUIT_IDLE },
+    { key = 'e', label = 'Finder', cmd = bin('quit-app Finder W'), idle = QUIT_IDLE },
     { key = 'g', label = 'Signal', cmd = bin('quit-app Signal B'), idle = QUIT_IDLE },
     { key = 'i', label = 'Books', cmd = bin('quit-app Books B'), idle = QUIT_IDLE },
     { key = 'm', label = 'Spotify', cmd = bin('quit-app Spotify B'), idle = QUIT_IDLE },
