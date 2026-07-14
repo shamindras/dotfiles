@@ -26,7 +26,10 @@ case "$APP" in
   djview)       "$RUN" /usr/bin/open /Applications/DjView.app ;;
   firefox)      "$RUN" /usr/bin/open /Applications/Firefox.app ;;
   preview)      "$RUN" /usr/bin/open /System/Applications/Preview.app ;;
-  finder)       "$RUN" /usr/bin/open /System/Library/CoreServices/Finder.app ;;
+  # Finder is always running, often with zero windows; plain `open` only
+  # activates it (no window, so no aerospace workspace switch). Send the
+  # Dock's "reopen" event instead: creates a window only if none exist.
+  finder)       "$RUN" /usr/bin/osascript -e 'tell application "Finder"' -e 'reopen' -e 'activate' -e 'end tell' ;;
   signal)       "$RUN" /usr/bin/open /Applications/Signal.app ;;
   books)        "$RUN" /usr/bin/open /System/Applications/Books.app ;;
   spotify)      "$RUN" /usr/bin/open /Applications/Spotify.app ;;
