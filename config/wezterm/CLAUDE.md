@@ -63,6 +63,9 @@ needed.
 
 - **Set theme**: edit `active.theme` in `utils/appearance.lua` (theme
   library table maps short keys to wezterm scheme names)
+- **tmux coupling**: `config/tmux/plugins.conf` fills the tmux message
+  line with the nightfox background hex (`#192330`) so prompts blend into
+  the terminal — update that fill when changing the theme here
 - **Browse schemes**: https://wezfurlong.org/wezterm/colorschemes/index.html
 - **Dark/light auto-switch**: handled by `depending_on_appearance()` helper
 
