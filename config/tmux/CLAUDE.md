@@ -6,7 +6,7 @@ serves as the input layer — CMD shortcuts are translated into tmux prefix
 sequences via WezTerm's `tmux()` / `tmux_shift()` helpers.
 
 Docs: https://man7.org/linux/man-pages/man1/tmux.1.html
-Installed version: tmux 3.6a (verified 2026-02-22)
+Installed version: tmux 3.7b (verified 2026-07-18)
 
 ## File Structure
 
@@ -16,7 +16,7 @@ Installed version: tmux 3.6a (verified 2026-02-22)
 | `options.conf` | Terminal, prefix, and core settings |
 | `keybindings.conf` | Custom keybindings (splits, navigation, copy, utils) |
 | `theme.conf` | Catppuccin v2 options + status bar + pane borders |
-| `plugins.conf` | TPM plugin declarations + plugin options + `run tpm` |
+| `plugins.conf` | TPM plugin declarations + plugin options + `run tpm` + post-run style overrides |
 | `.gitignore` | Ignores `plugins/` (hides TPM symlink from git) |
 
 Source order in `tmux.conf`: options → keybindings → theme → plugins.
@@ -159,6 +159,17 @@ for the full CMD → tmux mapping. Update it when either side changes.
 - Status left: session name in rounded pill
 - Status right: current directory basename
 - Pane borders: magenta (active), brightblack (inactive)
+
+### Message/prompt styles (tmux 3.7 workaround)
+
+tmux 3.7 draws prompts and messages as a partial overlay on the status
+line; styles need a `fill` colour to blank the rest of the bar (pre-3.7
+behavior). Catppuccin v2.1.3 lacks `fill`, so the command prompt (e.g.
+rename-window) rendered garbled — status pills showing through, input
+overlapping the window tabs. `plugins.conf` re-sets `message-style` and
+`message-command-style` after `run tpm` with `fill=#192330` (the WezTerm
+nightfox background). Remove once catppuccin/tmux#600 ships a fix; update
+the fill hex if the WezTerm theme changes.
 
 ### Window naming and persistence
 
