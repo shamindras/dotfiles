@@ -16,7 +16,7 @@ zsh-autosuggestions, zsh-syntax-highlighting). 22 autoloaded functions in `funct
 
 ```
 config/zsh/
-├── .zshenv                           # ZDOTDIR + XDG exports + dir creation
+├── .zshenv                           # ZDOTDIR + XDG exports + relocation vars + dir creation
 ├── .zshrc                            # Entry point: Z1 init + sources conf.d/*
 ├── completions/                      # Custom _toolname completion files (.gitkeep)
 ├── conf.d/                           # Modular configs (sourced alphabetically)
@@ -118,10 +118,25 @@ ZLE widgets omit `-h` handling since they operate on `$BUFFER`, not `$1`.
 XDG base directory variables are exported in `.zshenv` so they're available
 to all zsh invocations (interactive, scripts, cron, `zsh -c`).
 
-`00-z1-env-vars-xdg.zsh` sets XDG paths for tools including bat, zoxide,
-gh, npm, node, cargo, tmux, ipython, python, R, matplotlib, scikit-learn.
-All tools use proper XDG base directories. HISTFILE uses
-`XDG_STATE_HOME/zsh/history`.
+### Placement rule: .zshenv vs conf.d/
+
+`conf.d/` is sourced by `.zshrc`, so its exports reach **interactive shells
+only**. Vars that relocate tool state/config out of `$HOME` must instead go
+in `.zshenv`, or non-interactive invocations recreate the untracked files
+(verified 2026-07: `npm list` from a non-interactive shell recreated
+`~/.npm` because `NPM_CONFIG_USERCONFIG` was missing). Currently in
+`.zshenv`: `SHELL_SESSIONS_DISABLE`, `LESSKEY`, `LESSHISTFILE`,
+`NPM_CONFIG_USERCONFIG`, `CARGO_HOME`, `RUSTUP_HOME`.
+
+`SHELL_SESSIONS_DISABLE` has a second, stricter constraint: `/etc/zshrc`
+sources `/etc/zshrc_Apple_Terminal` (which creates `.zsh_sessions` files)
+**before** the user `.zshrc` runs, so setting it in `conf.d/` is a no-op —
+`.zshenv` is the only user-owned file early enough.
+
+`00-z1-env-vars-xdg.zsh` sets XDG paths for the remaining tools including
+bat, zoxide, gh, node, tmux, ipython, python, R, matplotlib, scikit-learn
+(fine there: they are launched from interactive shells, and misplacement is
+cosmetic). HISTFILE uses `XDG_STATE_HOME/zsh/history`.
 
 For tools without an env var (atuin logs, wget HSTS), the XDG path is
 set in the tool's own config file instead: `config/atuin/config.toml`
@@ -152,6 +167,10 @@ re-investigation:
 | `~/.kindle`              | Amazon Kindle | Proprietary, no XDG support.                              |
 | `~/.duckdb`              | DuckDB CLI    | No env var or flag; upstream does not support relocation. |
 | `~/.Xauthority`, `~/.serverauth.*` | XQuartz / X11 | `XAUTHORITY` env var risky to set; xdg-ninja warns moving can break X11 sessions. |
+| `~/.cups`                | CUPS          | Printing system state; out of scope, leave app-managed.   |
+| `~/.subversion`          | svn 1.14      | No XDG support; the `--config-dir` alias workaround is rejected per "Aliases are not a substitute" above. Holds `auth/` — do not delete. |
+| `~/.zshenv` (symlink)    | zsh           | Deliberate ZDOTDIR trampoline; the alternative is a root-owned `/etc/zshenv` edit that OS updates can clobber. |
+| `~/.npm/_logs`           | npm           | Can rarely reappear if npm is launched by a non-zsh parent (GUI app) that lacks `NPM_CONFIG_USERCONFIG`. Accepted; safe to delete. |
 
 [iss-dropbox]: https://github.com/dropbox/nautilus-dropbox/issues/5
 [iss-vscode]: https://github.com/microsoft/vscode/issues/3884
