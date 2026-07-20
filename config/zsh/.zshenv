@@ -14,6 +14,17 @@ export XDG_STATE_HOME=$HOME/.local/state
 export XDG_RUNTIME_DIR=$HOME/.xdg
 export XDG_PROJECTS_DIR=$HOME/Projects
 
+# Tool state/config relocation vars. These live here — NOT conf.d/ — because
+# conf.d is sourced by .zshrc (interactive only) and these must reach ALL zsh
+# invocations (zsh -c, scripts). SHELL_SESSIONS_DISABLE additionally must be
+# set before /etc/zshrc, which sources the Apple Terminal session script.
+export SHELL_SESSIONS_DISABLE=1
+export LESSKEY="$XDG_CONFIG_HOME/less/lesskey"
+export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+
 # Ensure XDG directories exist.
 () {
   local zdir
