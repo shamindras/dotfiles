@@ -24,8 +24,7 @@ export DROPBOX_BOOKS_DIR="$DROPBOX_RESOURCES_DIR/books"
 export DROPBOX_NOTES_DIR="$DROPBOX_DIR/notes"
 
 # less
-export LESSKEY="$XDG_CONFIG_HOME/less/lesskey"
-export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
+# LESSKEY/LESSHISTFILE live in .zshenv (non-interactive shells need them).
 
 # GNU parallel
 export PARALLEL_HOME="$XDG_CONFIG_HOME/parallel"
@@ -81,7 +80,7 @@ export N_PREFIX="$XDG_DATA_HOME/node"
 export N_CACHE_PREFIX="$XDG_CACHE_HOME"
 export N_PRESERVE_NPM=1
 export N_PRESERVE_COREPACK=1
-export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+# NPM_CONFIG_USERCONFIG lives in .zshenv (non-interactive shells need it).
 export COREPACK_HOME="$XDG_CACHE_HOME/node/corepack"
 export NODE_REPL_HISTORY="$XDG_STATE_HOME/node_repl/history"
 
@@ -89,8 +88,7 @@ export NODE_REPL_HISTORY="$XDG_STATE_HOME/node_repl/history"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 
 # rust
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
-export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+# CARGO_HOME/RUSTUP_HOME live in .zshenv (non-interactive shells need them).
 
 # R
 # source: https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html

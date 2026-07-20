@@ -23,11 +23,6 @@ export LESS="-g -i -M -R -S -w -z-4"
 # Reduce key delay
 export KEYTIMEOUT=1
 
-# Make Apple Terminal behave.
-if [[ "$OSTYPE" == darwin* ]]; then
-  export SHELL_SESSIONS_DISABLE=1
-fi
-
 # Homebrew
 if [[ "$OSTYPE" == darwin* ]] && (( $+commands[brew] )); then
   if [[ "${commands[brew]}" == "/opt/homebrew/bin/brew" ]]; then
