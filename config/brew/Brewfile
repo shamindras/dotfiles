@@ -36,6 +36,10 @@ brew "commitizen"
 brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Color management engine supporting ICC profiles
+brew "little-cms2"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # DjVu viewer
@@ -62,8 +66,6 @@ brew "unixodbc"
 brew "freetds"
 # Command-line fuzzy finder written in Go
 brew "fzf"
-# Image format providing lossless and lossy compression for web images
-brew "webp"
 # Geometry Engine
 brew "geos"
 # International domain name library (IDNA2008, Punycode and TR46)
@@ -74,8 +76,6 @@ brew "gnutls"
 brew "gnupg"
 # File format designed to store large amounts of data
 brew "hdf5"
-# Color management engine supporting ICC profiles
-brew "little-cms2"
 # New file format for still image compression
 brew "jpeg-xl"
 # Network authentication protocol
@@ -260,6 +260,8 @@ brew "yamllint"
 brew "yazi"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
 # Plain text note-taking assistant
 brew "zk"
 # Shell extension to navigate your filesystem faster
