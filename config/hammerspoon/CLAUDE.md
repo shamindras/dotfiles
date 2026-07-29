@@ -83,7 +83,7 @@ to surface).
 | run    | r   | 9     | Run utilities (brew, trash, mute, …)             |
 | search | s   | 3     | Raycast extensions                               |
 | github | g   | 5     | GitHub URLs                                      |
-| urls   | u   | 5     | Personal URLs                                    |
+| urls   | u   | 6     | Personal URLs                                    |
 
 State transitions:
 

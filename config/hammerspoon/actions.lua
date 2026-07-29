@@ -216,6 +216,7 @@ M.urls = {
       cmd = as_user("/usr/bin/open -na Firefox --args -private-window 'https://youtube.com'"),
     },
     { key = 'k', label = 'google-keep', cmd = url('https://keep.google.com/u/0/') },
+    { key = 'l', label = 'linkedin', cmd = url('https://www.linkedin.com/in/shamindras') },
     {
       key = 'w',
       label = 'brisbane-weather',
