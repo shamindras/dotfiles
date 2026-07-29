@@ -1,7 +1,7 @@
 # Espanso Configuration
 
 - **Docs**: https://espanso.org/docs/
-- **Installed version**: espanso 2.3.0 (verified 2026-02-26)
+- **Installed version**: espanso 2.4.0 (verified 2026-07-29)
 
 ## Overview
 
