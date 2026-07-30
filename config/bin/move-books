@@ -1,0 +1,27 @@
+#!/bin/sh
+# move-books — sweep downloaded books into the Dropbox library, then
+# normalize epub filenames.
+#
+#   1. Downloads *.pdf|*.djvu     -> reference_books/
+#   2. Downloads *.epub           -> ebooks/
+#   3. reference_books *.epub     -> ebooks/   (misfiled correction)
+#   4. rename-ebooks              -> author-year-title.epub (epubs only;
+#                                    pdfs/djvu keep their names)
+#
+# Extracted from the former inline `fd` chain in hammerspoon/actions.lua
+# (leader `RCmd → r → m`); also invoked via the `mvb` zsh alias. Dirs are
+# env-overridable for testing.
+
+set -eu
+
+FD="/opt/homebrew/bin/fd"
+BIN="$HOME/.config/bin"
+DOWNLOADS="${MOVE_BOOKS_DOWNLOADS:-$HOME/Downloads}"
+REF="${MOVE_BOOKS_REF:-$HOME/Dropbox/resources/books/reference_books}"
+EBOOKS="${MOVE_BOOKS_EBOOKS:-$HOME/Dropbox/resources/books/ebooks}"
+
+"$FD" . "$DOWNLOADS" -e pdf -e djvu -x mv -v {} "$REF"
+"$FD" . "$DOWNLOADS" -e epub -x mv -v {} "$EBOOKS"
+"$FD" . "$REF" -e epub -x mv -v {} "$EBOOKS"
+
+exec "$BIN/rename-ebooks" "$EBOOKS"

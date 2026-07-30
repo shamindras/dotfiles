@@ -14,6 +14,8 @@
 | `fastopen`            | Launch macOS apps by short name (centralized path lookup, POSIX sh); Finder is special-cased via AppleScript `reopen` (always running, often windowless — plain `open` activates without creating a window, so no aerospace switch) |
 | `gc`                  | Git-related utility script                                             |
 | `leader-hud`          | Update sketchybar leader key HUD (show/hide with group labels)         |
+| `move-books`          | Sweep Downloads → books library (pdf/djvu → reference_books, epub → ebooks, misfiled ref epubs → ebooks), then chain into `rename-ebooks`; leader `RCmd → r → m` + `mvb` alias; dirs env-overridable (`MOVE_BOOKS_{DOWNLOADS,REF,EBOOKS}`) for testing |
+| `rename-ebooks`       | Normalize epub filenames to `author-year-title.epub` (`[a-z0-9-]`, edition year, ≤6 title words) from embedded OPF metadata; python3 stdlib only; skips + reports files with unusable metadata or collisions; appends undo pairs to `$XDG_STATE_HOME/rename-ebooks/rename-log.tsv`; `--dry-run` + optional dir arg; pdfs ignored by design |
 | `open-nordvpn`        | Launch NordVPN with aerospace workspace integration                    |
 | `quit-app`            | Switch workspace first, then lazy-quit app in background with notify   |
 | `run-as-user`         | Execute a command as the console user (root→user context switch)       |
