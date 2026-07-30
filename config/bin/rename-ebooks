@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+# rename-ebooks — normalize epub filenames to the library convention:
+#
+#     <first-author-lastname>-<4-digit-year>-<main-title-max-6-words>.epub
+#     all lowercase, strictly [a-z0-9-]  (e.g. cheng-2023-is-math-real.epub)
+#
+# Author/title/year come from the epub's embedded OPF metadata (source
+# filenames from libgen / Anna's Archive / sanet.st are unreliable). Year
+# is the publication year of the edition in hand (dc:date), not the
+# original first-publication year. Files already conforming are ignored;
+# files with unusable metadata or a name collision are left untouched and
+# reported, so `ls | grep -v '^[a-z0-9-]*\.epub'` always surfaces the
+# stragglers. PDFs and everything else are ignored by design.
+#
+# Every rename is appended to $XDG_STATE_HOME/rename-ebooks/rename-log.tsv
+# as "<new>\t<old>" for undo. Invoked by config/bin/move-books (leader
+# `RCmd → r → m`) and directly via the `mvb` alias chain.
+#
+# Usage: rename-ebooks [--dry-run] [dir]   (dir defaults to the library)
+
+import os
+import re
+import sys
+import unicodedata
+import subprocess
+import zipfile
+import xml.etree.ElementTree as ET
+
+DEFAULT_DIR = os.path.expanduser("~/Dropbox/resources/books/ebooks")
+CONFORMING = re.compile(r"[a-z0-9-]+\.epub")
+DC = "{http://purl.org/dc/elements/1.1/}"
+PARTICLES = {"de", "du", "da", "van", "von", "der", "den", "la", "le", "di", "del", "dos"}
+MAX_TITLE_WORDS = 6
+
+
+def ascii_fold(s):
+    return "".join(c for c in unicodedata.normalize("NFD", s) if not unicodedata.combining(c))
+
+
+def opf_root(path):
+    with zipfile.ZipFile(path) as z:
+        names = z.namelist()
+        opf = None
+        try:
+            container = ET.fromstring(z.read("META-INF/container.xml"))
+            el = container.find(".//{*}rootfile")
+            if el is not None:
+                opf = el.get("full-path")
+        except Exception:
+            pass
+        if opf is None or opf not in names:
+            opf = next((n for n in names if n.endswith(".opf")), None)
+        if opf is None:
+            return None
+        return ET.fromstring(z.read(opf))
+
+
+def author_slug(root):
+    el = root.find(f".//{DC}creator")
+    if el is None or not (el.text or "").strip():
+        return None
+    name = re.split(r"[;&]| and ", el.text.strip())[0].strip().rstrip(";,")
+    if "," in name:  # "Koul, Hira L." -> Koul
+        surname = name.split(",")[0].strip()
+    else:  # "Marcus du Sautoy" -> du Sautoy
+        tokens = name.split()
+        if not tokens:
+            return None
+        surname_parts = [tokens[-1]]
+        for tok in reversed(tokens[:-1]):
+            if tok.lower() in PARTICLES:
+                surname_parts.insert(0, tok)
+            else:
+                break
+        surname = "".join(surname_parts)
+    slug = re.sub(r"[^a-z0-9]", "", ascii_fold(surname).lower())
+    return slug or None
+
+
+def title_slug(root):
+    el = root.find(f".//{DC}title")
+    if el is None or not (el.text or "").strip():
+        return None
+    main = re.split(r"[:;?(–—]", el.text.strip())[0]
+    main = ascii_fold(main).lower().replace("&", " and ")
+    words = re.sub(r"[^a-z0-9 ]", "", main).split()
+    return "-".join(words[:MAX_TITLE_WORDS]) or None
+
+
+def year(root):
+    for el in root.findall(f".//{DC}date"):
+        m = re.search(r"(19|20)\d{2}", el.text or "")
+        if m:
+            return m.group(0)
+    return None
+
+
+def main():
+    args = [a for a in sys.argv[1:] if a != "--dry-run"]
+    dry_run = "--dry-run" in sys.argv[1:]
+    directory = args[0] if args else DEFAULT_DIR
+
+    log_dir = os.path.join(
+        os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "rename-ebooks"
+    )
+    renamed, skipped = [], []
+
+    for fname in sorted(os.listdir(directory)):
+        if not fname.endswith(".epub") or CONFORMING.fullmatch(fname):
+            continue
+        try:
+            root = opf_root(os.path.join(directory, fname))
+        except Exception:
+            root = None
+        if root is None:
+            skipped.append((fname, "unreadable OPF"))
+            continue
+        author, title, yr = author_slug(root), title_slug(root), year(root)
+        missing = [k for k, v in [("author", author), ("title", title), ("year", yr)] if not v]
+        if missing:
+            skipped.append((fname, "no " + "/".join(missing) + " in metadata"))
+            continue
+        target = f"{author}-{yr}-{title}.epub"
+        if os.path.exists(os.path.join(directory, target)):
+            skipped.append((fname, f"target exists: {target}"))
+            continue
+        if not dry_run:
+            os.rename(os.path.join(directory, fname), os.path.join(directory, target))
+        renamed.append((fname, target))
+
+    if renamed and not dry_run:
+        os.makedirs(log_dir, exist_ok=True)
+        with open(os.path.join(log_dir, "rename-log.tsv"), "a") as fh:
+            for old, new in renamed:
+                fh.write(f"{new}\t{old}\n")
+
+    prefix = "DRY-RUN: " if dry_run else ""
+    for old, new in renamed:
+        print(f"{prefix}{old}  ->  {new}")
+    for fname, reason in skipped:
+        print(f"{prefix}SKIPPED ({reason}): {fname}")
+
+    summary = f"{len(renamed)} renamed" + (f", {len(skipped)} skipped" if skipped else "")
+    print(f"{prefix}{summary}")
+
+    # Surface a notification when headless (Hammerspoon hs.task has no TTY).
+    if not sys.stdout.isatty() and not dry_run and (renamed or skipped):
+        subprocess.run(
+            ["osascript", "-e",
+             f'display notification "{summary}" with title "rename-ebooks"'],
+            check=False,
+        )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
