@@ -131,19 +131,9 @@ M.run = {
       label = 'raycast-import',
       cmd = url('raycast://extensions/raycast/raycast/import-settings-data'),
     },
-    {
-      key = 'm',
-      label = 'move-books',
-      cmd = table.concat({
-        as_user(
-          '/opt/homebrew/bin/fd . $HOME/Downloads -e pdf -e djvu -x mv -v {} $HOME/Dropbox/resources/books/reference_books'
-        ),
-        as_user('/opt/homebrew/bin/fd . $HOME/Downloads -e epub -x mv -v {} $HOME/Dropbox/resources/books/ebooks'),
-        as_user(
-          '/opt/homebrew/bin/fd . $HOME/Dropbox/resources/books/reference_books -e epub -x mv -v {} $HOME/Dropbox/resources/books/ebooks'
-        ),
-      }, ' ; '),
-    },
+    -- Sweep Downloads into the books library, then normalize epub
+    -- filenames to author-year-title (config/bin/{move-books,rename-ebooks}).
+    { key = 'm', label = 'move-books', cmd = as_user(bin('move-books')) },
     { key = 'r', label = 'reload-hs', cmd = '/opt/homebrew/bin/hs -c "hs.reload()"' },
     { key = 't', label = 'empty-trash', cmd = bin('empty-trash') },
     {
