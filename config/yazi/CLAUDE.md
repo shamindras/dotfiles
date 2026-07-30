@@ -155,7 +155,8 @@ The initial tab (index 0) is the launch cwd. Extra tabs from
 `YAZI_STARTUP_TABS` are appended in order. Paths must not contain `:`.
 
 Producer: `~/.config/bin/yazi-tabs` (`config/bin/yazi-tabs`) — the single
-launcher holding the curated tab set (Downloads, books library) and
+launcher holding the curated tab set (Documents, Downloads, books
+library incl. ebooks) and
 name/index resolution. It is invoked by the zsh `yt` function, the tmux
 `prefix O y` binding, and sesh's `sesh_window_yazi_tabs` helper, so every
 entry point gets the same tabs without manual `cd`-ing. Run
