@@ -11,7 +11,7 @@
 # Callers: zsh `yt` function (interactive), tmux `prefix O y` binding,
 # and sesh session scripts via sesh_window_yazi_tabs (helpers.sh).
 #
-##? yazi-tabs - launch yazi with preloaded tabs (Downloads + books library)
+##? yazi-tabs - launch yazi with preloaded tabs (Documents, Downloads + books library)
 ##?
 ##? usage:
 ##?   yazi-tabs [options] [ACTIVE] [-- yazi-args...]
@@ -45,18 +45,20 @@ _dropbox="${DROPBOX_DIR:-$HOME/Dropbox}"
 _books="${DROPBOX_BOOKS_DIR:-${_dropbox}/resources/books}"
 _current="${_books}/current_reading/books"
 
-TAB_NAMES=(downloads refs now next deck backlog)
+TAB_NAMES=(docs downloads refs now next deck backlog ebooks)
 TAB_PATHS=(
+  "$HOME/Documents"
   "$HOME/Downloads"
   "${_books}/reference_books"
   "${_current}/00_now_reading"
   "${_current}/01_next_up"
   "${_current}/02_on_deck"
   "${_current}/03_backlog"
+  "${_books}/ebooks"
 )
 
-PROFILE_DEFAULT="downloads refs now next deck backlog"
-PROFILE_BOOKS="refs now next deck backlog"
+PROFILE_DEFAULT="docs downloads refs now next deck backlog ebooks"
+PROFILE_BOOKS="refs now next deck backlog ebooks"
 # ── Logic below; no data past this point ────────────────────────────────
 
 usage() { grep '^##?' "$0" | cut -c 5-; }

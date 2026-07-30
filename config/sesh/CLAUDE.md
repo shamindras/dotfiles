@@ -105,9 +105,9 @@ All scripts use:
 | feed     | newsboat | yazi    | term    | —      | —      | newsboat |
 
 Every `yazi` window opens with these tabs (left → right):
-WORK_DIR · Downloads (active) · books/reference_books · 00_now_reading · 01_next_up · 02_on_deck · 03_backlog.
-The `feed` session collapses WORK_DIR with Downloads (they're the same dir)
-so its yazi has 6 tabs instead of 7.
+WORK_DIR · Documents · Downloads (active) · books/reference_books · 00_now_reading · 01_next_up · 02_on_deck · 03_backlog · books/ebooks.
+The `feed` session uses the `books` profile (no Documents/Downloads tabs —
+its WORK_DIR already is Downloads) so its yazi has 7 tabs instead of 9.
 
 ### Common Window Patterns
 
