@@ -12,6 +12,9 @@
 # reported, so `ls | grep -v '^[a-z0-9-]*\.epub'` always surfaces the
 # stragglers. PDFs and everything else are ignored by design.
 #
+# Slug rules and OPF parsing live in config/booklib/{slugs,sources/epub}.py
+# (single source of truth, shared with book-librarian).
+#
 # Every rename is appended to $XDG_STATE_HOME/rename-ebooks/rename-log.tsv
 # as "<new>\t<old>" for undo. Invoked by config/bin/move-books (leader
 # `RCmd → r → m`) and directly via the `mvb` alias chain.
@@ -21,77 +24,37 @@
 import os
 import re
 import sys
-import unicodedata
-import subprocess
-import zipfile
-import xml.etree.ElementTree as ET
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # <repo>/config
+from booklib import slugs
+from booklib.sources.epub import DC, opf_root
 
 DEFAULT_DIR = os.path.expanduser("~/Dropbox/resources/books/ebooks")
-CONFORMING = re.compile(r"[a-z0-9-]+\.epub")
-DC = "{http://purl.org/dc/elements/1.1/}"
-PARTICLES = {"de", "du", "da", "van", "von", "der", "den", "la", "le", "di", "del", "dos"}
-MAX_TITLE_WORDS = 6
-
-
-def ascii_fold(s):
-    return "".join(c for c in unicodedata.normalize("NFD", s) if not unicodedata.combining(c))
-
-
-def opf_root(path):
-    with zipfile.ZipFile(path) as z:
-        names = z.namelist()
-        opf = None
-        try:
-            container = ET.fromstring(z.read("META-INF/container.xml"))
-            el = container.find(".//{*}rootfile")
-            if el is not None:
-                opf = el.get("full-path")
-        except Exception:
-            pass
-        if opf is None or opf not in names:
-            opf = next((n for n in names if n.endswith(".opf")), None)
-        if opf is None:
-            return None
-        return ET.fromstring(z.read(opf))
+# Strict author-year-title shape (matches booklib.config.CONFORMING): a bare
+# charset check would skip ISBN-named or abbreviation-named epubs as done.
+CONFORMING = re.compile(r"[a-z][a-z0-9]*-(1[6-9]|20)\d{2}-[a-z0-9][a-z0-9-]*\.epub")
 
 
 def author_slug(root):
     el = root.find(f".//{DC}creator")
     if el is None or not (el.text or "").strip():
         return None
-    name = re.split(r"[;&]| and ", el.text.strip())[0].strip().rstrip(";,")
-    if "," in name:  # "Koul, Hira L." -> Koul
-        surname = name.split(",")[0].strip()
-    else:  # "Marcus du Sautoy" -> du Sautoy
-        tokens = name.split()
-        if not tokens:
-            return None
-        surname_parts = [tokens[-1]]
-        for tok in reversed(tokens[:-1]):
-            if tok.lower() in PARTICLES:
-                surname_parts.insert(0, tok)
-            else:
-                break
-        surname = "".join(surname_parts)
-    slug = re.sub(r"[^a-z0-9]", "", ascii_fold(surname).lower())
-    return slug or None
+    return slugs.first_surname(slugs.split_authors(el.text))
 
 
 def title_slug(root):
     el = root.find(f".//{DC}title")
-    if el is None or not (el.text or "").strip():
+    if el is None:
         return None
-    main = re.split(r"[:;?(–—]", el.text.strip())[0]
-    main = ascii_fold(main).lower().replace("&", " and ")
-    words = re.sub(r"[^a-z0-9 ]", "", main).split()
-    return "-".join(words[:MAX_TITLE_WORDS]) or None
+    return slugs.title_slug(el.text or "")
 
 
 def year(root):
     for el in root.findall(f".//{DC}date"):
-        m = re.search(r"(19|20)\d{2}", el.text or "")
-        if m:
-            return m.group(0)
+        y = slugs.extract_year(el.text or "")
+        if y:
+            return y
     return None
 
 
@@ -142,14 +105,6 @@ def main():
 
     summary = f"{len(renamed)} renamed" + (f", {len(skipped)} skipped" if skipped else "")
     print(f"{prefix}{summary}")
-
-    # Surface a notification when headless (Hammerspoon hs.task has no TTY).
-    if not sys.stdout.isatty() and not dry_run and (renamed or skipped):
-        subprocess.run(
-            ["osascript", "-e",
-             f'display notification "{summary}" with title "rename-ebooks"'],
-            check=False,
-        )
     return 0
 
 

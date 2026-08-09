@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+# book-librarian — library pipeline: rename to author-year-title, convert
+# DjVu->PDF, generate books.bib. Logic lives in config/booklib/ (same repo;
+# ~/.config/bin is a symlink into it, so resolving this file's real path
+# lands us next to the package). See config/booklib/CLAUDE.md.
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # <repo>/config
+from booklib.cli import main
+
+sys.exit(main())
