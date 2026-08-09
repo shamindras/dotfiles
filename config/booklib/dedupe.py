@@ -42,6 +42,63 @@ def find_dupes(manifest):
     return out
 
 
+def _pages(path):
+    import re
+    import subprocess
+
+    if str(path).endswith(".djvu"):
+        out = subprocess.run(["djvused", str(path), "-e", "n"],
+                             capture_output=True, text=True).stdout.strip()
+        return int(out) if out.isdigit() else None
+    out = subprocess.run(["pdfinfo", str(path)], capture_output=True, text=True).stdout
+    m = re.search(r"^Pages:\s+(\d+)", out, re.MULTILINE)
+    return int(m.group(1)) if m else None
+
+
+def resolve_collisions(manifest, shas=None):
+    """Same-edition duplicate policy (user directive, 2026-08): a review-held
+    collision whose twin has a near-identical page count is a duplicate copy
+    — delete the newcomer, keep the incumbent. Real variants (page counts
+    diverge) stay in review. Returns number deleted."""
+    import re
+
+    rows = manifest.db.execute(
+        "SELECT m.sha256, m.proposed_stem FROM metadata m"
+        " WHERE m.status='needs_review' AND m.source LIKE '%collision%'"
+        " AND m.proposed_stem IS NOT NULL"
+    ).fetchall()
+    deleted = 0
+    for r in rows:
+        if shas is not None and r["sha256"] not in shas:
+            continue
+        base = re.sub(r"-\d+$", "", r["proposed_stem"])
+        twin = manifest.db.execute(
+            "SELECT p.path FROM metadata m JOIN paths p USING (sha256)"
+            " WHERE (m.final_stem=? OR m.proposed_stem=?) AND m.sha256<>? LIMIT 1",
+            (base, base, r["sha256"]),
+        ).fetchone()
+        path = manifest.path_for_sha(r["sha256"])
+        if not (path and os.path.exists(path)):
+            continue
+        if not (twin and os.path.exists(twin["path"])):
+            # Incumbent vanished: the hold is orphaned — re-resolve from
+            # scratch so the newcomer can claim the now-free base stem.
+            manifest.set_metadata(r["sha256"], status="pending", proposed_stem=None)
+            manifest.commit()
+            print(f"collision hold orphaned (twin gone), re-queued: {os.path.basename(path)}")
+            continue
+        p1, p2 = _pages(path), _pages(twin["path"])
+        if p1 and p2 and abs(p1 - p2) <= 6:
+            manifest.record_event("delete", path, "same-edition dup of " + base, r["sha256"])
+            os.remove(path)
+            manifest.unlink_path(path)
+            manifest.set_metadata(r["sha256"], status="skipped")
+            manifest.commit()
+            print(f"deduped same-edition copy: {os.path.basename(path)}  (kept {base})")
+            deleted += 1
+    return deleted
+
+
 def run(manifest, do_apply=False):
     prefix = "" if do_apply else "DRY-RUN: "
     dupes = find_dupes(manifest)

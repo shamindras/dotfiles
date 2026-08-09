@@ -160,16 +160,20 @@ class Manifest:
 
     def stem_taken(self, stem, kind=None):
         """Holder of a stem; kind-scoped when given — a pdf and an epub may
-        legitimately share a stem (format twins, e.g. koul-2026-*.pdf/.epub)."""
+        legitimately share a stem (format twins, e.g. koul-2026-*.pdf/.epub).
+        Only rows with a surviving path count: deleting a book frees its
+        stem for a replacement copy."""
         if kind:
             row = self.db.execute(
                 "SELECT m.sha256 FROM metadata m JOIN files f USING (sha256)"
+                " JOIN paths p USING (sha256)"
                 " WHERE (m.proposed_stem=? OR m.final_stem=?) AND f.kind=? LIMIT 1",
                 (stem, stem, "pdf" if kind == "djvu" else kind),
             ).fetchone()
         else:
             row = self.db.execute(
-                "SELECT sha256 FROM metadata WHERE proposed_stem=? OR final_stem=? LIMIT 1",
+                "SELECT m.sha256 FROM metadata m JOIN paths p USING (sha256)"
+                " WHERE m.proposed_stem=? OR m.final_stem=? LIMIT 1",
                 (stem, stem),
             ).fetchone()
         return row["sha256"] if row else None

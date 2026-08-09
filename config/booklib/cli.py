@@ -274,11 +274,20 @@ def cmd_sweep(args, manifest):
 
             for p in housekeeping.clean(manifest):
                 print(f"cleaned: {p}")
+        # Same-edition duplicates held by collision are policy-mechanical:
+        # delete the newcomer, keep the incumbent (page counts must agree).
+        # Runs before the no-new-files return so earlier holds self-heal.
+        deduped = 0
+        if args.apply:
+            from booklib import dedupe
+
+            deduped = dedupe.resolve_collisions(manifest)
         new_shas = set(stats["new_shas"])
-        # Also retry rows a previous sweep failed on (e.g. transient tool or
-        # network errors) — otherwise they'd strand until a manual resolve.
-        new_shas |= {r["sha256"] for r in manifest.rows_with_status("failed")}
-        if not new_shas and not stats.get("pruned"):
+        # Also retry pending/failed rows from previous sweeps (transient
+        # errors, re-queued orphaned holds) — otherwise they'd strand until
+        # a manual resolve. Steady-state this set is empty.
+        new_shas |= {r["sha256"] for r in manifest.rows_with_status("pending", "failed")}
+        if not new_shas and not stats.get("pruned") and not deduped:
             print("no new files")
             return 0
         counts = {}
@@ -291,7 +300,7 @@ def cmd_sweep(args, manifest):
         # Regenerate the bib for arrivals AND for manual deletions the scan
         # just pruned — entries only cover files still on disk.
         if args.apply and (
-            counts.get("renamed") or counts.get("converted") or stats.get("pruned")
+            counts.get("renamed") or counts.get("converted") or stats.get("pruned") or deduped
         ):
             bibgen.generate(manifest)
         review_n = sum(
