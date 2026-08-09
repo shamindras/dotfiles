@@ -52,7 +52,13 @@ def scan(manifest, dirs=None, rebuild=False):
                 manifest.link_path(path, sha, st.st_mtime_ns, st.st_size)
                 stats["relinked"] += 1
                 row = manifest.metadata_row(sha)
-                if row and row["status"] in ("pending", "failed"):
+                if row and (
+                    row["status"] in ("pending", "failed")
+                    # Known content wearing the wrong name (re-downloaded or
+                    # hand-renamed copy of an applied book): back to work.
+                    or (row["status"] == "applied" and row["final_stem"]
+                        and p.stem != row["final_stem"])
+                ):
                     stats["new_shas"].append(sha)
                 _protect_conforming(manifest, sha, p, stats)
                 continue
