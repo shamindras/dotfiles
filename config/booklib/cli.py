@@ -275,6 +275,9 @@ def cmd_sweep(args, manifest):
             for p in housekeeping.clean(manifest):
                 print(f"cleaned: {p}")
         new_shas = set(stats["new_shas"])
+        # Also retry rows a previous sweep failed on (e.g. transient tool or
+        # network errors) — otherwise they'd strand until a manual resolve.
+        new_shas |= {r["sha256"] for r in manifest.rows_with_status("failed")}
         if not new_shas and not stats.get("pruned"):
             print("no new files")
             return 0

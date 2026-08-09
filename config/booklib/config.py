@@ -15,6 +15,14 @@ import re
 import subprocess
 from pathlib import Path
 
+# Hammerspoon's hs.task spawns with a bare PATH (/usr/bin:/bin:...), so the
+# leader-key sweep can't find pdftotext/ddjvu/biber by name. Extend PATH once
+# at import so every subprocess call works headless (same reason move-books
+# hardcodes /opt/homebrew/bin/fd).
+for _extra in ("/opt/homebrew/bin", "/Library/TeX/texbin"):
+    if _extra not in os.environ.get("PATH", "").split(":"):
+        os.environ["PATH"] = os.environ.get("PATH", "") + ":" + _extra
+
 SCHEMA_VERSION = 1
 
 BOOKS_ROOT = Path(os.environ.get("BOOKLIB_ROOT", os.path.expanduser("~/Dropbox/resources/books")))
