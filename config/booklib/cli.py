@@ -287,6 +287,16 @@ def cmd_sweep(args, manifest):
         # errors, re-queued orphaned holds) — otherwise they'd strand until
         # a manual resolve. Steady-state this set is empty.
         new_shas |= {r["sha256"] for r in manifest.rows_with_status("pending", "failed")}
+        # Reconcile applied books whose on-disk name drifted from the
+        # canonical stem (hand-renamed or re-downloaded known content) —
+        # plan_ops knows how to rename them back.
+        for r in manifest.db.execute(
+            "SELECT m.sha256, m.final_stem, p.path FROM metadata m"
+            " JOIN paths p USING (sha256)"
+            " WHERE m.status='applied' AND m.final_stem IS NOT NULL"
+        ):
+            if Path(r["path"]).stem != r["final_stem"]:
+                new_shas.add(r["sha256"])
         if not new_shas and not stats.get("pruned") and not deduped:
             print("no new files")
             return 0
