@@ -102,7 +102,8 @@ Hammerspoon shells out to these scripts with the argv they expect:
 
 - `config/bin/{fastopen, quit-app, leader-hud, brew-update,
   empty-trash, open-nordvpn, run-as-user, close-notifications,
-  move-books}` (move-books chains into `config/bin/rename-ebooks`)
+  move-books}` (move-books chains into `config/bin/rename-ebooks`,
+  then detaches `config/bin/book-librarian sweep --async --apply`)
 - `config/sketchybar/items/leader.sh` + the
   `leader-hud show | hide <group>` interface
 - Group names recognised by the HUD (`leader`, `open`, `quit`,
