@@ -172,7 +172,8 @@ for i in "${!LANGS[@]}"; do
 
   if [[ "$inst" == "MISSING" ]]; then
     printf "  ⬇️  %s: installing...\n" "$lang"
-    nvim --headless +"TSInstall ${lang}" \
+    # nvim-treesitter main branch removed :TSInstall — use the Lua API.
+    nvim --headless +"lua require('nvim-treesitter').install({'${lang}'}, {force=true}):wait(120000)" \
       +'lua vim.defer_fn(function() vim.cmd("qa") end, 60000)' \
       2>/dev/null &
     nvim_pid=$!
@@ -182,7 +183,7 @@ for i in "${!LANGS[@]}"; do
       sleep 1
       waited=$((waited + 1))
     done
-    kill "$nvim_pid" 2>/dev/null
+    kill "$nvim_pid" 2>/dev/null || true
     wait "$nvim_pid" 2>/dev/null || true
 
     if [[ -f "$parser_so" ]]; then
@@ -193,7 +194,8 @@ for i in "${!LANGS[@]}"; do
     fi
   elif [[ "$inst" != "$want" ]]; then
     printf "  🔄 %s: updating...\n" "$lang"
-    nvim --headless +"TSUpdate ${lang}" \
+    # nvim-treesitter main branch removed :TSUpdate — use the Lua API.
+    nvim --headless +"lua require('nvim-treesitter').update({'${lang}'}):wait(120000)" \
       +'lua vim.defer_fn(function() vim.cmd("qa") end, 60000)' \
       2>/dev/null &
     nvim_pid=$!
@@ -211,7 +213,7 @@ for i in "${!LANGS[@]}"; do
         fi
       fi
     done
-    kill "$nvim_pid" 2>/dev/null
+    kill "$nvim_pid" 2>/dev/null || true
     wait "$nvim_pid" 2>/dev/null || true
 
     printf "  ✅ %s: updated (%ds)\n" "$lang" "$waited"
