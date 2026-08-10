@@ -58,10 +58,14 @@ def plan_ops(manifest, only=None, dirs=None):
 
 
 def check_gate(manifest, ops, arrival_shas=None):
-    """apply refuses without a verified backup — except for arrivals the
-    caller (sweep) just discovered, which pre-date nothing."""
-    backup = manifest.latest_verified_backup()
-    if backup:
+    """A verified backup is required only for MASS applies (more than
+    MASS_APPLY_THRESHOLD ops — the gate's original purpose of protecting
+    bulk migrations; user decision 2026-08-10). Small applies rely on the
+    undo log and Dropbox history. Arrivals the sweep just discovered are
+    always exempt — they pre-date nothing."""
+    if len(ops) <= config.MASS_APPLY_THRESHOLD:
+        return True, None
+    if manifest.latest_verified_backup():
         return True, None
     if arrival_shas is not None and all(o["sha"] in arrival_shas for o in ops):
         return True, None

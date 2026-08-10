@@ -57,7 +57,8 @@ scratch tree, same pattern as `MOVE_BOOKS_*`.
 ## Key invariants
 
 - Never overwrite; collisions → review with `-N` disambiguator.
-- `apply` refuses without a verified backup (arrivals via sweep exempt).
+- `apply` requires a verified backup only for mass runs (>20 ops);
+  small applies rely on the undo log (arrivals via sweep always exempt).
 - Mass applies (>20) require `--i-paused-dropbox`.
 - Edition year of the copy in hand; in-file © evidence beats API years;
   disagreements force review, never silently resolved.
