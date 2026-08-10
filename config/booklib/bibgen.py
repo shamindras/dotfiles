@@ -2,8 +2,8 @@
 
 Never hand-edited, never patched: entries are sorted by key with a fixed
 field order, so an unchanged library produces a byte-identical file (clean
-Dropbox history). Citation key = filename stem with hyphens stripped, so
-key ↔ file is always recoverable. Files whose metadata was never resolved
+Dropbox history). Citation key = the filename stem verbatim (hyphens kept — legal in
+bibtex/biblatex), so key and file are identical. Files whose metadata was never resolved
 (grandfathered conforming names) get a best-effort entry derived from the
 stem itself — populated fields only, no placeholder junk."""
 
@@ -79,7 +79,7 @@ def entries(manifest):
             fields["isbn"] = row["isbn13"]
         fields = {k: v for k, v in fields.items() if v}
         if fields:
-            out[stem.replace("-", "")] = fields
+            out[stem] = fields
     return out
 
 

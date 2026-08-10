@@ -15,6 +15,7 @@ return {
       -- scripts/ops/setup-nvim-treesitter to prevent races on concurrent nvim starts.
       ensure_installed = {
         'bash',
+        'bibtex',
         'gitignore',
         'javascript',
         'json',
