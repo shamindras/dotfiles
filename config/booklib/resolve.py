@@ -92,6 +92,13 @@ def _gather_inner(path, kind, offline):
     }
     if kind == "pdf":
         text = pagetext.extract_text(path)
+        if len(text.strip()) < 200:
+            # Image-only scan: OCR the first pages so the standard evidence
+            # checks (ISBN, © year, title-in-text) can still run.
+            ocr = pagetext.ocr_text(path)
+            if ocr.strip():
+                text = ocr
+                ev["ocr"] = True
         ev["isbns"] = pagetext.find_isbns(text)
         ev["doi"] = pagetext.find_doi(text)
         ev["ev_year"], ev["ev_rung"] = pagetext.year_evidence(text)
@@ -107,7 +114,21 @@ def _gather_inner(path, kind, offline):
                 ev["api_isbn"] = isbn
                 break
         if not ev["api"] and ev["doi"]:
-            ev["api"] = crossref.by_doi(ev["doi"])
+            # DOI sanity check: DOIs harvested from page text are often a
+            # CITED work's (references bleed into front matter). Only trust
+            # the Crossref record if its title appears in the book itself.
+            rec = crossref.by_doi(ev["doi"])
+            if rec and _title_in_text(rec.get("title"), ev.get("text_head")):
+                ev["api"] = rec
+            elif rec:
+                ev["doi"] = None  # wrong work — discard both record and DOI
+        # Second-source year agreement: an independent API confirming the
+        # primary record's year earns corroboration in scoring.
+        if ev.get("api") and ev.get("api_isbn") and ev["api"].get("year"):
+            other = googlebooks if ev["api"]["api"] == "openlibrary" else openlibrary
+            second = other.by_isbn(ev["api_isbn"])
+            if second and second.get("year") == ev["api"]["year"]:
+                ev["api2_agrees"] = second["api"]
         if not ev["api"] and ev["fn"] and ev["fn"].get("title") and kind == "djvu":
             # image-only scans: corroborate the filename parse by search
             ev["api"] = openlibrary.search(
@@ -187,6 +208,8 @@ def _store(manifest, sha, ev):
             conf += 15
         if _surname_agrees(fn, api):
             conf += 10
+        if ev.get("api2_agrees"):
+            conf += 10  # independent second API confirms the year
 
     # -- year: edition-in-hand rule ------------------------------------
     api_year = int(record["year"]) if record and record.get("year") else None
@@ -249,6 +272,10 @@ def _store(manifest, sha, ev):
         evidence_bits.append(f"fn-year:{fn['year']}")
     if api:
         evidence_bits.append(f"api:{api['api']}" + (f"={api_year}" if api_year else ""))
+    if ev.get("api2_agrees"):
+        evidence_bits.append(f"api2:{ev['api2_agrees']}")
+    if ev.get("ocr"):
+        evidence_bits.append("ocr")
 
     manifest.set_metadata(
         sha,

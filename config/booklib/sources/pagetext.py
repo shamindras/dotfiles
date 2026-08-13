@@ -51,6 +51,32 @@ def has_text_layer(path, pages=5, min_chars=50):
     return len(re.sub(r"\s", "", text)) >= min_chars
 
 
+def ocr_text(path, pages=5, dpi=150):
+    """OCR-lite rung for image-only scans: render the first few pages and
+    tesseract them so the standard ISBN/year/title-in-text evidence checks
+    can run. Empty string when tesseract isn't installed or OCR fails."""
+    import os
+    import shutil
+    import tempfile
+
+    if not shutil.which("tesseract"):
+        return ""
+    out = []
+    with tempfile.TemporaryDirectory() as td:
+        subprocess.run(
+            ["pdftoppm", "-png", "-r", str(dpi), "-f", "1", "-l", str(pages),
+             str(path), f"{td}/p"],
+            capture_output=True, check=False,
+        )
+        for png in sorted(os.listdir(td)):
+            res = subprocess.run(
+                ["tesseract", f"{td}/{png}", "stdout", "--psm", "3"],
+                capture_output=True, text=True, check=False,
+            )
+            out.append(res.stdout)
+    return "\n".join(out)
+
+
 def valid_isbn(candidate):
     """Normalize to ISBN-13 when the check digit validates, else None."""
     digits = re.sub(r"[-\s]", "", candidate or "").upper()
