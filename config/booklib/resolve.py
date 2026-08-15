@@ -151,7 +151,12 @@ def _title_in_text(title, text_head):
     if not (title and text_head):
         return False
     words = [w for w in re.sub(r"[^a-z0-9 ]", "", title.lower()).split() if len(w) > 2]
-    return len(words) >= 2 and all(w in text_head for w in words)
+    if len(words) >= 2:
+        return all(w in text_head for w in words)
+    # Single-word titles ("Thermodynamics") corroborate only when the word
+    # is long enough to be distinctive — short generics ("Analysis",
+    # "Geometry") appear incidentally in almost any math text.
+    return len(words) == 1 and len(words[0]) >= 9 and words[0] in text_head
 
 
 def _surname_agrees(fn, api):
