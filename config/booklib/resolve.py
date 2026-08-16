@@ -82,6 +82,7 @@ def _gather_inner(path, kind, offline):
         "kind": kind,
         "fn": filename.parse(name),
         "fn_isbn": filename.bare_isbn(name),
+        "fn_doi": filename.embedded_doi(name),
         "isbns": [],
         "doi": None,
         "ev_year": None,
@@ -123,7 +124,8 @@ def _gather_inner(path, kind, offline):
             if ev["api"]:
                 ev["api_isbn"] = isbn
                 break
-        if not ev["api"] and ev["doi"]:
+        if not ev["api"] and (ev.get("fn_doi") or ev["doi"]):
+            ev["doi"] = ev.get("fn_doi") or ev["doi"]
             # DOI sanity check: DOIs harvested from page text are often a
             # CITED work's (references bleed into front matter). Only trust
             # the Crossref record if its title appears in the book itself.
@@ -241,6 +243,11 @@ def _store(manifest, sha, ev):
             forced_review = True
     elif ev_year:
         year = ev_year
+        # Tiebreak rule (user-approved, 2026-08-17): a filename year equal
+        # to the © year, or exactly one less, is agreement — publishers
+        # routinely post-date the copyright page (CRC: 2006 file, © 2007).
+        if fn and fn.get("year") and int(fn["year"]) in (ev_year, ev_year - 1):
+            conf += 15
     elif api_year:
         year = api_year
         # No in-file © evidence, but the (trusted, user-named) filename year

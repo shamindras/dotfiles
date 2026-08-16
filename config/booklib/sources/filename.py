@@ -18,6 +18,14 @@ _ANY_YEAR = re.compile(r"(?:19|20)\d{2}")
 _NOISE = re.compile(r"\s*(?:-+\s*)?(?:libgen(?:\.l[ci])?|sanet\.st|z-?lib(?:rary)?[^.]*)\s*", re.I)
 
 
+def embedded_doi(name):
+    """Libgen embeds the book's own DOI in brackets with / as _ :
+    '[10.1201_b15876]' -> '10.1201/b15876'. Unlike DOIs harvested from
+    page text (often a cited work's), a filename DOI is the book's."""
+    m = re.search(r"\[(10\.\d{4,9})_([^\]\s]+)\]", name)
+    return f"{m.group(1)}/{m.group(2)}" if m else None
+
+
 def bare_isbn(name):
     """Validated ISBN-13 from digit runs in the filename itself."""
     for m in re.finditer(r"[\dXx][\dXx -]{8,16}[\dXx]", name):
