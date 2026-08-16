@@ -52,9 +52,10 @@ def has_text_layer(path, pages=5, min_chars=50):
 
 
 def ocr_text(path, pages=5, dpi=150):
-    """OCR-lite rung for image-only scans: render the first few pages and
-    tesseract them so the standard ISBN/year/title-in-text evidence checks
-    can run. Empty string when tesseract isn't installed or OCR fails."""
+    """OCR-lite rung for image-only scans (pdf AND djvu): render the first
+    few pages and tesseract them so the standard ISBN/year/title-in-text
+    evidence checks can run. Empty string when tesseract isn't installed
+    or OCR fails."""
     import os
     import shutil
     import tempfile
@@ -63,12 +64,24 @@ def ocr_text(path, pages=5, dpi=150):
         return ""
     out = []
     with tempfile.TemporaryDirectory() as td:
+        src = str(path)
+        if src.lower().endswith(".djvu"):
+            # djvu can't feed pdftoppm directly: decode the front pages to
+            # a temp pdf first (ddjvu), then rasterize as usual.
+            tmp_pdf = f"{td}/pages.pdf"
+            subprocess.run(
+                ["ddjvu", "-format=pdf", f"-page=1-{pages}", src, tmp_pdf],
+                capture_output=True, check=False,
+            )
+            if not os.path.exists(tmp_pdf):
+                return ""
+            src = tmp_pdf
         subprocess.run(
             ["pdftoppm", "-png", "-r", str(dpi), "-f", "1", "-l", str(pages),
-             str(path), f"{td}/p"],
+             src, f"{td}/p"],
             capture_output=True, check=False,
         )
-        for png in sorted(os.listdir(td)):
+        for png in sorted(f for f in os.listdir(td) if f.endswith(".png")):
             res = subprocess.run(
                 ["tesseract", f"{td}/{png}", "stdout", "--psm", "3"],
                 capture_output=True, text=True, check=False,

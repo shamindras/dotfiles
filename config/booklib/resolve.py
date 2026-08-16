@@ -104,6 +104,16 @@ def _gather_inner(path, kind, offline):
         ev["ev_year"], ev["ev_rung"] = pagetext.year_evidence(text)
         ev["embedded"] = embedded.pdf_meta(path)
         ev["text_head"] = text[:20000].lower()
+    elif kind == "djvu":
+        # Image-only by definition: OCR the front pages so ISBN/©/title
+        # evidence works for scans too (same rung as textless pdfs).
+        text = pagetext.ocr_text(path)
+        if text.strip():
+            ev["ocr"] = True
+            ev["isbns"] = pagetext.find_isbns(text)
+            ev["doi"] = pagetext.find_doi(text)
+            ev["ev_year"], ev["ev_rung"] = pagetext.year_evidence(text)
+            ev["text_head"] = text[:20000].lower()
     elif kind == "epub":
         ev["epub"] = epub.metadata(path)
 
