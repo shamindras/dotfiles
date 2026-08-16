@@ -20,7 +20,7 @@ Read-only verbs always safe; mutating verbs dry-run unless `--apply`.
 | Verb      | Purpose                                                        |
 | --------- | -------------------------------------------------------------- |
 | `scan`    | stat/hash sweep of scoped dirs into the manifest (`--rebuild`) |
-| `resolve` | metadata ladder over pending files (`--limit`, `--offline`); OCRs textless scans (tesseract), sanity-checks in-text DOIs against page text, +10 when a second API confirms the year |
+| `resolve` | metadata ladder over pending files (`--limit`, `--offline`); OCRs textless scans, pdf and djvu (tesseract), sanity-checks in-text DOIs against page text, +10 when a second API confirms the year |
 | `plan`    | table of proposed renames/conversions                          |
 | `review`  | `export` / `import FILE` / `list` TSV batches                  |
 | `apply`   | execute approved + auto-confident ops (backup-gated)           |
