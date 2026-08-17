@@ -10,6 +10,14 @@ sort_reverse = true      # Newest first
 linemode     = "size_and_mtime" # Custom linemode (init.lua): "12.9M  06/02 18:47"
 show_hidden  = true      # Show hidden files
 
+# Render budget for image/PDF/DjVu previews. The tmux 3.7b sixel path
+# (yazi ≥26.8.15) maps pixels 1:1 with no upscaling, so the 600x900
+# defaults look thin on a 4K display. Height chosen so portrait pages
+# stay under half the pane vertically; width only binds for landscape.
+[preview]
+max_width  = 1000
+max_height = 1000
+
 # Custom video player opener (macOS + Unix only)
 [opener]
 play = [
