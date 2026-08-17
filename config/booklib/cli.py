@@ -287,6 +287,16 @@ def cmd_sweep(args, manifest):
         # errors, re-queued orphaned holds) — otherwise they'd strand until
         # a manual resolve. Steady-state this set is empty.
         new_shas |= {r["sha256"] for r in manifest.rows_with_status("pending", "failed")}
+        # Outage-shaped review holds — rows that never got an API record
+        # (e.g. Open Library was down at resolve time) — also retry on
+        # every sweep: a recovered API can lift them to auto, and rows
+        # with unchanged evidence just land back in review (idempotent).
+        # Judgment holds that DID get an API answer stay untouched.
+        new_shas |= {
+            r["sha256"] for r in manifest.rows_with_status("needs_review")
+            if not any(a in (r["source"] or "")
+                       for a in ("openlibrary", "googlebooks", "crossref"))
+        }
         # Reconcile applied books whose on-disk name drifted from the
         # canonical stem (hand-renamed or re-downloaded known content) —
         # plan_ops knows how to rename them back.
@@ -302,7 +312,8 @@ def cmd_sweep(args, manifest):
             return 0
         counts = {}
         if new_shas:
-            resolve.resolve_pending(manifest, shas=new_shas)
+            # retry_review lets the outage-shaped holds re-enter the ladder.
+            resolve.resolve_pending(manifest, shas=new_shas, retry_review=True)
             ops = [o for o in apply_mod.plan_ops(manifest) if o["sha"] in new_shas]
             ok, reason = apply_mod.check_gate(manifest, ops, arrival_shas=new_shas)
             if ops and ok:
