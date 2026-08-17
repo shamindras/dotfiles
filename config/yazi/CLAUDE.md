@@ -1,7 +1,7 @@
 # Yazi Configuration
 
 - **Docs**: https://yazi-rs.github.io/docs/configuration/overview/
-- **Installed version**: Yazi 26.5.6 (verified 2026-05-16)
+- **Installed version**: Yazi 26.8.15 (verified 2026-08-17)
 
 ## Overview
 
@@ -33,6 +33,15 @@ local plugin lives alongside the ya pkg-managed ones.
   `<size>  <mm/dd HH:MM>` for files, `<mm/dd HH:MM>` for directories.
   Yazi preset `m*` prefix (`ms`, `mt`, `mb`, `mp`, `mo`, `mn`) still cycles
   through built-in linemodes mid-session; relaunch resets to this default.
+- **Preview render budget**: `[preview]` `max_width = 1000`,
+  `max_height = 1000` (defaults are 600x900; 1600x2400 overflowed the
+  pane and rendered slowly, 1000x1500 filled nearly full pane height —
+  1000px height keeps portrait pages under half the pane vertically).
+  Raised from defaults because yazi ≥26.8.15
+  emits raw sixel inside tmux (workaround for tmux 3.7b passthrough
+  breakage), and sixel pixels map 1:1 to physical pixels — no terminal
+  upscaling — so default-size renders look thin on a 4K display. Changing
+  these requires `ya cache clear` (cached JPEGs keep the old size).
 - **Previewers**: djvu-view for `.djvu`/`.djv`, ouch for archive mimes
 - **Openers**: `play` (VLC + mediainfo) for media; `preview` (macOS Preview)
   attached to `application/pdf` via `[open].prepend_rules` so it appears
@@ -119,7 +128,8 @@ community plugins and flavors. Do NOT vendor files manually.
 - **Install from package.toml**: `ya pkg install`
   (or `just yazi_plugins_install` — runs idempotently during `./install`)
 - **Remove**: `ya pkg delete <id>`
-- **Clear cache**: `yazi --clear-cache` (or `just yazi_clear_cache`)
+- **Clear cache**: `ya cache clear` (or `just yazi_clear_cache`) —
+  `yazi --clear-cache` is deprecated as of 26.8.15 and no longer clears
 
 `package.toml` tracks every installed package with a pinned revision
 and content hash — commit this file to keep state reproducible.
