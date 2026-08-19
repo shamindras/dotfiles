@@ -28,6 +28,7 @@ function z1_aliases {
   alias er='espanso restart'
   alias ghd='tmux-resize;gh dash;clear;'
   alias ghup='gh extension upgrade --all'
+  alias ipad-mirror='$HOME/.config/bin/ipad-mirror' # QuickTime live view of USB iPad (aerospace ws 9)
   alias ls='eza --color=always --group-directories-first --icons --git-ignore'
   alias l='ls -la'
   alias lg='tmux-resize;lazygit;clear;'
