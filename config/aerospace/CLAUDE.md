@@ -38,6 +38,8 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **vlc**: assigned to workspace V
 - **textedit**: assigned to workspace Q
 - **opensuperwhisper**: assigned to workspace U
+- **quicktime**: assigned to workspace 9 (iPad mirror window for Zoom
+  screen sharing; opened via `config/bin/ipad-mirror`, leader `RCmd → o → 9`)
 
 ## Reserved Alt Keys (Non-Workspace)
 
