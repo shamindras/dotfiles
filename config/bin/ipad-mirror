@@ -1,0 +1,25 @@
+#!/bin/sh
+# ipad-mirror — open QuickTime Player straight into a movie-recording
+# window, mirroring a USB-connected iPad (e.g. for Zoom screen sharing).
+#
+# Bypasses QuickTime's launch file picker, where Cancel quits the app
+# outright. Pick the iPad once via the chevron menu next to the record
+# button (Microphone: None); QuickTime remembers the choice on later
+# runs. AeroSpace routes the window to workspace 9 (on-window-detected
+# rule in aerospace.toml) and this script follows it there. Never press
+# record — the window is a live view only.
+#
+# Leader: RCmd → o → 9 opens; RCmd → q → 9 quits back to workspace W.
+
+set -eu
+
+osascript \
+  -e 'tell application "QuickTime Player" to activate' \
+  -e 'tell application "QuickTime Player" to new movie recording' \
+  >/dev/null
+
+# Follow the window: give it a beat to appear (and be moved by the
+# aerospace rule), then focus workspace 9. Absolute path — hs.task
+# spawns with a minimal PATH that lacks /opt/homebrew/bin.
+sleep 1
+/opt/homebrew/bin/aerospace workspace 9 2>/dev/null || true
