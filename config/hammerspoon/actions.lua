@@ -41,6 +41,7 @@ M.open = {
   group_name = 'open',
   bindings = {
     { key = '1', label = '1password', cmd = bin('fastopen 1password') },
+    { key = '9', label = 'ipad-mirror', cmd = bin('ipad-mirror') },
     { key = 'a', label = 'djview', cmd = bin('fastopen djview') },
     { key = 'b', label = 'firefox', cmd = bin('fastopen firefox') },
     { key = 'd', label = 'preview', cmd = bin('fastopen preview') },
@@ -70,6 +71,7 @@ M.quit = {
   group_name = 'quit',
   bindings = {
     { key = '1', label = '1Password', cmd = bin('quit-app 1Password B'), idle = QUIT_IDLE },
+    { key = '9', label = 'QuickTime Player', cmd = bin('quit-app "QuickTime Player" W'), idle = QUIT_IDLE },
     { key = 'a', label = 'DjView', cmd = bin('quit-app DjView W'), idle = QUIT_IDLE },
     { key = 'b', label = 'Firefox', cmd = bin('quit-app Firefox W'), idle = QUIT_IDLE },
     { key = 'd', label = 'Preview', cmd = bin('quit-app Preview W'), idle = QUIT_IDLE },
