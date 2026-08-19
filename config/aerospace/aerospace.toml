@@ -356,6 +356,11 @@ run = "move-node-to-workspace U"
 if.app-id = "app.zen-browser.zen"
 run = "move-node-to-workspace B"
 
+# QuickTime - iPad mirror window for Zoom screen sharing
+[[on-window-detected]]
+if.app-id = "com.apple.QuickTimePlayerX"
+run = "move-node-to-workspace 9"
+
 # Auto move apps - personal -------------------------------
 
 # microsoft Outlook
