@@ -222,8 +222,11 @@ def _store(manifest, sha, ev):
     # API lookup and the record instead came from a text-harvested ISBN,
     # that ISBN may belong to a CITED work (references bleed into front
     # matter) — a Misiewicz/Springer 2025 book was nearly named after the
-    # Billingsley it cites. Hold for review rather than trust the record.
-    if api and not api_is_search and ev["fn_isbn"] and ev.get("api_isbn") != ev["fn_isbn"]:
+    # Billingsley it cites. Sibling formats of the SAME book (print vs
+    # eBook) get consecutive numbers and share the first 11 digits
+    # (…55233-6 / …55232-9), so only an earlier divergence is suspect.
+    if (api and not api_is_search and ev["fn_isbn"] and ev.get("api_isbn")
+            and ev["api_isbn"][:11] != ev["fn_isbn"][:11]):
         forced_review = True
         source.append("isbn-mismatch")
 
