@@ -218,6 +218,15 @@ def _store(manifest, sha, ev):
     else:
         record = None
 
+    # Identity guard: a filename ISBN is the book's own. When it failed
+    # API lookup and the record instead came from a text-harvested ISBN,
+    # that ISBN may belong to a CITED work (references bleed into front
+    # matter) — a Misiewicz/Springer 2025 book was nearly named after the
+    # Billingsley it cites. Hold for review rather than trust the record.
+    if api and not api_is_search and ev["fn_isbn"] and ev.get("api_isbn") != ev["fn_isbn"]:
+        forced_review = True
+        source.append("isbn-mismatch")
+
     if record and api and not api_is_search:
         # Title corroboration: filename agreement, or (for ISBN-named files
         # with no filename signal) the API title appearing verbatim in the
