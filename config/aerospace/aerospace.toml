@@ -356,10 +356,13 @@ run = "move-node-to-workspace U"
 if.app-id = "app.zen-browser.zen"
 run = "move-node-to-workspace B"
 
-# QuickTime - iPad mirror window for Zoom screen sharing
+# QuickTime - iPad mirror window for Zoom screen sharing. Floating:
+# tiling would reset the window frame on every workspace revisit
+# (aerospace drops fullscreen/tile overrides on re-layout); the
+# ipad-mirror script sizes the floating window once via Hammerspoon.
 [[on-window-detected]]
 if.app-id = "com.apple.QuickTimePlayerX"
-run = "move-node-to-workspace 9"
+run = ['layout floating', 'move-node-to-workspace 9']
 
 # Auto move apps - personal -------------------------------
 
