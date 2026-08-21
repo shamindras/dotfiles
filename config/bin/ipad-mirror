@@ -18,8 +18,48 @@ osascript \
   -e 'tell application "QuickTime Player" to new movie recording' \
   >/dev/null
 
-# Follow the window: give it a beat to appear (and be moved by the
-# aerospace rule), then focus workspace 9. Absolute path — hs.task
-# spawns with a minimal PATH that lacks /opt/homebrew/bin.
-sleep 1
+# Follow the window to workspace 9. Absolute path — hs.task spawns
+# with a minimal PATH that lacks /opt/homebrew/bin.
 /opt/homebrew/bin/aerospace workspace 9 2>/dev/null || true
+
+# Maximize the recording window: full screen height, width from the
+# iPad's aspect ratio (QuickTime hard-locks it), centered. The window
+# floats (aerospace rule), so this frame persists across workspace
+# switches — tiled/fullscreen frames get reset on every revisit.
+# Poll first: the on-window-detected move to workspace 9 lags launch.
+n=0
+win_id=""
+while [ $n -lt 10 ]; do
+  win_id=$(/opt/homebrew/bin/aerospace list-windows --workspace 9 \
+    --format '%{window-id} %{app-bundle-id}' 2>/dev/null |
+    awk '$2 == "com.apple.QuickTimePlayerX" { print $1; exit }')
+  [ -n "$win_id" ] && break
+  sleep 0.5
+  n=$((n + 1))
+done
+if [ -n "$win_id" ]; then
+  /opt/homebrew/bin/hs -c '
+    local app = hs.application.get("QuickTime Player")
+    local w = app and app:mainWindow()
+    if w then
+      local sf = w:screen():frame()
+      w:setFrame(sf)              -- QuickTime snaps to the feed aspect
+      hs.timer.usleep(400000)
+      local wf = w:frame()        -- snapped, max-height size
+      w:setTopLeft({ x = sf.x + (sf.w - wf.w) / 2, y = sf.y })
+    end
+  ' >/dev/null 2>&1 || true
+  # Re-center after the camera feed settles: QuickTime attaches the
+  # remembered iPad source a beat after the window opens and re-snaps
+  # the window to the feed aspect, dropping the centered position.
+  sleep 2
+  /opt/homebrew/bin/hs -c '
+    local app = hs.application.get("QuickTime Player")
+    local w = app and app:mainWindow()
+    if w then
+      local sf = w:screen():frame()
+      local wf = w:frame()
+      w:setTopLeft({ x = sf.x + (sf.w - wf.w) / 2, y = sf.y })
+    end
+  ' >/dev/null 2>&1 || true
+fi
