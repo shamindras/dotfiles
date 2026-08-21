@@ -4,9 +4,12 @@ Rungs: bare ISBN in filename → in-file ISBN/DOI → API record → embedded
 metadata (corroboration, capped) → structured filename parse (capped) →
 review queue. Nothing below the auto threshold is ever applied silently.
 
-Year rule (load-bearing): the edition in hand wins. An in-file © year that
-is NEWER than the API's year is trusted outright (APIs habitually return
-first-publication years); any other disagreement forces review.
+Year rule (load-bearing): coalesce, intrinsic first. In-file evidence
+(© max-of-chain > edition line > published line) beats the API year, which
+beats the filename year — the first source present supplies the year
+outright. APIs habitually return first-publication or reissue years, so an
+in-file/API disagreement no longer forces review; the one exception is an
+uncorroborated OCR-read year older than the API's (misread-digit risk).
 """
 
 import difflib
@@ -228,32 +231,33 @@ def _store(manifest, sha, ev):
         if ev.get("api2_agrees"):
             conf += 10  # independent second API confirms the year
 
-    # -- year: edition-in-hand rule ------------------------------------
+    # -- year: coalesce, intrinsic first (user-approved 2026-08-22) ----
     api_year = int(record["year"]) if record and record.get("year") else None
     ev_year, ev_rung = ev["ev_year"], ev["ev_rung"]
     year = None
-    if ev_year and api_year:
-        if ev_year == api_year:
-            year = ev_year
-            conf += 15
-        elif ev_rung == "copyright" and ev_year > api_year:
-            year = ev_year  # API returned first-publication year
-        else:
-            year = ev_year
-            forced_review = True
-    elif ev_year:
+    if ev_year:
         year = ev_year
-        # Tiebreak rule (user-approved, 2026-08-17): a filename year equal
-        # to the © year, or exactly one less, is agreement — publishers
-        # routinely post-date the copyright page (CRC: 2006 file, © 2007).
-        if fn and fn.get("year") and int(fn["year"]) in (ev_year, ev_year - 1):
+        # Corroboration: API agreement, or a filename year within the ±1
+        # post-dating rule (publishers post-date © pages; CRC: 2006 file,
+        # © 2007). A text-layer © is authoritative even uncorroborated —
+        # a disagreeing API year is reprint/reissue metadata, not a
+        # different edition. OCR-read digits are fallible, so an
+        # uncorroborated OCR year may not overrule a NEWER API year.
+        corroborated = api_year == ev_year or (
+            fn and fn.get("year") and int(fn["year"]) in (ev_year, ev_year - 1)
+        )
+        if corroborated or not ev.get("ocr"):
             conf += 15
+        elif api_year and ev_year < api_year:
+            forced_review = True
     elif api_year:
         year = api_year
-        # No in-file © evidence, but the (trusted, user-named) filename year
+        # No in-file evidence, but the (trusted, user-named) filename year
         # agreeing with the API is corroboration of its own.
         if fn and fn.get("year") and int(fn["year"]) == api_year:
             conf += 10
+    elif fn and fn.get("year"):
+        year = int(fn["year"])  # last non-NA source in the coalesce
 
     first_pub = api_year if (api_year and year and api_year < year) else None
 
