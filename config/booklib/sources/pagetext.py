@@ -9,7 +9,9 @@ _ISBN_CAND = re.compile(
 )
 _DOI = re.compile(r"\b(10\.\d{4,9}/[-._;()/:A-Za-z0-9]+)")
 _COPYRIGHT = re.compile(
-    r"(?:©|\(c\)|(?<![a-z])copyright\b)\D{0,40}?"
+    # 80-char window: imprint lines like "© Springer Science+Business
+    # Media New York 2014" (41 chars of publisher) must still reach the year.
+    r"(?:©|\(c\)|(?<![a-z])copyright\b)\D{0,80}?"
     r"((?:19|20)\d{2}(?:\s*,\s*(?:19|20)\d{2})*)",
     re.IGNORECASE,
 )
