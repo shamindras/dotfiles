@@ -60,8 +60,10 @@ scratch tree, same pattern as `MOVE_BOOKS_*`.
 - `apply` requires a verified backup only for mass runs (>20 ops);
   small applies rely on the undo log (arrivals via sweep always exempt).
 - Mass applies (>20) require `--i-paused-dropbox`.
-- Edition year of the copy in hand; in-file © evidence beats API years;
-  disagreements force review, never silently resolved.
+- Edition year of the copy in hand, coalesced intrinsic-first: in-file ©
+  evidence > API year > filename year — first source present wins. API
+  reissue/first-publication disagreement never forces review; the only
+  year hold is an uncorroborated OCR-read year older than the API's.
 - Auto-apply only at confidence ≥ 80 (`config.AUTO_CONFIDENCE`).
 - Every mutation: undo-TSV line + events row committed BEFORE `os.rename`.
 - Paths NFC-normalized at manifest boundaries (APFS NFD pitfall).
