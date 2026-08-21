@@ -9,12 +9,16 @@ _ISBN_CAND = re.compile(
 )
 _DOI = re.compile(r"\b(10\.\d{4,9}/[-._;()/:A-Za-z0-9]+)")
 _COPYRIGHT = re.compile(
-    # 80-char window: imprint lines like "© Springer Science+Business
-    # Media New York 2014" (41 chars of publisher) must still reach the year.
-    r"(?:©|\(c\)|(?<![a-z])copyright\b)\D{0,80}?"
+    # 120-char window: the Springer boilerplate "© The Editor(s) (if
+    # applicable) and The Author(s), under exclusive license to Springer
+    # Nature Switzerland AG 2024" puts ~106 chars between © and the year.
+    r"(?:©|\(c\)|(?<![a-z])copyright\b)\D{0,120}?"
     r"((?:19|20)\d{2}(?:\s*,\s*(?:19|20)\d{2})*)",
     re.IGNORECASE,
 )
+# Classic © line whose © glyph the text layer mangled ("((; 1989 by
+# Springer-Verlag New York Inc."): line-start junk, year, "by Publisher".
+_YEAR_BY = re.compile(r"^\W{0,8}((?:19|20)\d{2}) by [A-Z]", re.MULTILINE)
 _EDITION = re.compile(
     r"\b(?:\d+(?:st|nd|rd|th)?\s+edition|first\s+published)\D{0,30}?((?:19|20)\d{2})",
     re.IGNORECASE,
@@ -130,12 +134,21 @@ def year_evidence(text):
     edition year."""
     lines = [ln for ln in (text or "").splitlines() if not re.search(r"\breprint", ln, re.I)]
     joined = "\n".join(lines)
-    m = _COPYRIGHT.search(joined)
-    if m:
-        years = [int(y) for y in re.findall(r"(?:19|20)\d{2}", m.group(1))]
-        years = [y for y in years if YEAR_MIN <= y <= YEAR_MAX]
-        if years:
-            return max(years), "copyright"
+    # Max over ALL © mentions, not the first: translated books carry the
+    # original edition's © ("Translation from the Romanian … © 1985
+    # Junimea") ahead of the current publisher's © line, and the current
+    # edition is always the newest © in the book.
+    years = [
+        int(y)
+        for m in _COPYRIGHT.finditer(joined)
+        for y in re.findall(r"(?:19|20)\d{2}", m.group(1))
+        if YEAR_MIN <= int(y) <= YEAR_MAX
+    ]
+    if not years:
+        years = [int(m.group(1)) for m in _YEAR_BY.finditer(joined)
+                 if YEAR_MIN <= int(m.group(1)) <= YEAR_MAX]
+    if years:
+        return max(years), "copyright"
     m = _EDITION.search(joined)
     if m and YEAR_MIN <= int(m.group(1)) <= YEAR_MAX:
         return int(m.group(1)), "edition"
