@@ -19,6 +19,14 @@ _COPYRIGHT = re.compile(
 # Classic © line whose © glyph the text layer mangled ("((; 1989 by
 # Springer-Verlag New York Inc."): line-start junk, year, "by Publisher".
 _YEAR_BY = re.compile(r"^\W{0,8}((?:19|20)\d{2}) by [A-Z]", re.MULTILINE)
+# © glyph degraded to a bare "c" at line start ("c 2008 Springer
+# Science+Business Media, LLC" / "c Springer-Verlag Berlin Heidelberg
+# 2014"): year right after the c, or at line end after the publisher.
+_C_YEAR = re.compile(
+    r"^\W{0,8}c\s+(?:((?:19|20)\d{2})(?=\s[A-Z])"
+    r"|[A-Z][^\n]{0,80}?((?:19|20)\d{2})\s*$)",
+    re.MULTILINE,
+)
 _EDITION = re.compile(
     r"\b(?:\d+(?:st|nd|rd|th)?\s+edition|first\s+published)\D{0,30}?((?:19|20)\d{2})",
     re.IGNORECASE,
@@ -147,6 +155,10 @@ def year_evidence(text):
     if not years:
         years = [int(m.group(1)) for m in _YEAR_BY.finditer(joined)
                  if YEAR_MIN <= int(m.group(1)) <= YEAR_MAX]
+    if not years:
+        years = [int(y) for m in _C_YEAR.finditer(joined)
+                 for y in m.groups()
+                 if y and YEAR_MIN <= int(y) <= YEAR_MAX]
     if years:
         return max(years), "copyright"
     m = _EDITION.search(joined)
