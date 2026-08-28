@@ -230,6 +230,22 @@ def _store(manifest, sha, ev):
         forced_review = True
         source.append("isbn-mismatch")
 
+    # Same failure mode without a filename ISBN to compare against: a
+    # text-harvested ISBN can belong to a SERIES-mate or cited work whose
+    # title ALSO appears in the book (back-matter series listings satisfy
+    # title-in-text — a LeBeau "R Series" book was auto-named after the Xie
+    # title its back cover lists). When the filename carries real words,
+    # strong disagreement with the API title holds the file for review.
+    if api and not api_is_search and ev.get("api_isbn") and not ev["fn_isbn"]:
+        name_words = re.sub(r"[^a-z0-9]+", " ", Path(ev["name"]).stem.lower()).split()
+        if sum(1 for w in name_words if w.isalpha()) >= 3:
+            ratio = difflib.SequenceMatcher(
+                None, " ".join(name_words), (api.get("title") or "").lower()
+            ).ratio()
+            if ratio < 0.35:
+                forced_review = True
+                source.append("fn-title-mismatch")
+
     if record and api and not api_is_search:
         # Title corroboration: filename agreement, or (for ISBN-named files
         # with no filename signal) the API title appearing verbatim in the
