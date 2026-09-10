@@ -1,7 +1,7 @@
 # Yazi Configuration
 
 - **Docs**: https://yazi-rs.github.io/docs/configuration/overview/
-- **Installed version**: Yazi 26.8.15 (verified 2026-08-17)
+- **Installed version**: Yazi 26.9.1 (verified 2026-09-09)
 
 ## Overview
 
@@ -47,6 +47,13 @@ local plugin lives alongside the ya pkg-managed ones.
   attached to `application/pdf` via `[open].prepend_rules` so it appears
   only in the `O` interactive chooser for PDFs (default `o` still goes to
   Skim via system `open`)
+- **Opener file interpolation**: yazi ≥26.8.15 substitutes files into
+  `run` strings via %-codes (`%s` all selected, `%s1` first selected,
+  `%h` hovered, `%d1` dirname, uppercase variants for logical URLs) and
+  shell-escapes them itself — do NOT quote them. The old `"$@"`/`"$1"`
+  positional style silently receives no arguments (`sh -c` is spawned
+  with no args), so commands like `open -a Preview "$@"` launch the app
+  with no file.
 
 ## Theme
 
