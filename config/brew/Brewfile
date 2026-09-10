@@ -36,10 +36,10 @@ brew "commitizen"
 brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
-# Color management engine supporting ICC profiles
-brew "little-cms2"
 # Image format providing lossless and lossy compression for web images
 brew "webp"
+# Color management engine supporting ICC profiles
+brew "little-cms2"
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # DjVu viewer
@@ -74,6 +74,8 @@ brew "libidn2"
 brew "gnutls"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# OpenType text shaping engine
+brew "harfbuzz"
 # File format designed to store large amounts of data
 brew "hdf5"
 # New file format for still image compression
@@ -102,8 +104,6 @@ brew "poppler"
 brew "gdal"
 # GitHub command-line tool
 brew "gh"
-# OpenType text shaping engine
-brew "harfbuzz"
 # Image processing and image analysis library
 brew "leptonica"
 # OCR (Optical Character Recognition) engine
