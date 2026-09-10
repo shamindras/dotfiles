@@ -72,26 +72,31 @@ marimo uses vim-style keybindings when `[keymap].preset = "vim"` is set in
 `marimo.toml`. SK auto-disables inside focused cells, but its default
 bindings fire in marimo's **command mode** (no cell focused). The config
 surgically unmaps conflicting keys on any `localhost:\d+` URL — covers the
-default port `2718` and any custom `--port` override.
+default port `2718` and any custom `--port` override. The unmaps run inside
+a runtime conditional (`if (/^localhost:\d+$/.test(window.location.host))`)
+rather than `api.unmap(key, domain)`, because domain-scoped unmap is only
+reliable for built-in mappings — several of these keys are custom `mapkey`
+bindings from this same config (`f`, `F`, `o`, `ym`, …).
 
 Two constants drive the unmap:
 
 | Constant                | Keys unmapped                                            | Reason                               |
 | ----------------------- | -------------------------------------------------------- | ------------------------------------ |
-| `marimoUnmapKeys`       | `a, b, d, j, k, m, u, G, /, ?, ym, ya, yf, yp, yM, o, O` | marimo command-mode + yank/omnibar   |
+| `marimoUnmapKeys`       | `a, b, d, f, F, j, k, m, u, G, /, ?, ym, ya, yf, yp, yM, o, O` | marimo command-mode + hints + yank/omnibar |
 | `marimoCtrlUnmapKeys`   | `<Ctrl-b/g/k/l/m/n/s/w/y/z/e/q/d/t/x>`                   | SK search-engine shortcuts           |
 
 **Kept active on marimo pages**: tab/history navigation (`h`, `l`, `H`,
 `L`, `gh`, `gl`, `t`, `T`, `zz`, `zh`, `zl`, `J`, `K`), tab reorder
-(`<`, `>`), and **link hints** (`f`, `F`, `gf`, `Ctrl-f`) — link hints
-are how you focus a marimo cell from a cold notebook load (marimo has
-no keyboard-only "focus first cell" path; an SK hint over a CodeMirror
-editor lets you click into one).
+(`<`, `>`), and **link hints via `gf` / `Ctrl-f`** — link hints are how
+you focus a marimo cell from a cold notebook load (marimo has no
+keyboard-only "focus first cell" path; an SK hint over a CodeMirror
+editor lets you click into one). `f` and `F` themselves are unmapped
+since they are not marimo-native and shadow nothing useful there.
 
 > **Why not `af`?** SK's default `af` (link hints in active new tab) is
 > a chord starting with `a`, but `a` is unmapped on marimo (collides
-> with marimo's "add cell above"). Use `f` (your remap = "hints in new
-> tab") instead.
+> with marimo's "add cell above"). Use `gf` (hints in new tab) or
+> `Ctrl-f` (hints in current tab) instead.
 
 **Out of scope** (deferred; add if needed): `127.0.0.1:\d+`, `marimo.app`
 (WASM playground).

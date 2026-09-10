@@ -656,31 +656,38 @@ api.unmap('f', /shamindras\.com/);
 
 // marimo notebooks — surgical unmap on any localhost port.
 // Keeps: tab/history nav (h, l, H, L, gh, gl, t, T, zz, zh, zl, J, K),
-//   link hints (f, F, gf, Ctrl-f) — needed to focus cells from cold start
+//   link hints via gf / Ctrl-f — needed to focus cells from cold start
 //   since marimo has no keyboard-only "focus first cell" path.
-// Unmaps: marimo command-mode keys + SK yank/omnibar/Ctrl-* search.
-const marimoUnmapKeys = [
-    // Marimo command-mode conflicts (fire when no cell is focused)
-    'a', 'b', 'd', 'j', 'k', 'm', 'u', 'G', '/', '?',
-    // SK yank commands
-    'ym', 'ya', 'yf', 'yp', 'yM',
-    // SK omnibar
-    'o', 'O',
-];
-marimoUnmapKeys.forEach(key => {
-    api.unmap(key, /localhost:\d+/);
-});
+// Unmaps: marimo command-mode keys + f/F hints + SK yank/omnibar/Ctrl-* search.
+// Runtime conditional (not api.unmap(key, domain)) because several of
+// these keys are custom mapkey bindings from this config (f, F, o, ym, …)
+// and domain-scoped unmap is only reliable for built-in mappings.
+if (/^localhost:\d+$/.test(window.location.host)) {
+    const marimoUnmapKeys = [
+        // Marimo command-mode conflicts (fire when no cell is focused)
+        'a', 'b', 'd', 'j', 'k', 'm', 'u', 'G', '/', '?',
+        // Link hints — not marimo-native; use gf or Ctrl-f instead
+        'f', 'F',
+        // SK yank commands
+        'ym', 'ya', 'yf', 'yp', 'yM',
+        // SK omnibar
+        'o', 'O',
+    ];
+    marimoUnmapKeys.forEach(key => {
+        api.unmap(key);
+    });
 
-// Ctrl-* search shortcuts disabled on marimo (Ctrl-f kept for link hints)
-const marimoCtrlUnmapKeys = [
-    '<Ctrl-b>', '<Ctrl-g>', '<Ctrl-k>', '<Ctrl-l>',
-    '<Ctrl-m>', '<Ctrl-n>', '<Ctrl-s>', '<Ctrl-w>', '<Ctrl-y>',
-    '<Ctrl-z>', '<Ctrl-e>', '<Ctrl-q>', '<Ctrl-d>', '<Ctrl-t>',
-    '<Ctrl-x>',
-];
-marimoCtrlUnmapKeys.forEach(key => {
-    api.unmap(key, /localhost:\d+/);
-});
+    // Ctrl-* search shortcuts disabled on marimo (Ctrl-f kept for link hints)
+    const marimoCtrlUnmapKeys = [
+        '<Ctrl-b>', '<Ctrl-g>', '<Ctrl-k>', '<Ctrl-l>',
+        '<Ctrl-m>', '<Ctrl-n>', '<Ctrl-s>', '<Ctrl-w>', '<Ctrl-y>',
+        '<Ctrl-z>', '<Ctrl-e>', '<Ctrl-q>', '<Ctrl-d>', '<Ctrl-t>',
+        '<Ctrl-x>',
+    ];
+    marimoCtrlUnmapKeys.forEach(key => {
+        api.unmap(key);
+    });
+}
 
 // ============================================
 // THEME: TOMORROW NIGHT (Foldex-style)
