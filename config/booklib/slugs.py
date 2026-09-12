@@ -23,8 +23,18 @@ _ROMAN = {"i": 1, "ii": 2, "iii": 3, "iv": 4, "v": 5, "vi": 6, "vii": 7, "viii":
 _VOL_RE = re.compile(r"\b(?:vol(?:ume)?\.?|part)\s*([0-9]+|[ivx]+)\b", re.IGNORECASE)
 
 
+# Letters NFD cannot decompose (no combining mark to strip) would otherwise
+# be dropped whole by the downstream [a-z0-9] filters: Sołtan became "sotan".
+_FOLD = str.maketrans({
+    "ł": "l", "Ł": "L", "ø": "o", "Ø": "O", "đ": "d", "Đ": "D",
+    "ð": "d", "Ð": "D", "þ": "th", "Þ": "Th", "ß": "ss",
+    "æ": "ae", "Æ": "Ae", "œ": "oe", "Œ": "Oe", "ı": "i", "ħ": "h", "Ħ": "H",
+})
+
+
 def ascii_fold(s):
-    return "".join(c for c in unicodedata.normalize("NFD", s) if not unicodedata.combining(c))
+    s = "".join(c for c in unicodedata.normalize("NFD", s) if not unicodedata.combining(c))
+    return s.translate(_FOLD)
 
 
 def split_authors(raw):
