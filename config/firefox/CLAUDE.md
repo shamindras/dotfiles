@@ -63,7 +63,7 @@
 | PDF Viewer           | page-fit zoom, no sidebar, spread mode               |
 | UI                   | No about:config warning, bookmarks hidden, dark      |
 | Session & Auth       | Restore session, homepage example.com, no pw sync    |
-| Security             | HTTPS-only mode enabled                              |
+| Security             | HTTPS-First (Firefox default), no interstitial       |
 | Performance          | Session history 10, bfcache on, 60s save, hw video   |
 | Context Menu Cleanup | Remove 9 bloat items via about:config                |
 | userChrome.css       | Enable legacy stylesheet loading                     |

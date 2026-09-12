@@ -150,8 +150,9 @@ user_pref("services.sync.engine.passwords", false);
 // Security {{{
 // =============================================================================
 
-// HTTPS-only mode (shows warning page for HTTP sites, click-through allowed)
-user_pref("dom.security.https_only_mode", true);
+// HTTPS-First (Firefox default): try HTTPS, silently fall back to HTTP.
+// Explicit false (not removed) — user.js prefs persist in prefs.js otherwise.
+user_pref("dom.security.https_only_mode", false);
 
 // }}}
 
