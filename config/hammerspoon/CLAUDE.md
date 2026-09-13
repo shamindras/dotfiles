@@ -96,6 +96,32 @@ State transitions:
 - Any unbound letter in any modal → exit + HUD hides (fail-safe).
 - 2 s idle at any level → exit + HUD hides.
 
+### Focus restore for Raycast deeplinks (`restore_focus`)
+
+Raycast restores focus to the previous app only when summoned via its
+own hotkey. Deeplink launches (`open raycast://…`, which all leader
+Raycast actions use) strand focus on dismiss — the app either stays
+"active" with zero windows (no deactivation event) or macOS hands
+focus one app too far back in the activation stack.
+
+Actions flagged `restore_focus = '<AppName>'` in `actions.lua` (all 5
+Raycast leaves: `search b/c/f`, `run e/i`) arm a restore in
+`leader.lua` at fire time:
+
+- The frontmost window is captured before the command runs.
+- A passive eventtap records Escape presses made while the panel app
+  is frontmost (dismissal intent).
+- A 100 ms `hs.timer.doEvery` poll watches the panel app's window
+  count; once a window has appeared and then disappears, the panel
+  was dismissed (5 s cap waiting for it to appear).
+- On dismissal: a recent (<0.8 s) Escape always restores the captured
+  window; otherwise restore happens only when focus is stranded (on
+  the panel app, or half-active on the captured window's app). Enter
+  (open a file) or a click into another app keeps that destination.
+
+All watchers/taps stop on restore, on skip, or when a newer flagged
+action re-arms.
+
 ### Cross-tool contracts
 
 Hammerspoon shells out to these scripts with the argv they expect:
@@ -185,10 +211,11 @@ All of the following survive reboot automatically:
 
 ## Hammerspoon API surfaces used
 
-`hs.hotkey.modal`, `hs.timer.doAfter`, `hs.eventtap`,
-`hs.eventtap.event.newKeyEvent`, `hs.eventtap.checkKeyboardModifiers`,
-`hs.eventtap.keyStroke`, `hs.usb.watcher`, `hs.task`, `hs.notify`,
-`hs.keycodes.map`.
+`hs.hotkey.modal`, `hs.timer.doAfter`, `hs.timer.doEvery`,
+`hs.eventtap`, `hs.eventtap.event.newKeyEvent`,
+`hs.eventtap.checkKeyboardModifiers`, `hs.eventtap.keyStroke`,
+`hs.usb.watcher`, `hs.task`, `hs.notify`, `hs.keycodes.map`,
+`hs.window`, `hs.application`.
 
 Validate field names against the installed version's docs before
 adding new code paths — Hammerspoon renames between point releases

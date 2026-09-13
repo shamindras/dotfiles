@@ -8,6 +8,9 @@
 --   idle  — optional override of the 2s timeout. Quit actions use 10s to let
 --           sketchybar's quit notification finish drawing before another
 --           leader sequence stomps it.
+--   restore_focus — optional app name (e.g. 'Raycast'); re-focus the
+--           pre-action window once that app's panel is dismissed
+--           (deeplink-launched panels don't restore focus — see leader.lua).
 
 local M = {}
 
@@ -127,11 +130,13 @@ M.run = {
       key = 'e',
       label = 'raycast-export',
       cmd = url('raycast://extensions/raycast/raycast/export-settings-data'),
+      restore_focus = 'Raycast',
     },
     {
       key = 'i',
       label = 'raycast-import',
       cmd = url('raycast://extensions/raycast/raycast/import-settings-data'),
+      restore_focus = 'Raycast',
     },
     -- Sweep Downloads into the books library, then normalize epub
     -- filenames to author-year-title (config/bin/{move-books,rename-ebooks}).
@@ -170,9 +175,24 @@ M.run = {
 M.search = {
   group_name = 'search',
   bindings = {
-    { key = 'b', label = 'bookmarks', cmd = url('raycast://extensions/raycast/browser-bookmarks/index') },
-    { key = 'c', label = 'clipboard', cmd = url('raycast://extensions/raycast/clipboard-history/clipboard-history') },
-    { key = 'f', label = 'files', cmd = url('raycast://extensions/raycast/file-search/search-files') },
+    {
+      key = 'b',
+      label = 'bookmarks',
+      cmd = url('raycast://extensions/raycast/browser-bookmarks/index'),
+      restore_focus = 'Raycast',
+    },
+    {
+      key = 'c',
+      label = 'clipboard',
+      cmd = url('raycast://extensions/raycast/clipboard-history/clipboard-history'),
+      restore_focus = 'Raycast',
+    },
+    {
+      key = 'f',
+      label = 'files',
+      cmd = url('raycast://extensions/raycast/file-search/search-files'),
+      restore_focus = 'Raycast',
+    },
   },
 }
 

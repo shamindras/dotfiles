@@ -110,6 +110,102 @@ local function enter_group(spec)
   end)
 end
 
+-- {{{ Focus restore (raycast:// deeplinks)
+
+-- Raycast restores focus to the previous app only when summoned via its
+-- own hotkey; deeplink launches (open raycast://…) hand focus to the
+-- wrong app on dismiss (one step too far back in the activation stack).
+-- For actions flagged restore_focus = '<AppName>', capture the frontmost
+-- window before firing, poll for the panel window disappearing, and
+-- re-focus the captured window — on an Escape dismissal always, and
+-- otherwise only when focus is left stranded. Enter (open a file) or a
+-- click elsewhere means the user chose a destination; leave focus alone.
+local escape_tap, dismiss_poll
+
+local function disarm_focus_restore()
+  if dismiss_poll then
+    dismiss_poll:stop()
+    dismiss_poll = nil
+  end
+  if escape_tap then
+    escape_tap:stop()
+    escape_tap = nil
+  end
+end
+
+local function arm_focus_restore(app_name)
+  local prev = hs.window.frontmostWindow()
+  if not prev then
+    return
+  end
+  disarm_focus_restore()
+  local prev_app = prev:application() and prev:application():name()
+  local done = false
+  local last_escape = 0
+
+  local function restore()
+    if done then
+      return
+    end
+    done = true
+    disarm_focus_restore()
+    pcall(function()
+      prev:focus()
+    end)
+  end
+
+  -- Escape while the panel app is frontmost records dismissal intent.
+  escape_tap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(e)
+    if e:getKeyCode() == hs.keycodes.map.escape then
+      local front = hs.application.frontmostApplication()
+      if front and front:name() == app_name then
+        last_escape = hs.timer.secondsSinceEpoch()
+      end
+    end
+    return false
+  end)
+  escape_tap:start()
+
+  -- Poll the panel app's window count: once a window has appeared and
+  -- then disappears, the panel was dismissed. Dismissal may leave the
+  -- app "active" with zero windows and no deactivation event, so an
+  -- app watcher is not reliable here — the poll is.
+  local seen_window = false
+  local ticks = 0
+  dismiss_poll = hs.timer.doEvery(0.1, function()
+    ticks = ticks + 1
+    local app = hs.application.get(app_name)
+    if app and #app:allWindows() > 0 then
+      seen_window = true
+      return
+    end
+    if not seen_window then
+      -- Panel not up yet; give the deeplink 5s to open, then give up.
+      if ticks > 50 then
+        disarm_focus_restore()
+      end
+      return
+    end
+    -- Panel gone. Recent Escape → restore no matter where focus went.
+    if hs.timer.secondsSinceEpoch() - last_escape < 0.8 then
+      restore()
+      return
+    end
+    -- No Escape seen: restore only if focus is stranded on the panel
+    -- app or half-active on prev's app. A different app in front means
+    -- the user opened something there — leave it alone.
+    local front = hs.application.frontmostApplication()
+    local fname = front and front:name()
+    if fname == nil or fname == app_name or fname == prev_app then
+      restore()
+    else
+      disarm_focus_restore()
+    end
+  end)
+end
+
+-- }}}
+
 local function fire_action(action)
   dbg('fire_action label=' .. tostring(action.label))
   cancel_idle()
@@ -119,6 +215,9 @@ local function fire_action(action)
     m:exit()
   end
   hud.hide()
+  if action.restore_focus then
+    arm_focus_restore(action.restore_focus)
+  end
   -- /bin/sh -c lets actions.lua chain commands via ' ; '.
   hs.task
     .new('/bin/sh', nil, function()
