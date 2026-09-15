@@ -236,13 +236,16 @@ def _store(manifest, sha, ev):
     # title-in-text — a LeBeau "R Series" book was auto-named after the Xie
     # title its back cover lists). When the filename carries real words,
     # strong disagreement with the API title holds the file for review.
+    # 0.40, not 0.35: "LLM Evals Course Notes July" vs "Designing the user
+    # interface" scored 0.364 and auto-applied under a cited work's name;
+    # true matches through libgen noise still clear 0.5.
     if api and not api_is_search and ev.get("api_isbn") and not ev["fn_isbn"]:
         name_words = re.sub(r"[^a-z0-9]+", " ", Path(ev["name"]).stem.lower()).split()
         if sum(1 for w in name_words if w.isalpha()) >= 3:
             ratio = difflib.SequenceMatcher(
                 None, " ".join(name_words), (api.get("title") or "").lower()
             ).ratio()
-            if ratio < 0.35:
+            if ratio < 0.40:
                 forced_review = True
                 source.append("fn-title-mismatch")
 
