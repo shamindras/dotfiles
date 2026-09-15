@@ -138,8 +138,9 @@ M.run = {
       cmd = url('raycast://extensions/raycast/raycast/import-settings-data'),
       restore_focus = 'Raycast',
     },
-    -- Sweep Downloads into the books library, then normalize epub
-    -- filenames to author-year-title (config/bin/{move-books,rename-ebooks}).
+    -- Wipe .DS_Store (same as r → w), normalize epub filenames, then sweep
+    -- Downloads into the books library
+    -- (config/bin/{move-books,wipe-ds-store,rename-ebooks}).
     { key = 'm', label = 'move-books', cmd = as_user(bin('move-books')) },
     { key = 'r', label = 'reload-hs', cmd = '/opt/homebrew/bin/hs -c "hs.reload()"' },
     { key = 't', label = 'empty-trash', cmd = bin('empty-trash') },
@@ -155,16 +156,7 @@ M.run = {
           .. "-e 'end if'"
       ),
     },
-    {
-      key = 'w',
-      label = 'wipe-ds-store',
-      cmd = table.concat({
-        as_user(
-          '/opt/homebrew/bin/fd -HI -t f .DS_Store $HOME/Dropbox/resources/books $HOME/Downloads $HOME/Documents -x rm'
-        ),
-        as_user('/opt/homebrew/bin/fd -HI -d 1 -t f .DS_Store $HOME -x rm'),
-      }, ' ; '),
-    },
+    { key = 'w', label = 'wipe-ds-store', cmd = as_user(bin('wipe-ds-store')) },
   },
 }
 
