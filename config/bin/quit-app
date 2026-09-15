@@ -58,15 +58,19 @@ fi
 
 # --- App-specific overrides --------------------------------------------------
 # Process detection: apps whose process name differs from their osascript name.
-# Bundle ID: non-native apps (Java, Qt) whose shutdown can steal focus —
-# get a longer settle delay before the quit signal fires.
+# Settle delay: seconds between the workspace switch and the quit signal —
+# too short and the window server yanks focus back to the dying app's
+# workspace. Non-native apps (Java, Qt) whose shutdown steals focus need
+# longer; menu-bar-centric apps whose quit never touches window focus
+# (NordVPN) can go near-instant.
 PGREP_FLAG="-xi"
 PGREP_PATTERN="$APP_NAME"
-BUNDLE_ID=""
+SETTLE_DELAY=1.0
 
 case "$APP_NAME" in
-  DjView)       PGREP_FLAG="-x"; PGREP_PATTERN="djview";          BUNDLE_ID="org.djvu.DjView" ;;
-  JDownloader2) PGREP_FLAG="-f"; PGREP_PATTERN="JDownloader2.app"; BUNDLE_ID="org.jdownloader.launcher" ;;
+  DjView)       PGREP_FLAG="-x"; PGREP_PATTERN="djview";           SETTLE_DELAY=1.5 ;;
+  JDownloader2) PGREP_FLAG="-f"; PGREP_PATTERN="JDownloader2.app"; SETTLE_DELAY=1.5 ;;
+  NordVPN)      SETTLE_DELAY=0.3 ;;
 esac
 
 # --- Helpers -----------------------------------------------------------------
@@ -198,14 +202,15 @@ else
   _switch_workspace "$WORKSPACE"
   # App not running — just switch workspace (idempotent, no notification)
   _is_running || exit 0
+  # Instant pending feedback: the ✓ only appears once the exit is verified
+  # (settle delay + app teardown ≈ 1.5–2.5s of otherwise-silent lag), so
+  # surface a "quitting" label immediately; _notify replaces it.
+  "$RUN" "$SKETCHYBAR" --set leader label="… $APP_NAME quitting" \
+    label.color="$COLOR_LAVENDER" drawing=on
   {
     # Settle time: let macOS fully commit to the new workspace before
     # the quit signal fires — prevents the dying app from stealing focus.
-    if [[ -n "$BUNDLE_ID" ]]; then
-      sleep 1.5
-    else
-      sleep 1.0
-    fi
+    sleep "$SETTLE_DELAY"
     _do_quit
     _poll_exit
     _switch_workspace "$WORKSPACE"
