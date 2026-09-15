@@ -46,6 +46,7 @@ function z1_aliases {
   alias bt='btm;clear;'
   alias top='tmux-resize;btop;clear;'
   alias t='task' # taskwarrior
+  alias ta='tmux attach' # reattach to live tmux server (see sesh CLAUDE.md workflow)
   alias tt='tmux-resize;taskwarrior-tui;clear'
   alias tree='eza --tree --all --group-directories-first -I ".git|.svn|.hg|.idea|.vscode|.Rproj.user|.pytest_cache"'
   alias t1='tree --level=1'

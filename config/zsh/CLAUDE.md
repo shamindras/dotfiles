@@ -187,7 +187,7 @@ re-investigation:
 | Category   | Examples                                                    |
 | ---------- | ----------------------------------------------------------- |
 | Navigation | `cd=z`, `..=z ..`, `dots`, `reps`, `conf`                  |
-| System     | `c=clear+tmux`, `b=bat`, `l=ls -la`, `tree`                |
+| System     | `c=clear+tmux`, `b=bat`, `l=ls -la`, `tree`, `ta=tmux attach` |
 | Brew       | `bu=~/.config/bin/brew-update` (canonical pipeline)         |
 | Dev        | `n=nvim`, `lg=lazygit`, `ghd=gh dash`, `cl=claude`, `clr=claude --resume`, `rq=R(quiet,no .RData)` |
 | Zk         | `kd=daily`, `kis=idea`, `ks=search`                        |
