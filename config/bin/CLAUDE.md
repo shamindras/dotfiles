@@ -29,8 +29,16 @@
 ## quit-app
 
 **Default flow** (workspace-first): resolve target workspace → switch
-workspace instantly → background { quit app → poll exit → sketchybar
-notification (green ✓ success / red ✗ failure, 2s linger) }.
+workspace instantly → show pending `… <app> quitting` label (lavender,
+instant feedback) → background { settle delay → quit app → poll exit →
+sketchybar notification (green ✓ success / red ✗ failure, 2s linger) }.
+
+The settle delay between workspace switch and quit signal is per-app
+(`SETTLE_DELAY` lookup): 1.0s default, 1.5s for non-native apps whose
+shutdown steals focus (DjView, JDownloader2), 0.3s for menu-bar-centric
+apps whose quit never touches window focus (NordVPN). The ✓ label only
+appears once the exit is verified, so the pending label covers the
+settle + app-teardown gap that was previously silent.
 
 **`--activate-quit` flow**: quit first (activate app, then Cmd+Q) →
 poll exit → animation delay → switch workspace. No background, no
