@@ -15,14 +15,21 @@ tmux rename-window -t "${SESSION}:1" "journal"
 # Window 2: yazi with preloaded tabs (Downloads active)
 sesh_window_yazi_tabs "${SESSION}" "${WORK_DIR}" downloads
 
-# Window 3: ideas (nvim with file picker in ideas dir)
+# Window 3: claude resuming the most recent ~/Downloads session (booklib/bibtex).
+# Falls back to a fresh session when there is no history to continue
+# (e.g. new machine with no ~/Downloads .claude history).
+sesh_window_claude_new "${SESSION}" "${HOME}/Downloads" "cl-dl-recent" "claude --continue || claude"
+
+# Window 4: claude in the zk notes dir
+sesh_window_claude_new "${SESSION}" "${WORK_DIR}" "cl-zk-notes"
+
+# Window 5: ideas (nvim with file picker in ideas dir)
 tmux new-window -a -t "${SESSION}:\$" -n "ideas" -c "${IDEAS_DIR}"
 tmux send-keys -l -t "${SESSION}:ideas" \
   "nvim +'autocmd User VeryLazy ++once lua require(\"shamindras.plugins.snacks.pickers\").picker_with_fd(Snacks.picker.files)';clear"
 tmux send-keys -t "${SESSION}:ideas" Enter
 
-sesh_window_term       "${SESSION}" "${WORK_DIR}"   # Window 4
-sesh_window_claude_new "${SESSION}" "${WORK_DIR}"   # Window 5
+sesh_window_term       "${SESSION}" "${WORK_DIR}"   # Window 6
 
 # Now send journal startup command.
 # Uses explicit binaries instead of the `kds` zsh alias so the command

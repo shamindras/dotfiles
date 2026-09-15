@@ -17,10 +17,14 @@ sesh_window_claude() {
 }
 
 # Window: claude (new window — use when another window owns W1)
+#   $1  session name
+#   $2  work_dir
+#   $3  window name (default: claude)
+#   $4  claude command (default: claude — e.g. "claude --continue")
 sesh_window_claude_new() {
-  local session="$1" work_dir="$2"
-  tmux new-window -a -t "${session}:\$" -n "claude" -c "${work_dir}"
-  tmux send-keys -t "${session}:claude" "clear && claude" Enter
+  local session="$1" work_dir="$2" name="${3:-claude}" cmd="${4:-claude}"
+  tmux new-window -a -t "${session}:\$" -n "${name}" -c "${work_dir}"
+  tmux send-keys -t "${session}:${name}" "clear && ${cmd}" Enter
 }
 
 # Window: nvim with Snacks file picker (creates new window)

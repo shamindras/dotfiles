@@ -62,7 +62,7 @@ take `session` and `work_dir` as positional args. Exception:
 |--------------------------|------------------------------------------------------------------------------------|
 | `sesh_window_items`      | Rename window 1 to "items", run `taskwarrior-tui;clear`                            |
 | `sesh_window_claude`     | Rename window 1 to "claude", clear screen + run `claude` (inherits cwd)            |
-| `sesh_window_claude_new` | New window "claude", clear + run `claude` (use when another window owns W1)        |
+| `sesh_window_claude_new` | New window, clear + run claude (use when another window owns W1). Optional `$3` window name (default `claude`), `$4` claude command (default `claude`) |
 | `sesh_window_nvim`       | New window "nvim", launch nvim with Snacks file picker                             |
 | `sesh_window_term`       | New window "term", plain shell                                                     |
 | `sesh_window_yazi_tabs`  | New window "yazi" w/ preloaded tabs — persistent: runs `yt -W` in the shell        |
@@ -94,15 +94,21 @@ All scripts use:
 
 ### Window Layout by Session
 
-| Session  | W1       | W2      | W3      | W4     | W5     | Focus    |
-|----------|----------|---------|---------|--------|--------|----------|
-| (ad-hoc) | claude   | yazi    | nvim    | term   | —      | claude   |
-| dots     | claude   | yazi    | nvim    | term   | —      | claude   |
-| play     | claude   | yazi    | nvim    | term (uv venv) | — | claude   |
-| career   | claude   | yazi    | nvim    | term   | —      | nvim     |
-| blog     | claude   | yazi    | nvim    | preview| term   | nvim     |
-| notes    | journal  | yazi    | ideas   | term   | claude | journal  |
-| feed     | newsboat | yazi    | term    | —      | —      | newsboat |
+| Session  | W1       | W2      | W3           | W4             | W5     | W6     | Focus    |
+|----------|----------|---------|--------------|----------------|--------|--------|----------|
+| (ad-hoc) | claude   | yazi    | nvim         | term           | —      | —      | claude   |
+| dots     | claude   | yazi    | nvim         | term           | —      | —      | claude   |
+| play     | claude   | yazi    | nvim         | term (uv venv) | —      | —      | claude   |
+| career   | claude   | yazi    | nvim         | term           | —      | —      | nvim     |
+| blog     | claude   | yazi    | nvim         | preview        | term   | —      | nvim     |
+| notes    | journal  | yazi    | cl-dl-recent | cl-zk-notes    | ideas  | term   | journal  |
+| feed     | newsboat | yazi    | term         | —              | —      | —      | newsboat |
+
+The `notes` session runs two claude windows: `cl-dl-recent` opens in
+`~/Downloads` with `claude --continue || claude` (resumes the most recent
+Downloads session — e.g. booklib/bibtex work — falling back to a fresh
+session when there is no history to continue), and `cl-zk-notes` runs a
+plain `claude` in the zk notes dir.
 
 Every `yazi` window opens with these tabs (left → right):
 WORK_DIR · Documents · Downloads (active) · books/reference_books · 00_now_reading · 01_next_up · 02_on_deck · 03_backlog · books/ebooks.
@@ -114,7 +120,7 @@ its WORK_DIR already is Downloads) so its yazi has 7 tabs instead of 9.
 | Window     | Setup |
 |------------|-------|
 | `items`    | `sesh_window_items` — renames window 1, runs `taskwarrior-tui;clear`                   |
-| `claude`   | `sesh_window_claude` (renames W1) or `sesh_window_claude_new` (new window)              |
+| `claude`   | `sesh_window_claude` (renames W1) or `sesh_window_claude_new` (new window; optional window name + command — `notes` uses it for `cl-dl-recent` / `cl-zk-notes`) |
 | `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker                                       |
 | `term`     | `sesh_window_term` — plain terminal                                                     |
 | `yazi`     | `sesh_window_yazi_tabs` — persistent shell window running `yt -W` (preloaded tabs)       |
@@ -139,7 +145,7 @@ Four scenarios, four commands. Mental model: you attach to the tmux
 
 | Situation                          | Command             | Effect                                          |
 | ---------------------------------- | ------------------- | ----------------------------------------------- |
-| Quit WezTerm, back to work         | `sc` (or `tmux attach`) | Reattach — everything intact, nothing re-run |
+| Quit WezTerm, back to work         | `sc` (or `ta` = `tmux attach`) | Reattach — everything intact, nothing re-run |
 | Work in a non-sra directory        | `Cmd-Ctrl-K` / `sn` | Pick from dirs.list → session w/ default layout |
 | After a reboot, stand up all       | `sra`               | Recreate all sesh.toml sessions fresh           |
 | One session is broken              | `sesh-reset <name>` | Kill + recreate just that session               |
@@ -149,7 +155,7 @@ Four scenarios, four commands. Mental model: you attach to the tmux
 The server and all processes are still alive. Reopen WezTerm and run:
 ```
 sc                          # fzf-pick a session, attach (nothing killed)
-tmux attach                 # or: name-free, lands in most-recent session
+ta                          # or: name-free `tmux attach`, lands in most-recent session
 ```
 Do NOT run `sra` here — it kills the live sessions and rebuilds defaults.
 
