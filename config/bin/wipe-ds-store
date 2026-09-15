@@ -1,0 +1,19 @@
+#!/bin/sh
+# wipe-ds-store — remove Finder's .DS_Store droppings.
+#
+#   1. Recursive sweep: books library, Downloads, Documents
+#   2. Depth-1 sweep:   $HOME itself
+#
+# Single source of truth for the leader `RCmd → r → w` action
+# (hammerspoon/actions.lua, formerly an inline fd chain there) and the
+# move-books preamble, so book sweeps never leave .DS_Store behind for
+# Dropbox to sync.
+
+set -eu
+
+FD="/opt/homebrew/bin/fd"
+
+"$FD" -HI -t f .DS_Store \
+  "$HOME/Dropbox/resources/books" "$HOME/Downloads" "$HOME/Documents" \
+  -x rm
+"$FD" -HI -d 1 -t f .DS_Store "$HOME" -x rm

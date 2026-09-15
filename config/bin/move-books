@@ -2,12 +2,14 @@
 # move-books — normalize epub filenames in Downloads, then sweep books
 # into the Dropbox library.
 #
-#   1. rename-ebooks Downloads    -> author-year-title.epub BEFORE moving
+#   1. wipe-ds-store              -> same sweep as leader `RCmd → r → w`, so
+#                                    the transfer never carries .DS_Store
+#   2. rename-ebooks Downloads    -> author-year-title.epub BEFORE moving
 #                                    (user preference: rename precedes move)
-#   2. Downloads *.pdf|*.djvu     -> reference_books/
-#   3. Downloads *.epub           -> ebooks/
-#   4. reference_books *.epub     -> ebooks/   (misfiled correction)
-#   5. book-librarian sweep       -> background: convert new djvu, rename new
+#   3. Downloads *.pdf|*.djvu     -> reference_books/
+#   4. Downloads *.epub           -> ebooks/
+#   5. reference_books *.epub     -> ebooks/   (misfiled correction)
+#   6. book-librarian sweep       -> background: convert new djvu, rename new
 #                                    pdf/epub from metadata, manifest + bib
 #                                    (silent; check `book-librarian status`)
 #
@@ -22,6 +24,8 @@ BIN="$HOME/.config/bin"
 DOWNLOADS="${MOVE_BOOKS_DOWNLOADS:-$HOME/Downloads}"
 REF="${MOVE_BOOKS_REF:-$HOME/Dropbox/resources/books/reference_books}"
 EBOOKS="${MOVE_BOOKS_EBOOKS:-$HOME/Dropbox/resources/books/ebooks}"
+
+"$BIN/wipe-ds-store"
 
 "$BIN/rename-ebooks" "$DOWNLOADS"
 
