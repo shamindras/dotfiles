@@ -41,7 +41,7 @@ case "$ACTION" in
         LABEL="(c)▸ n:󰎔 r:󰋚 u:󰄨"
         ;;
       run)
-        LABEL="(r)▸ b:󰏗 c:󰂜 e:󰈻 i:󰈔 m:󰉏 r:󰑓 t:󰩹 u:󰖁 w:󰛌"
+        LABEL="(r)▸ b:󰏗 c:󰂜 e:󰈻 i:󰈔 m:󰉏 n:󰤨 r:󰑓 t:󰩹 u:󰖁 w:󰛌"
         ;;
       search)
         LABEL="(s)▸ b:󰃀 c:󰅇 f:󰈞"

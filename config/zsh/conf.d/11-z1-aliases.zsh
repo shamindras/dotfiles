@@ -37,6 +37,7 @@ function z1_aliases {
   alias man='batman'
   alias mvb='$HOME/.config/bin/move-books' # sweep Downloads -> books library + rename epubs
   alias nb='tmux-resize;newsboat;clear;'
+  alias nordvpn-pause='$HOME/.config/bin/nordvpn-pause' # on|off|toggle|status — 15-min VPN pause via Hammerspoon AX
   alias paths='echo -e ${PATH//:/\\n}' # Echo all executable Paths
   alias rcp='rsync -ah --info=progress2'
   alias rmi='rm -i'

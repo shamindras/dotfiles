@@ -1,0 +1,152 @@
+#!/bin/zsh
+# nordvpn-pause — pause / resume the NordVPN connection from the shell
+#
+# NordVPN's macOS app has no CLI. The pause ("snooze") button on its
+# connection card does have a stable accessibility identifier, so the
+# press is driven through Hammerspoon's AX bridge (config/hammerspoon/
+# nordvpn.lua) via `hs -c`. No window focus, no workspace switch.
+#
+# Usage:
+#   nordvpn-pause on       Pause for 15 min (the app's immediate-pause button)
+#   nordvpn-pause off      Resume now (end the pause early)
+#   nordvpn-pause toggle   on if connected, off if paused — leader RCmd → r → n
+#   nordvpn-pause status   Print the connection-card state
+#
+# Feedback: stdout when run from a terminal; the sketchybar leader label
+# (same slot as quit-app's ✓/✗ notices) when stdout is not a TTY, i.e.
+# when fired from Hammerspoon.
+#
+# Exit codes: 0 done (or already in the requested state), 1 could not act
+# (app not running, not connected, Hammerspoon unreachable), 2 bad usage.
+
+set -euo pipefail
+
+HS=/opt/homebrew/bin/hs
+SKETCHYBAR=/opt/homebrew/bin/sketchybar
+RUN="$HOME/.config/bin/run-as-user"
+APP_PATH=/Applications/NordVPN.app
+
+POLL_INTERVAL=0.1
+WINDOW_WAIT=30     # 30 × 0.1s = 3s for a re-created window to expose its buttons
+PAUSE_WAIT=30      # 3s — pause is near-instant
+RESUME_WAIT=150    # 15s — resume re-establishes the tunnel
+
+# Catppuccin Mocha (ARGB hex) — same set quit-app uses
+COLOR_GREEN=0xffa6e3a1
+COLOR_RED=0xfff38ba8
+COLOR_YELLOW=0xfff9e2af
+COLOR_LAVENDER=0xffb4befe
+
+ACTION="${1:-}"
+case "$ACTION" in
+  on|off|toggle|status) ;;
+  *) echo "Usage: nordvpn-pause on|off|toggle|status" >&2; exit 2 ;;
+esac
+
+# --- Feedback ----------------------------------------------------------------
+if [[ -t 1 ]]; then
+  _say()    { print -- "$2"; }
+  _linger() { :; }
+else
+  _say() {
+    "$RUN" "$SKETCHYBAR" --set leader label="$2" label.color="$1" drawing=on
+  }
+  _linger() {
+    sleep 2
+    "$RUN" "$SKETCHYBAR" --set leader drawing=off label.color="$COLOR_LAVENDER"
+  }
+fi
+
+_fail() { _say "$COLOR_RED" "$1"; _linger; exit 1; }
+
+# --- Hammerspoon bridge ------------------------------------------------------
+_hs() {
+  # $1 = nordvpn.lua function name. Empty output means hs.ipc is down.
+  # stdin must be /dev/null: the hs CLI blocks reading a non-TTY stdin
+  # (a pipe or socket inherited from the caller) even with -c.
+  "$HS" -c "return require('nordvpn').$1()" </dev/null 2>/dev/null || true
+}
+
+_state() { _hs state; }
+
+# Poll until the state matches $1 (max $2 ticks). Prints the final state.
+_wait_for() {
+  local want="$1" max="$2" n=0 st
+  st="$(_state)"
+  while [[ "$st" != "$want" && $n -lt $max ]]; do
+    sleep "$POLL_INTERVAL"
+    n=$((n + 1))
+    st="$(_state)"
+  done
+  print -- "$st"
+}
+
+# --- Resolve current state ---------------------------------------------------
+STATE="$(_state)"
+[[ -z "$STATE" ]] && _fail "✗ Hammerspoon unreachable"
+[[ "$STATE" == "not-running" ]] && _fail "✗ NordVPN not running"
+
+# Window closed (Cmd-W → menubar only): re-create it in the background.
+# `open -g` leaves focus where it is; aerospace parks the window on N.
+if [[ "$STATE" == "no-window" ]]; then
+  "$RUN" /usr/bin/open -g "$APP_PATH"
+  STATE="$(_wait_for connected "$WINDOW_WAIT")"
+  [[ "$STATE" == "no-window" ]] && _fail "✗ NordVPN window unavailable"
+fi
+
+if [[ "$ACTION" == "status" ]]; then
+  if [[ "$STATE" == "paused" ]]; then
+    LEFT="$(_hs remaining)"
+    _say "$COLOR_YELLOW" "⏸ NordVPN paused${LEFT:+ · resumes in $LEFT}"
+  elif [[ "$STATE" == "connected" ]]; then
+    _say "$COLOR_GREEN" "󰤨 NordVPN connected"
+  else
+    _say "$COLOR_RED" "✗ NordVPN $STATE"
+  fi
+  _linger
+  exit 0
+fi
+
+# Resolve toggle into a concrete verb from the live state.
+if [[ "$ACTION" == "toggle" ]]; then
+  case "$STATE" in
+    connected) ACTION=on ;;
+    paused)    ACTION=off ;;
+  esac
+fi
+
+# --- Execute -----------------------------------------------------------------
+case "$ACTION" in
+  on)
+    case "$STATE" in
+      paused)       LEFT="$(_hs remaining)"
+                    _say "$COLOR_YELLOW" "⏸ NordVPN already paused${LEFT:+ · $LEFT left}"; _linger; exit 0 ;;
+      disconnected) _fail "✗ NordVPN not connected" ;;
+      connected)    ;;
+      *)            _fail "✗ NordVPN state: $STATE" ;;
+    esac
+    _say "$COLOR_LAVENDER" "… NordVPN pausing"
+    [[ "$(_hs pause)" == "pausing" ]] || _fail "✗ NordVPN pause failed"
+    if [[ "$(_wait_for paused "$PAUSE_WAIT")" == "paused" ]]; then
+      _say "$COLOR_GREEN" "⏸ NordVPN paused 15 min"
+    else
+      _fail "✗ NordVPN pause unverified"
+    fi
+    ;;
+  off|toggle)
+    case "$STATE" in
+      connected)    _say "$COLOR_YELLOW" "▶ NordVPN already connected"; _linger; exit 0 ;;
+      disconnected) _fail "✗ NordVPN not connected (nothing to resume)" ;;
+      paused)       ;;
+      *)            _fail "✗ NordVPN state: $STATE" ;;
+    esac
+    _say "$COLOR_LAVENDER" "… NordVPN resuming"
+    [[ "$(_hs resume)" == "resuming" ]] || _fail "✗ NordVPN resume failed"
+    if [[ "$(_wait_for connected "$RESUME_WAIT")" == "connected" ]]; then
+      _say "$COLOR_GREEN" "▶ NordVPN resumed"
+    else
+      _fail "✗ NordVPN resume unverified"
+    fi
+    ;;
+esac
+_linger

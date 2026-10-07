@@ -142,6 +142,10 @@ M.run = {
     -- Downloads into the books library
     -- (config/bin/{move-books,wipe-ds-store,rename-ebooks}).
     { key = 'm', label = 'move-books', cmd = as_user(bin('move-books')) },
+    -- Pause (15 min) ⇄ resume NordVPN without touching its window. `n` is
+    -- NordVPN in every group: o→n opens, q→n quits, r→n pauses/resumes.
+    -- Same idle override as quit: the sketchybar ⏸/▶ notice needs room.
+    { key = 'n', label = 'nordvpn-pause', cmd = bin('nordvpn-pause toggle'), idle = QUIT_IDLE },
     { key = 'r', label = 'reload-hs', cmd = '/opt/homebrew/bin/hs -c "hs.reload()"' },
     { key = 't', label = 'empty-trash', cmd = bin('empty-trash') },
     {
