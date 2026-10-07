@@ -18,7 +18,7 @@
 | `leader-hud`          | Update sketchybar leader key HUD (show/hide with group labels)         |
 | `move-books`          | Wipe `.DS_Store` FIRST (`wipe-ds-store`, same sweep as leader `RCmd → r → w`), rename epubs in Downloads (`rename-ebooks`, rename precedes move by user preference), then sweep Downloads → books library (pdf/djvu → reference_books, epub → ebooks, misfiled ref epubs → ebooks), then detach a silent `book-librarian sweep --async --apply` (converts/renames new arrivals, updates manifest + books.bib; no notification — check `book-librarian status`); leader `RCmd → r → m` + `mvb` alias; dirs env-overridable (`MOVE_BOOKS_{DOWNLOADS,REF,EBOOKS}`) for testing |
 | `rename-ebooks`       | Normalize epub filenames to `author-year-title.epub` (`[a-z0-9-]`, edition year, ≤6 title words) from embedded OPF metadata; python3 stdlib only, slug rules + OPF parsing imported from `config/booklib/` (single source of truth); skips + reports files with unusable metadata or collisions; appends undo pairs to `$XDG_STATE_HOME/rename-ebooks/rename-log.tsv`; `--dry-run` + optional dir arg; pdfs ignored by design |
-| `open-nordvpn`        | Launch NordVPN with aerospace workspace integration                    |
+| `nordvpn-pause`       | `on\|off\|toggle\|status` — pause NordVPN for 15 min / resume early without a CLI: `hs -c` into `config/hammerspoon/nordvpn.lua`, which presses the connection card's AX-identified buttons (no focus change); re-creates the window with `open -g` if it was closed; TTY → stdout, else sketchybar leader label (⏸ / ▶ / ✗, 2s linger); leader `RCmd → r → n` (toggle) + `nordvpn-pause` zsh alias |
 | `quit-app`            | Switch workspace first, then lazy-quit app in background with notify   |
 | `run-as-user`         | Execute a command as the console user (root→user context switch)       |
 | `sesh-dir-picker`     | fzf picker for ad-hoc sesh sessions from `config/sesh/dirs.list`       |
@@ -80,4 +80,5 @@ workspace-first quit.
   `install.conf.yaml`) — NOT on `PATH`; callers use absolute paths
 - Scripts must have executable permissions (`chmod +x`)
 - `fastopen` uses POSIX sh (not zsh) for minimal overhead
-- `open-nordvpn` uses POSIX sh with multi-step aerospace integration
+- `nordvpn-pause` needs Hammerspoon running with `hs.ipc` loaded (it is the
+  AX bridge); without it the script fails fast with `✗ Hammerspoon unreachable`

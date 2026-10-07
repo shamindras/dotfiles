@@ -23,6 +23,7 @@ config/hammerspoon/
 ├── taphold.lua                             # 4 tap-hold remaps via hs.eventtap
 ├── hud.lua                                 # SketchyBar leader HUD bridge
 ├── actions.lua                             # ~60-action data table (7 groups)
+├── nordvpn.lua                             # NordVPN pause/resume via AX identifiers
 └── launchagents/
     └── com.local.hidutil-remap.plist       # Caps→F18 + F1..F12→media at login
 ```
@@ -80,7 +81,7 @@ to surface).
 | open   | o   | 18    | Launch apps via `config/bin/fastopen`            |
 | quit   | q   | 18    | Quit apps via `config/bin/quit-app` (10s idle)   |
 | claude | c   | 3     | Claude URLs                                      |
-| run    | r   | 9     | Run utilities (brew, trash, mute, …)             |
+| run    | r   | 10    | Run utilities (brew, trash, mute, VPN pause, …)  |
 | search | s   | 3     | Raycast extensions                               |
 | github | g   | 5     | GitHub URLs                                      |
 | urls   | u   | 6     | Personal URLs                                    |
@@ -127,7 +128,7 @@ action re-arms.
 Hammerspoon shells out to these scripts with the argv they expect:
 
 - `config/bin/{fastopen, quit-app, leader-hud, brew-update,
-  empty-trash, open-nordvpn, run-as-user, close-notifications,
+  empty-trash, nordvpn-pause, run-as-user, close-notifications,
   move-books, wipe-ds-store}` (move-books runs
   `config/bin/wipe-ds-store` first — same sweep as `run → w` — then
   chains into `config/bin/rename-ebooks`, then detaches
@@ -143,6 +144,26 @@ workspace `Q` (where aerospace assigns it) and fires the quit there, so
 the save dialog shows on-screen instead of off on Firefox's workspace
 `W`. Once the dialog resolves, it switches to `W` if TextEdit actually
 quit, or stays on `Q` if cancelled.
+
+### NordVPN pause / resume (`run → n`, nordvpn.lua)
+
+`n` means NordVPN in every group: `o → n` opens, `q → n` quits,
+`r → n` pauses (15 min) or resumes, decided from the live state. The
+app has no CLI or AppleScript dictionary, so `nordvpn.lua` reads the
+connection card's AXIdentifiers through `hs.axuielement` and presses
+the button without focusing the window (no workspace switch):
+
+| Identifier                           | Text                                     | Present when          |
+| ------------------------------------ | ---------------------------------------- | --------------------- |
+| `connectionCardImmediatePauseButton` | Pause for 15 min                         | connected             |
+| `connectionCardActionButton`         | Secure my connection                     | paused / disconnected |
+| `toastHeader`                        | Paused / VPN connection resumes in mm:ss | paused only           |
+
+The module only presses and reports (`state`, `remaining`, `pause`,
+`resume`, `toggle`); `config/bin/nordvpn-pause` calls it via `hs -c`,
+polls for the new state, and posts the ⏸/▶ notice on the sketchybar
+leader label. Keep each Lua entry point sub-second — `hs.ipc` times out
+at ~3 s. Verified against NordVPN 10.12.0 (sideload build).
 
 ## hidutil LaunchAgent
 
