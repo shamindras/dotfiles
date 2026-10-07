@@ -38,6 +38,10 @@ gui:
       - "#db4b4b"
     defaultFgColor:
       - "#c0caf5"
+    authorColors: # in case you're not happy with the randomly assigned color
+      "Shamindra Shrotriya": "blue"
+      # use for other authors
+      "*": "red"
   # Window border style.
   # One of 'rounded' (default) | 'single' | 'double' | 'hidden'
   border: "rounded"
@@ -61,10 +65,6 @@ gui:
   # If true, show jump-to-window keybindings in window titles.
   showPanelJumps: true
   commandLogSize: 8
-  authorColors: # in case you're not happy with the randomly assigned color
-    "Shamindra Shrotriya": "blue"
-    # use for other authors
-    "*": "red"
 # use delta for git diffs
 git:
   diffRenderers:

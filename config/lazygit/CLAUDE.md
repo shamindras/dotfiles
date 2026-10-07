@@ -1,7 +1,7 @@
 # Lazygit Configuration
 
 - **Docs**: https://github.com/jesseduffield/lazygit
-- **Installed version**: lazygit 0.59.0 (verified 2026-02-26)
+- **Installed version**: lazygit 0.66.0 (verified 2026-10-07)
 
 ## Overview
 
@@ -17,7 +17,13 @@ custom commands for commitizen and branch pruning.
 ## Key Settings
 
 - **Nerd font**: version "3" (file icons)
-- **Theme**: Tokyo Night colors (custom hex), rounded borders
+- **Theme**: Tokyo Night colors (custom hex), rounded borders.
+  `authorColors` lives under `gui.theme` — lazygit ≥ 0.66 migrates the old
+  `gui.authorColors` location on every launch and rewrites `config.yml`,
+  so keep it in the new spot or the file shows a perpetual diff
+- **Auto-migration**: lazygit rewrites `config.yml` at startup whenever a
+  config key has moved upstream; a surprise diff after a brew upgrade is
+  that, not a stray edit — accept it and bump the version line here
 - **Side panel**: 33.33% width, flexible main panel split
 - **File tree view**: enabled by default (toggle with `~`)
 - **Editor**: nvim with `+{{line}} -- {{filename}}` template
