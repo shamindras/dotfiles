@@ -8,8 +8,8 @@
 #
 # Usage:
 #   nordvpn-pause on       Pause for 15 min (the app's immediate-pause button)
-#   nordvpn-pause off      Resume now (end the pause early)
-#   nordvpn-pause toggle   on if connected, off if paused — leader RCmd → r → n
+#   nordvpn-pause off      Secure: resume a pause, or quick-connect if disconnected
+#   nordvpn-pause toggle   on if connected, otherwise off — leader RCmd → r → n
 #   nordvpn-pause status   Print the connection-card state
 #
 # Feedback: stdout when run from a terminal; the sketchybar leader label
@@ -17,7 +17,7 @@
 # when fired from Hammerspoon.
 #
 # Exit codes: 0 done (or already in the requested state), 1 could not act
-# (app not running, not connected, Hammerspoon unreachable), 2 bad usage.
+# (app not running, nothing to pause, Hammerspoon unreachable), 2 bad usage.
 
 set -euo pipefail
 
@@ -29,7 +29,7 @@ APP_PATH=/Applications/NordVPN.app
 POLL_INTERVAL=0.1
 WINDOW_WAIT=30     # 30 × 0.1s = 3s for a re-created window to expose its buttons
 PAUSE_WAIT=30      # 3s — pause is near-instant
-RESUME_WAIT=150    # 15s — resume re-establishes the tunnel
+RESUME_WAIT=200    # 20s — resume / quick-connect re-establishes the tunnel
 
 # Catppuccin Mocha (ARGB hex) — same set quit-app uses
 COLOR_GREEN=0xffa6e3a1
@@ -134,18 +134,20 @@ case "$ACTION" in
     fi
     ;;
   off|toggle)
+    # "Secure my connection" is one button for two states: paused → resume,
+    # disconnected → quick-connect. Label each so the notice says which.
     case "$STATE" in
       connected)    _say "$COLOR_YELLOW" "▶ NordVPN already connected"; _linger; exit 0 ;;
-      disconnected) _fail "✗ NordVPN not connected (nothing to resume)" ;;
-      paused)       ;;
+      paused)       VERB=resuming;  DONE="▶ NordVPN resumed" ;;
+      disconnected) VERB=connecting; DONE="󰤨 NordVPN connected" ;;
       *)            _fail "✗ NordVPN state: $STATE" ;;
     esac
-    _say "$COLOR_LAVENDER" "… NordVPN resuming"
-    [[ "$(_hs resume)" == "resuming" ]] || _fail "✗ NordVPN resume failed"
+    _say "$COLOR_LAVENDER" "… NordVPN $VERB"
+    [[ "$(_hs resume)" == "$VERB" ]] || _fail "✗ NordVPN $VERB failed"
     if [[ "$(_wait_for connected "$RESUME_WAIT")" == "connected" ]]; then
-      _say "$COLOR_GREEN" "▶ NordVPN resumed"
+      _say "$COLOR_GREEN" "$DONE"
     else
-      _fail "✗ NordVPN resume unverified"
+      _fail "✗ NordVPN $VERB unverified"
     fi
     ;;
 esac

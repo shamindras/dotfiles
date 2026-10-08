@@ -138,35 +138,42 @@ function M.pause()
   return 'pausing'
 end
 
--- Press the resume button. → 'resuming' on press, else the current state.
+-- Press "Secure my connection". It is the same button whether the VPN
+-- is paused (ends the pause) or fully disconnected (quick-connect to
+-- the last / fastest server). → 'resuming' | 'connecting' on press,
+-- else the current state.
+local function secure(found)
+  local st = classify(found)
+  if st == 'paused' then
+    found[ID_ACTION]:performAction('AXPress')
+    return 'resuming'
+  elseif st == 'disconnected' then
+    found[ID_ACTION]:performAction('AXPress')
+    return 'connecting'
+  end
+  return st
+end
+
 function M.resume()
   local found, err = scan()
   if not found then
     return err
   end
-  local st = classify(found)
-  if st ~= 'paused' then
-    return st
-  end
-  found[ID_ACTION]:performAction('AXPress')
-  return 'resuming'
+  return secure(found)
 end
 
--- connected → pause, paused → resume, anything else → report state.
+-- Secured ⇄ not secured: connected → pause; paused or disconnected →
+-- secure (resume / quick-connect); anything else → report state.
 function M.toggle()
   local found, err = scan()
   if not found then
     return err
   end
-  local st = classify(found)
-  if st == 'connected' then
+  if classify(found) == 'connected' then
     found[ID_PAUSE]:performAction('AXPress')
     return 'pausing'
-  elseif st == 'paused' then
-    found[ID_ACTION]:performAction('AXPress')
-    return 'resuming'
   end
-  return st
+  return secure(found)
 end
 
 -- }}}

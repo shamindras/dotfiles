@@ -23,7 +23,7 @@ config/hammerspoon/
 ├── taphold.lua                             # 4 tap-hold remaps via hs.eventtap
 ├── hud.lua                                 # SketchyBar leader HUD bridge
 ├── actions.lua                             # ~60-action data table (7 groups)
-├── nordvpn.lua                             # NordVPN pause/resume via AX identifiers
+├── nordvpn.lua                             # NordVPN pause/resume/connect via AX ids
 └── launchagents/
     └── com.local.hidutil-remap.plist       # Caps→F18 + F1..F12→media at login
 ```
@@ -148,7 +148,9 @@ quit, or stays on `Q` if cancelled.
 ### NordVPN pause / resume (`run → n`, nordvpn.lua)
 
 `n` means NordVPN in every group: `o → n` opens, `q → n` quits,
-`r → n` pauses (15 min) or resumes, decided from the live state. The
+`r → n` toggles secured ⇄ not secured from the live state: connected →
+pause (15 min); paused → resume; disconnected → quick-connect (same
+"Secure my connection" button). The
 app has no CLI or AppleScript dictionary, so `nordvpn.lua` reads the
 connection card's AXIdentifiers through `hs.axuielement` and presses
 the button without focusing the window (no workspace switch):
