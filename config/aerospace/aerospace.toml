@@ -14,7 +14,12 @@ after-login-command = []
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 # borders and sketchybar are managed via brew services (launchd),
 # so they start reliably at login independent of AeroSpace.
-after-startup-command = []
+# Pre-launch Claude Desktop in the background (-g: no activation) so its
+# window is already routed to workspace C by on-window-detected below.
+# Runs on every AeroSpace start (login or relaunch), never on reload-config;
+# `open` on an already running app is a no-op. after-login-command is
+# deprecated since 0.19.0 (nikitabobko/AeroSpace#1482).
+after-startup-command = ['exec-and-forget open -g /Applications/Claude.app']
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = [
@@ -281,9 +286,14 @@ run = "move-node-to-workspace B"
 if.app-id = "org.mozilla.firefox"
 run = "move-node-to-workspace B"
 
-# [C]alendar
+# Calendar (8 — C belongs to Claude Desktop)
 [[on-window-detected]]
 if.app-id = "com.apple.iCal"
+run = "move-node-to-workspace 8"
+
+# [C]laude Desktop
+[[on-window-detected]]
+if.app-id = "com.anthropic.claudefordesktop"
 run = "move-node-to-workspace C"
 
 # p[D]f  - Preview
