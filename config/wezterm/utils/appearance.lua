@@ -40,9 +40,8 @@ local font_library = {
   MonaspiceAr  = 'MonaspiceAr Nerd Font',
   MonaspiceNe  = 'MonaspiceNe Nerd Font',
   Monoid       = 'Monoid',
-  RedHatMono   = 'Red Hat Mono',
   RobotoMono   = 'RobotoMono Nerd Font',
-  SourceCode   = 'Source Code Pro',
+  SourceCode   = 'SauceCodePro Nerd Font',
   Victor       = 'Victor Mono',
 }
 

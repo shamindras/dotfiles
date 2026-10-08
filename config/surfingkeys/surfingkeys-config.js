@@ -694,8 +694,8 @@ if (/^localhost:\d+$/.test(window.location.host)) {
 // ============================================
 
 // Hint styling - 12pt with monospace font matching keystroke popup style
-api.Hints.style('border: solid 2px #373B41; color:#52C196; background: initial; background-color: #1D1F21; font-size: 12pt; font-weight: bold; padding: 4px 7px; font-family: "Menlo", "Monaco", "Source Code Pro", monospace;');
-api.Hints.style("border: solid 2px #373B41 !important; padding: 4px 7px !important; color: #C5C8C6 !important; background: #1D1F21 !important; font-size: 12pt !important; font-weight: bold !important; font-family: 'Menlo', 'Monaco', 'Source Code Pro', monospace !important;", "text");
+api.Hints.style('border: solid 2px #373B41; color:#52C196; background: initial; background-color: #1D1F21; font-size: 12pt; font-weight: bold; padding: 4px 7px; font-family: "Menlo", "Monaco", monospace;');
+api.Hints.style("border: solid 2px #373B41 !important; padding: 4px 7px !important; color: #C5C8C6 !important; background: #1D1F21 !important; font-size: 12pt !important; font-weight: bold !important; font-family: 'Menlo', 'Monaco', monospace !important;", "text");
 api.Visual.style('marks', 'background-color: #52C19699;');
 api.Visual.style('cursor', 'background-color: #81A2BE;');
 
@@ -704,7 +704,7 @@ settings.theme = `
 /* ===== TOMORROW NIGHT THEME ===== */
 
 :root {
-  --font: 'Menlo', 'Monaco', 'Source Code Pro', monospace;
+  --font: 'Menlo', 'Monaco', monospace;
   --font-size: 12pt;
   --font-weight: normal;
   --fg: #C5C8C6;
