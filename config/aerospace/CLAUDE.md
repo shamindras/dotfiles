@@ -1,7 +1,7 @@
 # AeroSpace Configuration
 
 - **Docs**: https://nikitabobko.github.io/AeroSpace/
-- **Installed version**: aerospace 0.20.2-Beta (verified 2026-02-26)
+- **Installed version**: aerospace 0.21.3-Beta (verified 2026-10-08)
 
 ## Overview
 
@@ -20,9 +20,13 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **Gaps**: per-monitor outer top gap — 0 for built-in, 30px for external
   (leaves room for sketchybar)
 - **Mouse**: follows focus on monitor change, `move-mouse window-lazy-center`
-- **Startup**: `after-startup-command` is empty — `borders` and `sketchybar`
-  are managed as brew services (launchd). AeroSpace only registers the
-  workspace-change trigger for sketchybar via `exec-on-workspace-change`
+- **Startup**: `borders` and `sketchybar` are managed as brew services
+  (launchd), not by AeroSpace. `after-startup-command` only pre-launches
+  Claude Desktop in the background (`open -g`) so workspace `C` is populated
+  at login; it runs on every AeroSpace start, never on `reload-config`.
+  `after-login-command` is deprecated since 0.19.0 and must stay empty.
+  AeroSpace also registers the workspace-change trigger for sketchybar via
+  `exec-on-workspace-change`
 - **App routing**: `on-window-detected` maps 40+ apps to workspaces (1-9, A-Z)
   by `app-id`; system utils float
 - **Keybindings**: Alt+hjkl (focus), Alt+Shift+hjkl (move), Alt+number/letter
@@ -35,6 +39,8 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **wezterm**: assigned to workspace W
 - **ghostty**: assigned to workspace T
 - **vscode**: assigned to workspace S
+- **claude desktop**: assigned to workspace C (leader `RCmd → o/q → c`,
+  deep links under `RCmd → c`); Calendar moved to workspace 8 to free `C`
 - **vlc**: assigned to workspace V
 - **textedit**: assigned to workspace Q
 - **opensuperwhisper**: assigned to workspace U
