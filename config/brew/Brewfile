@@ -120,6 +120,8 @@ brew "gobject-introspection"
 brew "graphviz"
 # Tool for glamorous shell scripts
 brew "gum"
+# Client library for huggingface.co hub
+brew "hf"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
 # Spell checker and morphological analyzer
@@ -144,6 +146,8 @@ brew "libass"
 brew "libmng"
 # Library for reading RAW files from digital photo cameras
 brew "libraw"
+# LLM inference in C/C++
+brew "llama.cpp"
 # Powerful, lightweight programming language
 brew "lua"
 # Tool for linting and static analysis of Lua code
@@ -178,6 +182,8 @@ brew "parallel"
 brew "perl"
 # General-purpose scripting language
 brew "php", restart_service: :changed
+# AI agent toolkit
+brew "pi-coding-agent"
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
 # Execute binaries from Python packages in isolated environments
