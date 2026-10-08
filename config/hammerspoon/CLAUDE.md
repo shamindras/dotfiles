@@ -78,9 +78,9 @@ to surface).
 
 | Group  | Key | Count | Purpose                                          |
 | ------ | --- | ----- | ------------------------------------------------ |
-| open   | o   | 18    | Launch apps via `config/bin/fastopen`            |
-| quit   | q   | 18    | Quit apps via `config/bin/quit-app` (10s idle)   |
-| claude | c   | 3     | Claude URLs                                      |
+| open   | o   | 19    | Launch apps via `config/bin/fastopen`            |
+| quit   | q   | 19    | Quit apps via `config/bin/quit-app` (10s idle)   |
+| claude | c   | 5     | Claude Desktop deep links (`claude://`)          |
 | run    | r   | 10    | Run utilities (brew, trash, mute, VPN pause, …)  |
 | search | s   | 3     | Raycast extensions                               |
 | github | g   | 5     | GitHub URLs                                      |
@@ -144,6 +144,36 @@ workspace `Q` (where aerospace assigns it) and fires the quit there, so
 the save dialog shows on-screen instead of off on Firefox's workspace
 `W`. Once the dialog resolves, it switches to `W` if TextEdit actually
 quit, or stays on `Q` if cancelled.
+
+### Claude Desktop (`c` at every level)
+
+`c` means Claude Desktop (`com.anthropic.claudefordesktop`) in every
+group, mirroring its aerospace workspace `C`: `o → c` opens, `q → c`
+quits (returns to `W`), `Alt-c` jumps to it. The `claude` group no
+longer opens claude.ai in Firefox; every leaf is a `claude://` deep link
+the desktop app handles (it launches the app if needed, and aerospace
+routes the window to `C`):
+
+| Leaf    | URL                                      | Lands on                  |
+| ------- | ---------------------------------------- | ------------------------- |
+| `c → c` | `claude://code/new`                      | Code tab, new session     |
+| `c → l` | `claude://code/continue?session=last`    | Code tab, last session    |
+| `c → n` | `claude://claude.ai/new?surface=chat`    | Chat tab, new chat        |
+| `c → r` | `claude://claude.ai/chat`                | Chat tab, Recents         |
+| `c → u` | `claude://claude.ai/settings/usage`      | Settings → Usage          |
+
+Routes were read from the app's URL dispatcher (Claude 2.26454.2) and
+fired live: `claude.ai/new` and `code/*` are the Dock-menu links,
+`claude.ai/chat` with no conversation id falls through to `/recents`,
+and `claude.ai/settings/*` passes straight through. Also available but
+not bound: `claude.ai/chat/<uuid>` (one conversation),
+`claude.ai/project` (projects list), `code/search`, and a `q=` parameter
+on `new` that pre-fills the prompt.
+
+`quit-app Claude` anchors its process match to the bundle executable
+(`/Applications/Claude.app/Contents/MacOS/Claude$`): a plain `pgrep -xi
+claude` also matches every running `claude` CLI process, so the quit
+would never observe the exit and time out after 10 s.
 
 ### NordVPN pause / resume (`run → n`, nordvpn.lua)
 

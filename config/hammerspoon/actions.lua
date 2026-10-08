@@ -47,6 +47,7 @@ M.open = {
     { key = '9', label = 'ipad-mirror', cmd = bin('ipad-mirror') },
     { key = 'a', label = 'djview', cmd = bin('fastopen djview') },
     { key = 'b', label = 'firefox', cmd = bin('fastopen firefox') },
+    { key = 'c', label = 'claude', cmd = bin('fastopen claude') },
     { key = 'd', label = 'preview', cmd = bin('fastopen preview') },
     { key = 'e', label = 'finder', cmd = bin('fastopen finder') },
     { key = 'g', label = 'signal', cmd = bin('fastopen signal') },
@@ -77,6 +78,7 @@ M.quit = {
     { key = '9', label = 'QuickTime Player', cmd = bin('quit-app "QuickTime Player" W'), idle = QUIT_IDLE },
     { key = 'a', label = 'DjView', cmd = bin('quit-app DjView W'), idle = QUIT_IDLE },
     { key = 'b', label = 'Firefox', cmd = bin('quit-app Firefox W'), idle = QUIT_IDLE },
+    { key = 'c', label = 'Claude', cmd = bin('quit-app Claude W'), idle = QUIT_IDLE },
     { key = 'd', label = 'Preview', cmd = bin('quit-app Preview W'), idle = QUIT_IDLE },
     { key = 'e', label = 'Finder', cmd = bin('quit-app Finder W'), idle = QUIT_IDLE },
     { key = 'g', label = 'Signal', cmd = bin('quit-app Signal B'), idle = QUIT_IDLE },
@@ -106,14 +108,21 @@ M.quit = {
 
 -- }}}
 
--- {{{ Group: c — Claude URLs
+-- {{{ Group: c — Claude Desktop deep links
 
+-- Every leaf is a claude:// URL handled by Claude Desktop (launches the app
+-- if needed; aerospace routes its window to workspace C). Routes verified
+-- against the app's URL dispatcher (Claude 2.26454.2): `claude.ai/new` and
+-- `code/*` are the Dock-menu links; `claude.ai/chat` with no id falls
+-- through to /recents; `claude.ai/settings/*` passes straight through.
 M.claude = {
   group_name = 'claude',
   bindings = {
-    { key = 'n', label = 'new', cmd = url('https://claude.ai/new') },
-    { key = 'r', label = 'recents', cmd = url('https://claude.ai/recents') },
-    { key = 'u', label = 'usage', cmd = url('https://claude.ai/settings/usage') },
+    { key = 'c', label = 'code-new', cmd = url('claude://code/new') },
+    { key = 'l', label = 'code-last', cmd = url('claude://code/continue?session=last') },
+    { key = 'n', label = 'new', cmd = url('claude://claude.ai/new?surface=chat') },
+    { key = 'r', label = 'recents', cmd = url('claude://claude.ai/chat') },
+    { key = 'u', label = 'usage', cmd = url('claude://claude.ai/settings/usage') },
   },
 }
 

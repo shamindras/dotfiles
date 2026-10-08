@@ -68,6 +68,9 @@ PGREP_PATTERN="$APP_NAME"
 SETTLE_DELAY=1.0
 
 case "$APP_NAME" in
+  # Anchored to the bundle executable: `pgrep -xi claude` would also match
+  # every running `claude` CLI (Claude Code) process and never see the exit.
+  Claude)       PGREP_FLAG="-f"; PGREP_PATTERN="/Applications/Claude.app/Contents/MacOS/Claude$" ;;
   DjView)       PGREP_FLAG="-x"; PGREP_PATTERN="djview";           SETTLE_DELAY=1.5 ;;
   JDownloader2) PGREP_FLAG="-f"; PGREP_PATTERN="JDownloader2.app"; SETTLE_DELAY=1.5 ;;
   NordVPN)      SETTLE_DELAY=0.3 ;;
