@@ -284,6 +284,8 @@ cask "1password-cli"
 cask "nikitabobko/tap/aerospace"
 # E-books management software
 cask "calibre"
+# Anthropic's official Claude AI desktop app
+cask "claude"
 # Terminal-based AI coding assistant
 cask "claude-code"
 # DjVu viewer and browser plugin
@@ -306,10 +308,9 @@ cask "font-lilex-nerd-font"
 cask "font-maple-mono"
 cask "font-monaspice-nerd-font"
 cask "font-monoid"
-cask "font-red-hat-mono"
 cask "font-roboto-mono-nerd-font"
+cask "font-sauce-code-pro-nerd-font"
 cask "font-sf-pro"
-cask "font-source-code-pro"
 cask "font-symbols-only-nerd-font"
 cask "font-udev-gothic-nf"
 cask "font-victor-mono"

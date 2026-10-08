@@ -1,7 +1,7 @@
 # Homebrew Configuration
 
 - **Docs**: https://brew.sh/
-- **Installed version**: Homebrew 5.1.7 (verified 2026-04-21)
+- **Installed version**: Homebrew 7.0.8 (verified 2026-10-08)
 
 ## File Structure
 
@@ -77,6 +77,17 @@ story for these four given their upstream cask definitions.
 Add or remove `.pkg` auto-updating casks in the table above whenever the
 Brewfile changes (grep `auto_updates true` + `pkg` in `brew info --cask
 <name> --json=v2` for any new cask you add).
+
+### Known limitation: git-sourced casks under the download sandbox
+
+Homebrew 7 runs cask downloads inside a macOS sandbox that denies reads
+of `~/Library/CloudStorage` and `~/Dropbox`. Casks whose `url` is a git
+repository (e.g. Google Fonts casks with `version :latest`) invoke git,
+which reads `~/.config/git/config`. That path is a dotbot symlink into
+Dropbox, so git aborts with "Operation not permitted". Upstream's fix
+(Homebrew/brew#24119) only covers a symlinked `~/.gitconfig`, not the
+XDG directory. Prefer casks that download an archive (curl); check with
+`brew info --cask --json=v2 <name> | jq .casks[0].url` before adding.
 
 ### Reinstall recovery — in-run vs between-run
 
