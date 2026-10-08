@@ -25,6 +25,7 @@ case "$APP" in
   1password)    "$RUN" /usr/bin/open /Applications/1Password.app ;;
   djview)       "$RUN" /usr/bin/open /Applications/DjView.app ;;
   firefox)      "$RUN" /usr/bin/open /Applications/Firefox.app ;;
+  claude)       "$RUN" /usr/bin/open /Applications/Claude.app ;;
   preview)      "$RUN" /usr/bin/open /System/Applications/Preview.app ;;
   # Finder is always running, often with zero windows; plain `open` only
   # activates it (no window, so no aerospace workspace switch). Send the
