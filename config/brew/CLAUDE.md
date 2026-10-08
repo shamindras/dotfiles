@@ -45,7 +45,7 @@ this policy.
      unintentional losses can be caught with Ctrl-C.
    - **bootstrap** — brew is (near-)empty vs the Brewfile (fresh
      machine). Gated by `installed_count < brewfile_entries / 2`.
-4. `brew bundle dump --describe --force` in **steady + drift** — both
+4. `brew bundle dump --force --formula --cask --tap` in **steady + drift** — both
    directions of change flow through (ad-hoc installs AND uninstalls
    end up reflected in the Brewfile). Skipped in bootstrap so a fresh
    machine doesn't overwrite the canonical Brewfile.
