@@ -223,6 +223,7 @@ M.github = {
 M.urls = {
   group_name = 'urls',
   bindings = {
+    { key = 'a', label = 'amazon-orders', cmd = url('https://www.amazon.com.au/gp/css/order-history') },
     { key = 'b', label = 'blog-posts', cmd = url('https://www.shamindras.com/posts') },
     { key = 'h', label = 'homepage', cmd = url('https://www.shamindras.com/') },
     -- Private-window Firefox (no run-as-user wrapper around -na args; let
