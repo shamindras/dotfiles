@@ -84,7 +84,7 @@ to surface).
 | run    | r   | 10    | Run utilities (brew, trash, mute, VPN pause, …)  |
 | search | s   | 3     | Raycast extensions                               |
 | github | g   | 5     | GitHub URLs                                      |
-| urls   | u   | 6     | Personal URLs                                    |
+| urls   | u   | 7     | Personal URLs                                    |
 
 State transitions:
 
