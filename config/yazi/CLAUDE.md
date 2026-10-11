@@ -46,7 +46,9 @@ local plugin lives alongside the ya pkg-managed ones.
 - **Openers**: `play` (VLC + mediainfo) for media; `preview` (macOS Preview)
   attached to `application/pdf` via `[open].prepend_rules` so it appears
   only in the `O` interactive chooser for PDFs (default `o` still goes to
-  Skim via system `open`)
+  Skim via system `open`); `*.{m3u,m3u8}` playlists route to `play` by
+  URL glob (VLC is its first macOS entry, so `o` opens them in VLC) —
+  glob rather than mime because m3u is often sniffed as `text/*`
 - **Opener file interpolation**: yazi ≥26.8.15 substitutes files into
   `run` strings via %-codes (`%s` all selected, `%s1` first selected,
   `%h` hovered, `%d1` dirname, uppercase variants for logical URLs) and

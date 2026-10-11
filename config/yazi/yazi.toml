@@ -39,6 +39,10 @@ preview = [
 [open]
 prepend_rules = [
   { mime = "application/pdf", use = [ "open", "preview", "reveal" ] },
+  # M3U/M3U8 playlists -> VLC by default (play's first macOS entry).
+  # Matched by URL glob since m3u is often mime-sniffed as text/*,
+  # which would otherwise route it to the edit opener.
+  { url = "*.{m3u,m3u8}", use = [ "play", "reveal" ] },
 ]
 
 # Plugin previewers (order matters — first match wins)
