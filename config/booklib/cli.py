@@ -116,6 +116,8 @@ def cmd_scan(args, manifest):
     )
     for p in stats["dataless"]:
         print(f"DATALESS (make available offline first): {p}")
+    for p in stats["empty"]:
+        print(f"EMPTY (0 bytes, not tracked — restore or delete): {p}")
     return 0
 
 
