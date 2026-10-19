@@ -25,7 +25,10 @@ def _is_dataless(st):
 
 def scan(manifest, dirs=None, rebuild=False):
     dirs = dirs or config.scoped_dirs()
-    stats = {"known": 0, "new": 0, "relinked": 0, "conforming": 0, "dataless": [], "new_shas": []}
+    stats = {
+        "known": 0, "new": 0, "relinked": 0, "conforming": 0,
+        "dataless": [], "empty": [], "new_shas": [],
+    }
     if rebuild:
         manifest.db.execute("DELETE FROM paths")
 
@@ -41,6 +44,13 @@ def scan(manifest, dirs=None, rebuild=False):
             st = entry.stat()
             if _is_dataless(st):
                 stats["dataless"].append(path)
+                continue
+            if st.st_size == 0:
+                # Never hash or link an empty file: every 0-byte file shares
+                # one sha, so recording it becomes a trap that relinks any
+                # later placeholder onto that record's stem and renames real
+                # books onto it (the amidi incident, 2026-10).
+                stats["empty"].append(path)
                 continue
             if manifest.fastpath_sha(path, st.st_size, st.st_mtime_ns):
                 stats["known"] += 1

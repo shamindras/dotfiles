@@ -60,11 +60,14 @@ REVIEW_BATCH_SIZE = 50
 
 
 def scoped_dirs():
-    """Directories whose files the pipeline manages (flat, no recursion)."""
+    """Directories whose files the pipeline manages. reference_books and
+    ebooks are flat; current_reading/books is covered to any depth — a book
+    moved into a nested shelf (e.g. 00_now_reading/second_priority/) must
+    stay linked, or the sweep prunes its old path and drops it from the bib."""
     dirs = [BOOKS_ROOT / "reference_books", BOOKS_ROOT / "ebooks"]
     staged = BOOKS_ROOT / "current_reading" / "books"
     if staged.is_dir():
-        dirs += sorted(p for p in staged.iterdir() if p.is_dir())
+        dirs += sorted(p for p in staged.rglob("*") if p.is_dir())
     return [d for d in dirs if d.is_dir()]
 
 
