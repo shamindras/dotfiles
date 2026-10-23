@@ -1,3 +1,10 @@
+# First [[session]] is where `sra` (sesh-reset --all) lands and the top
+# row of the sesh picker — keep `notes` here.
+[[session]]
+name = "notes"
+path = "~/Dropbox/notes/zk"
+startup_command = "~/.config/sesh/scripts/notes.sh"
+
 [[session]]
 name = "play"
 path = "~/Dropbox/repos/codebox"
@@ -17,11 +24,6 @@ startup_command = "~/.config/sesh/scripts/career.sh"
 name = "blog"
 path = "~/Dropbox/repos/ss_personal_quarto_blog"
 startup_command = "~/.config/sesh/scripts/blog.sh"
-
-[[session]]
-name = "notes"
-path = "~/Dropbox/notes/zk"
-startup_command = "~/.config/sesh/scripts/notes.sh"
 
 [[session]]
 name = "feed"
