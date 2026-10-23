@@ -36,6 +36,24 @@ local function url(u)
   return as_user("/usr/bin/open '" .. u .. "'")
 end
 
+-- Google Maps driving directions from home, destination left empty so the
+-- page opens on Maps' own search box (venue suggestions as you type). The
+-- street address lives in Hammerspoon's settings store, not this (public)
+-- repo — set it once, then hs.reload():
+--   hs -c "hs.settings.set('home_address', '<street address>')"
+-- Unset → the page still opens, with no origin (Maps falls back to the
+-- current location) and a console warning.
+local MAPS_DIR = 'https://www.google.com/maps/dir/?api=1&travelmode=driving'
+
+local function maps_from_home()
+  local home = hs.settings.get('home_address')
+  if not home or home == '' then
+    print("actions.lua: hs.settings 'home_address' unset — urls → m opens Maps without an origin")
+    return url(MAPS_DIR)
+  end
+  return url(MAPS_DIR .. '&origin=' .. hs.http.encodeForQuery(home))
+end
+
 -- }}}
 
 -- {{{ Group: o — open apps (via fastopen)
@@ -235,6 +253,7 @@ M.urls = {
     },
     { key = 'k', label = 'google-keep', cmd = url('https://keep.google.com/u/0/') },
     { key = 'l', label = 'linkedin', cmd = url('https://www.linkedin.com/in/shamindras') },
+    { key = 'm', label = 'maps-from-home', cmd = maps_from_home() },
     { key = 'w', label = 'hawthorn-weather', cmd = url('https://www.google.com/search?q=hawthorn+vic+weather') },
   },
 }

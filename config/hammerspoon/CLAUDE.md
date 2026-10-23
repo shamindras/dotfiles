@@ -84,7 +84,7 @@ to surface).
 | run    | r   | 10    | Run utilities (brew, trash, mute, VPN pause, …)  |
 | search | s   | 3     | Raycast extensions                               |
 | github | g   | 5     | GitHub URLs                                      |
-| urls   | u   | 7     | Personal URLs                                    |
+| urls   | u   | 8     | Personal URLs                                    |
 
 State transitions:
 
@@ -197,6 +197,27 @@ polls for the new state, and posts the ⏸/▶ notice on the sketchybar
 leader label. Keep each Lua entry point sub-second — `hs.ipc` times out
 at ~3 s. Verified against NordVPN 10.12.0 (sideload build).
 
+### Maps from home (`urls → m`)
+
+Opens Google Maps driving directions with the origin pre-filled and the
+destination empty, so the page lands on Maps' own search box (venue
+suggestions as you type). The URL is the documented Maps URL API form
+(`maps/dir/?api=1&origin=…&travelmode=driving`) — no feature ids,
+viewport or tracking params.
+
+The street address is **not** in this repo (it is public). It lives in
+Hammerspoon's settings store (`hs.settings`, persisted in Hammerspoon's
+own preferences plist). One-time setup per machine, then reload:
+
+```sh
+hs -c "hs.settings.set('home_address', '<street address>')" </dev/null
+hs -c "hs.reload()" </dev/null
+```
+
+`actions.lua` reads the setting at load time (`maps_from_home()`). When
+unset, the leaf still opens Maps with no origin and logs a warning to
+the Hammerspoon console.
+
 ## hidutil LaunchAgent
 
 `launchagents/com.local.hidutil-remap.plist` is symlinked to
@@ -263,6 +284,9 @@ All of the following survive reboot automatically:
   set to **Do Nothing** (default is "Show Emoji & Symbols", which
   hijacks the fn key). Required for native `fn + Backspace →
   ForwardDelete`.
+- **Home address for `urls → m`**: `hs -c "hs.settings.set('home_address',
+  '<street address>')"` then `hs -c "hs.reload()"` (see "Maps from home").
+  Kept out of git on purpose.
 
 ## Hammerspoon API surfaces used
 
@@ -270,7 +294,7 @@ All of the following survive reboot automatically:
 `hs.eventtap`, `hs.eventtap.event.newKeyEvent`,
 `hs.eventtap.checkKeyboardModifiers`, `hs.eventtap.keyStroke`,
 `hs.usb.watcher`, `hs.task`, `hs.notify`, `hs.keycodes.map`,
-`hs.window`, `hs.application`.
+`hs.window`, `hs.application`, `hs.settings`, `hs.http.encodeForQuery`.
 
 Validate field names against the installed version's docs before
 adding new code paths — Hammerspoon renames between point releases
