@@ -12,9 +12,11 @@ sesh_window_claude    "${SESSION}" "${WORK_DIR}"                                
 sesh_window_yazi_tabs "${SESSION}" "${WORK_DIR}" downloads  # Window 2
 sesh_window_nvim      "${SESSION}" "${WORK_DIR}"                                  # Window 3
 
-# Window 4: quarto preview server (session-specific)
+# Window 4: quarto preview server (session-specific). --no-browser keeps
+# Firefox closed; quarto still prints the clickable "Browse at http://…"
+# line, so the draft site is one click away in this window.
 tmux new-window -a -t "${SESSION}:\$" -n "preview" -c "${WORK_DIR}"
-tmux send-keys -t "${SESSION}:preview" "quarto preview;clear" Enter
+tmux send-keys -t "${SESSION}:preview" "quarto preview --no-browser;clear" Enter
 
 sesh_window_term      "${SESSION}" "${WORK_DIR}"                                  # Window 5
 
