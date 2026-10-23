@@ -227,6 +227,10 @@ keymap(
 )
 keymap({ 'n', 'v' }, '<leader>xa', '<C-a>', { desc = 'e[x]ecute [a]dd (increment)' })
 keymap({ 'n', 'v' }, '<leader>xx', '<C-x>', { desc = 'e[x]ecute decrement (C-[x])' })
+-- Native `~` advances the cursor in normal mode; `g~l` toggles in place.
+-- Visual `~` already toggles the selection without moving.
+keymap('n', '<leader>xc', 'g~l', { desc = 'e[x]ecute [c]ase toggle' })
+keymap('v', '<leader>xc', '~', { desc = 'e[x]ecute [c]ase toggle' })
 
 -- }}}
 

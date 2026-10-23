@@ -77,7 +77,7 @@ config/nvim/
 | `<leader>t`  | Toggle (line numbers, spell, theme, cursorword, hipatterns, inlay hints, render-markdown) |
 | `<leader>v`  | Version control (lazygit)                                    |
 | `<leader>w`  | Window (split, equalize, maximize, resize, swap)             |
-| `<leader>x`  | Execute (Lua line/visual/buffer, open URL, increment/decrement) |
+| `<leader>x`  | Execute (Lua line/visual/buffer, open URL, increment/decrement, case toggle) |
 
 Depth-1 allow-list (bindings that terminate at `<leader>X`):
 `<leader>d`, `<leader>y`, `<leader>Y`, `<leader>p` (v-mode), `<leader><space>`.
