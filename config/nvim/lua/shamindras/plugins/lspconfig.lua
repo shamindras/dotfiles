@@ -154,9 +154,12 @@ return {
         lua_ls = {},
         marksman = {
           root_dir = function(bufnr, on_dir)
+            -- Compare resolved paths: the notebook lives behind the ~/Dropbox symlink
+            -- and buffers may be opened under either spelling.
             local fname = vim.api.nvim_buf_get_name(bufnr)
-            local zk_dir = vim.fn.getenv('ZK_NOTEBOOK_DIR')
-            if zk_dir ~= vim.NIL and zk_dir ~= '' and vim.startswith(fname, zk_dir) then
+            local zk_dir = vim.env.ZK_NOTEBOOK_DIR
+            zk_dir = zk_dir and zk_dir ~= '' and vim.uv.fs_realpath(zk_dir)
+            if zk_dir and vim.startswith(vim.uv.fs_realpath(fname) or fname, zk_dir) then
               return -- skip zk notebooks → marksman won't attach
             end
             on_dir(require('lspconfig.util').root_pattern('.marksman.toml', '.git')(fname))

@@ -222,6 +222,10 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 
 - Files inside `$ZK_NOTEBOOK_DIR` → zk LSP (auto-attach via zk-nvim)
 - All other `.md` files → marksman (guard in `lspconfig.lua` `root_dir`)
+- `$ZK_NOTEBOOK_DIR` is resolved with `vim.uv.fs_realpath` before use (in
+  `zk.lua` and the marksman guard): zk canonicalises the notebook root through
+  the `~/Dropbox` symlink but not the `dir` sent to `zk.new`, so an unresolved
+  path is rejected as "outside the notebook"
 
 ### Buffer Settings (ftplugin/markdown.lua)
 
