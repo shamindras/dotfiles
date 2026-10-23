@@ -23,23 +23,34 @@ return {
   config = function()
     -- {{{ Helper Functions
 
-    -- Get notebook directory
+    -- Resolved notebook directory, or nil (with a notification) when unusable.
+    -- zk canonicalises the notebook root (~/Dropbox → ~/Library/CloudStorage/Dropbox)
+    -- but not the `dir` we send it, so resolve here or zk.new rejects the path
+    -- as "outside the notebook".
     local function get_notebook_dir()
-      local notebook_dir = vim.fn.getenv('ZK_NOTEBOOK_DIR')
-      if notebook_dir == vim.NIL or notebook_dir == '' then
-        vim.notify('ZK_NOTEBOOK_DIR environment variable not set', vim.log.levels.WARN)
+      local notebook_dir = vim.env.ZK_NOTEBOOK_DIR
+      if not notebook_dir or notebook_dir == '' then
+        vim.notify('zk: ZK_NOTEBOOK_DIR is not set', vim.log.levels.ERROR)
         return nil
       end
-      return notebook_dir
+      local real = vim.uv.fs_realpath(notebook_dir)
+      if not real then
+        vim.notify('zk: notebook directory does not exist: ' .. notebook_dir, vim.log.levels.ERROR)
+        return nil
+      end
+      return real
+    end
+
+    -- True when `path` names the file in the current buffer, under any symlink spelling.
+    local function is_current_buffer(path)
+      return vim.uv.fs_realpath(path) == vim.uv.fs_realpath(vim.api.nvim_buf_get_name(0))
     end
 
     -- Sync templates from ~/.config/zk/templates to notebook
     local function sync_templates()
       local source = vim.fn.expand('~/.config/zk/templates/')
-      local notebook_dir = vim.fn.getenv('ZK_NOTEBOOK_DIR')
-
-      if notebook_dir == vim.NIL or notebook_dir == '' then
-        vim.notify('ZK_NOTEBOOK_DIR environment variable not set', vim.log.levels.ERROR)
+      local notebook_dir = get_notebook_dir()
+      if not notebook_dir then
         return false
       end
 
@@ -78,7 +89,8 @@ return {
 
       zk_api.new(nil, options, function(err, res)
         if err then
-          vim.notify(string.format('Failed to create %s: %s', note_type, tostring(err)), vim.log.levels.ERROR)
+          local msg = type(err) == 'table' and err.message or tostring(err)
+          vim.notify(string.format('Failed to create %s: %s', note_type, msg), vim.log.levels.ERROR)
           return
         end
 
@@ -89,7 +101,7 @@ return {
 
           -- Already on this note — skip `:edit` (would trip E37 on a modified buffer
           -- even with `hidden=true`) but still notify so the keypress feels responsive.
-          if vim.fn.fnamemodify(res.path, ':p') == vim.api.nvim_buf_get_name(0) then
+          if is_current_buffer(res.path) then
             vim.notify(string.format('Already on %s: %s', note_type, filename), vim.log.levels.INFO, { timeout = 2000 })
             return
           end
@@ -157,7 +169,7 @@ return {
       end
 
       local filename = vim.fn.fnamemodify(path, ':t')
-      if vim.fn.fnamemodify(path, ':p') == vim.api.nvim_buf_get_name(0) then
+      if is_current_buffer(path) then
         vim.notify(string.format('Already on %s: %s', note_type, filename), vim.log.levels.INFO, { timeout = 2000 })
         return true
       end
