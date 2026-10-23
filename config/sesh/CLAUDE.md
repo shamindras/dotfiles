@@ -27,6 +27,9 @@ whole server — every other session is one picker away.
 Startup scripts only run when sesh creates a **new** session. On reconnect
 to a live session, sesh just attaches/switches — no re-run.
 
+The first `[[session]]` in `sesh.toml` is where `sra` lands and the top row
+of the picker — `notes` is kept there on purpose.
+
 **Session tiers:**
 
 | Tier    | Source                              | Layout                        | Reboot recovery              |
@@ -50,6 +53,7 @@ to a live session, sesh just attaches/switches — no re-run.
 | `scripts/helpers.sh` | Shared helper functions (sourceable library, not executable) |
 | `scripts/default.sh` | Generic ad-hoc layout (`[default_session]` startup) |
 | `scripts/*.sh` | Per-session startup scripts (window layouts) |
+| `scripts/journal-layout.lua` | nvim script run by `notes.sh` for the journal window split (sesh-only; nothing in `config/nvim` references it) |
 | `CLAUDE.md` | This documentation file |
 
 ## Helper Library (`scripts/helpers.sh`)
@@ -125,8 +129,30 @@ its WORK_DIR already is Downloads) so its yazi has 7 tabs instead of 9.
 | `term`     | `sesh_window_term` — plain terminal                                                     |
 | `yazi`     | `sesh_window_yazi_tabs` — persistent shell window running `yt -W` (preloaded tabs)       |
 | `preview`  | `quarto preview` (`blog` session only, inline)                                           |
-| `journal`  | Explicit cd + rsync + `zk daily` (`notes` session only, inline — avoids alias race)      |
+| `journal`  | Explicit cd + rsync + `zk new --print-path` + `nvim +'luafile journal-layout.lua'` (`notes` session only, inline — avoids alias race) |
 | `newsboat` | `newsboat` (`feed` session only, inline)                                                 |
+
+### Journal window layout (`notes` session)
+
+`notes.sh` resolves today's note with `zk new --no-input --print-path journal`
+(creates it if missing, prints the existing path otherwise, never launches
+an editor) and opens it with `nvim +'luafile ~/.config/sesh/scripts/journal-layout.lua'`.
+The script reproduces the hand sequence `<leader>wz`, `5<leader>wj`, `zv`:
+
+- Bottom window (8 rows): the first H2 titled "tasks" (any case, falls back
+  to the first H2) floated to the top via the buffer-local `zv`, cursor on
+  the first task.
+- Top window: the next H2 after it (falls back to the last H2), same
+  treatment, cursor on the first entry. Focus ends here.
+- Runs from the first `CursorHold` (idle main loop, after the ftplugin's
+  auto-collapse). A timer would fire inside lazy.nvim's startup `vim.wait`,
+  where a set viewport is re-derived at the next redraw.
+- `sesh-reset` creates sessions detached at the terminal's full height; the
+  attach-time resize (tmux status line) recentres the non-current window, so
+  a `VimResized` within 3 s re-applies the placement once.
+
+`zv` is invoked through `:normal` (no bang) so it is the mapping from
+`config/nvim/ftplugin/markdown_folds.lua`; the nvim config is not modified.
 
 ## tmux / WezTerm Integration
 

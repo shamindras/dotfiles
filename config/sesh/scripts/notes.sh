@@ -4,6 +4,7 @@ set -Eeuo pipefail
 SESSION="notes"
 WORK_DIR="${DROPBOX_DIR:-$HOME/Dropbox}/notes/zk"
 IDEAS_DIR="${WORK_DIR}/ideas"
+JOURNAL_LAYOUT="$HOME/.config/sesh/scripts/journal-layout.lua"
 
 # shellcheck source=helpers.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -31,12 +32,15 @@ tmux send-keys -t "${SESSION}:ideas" Enter
 
 sesh_window_term       "${SESSION}" "${WORK_DIR}"   # Window 6
 
-# Now send journal startup command.
+# Now send journal startup command: sync templates, resolve today's note
+# with `zk new --print-path` (creates it if missing, prints the existing
+# path otherwise, never launches an editor), then open it with the sesh
+# split layout (journal-layout.lua: tasks window below, notes above).
 # Uses explicit binaries instead of the `kds` zsh alias so the command
 # works even if the pane's shell hasn't finished loading .zshrc (cold-start
 # race when `sesh connect notes` is run from a fresh terminal with no tmux server).
 tmux send-keys -l -t "${SESSION}:journal" \
-  "cd '${WORK_DIR}' && rsync -au --delete ~/.config/zk/templates/ '${WORK_DIR}/.zk/templates/' 2>/dev/null; zk daily;clear"
+  "cd '${WORK_DIR}' && rsync -au --delete ~/.config/zk/templates/ '${WORK_DIR}/.zk/templates/' 2>/dev/null; nvim +'luafile ${JOURNAL_LAYOUT}' \"\$(zk new --no-input --print-path journal)\";clear"
 tmux send-keys -t "${SESSION}:journal" Enter
 
 sesh_focus_window "${SESSION}" "journal"
