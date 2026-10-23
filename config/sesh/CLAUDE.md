@@ -128,7 +128,7 @@ its WORK_DIR already is Downloads) so its yazi has 7 tabs instead of 9.
 | `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker                                       |
 | `term`     | `sesh_window_term` — plain terminal                                                     |
 | `yazi`     | `sesh_window_yazi_tabs` — persistent shell window running `yt -W` (preloaded tabs)       |
-| `preview`  | `quarto preview` (`blog` session only, inline)                                           |
+| `preview`  | `quarto preview --no-browser` (`blog` session only, inline) — server up, Firefox not opened; click the printed `Browse at` URL |
 | `journal`  | Explicit cd + rsync + `zk new --print-path` + `nvim +'luafile journal-layout.lua'` (`notes` session only, inline — avoids alias race) |
 | `newsboat` | `newsboat` (`feed` session only, inline)                                                 |
 
