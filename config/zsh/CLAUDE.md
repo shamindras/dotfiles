@@ -35,6 +35,7 @@ config/zsh/
 │   └── 12-z1-prompt.zsh             # Simple vcs_info prompt
 └── functions/                        # Autoloaded functions (22 files)
     ├── k, ki                         # Zettelkasten (zk) wrappers
+    ├── kd                            # Today's journal in nvim with the split layout (sesh journal-layout.lua)
     ├── y                             # Yazi wrapper (preserves cwd)
     ├── yt                            # Yazi with preloaded tabs (wash + cwd-follow shim over ~/.config/bin/yazi-tabs)
     ├── ua                            # Activate nearest uv Python venv
@@ -190,7 +191,7 @@ re-investigation:
 | System     | `c=clear+tmux`, `b=bat`, `l=ls -la`, `tree`, `ta=tmux attach`, `nordvpn-pause on\|off\|toggle\|status` |
 | Brew       | `bu=~/.config/bin/brew-update` (canonical pipeline)         |
 | Dev        | `n=nvim`, `lg=lazygit`, `ghd=gh dash`, `cl=claude`, `clr=claude --resume`, `rq=R(quiet,no .RData)` |
-| Zk         | `kd=daily`, `kis=idea`, `ks=search`                        |
+| Zk         | `kd` (function: daily journal, split layout), `kds=kd --sync-templates`, `kis=idea`, `ks=search` |
 | Suffix     | `.pdf→Skim`, `.jpg→Preview`, `.mp4→VLC`                    |
 | Global     | `H=head`, `L=bat`, `G=rg`, `C=pbcopy`, `J=jq`             |
 
@@ -211,7 +212,7 @@ re-investigation:
 | zoxide | Replaces `cd`, used in all nav aliases             |
 | fzf    | Ctrl-T (files), Ctrl-R (history), Alt-C (dirs)    |
 | yazi   | `y` wrapper preserves cwd on exit; `yt` launches with preloaded tabs (wash by default, `-W` skips; logic in `~/.config/bin/yazi-tabs`); `yh` = home variant; `R w`/`R c` in yazi run `wash`/`clean` on cwd via `zsh -ic` |
-| zk     | `k`/`ki` functions with template sync              |
+| zk     | `k`/`ki` functions with template sync; `kd` opens today's journal with the sesh split layout (`~/.config/sesh/scripts/journal-layout.lua`), `kds` syncs templates first |
 | sesh   | `sc` connect: fzf-pick or `sc <name>` direct (safe reattach); `sn` ad-hoc session from dirs.list; `sesh-reset` force-recreate (`sra` = `--all`, derived from sesh.toml) |
 | uv     | `ua` activates nearest Python venv                 |
 | aerospace | `asr` reloads config + self-heals post-upgrade stale server; `asf` forced restart |

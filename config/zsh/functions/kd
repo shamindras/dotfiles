@@ -1,0 +1,38 @@
+##? kd - open today's zk journal in nvim with the split layout
+##?
+##? Same view as the sesh `notes` journal window: tasks section in a short
+##? window below, notes section above, cursor on the first item of each
+##? (~/.config/sesh/scripts/journal-layout.lua, run via `nvim +luafile`).
+##? Works from any directory, inside or outside tmux.
+##?
+##? usage:
+##?   kd [--sync-templates]
+##?
+##? options:
+##?   --sync-templates  sync templates from dotfiles to the notebook first
+##?                     (matters on the first open of a day — the note is
+##?                     created from the template)
+##?
+##? examples:
+##?   kd                      # open/create today's journal, split layout
+##?   kd --sync-templates     # same, templates synced first (alias: kds)
+
+kd() {
+  [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
+
+  local sync_flag=""
+  [[ "$1" == "--sync-templates" ]] && sync_flag="--sync-templates"
+
+  cd "$ZK_NOTEBOOK_DIR" || return
+  tmux-resize
+
+  # --print-path creates the note if missing, prints the existing path
+  # otherwise, and never launches an editor. Keep in step with the
+  # journal window in ~/.config/sesh/scripts/notes.sh.
+  local note
+  note="$(k $sync_flag new --no-input --print-path journal)" || return
+  nvim +'luafile ~/.config/sesh/scripts/journal-layout.lua' "$note"
+  clear
+}
+
+# vim: ft=zsh
