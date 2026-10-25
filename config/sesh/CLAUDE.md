@@ -154,6 +154,10 @@ The script reproduces the hand sequence `<leader>wz`, `5<leader>wj`, `zv`:
 `zv` is invoked through `:normal` (no bang) so it is the mapping from
 `config/nvim/ftplugin/markdown_folds.lua`; the nvim config is not modified.
 
+The same layout is available from any shell via the zsh function `kd`
+(`kds` syncs templates first) — `config/zsh/functions/kd` runs the same
+`zk new --print-path` + `nvim +luafile` pair, so keep the two in step.
+
 ## tmux / WezTerm Integration
 
 - `prefix+N s` (or CMD+Shift+K via WezTerm) opens sesh fzf picker popup

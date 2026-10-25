@@ -36,6 +36,8 @@ sesh_window_term       "${SESSION}" "${WORK_DIR}"   # Window 6
 # with `zk new --print-path` (creates it if missing, prints the existing
 # path otherwise, never launches an editor), then open it with the sesh
 # split layout (journal-layout.lua: tasks window below, notes above).
+# The interactive twin is the zsh function `kd` (config/zsh/functions/kd);
+# keep the two launch lines in step.
 # Uses explicit binaries instead of the `kds` zsh alias so the command
 # works even if the pane's shell hasn't finished loading .zshrc (cold-start
 # race when `sesh connect notes` is run from a fresh terminal with no tmux server).
