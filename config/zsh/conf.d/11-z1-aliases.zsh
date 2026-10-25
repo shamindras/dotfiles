@@ -70,9 +70,9 @@ function z1_aliases {
   # Search notes interactively
   alias ks='tmux-resize;k edit --interactive;clear'
 
-  # Quick edit today's journal
-  alias kd='z $ZK_NOTEBOOK_DIR;tmux-resize;k daily;clear'
-  alias kds='z $ZK_NOTEBOOK_DIR;tmux-resize;k --sync-templates daily;clear'
+  # Today's journal with the split layout: `kd` is an autoloaded function
+  # (functions/kd); `kds` syncs templates first.
+  alias kds='kd --sync-templates'
 
   # Quick add idea
   alias kis='z $ZK_NOTEBOOK_DIR;ki --sync-templates' # calls the `ki` custom function
