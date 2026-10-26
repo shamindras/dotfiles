@@ -218,6 +218,15 @@ local function fire_action(action)
   if action.restore_focus then
     arm_focus_restore(action.restore_focus)
   end
+  -- In-process leaves (fn) run directly; errors go to the console rather
+  -- than killing the modal scaffold.
+  if action.fn then
+    local ok, err = pcall(action.fn)
+    if not ok then
+      print('leader: ' .. tostring(action.label) .. ' failed: ' .. tostring(err))
+    end
+    return
+  end
   -- /bin/sh -c lets actions.lua chain commands via ' ; '.
   hs.task
     .new('/bin/sh', nil, function()

@@ -24,6 +24,7 @@ config/hammerspoon/
 ├── hud.lua                                 # SketchyBar leader HUD bridge
 ├── actions.lua                             # ~60-action data table (7 groups)
 ├── nordvpn.lua                             # NordVPN pause/resume/connect via AX ids
+├── claude.lua                              # Claude Desktop deep links + AX focus steps
 └── launchagents/
     └── com.local.hidutil-remap.plist       # Caps→F18 + F1..F12→media at login
 ```
@@ -90,8 +91,10 @@ State transitions:
 
 - F18 tap (Caps) and RCmd tap both call `leader.enter_leader()`.
 - Group entry: `leader → sub-group`, HUD updates, idle timer re-arms.
-- Action fires: `sub-group → base`, HUD hides, shell command runs in
-  a detached `hs.task` so a slow process can't trap the modal.
+- Action fires: `sub-group → base`, HUD hides, then either the leaf's
+  shell `cmd` runs in a detached `hs.task` so a slow process can't trap
+  the modal, or its Lua `fn` runs in-process under `pcall` (used by the
+  `claude` group, which must drive the app's AX tree afterwards).
 - Escape from sub-group → back to leader.
 - Escape from leader → exit + HUD hides.
 - Any unbound letter in any modal → exit + HUD hides (fail-safe).
@@ -150,17 +153,70 @@ quit, or stays on `Q` if cancelled.
 `c` means Claude Desktop (`com.anthropic.claudefordesktop`) in every
 group, mirroring its aerospace workspace `C`: `o → c` opens, `q → c`
 quits (returns to `W`), `Alt-c` jumps to it. The `claude` group no
-longer opens claude.ai in Firefox; every leaf is a `claude://` deep link
-the desktop app handles (it launches the app if needed, and aerospace
-routes the window to `C`):
+longer opens claude.ai in Firefox; every leaf calls
+`require('claude').open(<route>)` (`claude.lua`), which opens a
+`claude://` deep link the desktop app handles (it launches the app if
+needed, and aerospace routes the window to `C`), then leaves the cursor
+ready to type:
 
-| Leaf    | URL                                      | Lands on                  |
-| ------- | ---------------------------------------- | ------------------------- |
-| `c → c` | `claude://code/new`                      | Code tab, new session     |
-| `c → l` | `claude://code/continue?session=last`    | Code tab, last session    |
-| `c → n` | `claude://claude.ai/new?surface=chat`    | Chat tab, new chat        |
-| `c → r` | `claude://claude.ai/chat`                | Chat tab, Recents         |
-| `c → u` | `claude://claude.ai/settings/usage`      | Settings → Usage          |
+| Leaf    | URL                                      | Lands on, cursor in            |
+| ------- | ---------------------------------------- | ------------------------------ |
+| `c → c` | `claude://code/new`                      | Code tab, new session          |
+| `c → l` | `claude://code/continue?session=last`    | Code tab, last session         |
+| `c → n` | `claude://claude.ai/new?surface=chat`    | Chat tab, new chat, composer   |
+| `c → r` | `claude://claude.ai/chat`                | Chat tab, Recents, search box  |
+| `c → u` | `claude://claude.ai/settings/usage`      | Settings → Usage, its search   |
+
+The URL alone cannot deliver the last column: the Recents search box is
+collapsed behind a magnifier button, and the Settings overlay keeps
+keyboard focus over whatever `new` navigates to underneath. Claude
+Desktop has no automation API beyond `claude://`, so `claude.open()`
+drives the page the way a screen reader would: it dismisses the Settings
+overlay if it is up, opens the link, then polls every 0.2 s to open the
+search box for `recents` or focus the composer for `new`.
+
+How the module reads and drives the page (all learned the hard way; see
+the header of `claude.lua`):
+
+- **Walk, don't search.** Each poll is a synchronous depth-first walk
+  over `AXChildren` rooted at the application element, skipping the menu
+  bars (~400-1000 elements, ~50 ms). Chromium switches its web
+  accessibility tree on only for a walk that reaches the window through
+  the application's children; rooted at the window itself the walk sees
+  ~14 NSView-level elements forever. `elementSearch` took 5-8 s per pass.
+- **Click, don't `AXPress`.** Activation is a synthesized mouse click at
+  the element's `AXFrame` centre, mouse position restored. `AXPress` and
+  `AXFocused` writes were honoured in some sessions and silently ignored
+  in others. `AXManualAccessibility` is never set; setting it on every
+  poll rebuilt the tree and hid the web tree for 40 s+ after a launch.
+- **Click only when safe.** A click is sent only while Claude is
+  frontmost and the point is on a screen, because aerospace parks other
+  workspaces' windows off-screen. If Claude stops being frontmost once
+  the page is up, the poll is abandoned.
+- **Timing.** Nothing is clicked within 0.6 s of a URL send (the click
+  would land on the outgoing page); the magnifier is re-clicked after
+  1.5 s if the box has not shown, three tries at most. Budget 10 s warm,
+  30 s on a cold launch: the window exists before its web tree does, and
+  the app's own startup landing page can win over the launch-time deep
+  link, so the module waits for the web tree and re-sends the link once.
+
+The labels are the contract (verified against Claude 2.26454.2); if one
+changes upstream the leaf silently degrades to a plain navigation:
+
+| Element       | Attribute       | Value                          | Role                      |
+| ------------- | --------------- | ------------------------------ | ------------------------- |
+| `AXButton`    | `AXDescription` | `Search your activity`         | Recents magnifier         |
+| `AXTextField` | `AXDescription` | `Search your activity`         | Recents search box        |
+| `AXTextArea`  | `AXDescription` | `Write your prompt to Claude`  | chat composer             |
+| `AXTextField` | `AXDescription` | `Search settings`              | Settings overlay present  |
+| `AXButton`    | `AXDescription` | `Close`                        | Settings overlay close    |
+
+The search box is matched by description, not its `Search recents...`
+placeholder, which vanishes once anything is typed.
+
+Set `require('claude').debug = true` and read `_G._claude_log` to see
+the step timeline when a leaf stops landing focus; `require('claude').stop()`
+cancels an in-flight poll.
 
 Routes were read from the app's URL dispatcher (Claude 2.26454.2) and
 fired live: `claude.ai/new` and `code/*` are the Dock-menu links,
@@ -294,7 +350,8 @@ All of the following survive reboot automatically:
 `hs.eventtap`, `hs.eventtap.event.newKeyEvent`,
 `hs.eventtap.checkKeyboardModifiers`, `hs.eventtap.keyStroke`,
 `hs.usb.watcher`, `hs.task`, `hs.notify`, `hs.keycodes.map`,
-`hs.window`, `hs.application`, `hs.settings`, `hs.http.encodeForQuery`.
+`hs.window`, `hs.application`, `hs.settings`, `hs.http.encodeForQuery`,
+`hs.axuielement`, `hs.urlevent`.
 
 Validate field names against the installed version's docs before
 adding new code paths — Hammerspoon renames between point releases
