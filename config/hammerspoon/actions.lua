@@ -1,10 +1,12 @@
 -- actions.lua — leader action table
 --
--- Each leaf is { key, label, cmd, idle? }:
+-- Each leaf is { key, label, cmd | fn, idle? }:
 --   key   — single character bound inside the sub-modal
 --   label — short name surfaced in errors / hs.console (not the HUD label;
 --           HUD labels come from config/bin/leader-hud)
 --   cmd   — shell command appended to "$HOME/.config/bin/"
+--   fn    — Lua function run in-process instead of a shell command (used
+--           where the action must drive an app's AX tree afterwards)
 --   idle  — optional override of the 2s timeout. Quit actions use 10s to let
 --           sketchybar's quit notification finish drawing before another
 --           leader sequence stomps it.
@@ -128,19 +130,24 @@ M.quit = {
 
 -- {{{ Group: c — Claude Desktop deep links
 
--- Every leaf is a claude:// URL handled by Claude Desktop (launches the app
--- if needed; aerospace routes its window to workspace C). Routes verified
--- against the app's URL dispatcher (Claude 2.26454.2): `claude.ai/new` and
--- `code/*` are the Dock-menu links; `claude.ai/chat` with no id falls
--- through to /recents; `claude.ai/settings/*` passes straight through.
+-- Every leaf opens a claude:// URL in Claude Desktop (launches the app if
+-- needed; aerospace routes its window to workspace C) via claude.lua,
+-- which also dismisses the Settings overlay first and, for recents,
+-- expands and focuses the search box. URLs live in claude.lua.
+local function claude(route)
+  return function()
+    require('claude').open(route)
+  end
+end
+
 M.claude = {
   group_name = 'claude',
   bindings = {
-    { key = 'c', label = 'code-new', cmd = url('claude://code/new') },
-    { key = 'l', label = 'code-last', cmd = url('claude://code/continue?session=last') },
-    { key = 'n', label = 'new', cmd = url('claude://claude.ai/new?surface=chat') },
-    { key = 'r', label = 'recents', cmd = url('claude://claude.ai/chat') },
-    { key = 'u', label = 'usage', cmd = url('claude://claude.ai/settings/usage') },
+    { key = 'c', label = 'code-new', fn = claude('code_new') },
+    { key = 'l', label = 'code-last', fn = claude('code_last') },
+    { key = 'n', label = 'new', fn = claude('new') },
+    { key = 'r', label = 'recents', fn = claude('recents') },
+    { key = 'u', label = 'usage', fn = claude('usage') },
   },
 }
 
