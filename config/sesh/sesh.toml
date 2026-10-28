@@ -4,8 +4,9 @@
 strict_mode = true
 
 # Picker (sesh picker, bound in tmux `N s` / `N #`): live tmux sessions
-# first, then [[session]] entries, then zoxide. Flat order keeps the config
-# block and `#` jump numbers stable day to day.
+# first (most recently attached on top — `#` numbers are a recency stack,
+# not a fixed index; aliases are the fixed targets), then [[session]]
+# entries in file order, then zoxide.
 sort_order = ["tmux", "config", "zoxide"]
 
 [tui]
@@ -29,31 +30,77 @@ zoxide = { icon = "", color = "cyan" }
 name = "notes"
 path = "~/Dropbox/notes/zk"
 startup_command = "~/.config/sesh/scripts/notes.sh"
+alias = "nn"
+alias_auto_connect = true
+icon = "📓"
 
 [[session]]
 name = "play"
 path = "~/Dropbox/repos/codebox"
 startup_command = "~/.config/sesh/scripts/play.sh"
+alias = "pp"
+alias_auto_connect = true
+icon = "🧪"
 
 [[session]]
 name = "dots"
 path = "~/Dropbox/repos/dotfiles"
 startup_command = "~/.config/sesh/scripts/dots.sh"
+alias = "dd"
+alias_auto_connect = true
+icon = "🔧"
 
 [[session]]
 name = "career"
 path = "~/Dropbox/repos/ss_applications"
 startup_command = "~/.config/sesh/scripts/career.sh"
+alias = "cc"
+alias_auto_connect = true
+icon = "💼"
 
 [[session]]
 name = "blog"
 path = "~/Dropbox/repos/ss_personal_quarto_blog"
 startup_command = "~/.config/sesh/scripts/blog.sh"
+alias = "bb"
+alias_auto_connect = true
+icon = "✍️ "
 
 [[session]]
 name = "feed"
 path = "~/Downloads"
 startup_command = "~/.config/sesh/scripts/feed.sh"
+alias = "ff"
+alias_auto_connect = true
+icon = "📰"
+
+# Picker icons for the ad-hoc tier (dirs.list roots). Icon only — the
+# layout stays with [default_session] below; a wildcard startup_command
+# would silently override default.sh. Each root is listed twice because
+# sesh reports both the ~/Dropbox symlink and its CloudStorage target.
+[[wildcard]]
+pattern = "~/Dropbox/repos/*"
+icon = "📦"
+
+[[wildcard]]
+pattern = "~/Library/CloudStorage/Dropbox/repos/*"
+icon = "📦"
+
+[[wildcard]]
+pattern = "~/Dropbox/resources/**"
+icon = "📚"
+
+[[wildcard]]
+pattern = "~/Library/CloudStorage/Dropbox/resources/**"
+icon = "📚"
+
+[[wildcard]]
+pattern = "~/Dropbox/entertainment/**"
+icon = "🎧"
+
+[[wildcard]]
+pattern = "~/Library/CloudStorage/Dropbox/entertainment/**"
+icon = "🎧"
 
 # Applies ONLY to sessions with no [[session]] entry above (ad-hoc
 # directories from sesh-dir-picker or zoxide connects). Per-session
