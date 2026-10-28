@@ -164,14 +164,18 @@ The picker is sesh's own (`sesh picker`, configured under `[tui]` and
 `[icons]` in `sesh.toml`), not fzf. Rows: live tmux sessions first (most
 recently attached on top, the attached one hidden by `-H`), then
 `[[session]]` entries in file order, then zoxide; `-d` hides duplicate
-names. A faint rule separates the groups.
+names. A faint rule separates the groups. The attached session therefore
+shows only as its config row, alone below the rule — that position is the
+"you are here" marker (sesh cannot annotate config rows). The preview
+pane is off; `ctrl+o` shows it for one run (live sessions: active pane
+capture, otherwise a directory listing).
 
-| WezTerm       | tmux         | Command                         | Use                                |
-| ------------- | ------------ | ------------------------------- | ---------------------------------- |
-| `CMD+K`       | `prefix N s` | `sesh picker -Hd`               | primary: alias, `#` + digit, fuzzy |
-| `CMD+Shift+K` | `prefix N #` | `sesh picker -Hd -q '#'`        | same picker, rows pre-numbered     |
-| `CMD+J`       | `prefix N j` | `sesh last`                     | toggle to the previous session     |
-| `CMD+Ctrl+K`  | `prefix N d` | `~/.config/bin/sesh-dir-picker` | ad-hoc session from `dirs.list`    |
+| WezTerm       | tmux         | Command                              | Use                                |
+| ------------- | ------------ | ------------------------------------ | ---------------------------------- |
+| `CMD+K`       | `prefix N s` | `sesh picker -Hd`                    | primary: alias, `#` + digit, fuzzy |
+| `CMD+Shift+K` | `prefix N #` | `sesh picker -Hd -q '#'`             | same picker, rows pre-numbered     |
+| `CMD+J`       | `prefix N j` | `switch-client -l`, else `sesh last` | toggle to the previous session     |
+| `CMD+Ctrl+K`  | `prefix N d` | `~/.config/bin/sesh-dir-picker`      | ad-hoc session from `dirs.list`    |
 
 Inside the picker:
 
@@ -181,7 +185,7 @@ Inside the picker:
 | `/`             | browse aliased sessions only; completing one connects               |
 | `#` then `1-9`  | jump by row; row 1 is always what `CMD+J` would reach               |
 | any other text  | fuzzy filter, Enter connects                                        |
-| `ctrl+x`        | kill a tmux row / prune a zoxide row (confirmation dialog)          |
+| `ctrl+x`        | kill a tmux row / prune a zoxide row (confirmation; was `ctrl-d`)   |
 | `ctrl+o`        | toggle the preview pane (off by default; needs ≥100 columns)        |
 
 `#` numbers are a **recency stack**, not a fixed index: every switch
