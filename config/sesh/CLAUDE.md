@@ -38,7 +38,7 @@ of the picker — `notes` is kept there on purpose.
 | ad-hoc  | `dirs.list` (exact paths + globs)   | `default.sh` via `[default_session]` | re-pick (`Cmd-Ctrl-K` / `sn`) |
 | promote | `/sesh-promote` skill (ad-hoc → sra)| custom generated script       | joins `sra` automatically    |
 
-**Recovery for a broken session:** `sesh-reset <name>` (zsh function):
+**Recovery for a broken session:** `sesh-reset <name|alias>` (zsh function):
 1. Kills the tmux session(s)
 2. Creates detached tmux sessions + runs startup scripts (bypasses `sesh connect`
    to avoid blocking on attach)
@@ -48,7 +48,7 @@ of the picker — `notes` is kept there on purpose.
 
 | File | Purpose |
 |------|---------|
-| `sesh.toml` | Session definitions + `[default_session]` fallback layout |
+| `sesh.toml` | Session definitions (name/path/script/alias/icon), picker `[tui]`/`[icons]`/`sort_order`, `[[wildcard]]` tree icons, `[default_session]` fallback layout |
 | `dirs.list` | Ad-hoc launchable directories (read by `sesh-dir-picker`) |
 | `scripts/helpers.sh` | Shared helper functions (sourceable library, not executable) |
 | `scripts/default.sh` | Generic ad-hoc layout (`[default_session]` startup) |
@@ -158,15 +158,63 @@ The same layout is available from any shell via the zsh function `kd`
 (`kds` syncs templates first) — `config/zsh/functions/kd` runs the same
 `zk new --print-path` + `nvim +luafile` pair, so keep the two in step.
 
-## tmux / WezTerm Integration
+## Picker (sesh's built-in TUI)
 
-- `prefix+N s` (or CMD+Shift+K via WezTerm) opens sesh fzf picker popup
-- Filter keys in picker: `ctrl-a` all, `ctrl-t` tmux, `ctrl-g` config,
-  `ctrl-x` zoxide, `ctrl-d` kill session
-- `prefix+N d` (or CMD+Ctrl+K) opens the ad-hoc directory picker
-  (`~/.config/bin/sesh-dir-picker`)
-- WezTerm K-column: CMD+K = `N w` tree, CMD+Shift+K = `N s` existing
-  sessions, CMD+Ctrl+K = `N d` new session from directory
+The picker is sesh's own (`sesh picker`, configured under `[tui]` and
+`[icons]` in `sesh.toml`), not fzf. Rows: live tmux sessions first (most
+recently attached on top, the attached one hidden by `-H`), then
+`[[session]]` entries in file order, then zoxide; `-d` hides duplicate
+names. A faint rule separates the groups.
+
+| WezTerm       | tmux         | Command                         | Use                                |
+| ------------- | ------------ | ------------------------------- | ---------------------------------- |
+| `CMD+K`       | `prefix N s` | `sesh picker -Hd`               | primary: alias, `#` + digit, fuzzy |
+| `CMD+Shift+K` | `prefix N #` | `sesh picker -Hd -q '#'`        | same picker, rows pre-numbered     |
+| `CMD+J`       | `prefix N j` | `sesh last`                     | toggle to the previous session     |
+| `CMD+Ctrl+K`  | `prefix N d` | `~/.config/bin/sesh-dir-picker` | ad-hoc session from `dirs.list`    |
+
+Inside the picker:
+
+| Keys            | Effect                                                              |
+| --------------- | ------------------------------------------------------------------- |
+| `dd` (an alias) | connects the moment the alias is complete (no Enter), 150 ms grace  |
+| `/`             | browse aliased sessions only; completing one connects               |
+| `#` then `1-9`  | jump by row; row 1 is always what `CMD+J` would reach               |
+| any other text  | fuzzy filter, Enter connects                                        |
+| `ctrl+x`        | kill a tmux row / prune a zoxide row (confirmation dialog)          |
+| `ctrl+o`        | toggle the preview pane (off by default; needs ≥100 columns)        |
+
+`#` numbers are a **recency stack**, not a fixed index: every switch
+reshuffles the live group. Aliases are the fixed targets.
+
+### Aliases and icons
+
+| Session | Alias | Icon | Session | Alias | Icon |
+| ------- | ----- | ---- | ------- | ----- | ---- |
+| notes   | `nn`  | 📓   | career  | `cc`  | 💼   |
+| play    | `pp`  | 🧪   | blog    | `bb`  | ✍️   |
+| dots    | `dd`  | 🔧   | feed    | `ff`  | 📰   |
+
+First letter doubled, `alias_auto_connect = true` on all six. Aliases must
+be unique case-insensitively (sesh errors otherwise) and never a single
+letter — auto-connect would fire on the first keystroke of any fuzzy search.
+Aliases also work on the CLI: `sesh connect dd`, `sc dd`, `sesh-reset dd`.
+The `blog` icon carries a trailing space because variation-selector emoji
+(`✍️`) measure two cells but WezTerm draws one.
+
+Ad-hoc directories get a tree icon from `[[wildcard]]` blocks mirroring the
+`dirs.list` roots (📦 repos, 📚 resources, 🎧 entertainment). Each root is
+listed twice — `~/Dropbox/...` and `~/Library/CloudStorage/Dropbox/...` —
+because sesh reports whichever spelling zoxide recorded. Wildcards carry
+**icons only**; a wildcard `startup_command` would override `default.sh`.
+
+`strict_mode = true` rejects unknown fields, and the `#:schema` directive
+on line 1 gives taplo (already in the nvim LSP/conform setup) completion
+and diagnostics. Validate with `sesh list -c --json | jq .`.
+
+Rollback to the old fzf popups: revert the single commit
+`feat(tmux): replace fzf session pickers with sesh picker`; aliases,
+validation and `sesh last` are independent of it.
 
 ## Workflow Guide (tldr)
 
@@ -190,9 +238,9 @@ ta                          # or: name-free `tmux attach`, lands in most-recent 
 Do NOT run `sra` here — it kills the live sessions and rebuilds defaults.
 
 `sc` is a zsh autoloaded function (`config/zsh/functions/sc`): bare `sc`
-fzf-picks a session, `sc <name>` connects directly — attaches if the
-session is alive, creates it from sesh.toml if not. Note `sesh connect`
-requires a session name — there is no built-in name-free mode.
+fzf-picks a session, `sc <name|alias>` connects directly — attaches if
+the session is alive, creates it from sesh.toml if not. Note `sesh connect`
+requires a session name or alias — there is no built-in name-free mode.
 
 ### Computer restart / cold start
 
@@ -215,8 +263,8 @@ sesh-reset notes feed       # multiple sessions
 
 ### Day-to-day
 
-- Switch sessions: `prefix+s` (or `CMD+Shift+K`)
-- Connect to config session: `sesh connect <name>` or `sc`
+- Switch sessions: `CMD+K` then an alias (`dd`), or `CMD+J` to toggle
+- Connect to config session: `sesh connect <name|alias>` or `sc <name|alias>`
 
 ## Ad-hoc Sessions (dirs.list + default layout)
 
@@ -253,7 +301,9 @@ Run `/sesh-promote <dir>` to graduate an ad-hoc directory interactively
 (generates the block, script, and doc updates). Manual steps:
 
 1. Add a `[[session]]` block to `sesh.toml` with name, path,
-   startup_command — **before** the `[default_session]` table
+   startup_command, a unique two-letter alias (+ `alias_auto_connect`)
+   and an icon — after the other `[[session]]` blocks and **before** the
+   `[[wildcard]]` and `[default_session]` tables
 2. Create matching script in `scripts/` — source `helpers.sh` and use shared
    functions for standard windows (nvim, claude, term, yazi)
 3. Add session-specific windows inline after the shared calls
