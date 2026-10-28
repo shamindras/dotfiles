@@ -213,7 +213,7 @@ re-investigation:
 | fzf    | Ctrl-T (files), Ctrl-R (history), Alt-C (dirs)    |
 | yazi   | `y` wrapper preserves cwd on exit; `yt` launches with preloaded tabs (wash by default, `-W` skips; logic in `~/.config/bin/yazi-tabs`); `yh` = home variant; `R w`/`R c` in yazi run `wash`/`clean` on cwd via `zsh -ic` |
 | zk     | `k`/`ki` functions with template sync; `kd` opens today's journal with the sesh split layout (`~/.config/sesh/scripts/journal-layout.lua`), `kds` syncs templates first |
-| sesh   | `sc` connect: fzf-pick or `sc <name>` direct (safe reattach); `sn` ad-hoc session from dirs.list; `sesh-reset` force-recreate (`sra` = `--all`, derived from sesh.toml) |
+| sesh   | `sc` connect: fzf-pick or `sc <name\|alias>` direct (safe reattach; aliases like `dd` from sesh.toml); `sn` ad-hoc session from dirs.list; `sesh-reset <name\|alias>` force-recreate (`sra` = `--all`, derived from sesh.toml) |
 | uv     | `ua` activates nearest Python venv                 |
 | aerospace | `asr` reloads config + self-heals post-upgrade stale server; `asf` forced restart |
 
