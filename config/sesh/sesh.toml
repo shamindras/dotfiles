@@ -1,3 +1,8 @@
+#:schema https://github.com/joshmedeski/sesh/raw/main/sesh.schema.json
+
+# Reject unknown fields (typos) instead of silently ignoring them.
+strict_mode = true
+
 # First [[session]] is where `sra` (sesh-reset --all) lands and the top
 # row of the sesh picker — keep `notes` here.
 [[session]]

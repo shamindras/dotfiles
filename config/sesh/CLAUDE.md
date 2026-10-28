@@ -10,7 +10,7 @@ exercised (auto-restore off, real programs not whitelisted) and the plugins
 only added stale-state failure modes.
 
 Docs: https://github.com/joshmedeski/sesh
-Installed version: sesh 2.26.2 (verified 2026-07-04)
+Installed version: sesh 2.34.0 (verified 2026-10-29)
 
 ## Persistence Model
 
