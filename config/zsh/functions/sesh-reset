@@ -4,7 +4,7 @@
 ##? sesh.toml startup scripts.
 ##?
 ##? usage:
-##?   sesh-reset <session-name> [<session-name> ...]
+##?   sesh-reset <session-name|alias> [<session-name|alias> ...]
 ##?   sesh-reset --all
 ##?
 ##? options:
@@ -14,6 +14,7 @@
 ##?
 ##? examples:
 ##?   sesh-reset notes              # recreate notes session
+##?   sesh-reset dd                 # aliases from sesh.toml work too
 ##?   sesh-reset notes feed dots    # recreate multiple sessions
 ##?   sesh-reset --all              # recreate all sesh.toml sessions
 
@@ -24,6 +25,14 @@ sesh-reset() {
   _sesh_kill() {
     local session="$1"
     tmux kill-session -t "$session" 2>/dev/null || true
+  }
+
+  # --- Inner function: map an alias to its session name (names pass through) ---
+  _sesh_resolve() {
+    local s="$1" name
+    name="$(sesh list -c --json | jq -r --arg s "$s" \
+      '.[] | select(.Alias == $s) | .Name' | head -n1)"
+    printf '%s\n' "${name:-$s}"
   }
 
   # --- Inner function: create session detached + run startup script ---
@@ -71,7 +80,8 @@ sesh-reset() {
       return 1
       ;;
     *)
-      sessions=("$@")
+      local a
+      for a in "$@"; do sessions+=("$(_sesh_resolve "$a")"); done
       ;;
   esac
 
@@ -95,7 +105,7 @@ sesh-reset() {
     tmux attach-session -t "${sessions[1]}"
   fi
 
-  unfunction _sesh_kill _sesh_create_detached 2>/dev/null
+  unfunction _sesh_resolve _sesh_kill _sesh_create_detached 2>/dev/null
 }
 
 # vim: ft=zsh
