@@ -2,7 +2,8 @@
 ##?
 ##? Attaches if the session is alive, creates it if not. With no
 ##? arguments, pick a session via fzf; with arguments, connect
-##? directly (multi-word session names are joined with spaces).
+##? directly by name or sesh.toml alias (multi-word session names are
+##? joined with spaces).
 ##?
 ##? usage:
 ##?   sc [<session-name> ...]
@@ -13,6 +14,7 @@
 ##? examples:
 ##?   sc          # fzf-pick a session
 ##?   sc notes    # connect straight to 'notes'
+##?   sc dd       # same via alias (see config/sesh/sesh.toml)
 
 sc() {
   [[ "$1" == "-h" || "$1" == "--help" ]] && { grep "^##?" "${(%):-%x}" | cut -c 5-; return 0; }
