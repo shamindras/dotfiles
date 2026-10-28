@@ -3,6 +3,26 @@
 # Reject unknown fields (typos) instead of silently ignoring them.
 strict_mode = true
 
+# Picker (sesh picker, bound in tmux `N s` / `N w`): live tmux sessions
+# first, then [[session]] entries, then zoxide. Flat order keeps the config
+# block and `#` jump numbers stable day to day.
+sort_order = ["tmux", "config", "zoxide"]
+
+[tui]
+show_icons = true
+show_windows = true        # dimmed window names after each session
+group_separator = true     # faint rule between the sort_order groups
+prompt = "⚡ "
+placeholder = "session"
+preview = false
+
+# Source glyphs (also shown by `sesh list --icons`). Per-session `icon`
+# fields override these in the picker.
+[icons]
+tmux   = { icon = "", color = "green" }
+config = { icon = "", color = "blue" }
+zoxide = { icon = "", color = "cyan" }
+
 # First [[session]] is where `sra` (sesh-reset --all) lands and the top
 # row of the sesh picker — keep `notes` here.
 [[session]]
