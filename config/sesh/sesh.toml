@@ -3,7 +3,7 @@
 # Reject unknown fields (typos) instead of silently ignoring them.
 strict_mode = true
 
-# Picker (sesh picker, bound in tmux `N s` / `N w`): live tmux sessions
+# Picker (sesh picker, bound in tmux `N s` / `N #`): live tmux sessions
 # first, then [[session]] entries, then zoxide. Flat order keeps the config
 # block and `#` jump numbers stable day to day.
 sort_order = ["tmux", "config", "zoxide"]

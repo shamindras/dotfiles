@@ -179,8 +179,8 @@ function M.setup(config)
     tmux('9', '9'),                -- CMD+9       = window 9
 
     -- Session management — N (Navigate) key table
-    tmux_table('k', 'CMD|SHIFT', 'N', 's'),   -- CMD+Shift+K = sesh picker
-    tmux_table('k', 'CMD', 'N', 'w'),         -- CMD+K       = session/window tree
+    tmux_table('k', 'CMD', 'N', 's'),         -- CMD+K       = sesh picker (alias / # / fuzzy)
+    tmux_table('k', 'CMD|SHIFT', 'N', '#'),   -- CMD+Shift+K = sesh picker, row-number mode
     tmux_table('k', 'CMD|CTRL', 'N', 'd'),    -- CMD+Ctrl+K  = new session from dir
     tmux_table('j', 'CMD', 'N', 'j'),         -- CMD+J       = last session
     tmux_table('n', 'CMD', 'N', 'n'),         -- CMD+N       = new session
