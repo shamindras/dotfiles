@@ -38,6 +38,14 @@ Ask the user (one question at a time, checkbox format):
    nvim / term, focus claude). Offer per-window customization: which
    windows, order, focus, and any session-specific windows (see
    `config/sesh/scripts/notes.sh`, `blog.sh` for inline-window patterns).
+3. **Alias** — two letters, default: the first letter doubled (`nn`, `dd`
+   style, matching the existing sessions). Must be unique case-insensitively
+   across every `[[session]]` (`sesh list -c --json | jq -r '.[].Alias'`);
+   a single letter would auto-connect on the first keystroke of any fuzzy
+   search, so refuse it.
+4. **Icon** — one emoji shown in the picker. Emoji with a variation
+   selector (e.g. ✍️) need a trailing space in the string to stay aligned in
+   WezTerm.
 
 ## 4. Generate the startup script
 
@@ -59,7 +67,13 @@ array-of-tables entries must not follow it, or they'd nest incorrectly):
 name = "<name>"
 path = "<~/-form path>"
 startup_command = "~/.config/sesh/scripts/<name>.sh"
+alias = "<alias>"
+alias_auto_connect = true
+icon = "<emoji>"
 ```
+
+Place it after the existing `[[session]]` blocks and before the
+`[[wildcard]]` blocks, so the file stays grouped by table type.
 
 ## 6. Clean up dirs.list
 
@@ -76,8 +90,11 @@ paths).
 
 ## 8. Validate
 
-1. `sesh list -c --json | jq .` — parses; new session present with correct
-   Name/Path/StartupCommand.
+1. `sesh list -c --json | jq .` — parses (`strict_mode` rejects unknown
+   fields); new session present with correct Name/Path/StartupCommand/
+   Alias/Icon, and
+   `sesh list -c --json | jq -e 'map(.Alias | ascii_downcase) | length == (unique | length)'`
+   confirms aliases are still unique.
 2. `bash -n config/sesh/scripts/<name>.sh`.
 3. Tell the user: run `sesh connect <name>` (or `sesh-reset <name>` if a
    live ad-hoc session with that name exists — the old session must be
