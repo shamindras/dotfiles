@@ -1,0 +1,15 @@
+# markdownlint-cli2 config for zk notes. Deployed from
+# config/zk/notebook/zk/ by scripts/ops/sync-notes-config; overrides the
+# notes-root config one level up.
+# Aligns line length with prettier (printWidth = 120).
+# MD041 disabled because zk notes use frontmatter for titles, not H1 headings.
+# MD025 told not to treat frontmatter `title:` as an H1, so a body H1 is allowed.
+config:
+  MD013:
+    line_length: 120
+    code_blocks: false
+    tables: false
+  MD025:
+    front_matter_title: ""
+  MD033: false
+  MD041: false

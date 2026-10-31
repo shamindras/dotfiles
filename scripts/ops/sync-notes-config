@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# sync-notes-config — deploy the markdown formatter/linter configs for the
+# notes tree from the dotfiles repo into $DROPBOX_NOTES_DIR.
+#
+# config/zk/notebook/ mirrors $DROPBOX_NOTES_DIR:
+#   .prettierrc.yaml          → notes/            (one copy serves zk + scratch:
+#   .prettierignore           → notes/             prettier and the nvim-lint
+#   .markdownlint-cli2.yaml   → notes/             markdownlint wiring both
+#   zk/.markdownlint-cli2.yaml → notes/zk/         search upward from the file)
+#
+# Copies, never symlinks: the targets live under ~/Library/CloudStorage and
+# Dropbox does not sync symlinks reliably. The repo copy is canonical; this
+# overwrites unconditionally and is idempotent. Run by setup-zk during
+# ./install and by `just notes_config_sync`.
+
+set -Eeuo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+src="$repo_root/config/zk/notebook"
+notes="${DROPBOX_NOTES_DIR:-$HOME/Dropbox/notes}"
+
+if [ ! -d "$notes" ]; then
+  echo "ERROR: notes directory not found at $notes" >&2
+  echo "Dropbox must be synced before notes configs can be deployed." >&2
+  exit 1
+fi
+
+files=(
+  .prettierrc.yaml
+  .prettierignore
+  .markdownlint-cli2.yaml
+  zk/.markdownlint-cli2.yaml
+)
+
+for rel in "${files[@]}"; do
+  mkdir -p "$notes/$(dirname "$rel")"
+  if [ -f "$notes/$rel" ] && cmp -s "$src/$rel" "$notes/$rel"; then
+    echo "✓ $rel up to date"
+  else
+    cp -f "$src/$rel" "$notes/$rel"
+    echo "✓ $rel deployed"
+  fi
+done
