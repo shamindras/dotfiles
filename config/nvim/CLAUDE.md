@@ -288,6 +288,14 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 - `.prettierrc.yaml` — prettier options (`printWidth: 120`, `proseWrap: always`)
 - `.prettierignore` — ignore all except `.md` files (with `!*/` to traverse subdirs)
 
+Both prettier and the markdownlint wiring in `nvim-lint.lua` search upward
+from the buffer, so a `.md` file with no config above it formats with
+prettier defaults (`proseWrap: preserve`, width 80) and lints with stock
+rules. The notes tree (`$DROPBOX_NOTES_DIR`: zk + scratch) gets the same
+120-column conventions from configs deployed by
+`scripts/ops/sync-notes-config` — see `config/zk/CLAUDE.md` § Markdown
+formatting config.
+
 ### LSP API
 
 Servers use the nvim 0.11+ native `vim.lsp.config()` + `vim.lsp.enable()` API.
