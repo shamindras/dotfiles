@@ -34,7 +34,7 @@ just                  # Interactive recipe picker (fzf + preview)
 just help             # List all targets grouped by area
 just all              # Write pipeline: clean → format → brewfile → firefox sync → treesitter → yazi (no audits)
 just format           # Format Lua (stylua) + markdown (prettier)
-just sync-all         # Sync firefox + treesitter + yazi plugins + submodules
+just sync-all         # Sync firefox + treesitter + yazi plugins + notes configs + submodules
 just audit            # Read-only audit: firefox drift + treesitter parsers + yazi plugins
 just clean            # Sweep .DS_Store, swap files, stale zsh sessions
 just update_brewfile  # Dump current Homebrew packages to Brewfile
@@ -91,6 +91,7 @@ Organized by runtime role:
   - `audit-firefox` - Audit Firefox prefs for drift
   - `setup-firefox` - Sync Firefox user.js, chrome/, policies.json
   - `setup-nvim-treesitter` - Install/update nvim-treesitter parsers
+  - `sync-notes-config` - Copy prettier/markdownlint configs into `$DROPBOX_NOTES_DIR`
 - `scripts/_lib/` — sourced helpers (e.g., `step.sh` for two-tier progress)
 - `scripts/migrate/` — one-off migration utilities (unchanged)
 
