@@ -345,6 +345,7 @@ return {
         { mode = 'n', keys = '<leader>i', desc = '+[i]nsert' },
         { mode = 'n', keys = '<leader>k', desc = '+[k]asten' },
         { mode = 'n', keys = '<leader>m', desc = '+[m]arkdown' },
+        { mode = 'n', keys = '<leader>n', desc = '+[n]ote scratch' },
         { mode = 'n', keys = '<leader>q', desc = '+[q]uit' },
         { mode = 'n', keys = '<leader>s', desc = '+[s]earch' },
         { mode = 'n', keys = '<leader>t', desc = '+[t]oggle' },

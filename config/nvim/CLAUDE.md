@@ -6,7 +6,7 @@ Neovim editor config with lazy.nvim plugin manager, ~29 plugins, leader-based
 keymaps, and deep cross-tool integration (tmux, aerospace, lazygit, zk).
 
 - **Docs**: https://neovim.io/doc/
-- **Installed version**: NVIM v0.12.0 (verified 2026-03-30)
+- **Installed version**: NVIM v0.12.6 (verified 2026-10-31)
 - **Lua conventions**: `.claude/conventions/lua.md`
 
 ## Architecture
@@ -26,6 +26,9 @@ config/nvim/
 ├── lua/shamindras/
 │   ├── util/
 │   │   ├── markdown.lua              # Shared treesitter helpers (headings, folds, section ops)
+│   │   ├── slug.lua                  # Title <-> slug helpers shared by zk ideas and scratch notes
+│   │   ├── file.lua                  # rename_to / rename_prompt (behind <leader>br and <leader>nr)
+│   │   ├── scratch.lua               # Markdown scratch notes: create, pick, rename, promote, delete
 │   │   └── themes.lua                # Theme registry (plugins, palettes, setup opts, separator colors)
 │   ├── core/
 │   │   ├── options.lua               # Editor settings (12 fold sections)
@@ -43,6 +46,7 @@ config/nvim/
 │       │   ├── init.lua              # Fuzzy finder, lazygit, buffer delete
 │       │   └── pickers.lua           # Custom Snacks picker configs (fd, rg, ivy, todo, colorscheme)
 │       ├── zk.lua                    # Zettelkasten integration
+│       ├── scratch.lua               # Virtual spec: <leader>n* keymaps over util/scratch.lua
 │       ├── markdown.lua              # Markdown editing (tadmccorkle/markdown.nvim)
 │       ├── render-markdown.lua       # In-buffer markdown rendering
 │       ├── mini.lua                  # Single mini.nvim spec (12 modules)
@@ -72,6 +76,7 @@ config/nvim/
 | `<leader>i`  | Insert (blank lines above/below)                             |
 | `<leader>k`  | Zettelkasten (daily, idea, search, grep, backlinks)          |
 | `<leader>m`  | Markdown ops (checkbox, TOC, list, heading promote/demote)   |
+| `<leader>n`  | Note scratch (new, find, grep, last, rename, promote, delete) |
 | `<leader>q`  | Quit (save-all-and-exit, force-quit-all)                     |
 | `<leader>s`  | Search (grep, diagnostics, todo, command history, replace)   |
 | `<leader>t`  | Toggle (line numbers, spell, theme, cursorword, hipatterns, inlay hints, render-markdown) |
@@ -117,6 +122,42 @@ revisit adopting the native defaults.
 **Appearance**: mini.statusline, mini.notify, mini.icons, mini.clue, mini.cursorword, mini.hipatterns, noice.nvim
 **Markdown**: markdown.nvim (editing/motions), render-markdown.nvim (rendering), marksman (LSP, non-zk files)
 **Special**: zk-nvim (notes)
+
+## Scratch Notes (`<leader>n`)
+
+Low-latency markdown scratchpads: plain `.md` files in
+`$DROPBOX_NOTES_DIR/scratch`, a Dropbox-backed **sibling** of the zk
+notebook (never inside it, so the zk index and `<leader>k*` stay clean;
+marksman is the LSP that attaches). Logic in `util/scratch.lua`, keymaps in
+`plugins/scratch.lua` (virtual lazy spec depending on snacks + zk-nvim).
+Shell twin: `~/.config/bin/scratch-new` (zsh `ns`, tmux `prefix O s` /
+`CMD+S`, sesh `scratch` session, alias `ss`).
+
+One prompt, two outcomes (cursor lands on line 3 in insert mode either way):
+
+| Input at `Scratch title:` | File                    | Line 1          |
+| ------------------------- | ----------------------- | --------------- |
+| Enter (empty) or Esc      | `2026-10-31-143205.md`  | `# `            |
+| `api design`              | `api-design.md`         | `# Api Design`  |
+| Ctrl-C                    | nothing                 | nothing         |
+
+`vim.fn.input` cannot tell Esc from an empty Enter, so both take the
+timestamp path. An existing `<slug>.md` is opened, never overwritten.
+
+| Key          | Action                                                                 |
+| ------------ | ---------------------------------------------------------------------- |
+| `<leader>nn` | New scratch (prompt, Enter = timestamp)                                |
+| `<leader>nf` | Find: Snacks picker, newest first, first H1 as label + relative age    |
+| `<leader>ng` | Grep the scratch directory                                             |
+| `<leader>nl` | Open the newest scratch                                                |
+| `<leader>nr` | Rename the current scratch to the slug of its H1 (writes first)        |
+| `<leader>np` | Promote to a zk idea (`ideas/`, H1 as title, body appended), delete scratch |
+| `<leader>nd` | Delete the current scratch (confirm), then open the picker             |
+
+`nr`, `np`, `nd` act only on buffers inside the scratch directory.
+Slug rule (one definition, two implementations kept in step):
+`util/slug.lua` and `config/bin/scratch-new` — see `config/zsh/CLAUDE.md`
+§ Scratch slug rule.
 
 ## Cross-Tool Integration
 

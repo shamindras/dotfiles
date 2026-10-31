@@ -56,6 +56,9 @@ require('lazy').setup({
   -- zk (zettelkasten)
   require('shamindras.plugins.zk'),
 
+  -- scratch notes (keymaps over util/scratch.lua)
+  require('shamindras.plugins.scratch'),
+
   -- markdown
   require('shamindras.plugins.markdown'),
   require('shamindras.plugins.render-markdown'),
