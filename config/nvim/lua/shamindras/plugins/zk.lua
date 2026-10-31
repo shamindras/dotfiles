@@ -67,14 +67,8 @@ return {
       end
     end
 
-    -- Convert slug to human-readable Title Case (e.g., "deep-learning" → "Deep Learning")
-    local function slugify_to_title(slug)
-      local with_spaces = slug:gsub('-', ' ')
-      local title = with_spaces:gsub("(%a)([%w_']*)", function(first, rest)
-        return first:upper() .. rest:lower()
-      end)
-      return title
-    end
+    -- Title Case helper shared with util/scratch.lua
+    local slugify_to_title = require('shamindras.util.slug').to_title
 
     -- }}}
 

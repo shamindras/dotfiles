@@ -51,29 +51,8 @@ keymap({ 'n', 'v' }, '<leader>d', '"_d', { desc = '[d]elete to black hole' })
 
 -- {{{ Buffer File Operations
 
-local function rename_file()
-  local old_name = vim.fn.expand('%')
-  if old_name == '' then
-    vim.notify('No file to rename', vim.log.levels.WARN)
-    return
-  end
-
-  local new_name = vim.fn.input('New name: ', old_name, 'file')
-
-  if new_name == '' or new_name == old_name then
-    return
-  end
-
-  local ok, err = pcall(vim.fn.rename, old_name, new_name)
-  if not ok then
-    vim.notify('Rename failed: ' .. err, vim.log.levels.ERROR)
-    return
-  end
-
-  vim.cmd('edit ' .. vim.fn.fnameescape(new_name))
-  vim.cmd('bdelete ' .. vim.fn.bufnr(old_name))
-  vim.notify('Renamed: ' .. old_name .. ' � ' .. new_name)
-end
+-- Rename flow lives in util/file.lua (shared with util/scratch.lua)
+local rename_file = require('shamindras.util.file').rename_prompt
 
 local function make_executable()
   local file = vim.fn.expand('%')
