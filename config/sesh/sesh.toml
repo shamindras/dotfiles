@@ -74,6 +74,14 @@ alias = "ff"
 alias_auto_connect = true
 icon = "📰"
 
+[[session]]
+name = "scratch"
+path = "~/Dropbox/notes/scratch"
+startup_command = "~/.config/sesh/scripts/scratch.sh"
+alias = "ss"
+alias_auto_connect = true
+icon = "📝"
+
 # Picker icons for the ad-hoc tier (dirs.list roots). Icon only — the
 # layout stays with [default_session] below; a wildcard startup_command
 # would silently override default.sh. Each root is listed twice because
