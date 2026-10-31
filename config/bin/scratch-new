@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# scratch-new — create (or reuse) a markdown scratch note and print its path.
+#
+# Shell twin of config/nvim/lua/shamindras/util/scratch.lua. Called by the
+# zsh `ns` function, tmux `prefix O s` (CMD+S) and the sesh `scratch`
+# session. Keep the naming rule in step with util/slug.lua + util/scratch.lua
+# (documented once in config/zsh/CLAUDE.md):
+#   empty title → YYYY-MM-DD-HHMMSS.md, line 1 "# "
+#   title       → <slug>.md, line 1 "# Title Case"
+#   slug        → lowercase, runs of [^a-z0-9] → "-", leading/trailing "-" stripped
+#
+# usage:
+#   scratch-new [title...]        create (or reuse), print the path
+#   scratch-new --open [title...] create, prompt for a title when none given,
+#                                 then exec nvim on line 3 in insert mode
+#   scratch-new --last            print the newest scratch path (exit 1 if none)
+#   scratch-new --help
+set -Eeuo pipefail
+
+SCRATCH_DIR="${DROPBOX_NOTES_DIR:-$HOME/Dropbox/notes}/scratch"
+
+usage() {
+  sed -n '2,17p' "${BASH_SOURCE[0]}" | cut -c 3-
+}
+
+slugify() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+title_case() {
+  printf '%s' "$1" | tr '-' ' ' |
+    awk '{ for (i = 1; i <= NF; i++) $i = toupper(substr($i, 1, 1)) tolower(substr($i, 2)) } 1'
+}
+
+# create <title> — prints the path; writes the heading only for a new file
+create() {
+  local title="$1" name heading path
+  mkdir -p "$SCRATCH_DIR"
+
+  name=""
+  [[ -n "$title" ]] && name="$(slugify "$title")"
+  if [[ -n "$name" ]]; then
+    heading="# $(title_case "$name")"
+  else
+    name="$(date +%Y-%m-%d-%H%M%S)"
+    heading="# "
+  fi
+
+  path="$SCRATCH_DIR/$name.md"
+  if [[ ! -e "$path" ]]; then
+    printf '%s\n\n\n' "$heading" >"$path"
+  fi
+  printf '%s\n' "$path"
+}
+
+newest() {
+  local path
+  path="$(ls -t "$SCRATCH_DIR"/*.md 2>/dev/null | head -n 1 || true)"
+  if [[ -z "$path" ]]; then
+    echo "scratch-new: no scratch notes in $SCRATCH_DIR" >&2
+    return 1
+  fi
+  printf '%s\n' "$path"
+}
+
+case "${1:-}" in
+  -h | --help)
+    usage
+    ;;
+  -l | --last)
+    newest
+    ;;
+  -o | --open)
+    shift
+    title="$*"
+    if [[ $# -eq 0 ]]; then
+      read -rp 'Scratch title: ' title || title=""
+    fi
+    path="$(create "$title")"
+    exec nvim +3 +startinsert "$path"
+    ;;
+  *)
+    create "$*"
+    ;;
+esac
