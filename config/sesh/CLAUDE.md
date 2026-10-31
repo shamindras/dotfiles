@@ -107,6 +107,7 @@ All scripts use:
 | blog     | claude   | yazi    | nvim         | preview        | term   | —      | nvim     |
 | notes    | journal  | yazi    | cl-dl-recent | cl-zk-notes    | ideas  | term   | journal  |
 | feed     | newsboat | yazi    | term         | —              | —      | —      | newsboat |
+| scratch  | nvim     | yazi    | term         | —              | —      | —      | nvim     |
 
 The `notes` session runs two claude windows: `cl-dl-recent` opens in
 `~/Downloads` with `claude --continue || claude` (resumes the most recent
@@ -125,7 +126,7 @@ its WORK_DIR already is Downloads) so its yazi has 7 tabs instead of 9.
 |------------|-------|
 | `items`    | `sesh_window_items` — renames window 1, runs `taskwarrior-tui;clear`                   |
 | `claude`   | `sesh_window_claude` (renames W1) or `sesh_window_claude_new` (new window; optional window name + command — `notes` uses it for `cl-dl-recent` / `cl-zk-notes`) |
-| `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker                                       |
+| `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker (`scratch` session: inline, opens the scratch picker `require("shamindras.util.scratch").pick()` instead) |
 | `term`     | `sesh_window_term` — plain terminal                                                     |
 | `yazi`     | `sesh_window_yazi_tabs` — persistent shell window running `yt -W` (preloaded tabs)       |
 | `preview`  | `quarto preview --no-browser` (`blog` session only, inline) — server up, Firefox not opened; click the printed `Browse at` URL |
@@ -198,8 +199,9 @@ reshuffles the live group. Aliases are the fixed targets.
 | notes   | `nn`  | 📓   | career  | `cc`  | 💼   |
 | play    | `pp`  | 🧪   | blog    | `bb`  | ✍️   |
 | dots    | `dd`  | 🔧   | feed    | `ff`  | 📰   |
+| scratch | `ss`  | 📝   |         |       |      |
 
-First letter doubled, `alias_auto_connect = true` on all six. Aliases must
+First letter doubled, `alias_auto_connect = true` on all seven. Aliases must
 be unique case-insensitively (sesh errors otherwise) and never a single
 letter — auto-connect would fire on the first keystroke of any fuzzy search.
 Aliases also work on the CLI: `sesh connect dd`, `sc dd`, `sesh-reset dd`.
