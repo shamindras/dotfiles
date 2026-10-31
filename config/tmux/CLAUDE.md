@@ -118,6 +118,7 @@ sequences after prefix. This avoids colliding with tmux built-in defaults.
 | `C` | Claude Code window (incrementing: claude, claude-1…)       |
 | `c` | Claude Code in right split (50% width)                     |
 | `u` | fzf-url picker                                             |
+| `s` | Scratch note: new window running `~/.config/bin/scratch-new --open` (title prompt → nvim; window closes on `:q`; incrementing: scratch, scratch-1…) |
 
 **N (Navigate) — session management** (`prefix + N + <key>`):
 
