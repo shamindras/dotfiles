@@ -1,0 +1,11 @@
+# markdownlint-cli2 config for $DROPBOX_NOTES_DIR (scratch notes and any
+# other markdown under notes/). Deployed from config/zk/notebook/ by
+# scripts/ops/sync-notes-config. zk/ carries its own override.
+# Aligns line length with prettier (.prettierrc.yaml: printWidth = 120).
+# MD041 left at its default (enabled): scratch notes start with an H1.
+config:
+  MD013:
+    line_length: 120
+    code_blocks: false
+    tables: false
+  MD033: false

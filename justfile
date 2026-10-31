@@ -45,15 +45,17 @@ format:
 help:
 	@just --list
 
-# Sync firefox, treesitter, yazi plugins, submodules.
+# Sync firefox, treesitter, yazi plugins, notes configs, submodules.
 sync-all:
-	@scripts/step outer 1 4 🦊 "Syncing Firefox"
+	@scripts/step outer 1 5 🦊 "Syncing Firefox"
 	@just firefox_sync
-	@scripts/step outer 2 4 🔄 "Syncing treesitter"
+	@scripts/step outer 2 5 🔄 "Syncing treesitter"
 	@just treesitter_sync
-	@scripts/step outer 3 4 🐱 "Upgrading yazi plugins"
+	@scripts/step outer 3 5 🐱 "Upgrading yazi plugins"
 	@just yazi_plugins_upgrade
-	@scripts/step outer 4 4 📦 "Updating submodules"
+	@scripts/step outer 4 5 📝 "Syncing notes configs"
+	@just notes_config_sync
+	@scripts/step outer 5 5 📦 "Updating submodules"
 	@just update_submods
 
 # Format markdown files with prettier.
@@ -87,6 +89,13 @@ firefox_sync:
 	@printf "🦊 Syncing Firefox config (user.js, chrome/, policies.json) to profile...\n"
 	@./scripts/ops/setup-firefox
 	@printf "✅ Firefox synced (restart Firefox for changes)\n"
+
+# Deploy prettier + markdownlint configs from config/zk/notebook/ into $DROPBOX_NOTES_DIR.
+[group('notes')]
+notes_config_sync:
+	@printf "📝 Syncing notes formatter configs to $DROPBOX_NOTES_DIR...\n"
+	@./scripts/ops/sync-notes-config
+	@printf "✅ Notes configs synced\n"
 
 # Show nvim-treesitter parser status (read-only).
 [group('treesitter')]

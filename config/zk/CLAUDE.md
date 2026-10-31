@@ -5,10 +5,11 @@
 
 ## File Structure
 
-| File          | Purpose                                 |
-| ------------- | --------------------------------------- |
-| `config.toml` | Notebook config (groups, aliases, LSP)  |
-| `templates/`  | Note templates (daily.md, idea.md)      |
+| File          | Purpose                                                              |
+| ------------- | -------------------------------------------------------------------- |
+| `config.toml` | Notebook config (groups, aliases, LSP)                               |
+| `templates/`  | Note templates (daily.md, idea.md)                                   |
+| `notebook/`   | Canonical prettier + markdownlint configs for `$DROPBOX_NOTES_DIR`   |
 
 ## Key Settings
 
@@ -28,6 +29,26 @@
 | `.zk/notebook.db`     | **No**  | SQLite index, rebuilt lazily by zk-nvim LSP from the markdown files.   |
 | `.zk/notebook.db-wal`, `.zk/notebook.db-shm` | **No** | Transient SQLite WAL sidecars (long-lived during nvim sessions).       |
 | `.zk/templates/`      | **No**  | Cache rsync'd locally from `config/zk/templates/` by `sync_templates()` in `config/nvim/lua/shamindras/plugins/zk.lua`. |
+
+## Markdown formatting config (`$DROPBOX_NOTES_DIR/`)
+
+prettier (conform.nvim) and markdownlint-cli2 (nvim-lint) both search upward
+from the file being edited, so one config set at the notes root serves the zk
+notebook and the scratch directory (`notes/scratch`, a sibling of `zk/`).
+`config/zk/notebook/` mirrors the notes tree and is the source of truth;
+`scripts/ops/sync-notes-config` copies it out (never symlinks — Dropbox does
+not sync symlinks reliably).
+
+| Deployed path                      | Source (`config/zk/notebook/`) | Notes                                            |
+| ---------------------------------- | ------------------------------ | ------------------------------------------------ |
+| `notes/.prettierrc.yaml`           | `.prettierrc.yaml`             | `printWidth: 120`, `proseWrap: always`           |
+| `notes/.prettierignore`            | `.prettierignore`              | Markdown only; skips `.zk/`, `.claude/`          |
+| `notes/.markdownlint-cli2.yaml`    | `.markdownlint-cli2.yaml`      | MD013 at 120; MD041 on (scratch starts with H1)  |
+| `notes/zk/.markdownlint-cli2.yaml` | `zk/.markdownlint-cli2.yaml`   | Override: MD041 off, frontmatter title not an H1 |
+
+Refresh after editing a tracked copy: `just notes_config_sync` (also part of
+`just sync-all`). `./install` runs it via `setup-zk`. Dropbox syncs the
+deployed copies to other machines.
 
 Why `.zk/` is Dropbox-ignored: on macOS Tahoe (26.x), `~/Library/CloudStorage/Dropbox`
 is a File Provider that materialises files on demand. A synced `notebook.db`

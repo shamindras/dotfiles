@@ -17,6 +17,8 @@
 #   4. Seed starter templates from config/zk/templates/ if .zk/templates/ is empty.
 #   5. If an existing notebook.db is corrupt, back it up to /tmp and remove it.
 #      The zk-nvim LSP rebuilds the index lazily on next markdown buffer open.
+#   6. Deploy markdown formatter/linter configs (prettier, markdownlint) from
+#      config/zk/notebook/ into $DROPBOX_NOTES_DIR via scripts/ops/sync-notes-config.
 
 set -Eeuo pipefail
 
@@ -71,5 +73,10 @@ if [ -f "$db" ]; then
     echo "  zk-nvim LSP will rebuild the index on next markdown buffer open."
   fi
 fi
+
+# 6. Deploy prettier + markdownlint configs for the notes tree (zk + scratch).
+#    Copies, not symlinks — see scripts/ops/sync-notes-config.
+echo "Syncing notes formatter configs..."
+./scripts/ops/sync-notes-config
 
 echo "✓ zk setup complete!"
