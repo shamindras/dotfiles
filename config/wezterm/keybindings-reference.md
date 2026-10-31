@@ -68,15 +68,16 @@ Note: All tmux bindings in this reference (including former core defaults like `
 
 ## Tool Launchers — O (Open) key table
 
-| WezTerm key   | tmux key | Action                       |
-| ------------- | -------- | ---------------------------- |
-| `CMD+G`       | `O g`    | Lazygit popup                |
+| WezTerm key   | tmux key | Action                                                          |
+| ------------- | -------- | --------------------------------------------------------------- |
+| `CMD+G`       | `O g`    | Lazygit popup                                                   |
 | `CMD+Y`       | `O y`    | Yazi window w/ preloaded tabs, Downloads active (yazi, yazi-1…) |
-| `CMD+I`       | `O i`    | Items (taskwarrior-tui)      |
-| `CMD+B`       | `O b`    | Btm                          |
-| `CMD+C`       | `O C`    | Claude Code window (claude…) |
-| `CMD+SHIFT+C` | `O c`    | Claude Code sidebar (50%)    |
-| `CMD+U`       | `O u`    | fzf-url picker               |
+| `CMD+I`       | `O i`    | Items (taskwarrior-tui)                                         |
+| `CMD+B`       | `O b`    | Btm                                                             |
+| `CMD+C`       | `O C`    | Claude Code window (claude…)                                    |
+| `CMD+SHIFT+C` | `O c`    | Claude Code sidebar (50%)                                       |
+| `CMD+U`       | `O u`    | fzf-url picker                                                  |
+| `CMD+S`       | `O s`    | Scratch note (prompt → nvim)                                    |
 
 ## Copy Mode & Utilities
 
