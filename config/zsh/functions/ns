@@ -1,0 +1,53 @@
+##? ns - new markdown scratch note in nvim (low-latency, Dropbox-backed)
+##?
+##? Thin wrapper over ~/.config/bin/scratch-new: one title prompt, Enter
+##? saves as a timestamp name, a title saves as its slug, cursor lands on
+##? line 3 in insert mode. Files live in $DROPBOX_NOTES_DIR/scratch, a
+##? sibling of the zk notebook (never inside it). In nvim: <leader>n*.
+##?
+##? usage:
+##?   ns [title...]
+##?   ns -l | -f | -h
+##?
+##? options:
+##?   (none)      prompt "Scratch title:" — Enter = timestamp name
+##?   title...    skip the prompt, use the words as the title
+##?   -l, --last  open the newest scratch
+##?   -f, --find  open nvim with the scratch picker (<leader>nf)
+##?   -h, --help  this help
+##?
+##? examples:
+##?   ns                      # prompt, Enter → 2026-10-31-143205.md
+##?   ns api design           # → api-design.md with "# Api Design"
+##?   ns -l                   # reopen the newest scratch
+
+ns() {
+  local bin="${XDG_CONFIG_HOME:-$HOME/.config}/bin/scratch-new"
+
+  case "${1:-}" in
+    -h|--help)
+      grep "^##?" "${(%):-%x}" | cut -c 5-
+      return 0
+      ;;
+    -l|--last)
+      local note
+      note="$("$bin" --last)" || return 1
+      tmux-resize
+      nvim "$note"
+      clear
+      return
+      ;;
+    -f|--find)
+      tmux-resize
+      nvim +'autocmd User VeryLazy ++once lua require("shamindras.util.scratch").pick()'
+      clear
+      return
+      ;;
+  esac
+
+  tmux-resize
+  "$bin" --open "$@"
+  clear
+}
+
+# vim: ft=zsh

@@ -5,7 +5,7 @@
 Modular zsh config with custom "Z1" framework. Numbered `conf.d/` files ensure
 deterministic load order. Plugin system based on
 [zsh_unplugged](https://github.com/mattmc3/zsh_unplugged) (git-based, 2 plugins:
-zsh-autosuggestions, zsh-syntax-highlighting). 22 autoloaded functions in `functions/`.
+zsh-autosuggestions, zsh-syntax-highlighting). 24 autoloaded functions in `functions/`.
 
 - **Docs**: https://zsh.sourceforge.io/Doc/
 - **Installed version**: zsh 5.9 (system `/bin/zsh`, verified 2026-03-25)
@@ -33,9 +33,10 @@ config/zsh/
 │   ├── 10-z1-brew-apps.zsh          # zoxide, fzf, atuin (cached via __memoize_cmd)
 │   ├── 11-z1-aliases.zsh            # 90+ aliases (regular, suffix, global)
 │   └── 12-z1-prompt.zsh             # Simple vcs_info prompt
-└── functions/                        # Autoloaded functions (22 files)
+└── functions/                        # Autoloaded functions (24 files)
     ├── k, ki                         # Zettelkasten (zk) wrappers
     ├── kd                            # Today's journal in nvim with the split layout (sesh journal-layout.lua)
+    ├── ns                            # New markdown scratch note (wrapper over ~/.config/bin/scratch-new)
     ├── y                             # Yazi wrapper (preserves cwd)
     ├── yt                            # Yazi with preloaded tabs (wash + cwd-follow shim over ~/.config/bin/yazi-tabs)
     ├── ua                            # Activate nearest uv Python venv
@@ -213,9 +214,27 @@ re-investigation:
 | fzf    | Ctrl-T (files), Ctrl-R (history), Alt-C (dirs)    |
 | yazi   | `y` wrapper preserves cwd on exit; `yt` launches with preloaded tabs (wash by default, `-W` skips; logic in `~/.config/bin/yazi-tabs`); `yh` = home variant; `R w`/`R c` in yazi run `wash`/`clean` on cwd via `zsh -ic` |
 | zk     | `k`/`ki` functions with template sync; `kd` opens today's journal with the sesh split layout (`~/.config/sesh/scripts/journal-layout.lua`), `kds` syncs templates first |
+| scratch | `ns [title]` new scratch note (prompt when no title; `-l` newest, `-f` picker) via `~/.config/bin/scratch-new`; nvim twin is `<leader>n*` — see § Scratch slug rule |
 | sesh   | `sc` connect: fzf-pick or `sc <name\|alias>` direct (safe reattach; aliases like `dd` from sesh.toml); `sn` ad-hoc session from dirs.list; `sesh-reset <name\|alias>` force-recreate (`sra` = `--all`, derived from sesh.toml) |
 | uv     | `ua` activates nearest Python venv                 |
 | aerospace | `asr` reloads config + self-heals post-upgrade stale server; `asf` forced restart |
+
+## Scratch slug rule
+
+Scratch notes (`ns`, tmux `O s`, sesh `scratch`, nvim `<leader>n*`) share
+one naming rule, implemented twice by decision — `config/bin/scratch-new`
+(shell) and `config/nvim/lua/shamindras/util/slug.lua` +
+`util/scratch.lua` (Lua). Change both together:
+
+| Input          | Filename                 | Line 1         |
+| -------------- | ------------------------ | -------------- |
+| empty          | `YYYY-MM-DD-HHMMSS.md`   | `# `           |
+| `API Design!`  | `api-design.md`          | `# Api Design` |
+
+Slug: lowercase, runs of `[^a-z0-9]` → `-`, leading/trailing `-` stripped.
+Title Case: `-` → space, first letter of each word upper, rest lower.
+Files are written as heading + two blank lines; an existing slug is reused,
+never overwritten. Directory: `$DROPBOX_NOTES_DIR/scratch` (created on use).
 
 ## Startup Performance
 
