@@ -137,7 +137,11 @@ return {
         group = vim.api.nvim_create_augroup('LspDetachCleanup', { clear = true }),
         callback = function(event)
           vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds({ group = 'lsp-document-highlight', buffer = event.buf })
+          -- The group only exists once a documentHighlight-capable server has
+          -- attached; create-or-get it so detaching from any other server
+          -- (e.g. marksman on a scratch note being renamed) cannot error.
+          local hl_group = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = false })
+          vim.api.nvim_clear_autocmds({ group = hl_group, buffer = event.buf })
           -- let mini.cursorword resume for this buffer
           vim.b[event.buf].minicursorword_disable = false
         end,
