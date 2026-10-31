@@ -51,3 +51,7 @@ pages. Keeping `.zk/` local-only removes the entire race.
 - Zsh functions `k`/`ki` wrap zk with template sync from config to notebook
 - Nvim integration via zk-nvim plugin (`<leader>k` prefix)
 - Setup script: `scripts/setup/setup-zk`
+- Scratch notes live **outside** the notebook (`$DROPBOX_NOTES_DIR/scratch`,
+  see `config/nvim/CLAUDE.md` § Scratch Notes). `<leader>np` promotes one into
+  `ideas/` via `zk.api.new` (title = H1, `idea.md` template, body appended
+  after creation because the template does not render `{{content}}`)
