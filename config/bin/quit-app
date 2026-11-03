@@ -15,6 +15,7 @@ set -euo pipefail
 
 # --- Configuration -----------------------------------------------------------
 MAX_ITERATIONS=100   # 100 × 0.1s = 10s max wait for process exit
+MAX_ROUNDS=5         # quit events sent before giving up on a multi-instance app
 POLL_INTERVAL=0.1    # seconds between each running check
 POST_EXIT_DELAY=0.3  # seconds after exit for macOS animations to settle
 SKETCHYBAR="/opt/homebrew/bin/sketchybar"
@@ -106,6 +107,40 @@ _poll_exit() {
   while _is_running && [[ $n -lt $MAX_ITERATIONS ]]; do
     sleep "$POLL_INTERVAL"
     n=$((n + 1))
+  done
+}
+
+_count_running() {
+  pgrep $PGREP_FLAG "$PGREP_PATTERN" 2>/dev/null | wc -l | tr -d ' '
+}
+
+_poll_count_below() {
+  # Wait for the number of matching processes to drop under $1.
+  local n=0
+  while [[ $(_count_running) -ge $1 && $n -lt $MAX_ITERATIONS ]]; do
+    sleep "$POLL_INTERVAL"
+    n=$((n + 1))
+  done
+}
+
+_quit_all() {
+  # The quit Apple Event is addressed by app name, so with several
+  # instances of one app running (Claude via `open -n`) each event ends
+  # exactly one of them: send, wait for the count to drop, repeat. A
+  # single-instance app takes one round, as before. A round that makes no
+  # progress falls back to SIGTERM on whatever still matches (Electron
+  # quits gracefully on it) and one last poll.
+  local round=0 before
+  while _is_running && [[ $round -lt $MAX_ROUNDS ]]; do
+    before=$(_count_running)
+    _do_quit
+    _poll_count_below "$before"
+    if [[ $(_count_running) -ge $before ]]; then
+      pkill -TERM $PGREP_FLAG "$PGREP_PATTERN" 2>/dev/null || true
+      _poll_exit
+      break
+    fi
+    round=$((round + 1))
   done
 }
 
@@ -214,8 +249,7 @@ else
     # Settle time: let macOS fully commit to the new workspace before
     # the quit signal fires — prevents the dying app from stealing focus.
     sleep "$SETTLE_DELAY"
-    _do_quit
-    _poll_exit
+    _quit_all
     _switch_workspace "$WORKSPACE"
     _notify
   } &

@@ -49,6 +49,15 @@ the plain quit event, so it now uses the default workspace-first flow).
 If the app isn't running, workspace-first mode switches workspace and
 exits immediately (idempotent, no notification).
 
+**Several instances** (Claude Desktop opened again with `open -n`): the
+quit Apple Event is addressed by app name and ends exactly one process, so
+`_quit_all` sends one per round, waits for the matching-process count to
+drop, and repeats (5 rounds max). A round with no progress falls back to
+`pkill -TERM` on the remaining matches (Electron quits gracefully on it)
+and one last poll. Single-instance apps take one round, unchanged. To quit
+only one Claude instance use leader `RCmd → c → q` (`claude.lua`), not this
+script.
+
 **`--save-check <home-workspace>`** (TextEdit): before switching away,
 query the app for documents with unsaved changes
 (`count of (documents whose modified is true)` via osascript). If any are
