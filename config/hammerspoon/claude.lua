@@ -13,7 +13,8 @@
 --     `new` then re-asserts focus on the composer, which the dismissal
 --     otherwise leaves unfocused.
 --
--- AX contract (verified against Claude 2.26454.2 — labels are the API):
+-- AX contract (verified against Claude 2.26454.2; on 4.4212.0 only the
+-- composer label was re-checked — labels are the API):
 --   AXButton    AXDescription "Search your activity"   Recents magnifier
 --   AXTextField AXDescription "Search your activity"   Recents search box
 --               (matched by description, not the "Search recents..."
@@ -57,6 +58,13 @@
 -- own startup landing page can win over the deep link it was launched
 -- with. So when the first poll sees no AXWebArea, the module waits for
 -- one to appear, re-sends the link once, and polls on a longer budget.
+--
+-- Instances: the app cannot open a second copy of itself, but `open -n`
+-- starts another process (leader c → o, open_new() below, on the Chat
+-- tab); each lands on workspace C. Cmd-W only closes a window (the process stays,
+-- invisible), so quit_one() below is the per-instance Cmd-Q: graceful
+-- terminate on the frontmost, else newest, instance. q → c (quit-app)
+-- quits them all.
 
 local M = {}
 
@@ -333,6 +341,141 @@ local FOCUS = {
 -- Cancel an in-flight focus poll (debugging aid).
 function M.stop()
   stop_poll()
+end
+
+-- }}}
+
+-- {{{ Instances (c → q)
+
+local SKETCHYBAR = '/opt/homebrew/bin/sketchybar'
+local AEROSPACE = '/opt/homebrew/bin/aerospace'
+local QUIT_TIMEOUT_S = 10
+local NOTICE_S = 2 -- linger, then reset: same contract as config/bin/quit-app
+-- Catppuccin Mocha (ARGB), the colours quit-app uses on the leader item.
+local COLOR_GREEN = '0xffa6e3a1'
+local COLOR_RED = '0xfff38ba8'
+local COLOR_LAVENDER = '0xffb4befe'
+
+-- Absolute paths: hs.task spawns with the minimal default PATH (no
+-- /opt/homebrew/bin), see hud.lua.
+local function task(bin, args)
+  hs.task
+    .new(bin, nil, function()
+      return false
+    end, args)
+    :start()
+end
+
+local notice_timer
+
+local function show_label(label, color)
+  if notice_timer then
+    notice_timer:stop()
+    notice_timer = nil
+  end
+  task(SKETCHYBAR, { '--set', 'leader', 'label=' .. label, 'label.color=' .. color, 'drawing=on' })
+end
+
+-- Final notice: show, linger NOTICE_S, then hide and restore the colour.
+local function notice(label, color)
+  show_label(label, color)
+  notice_timer = hs.timer.doAfter(NOTICE_S, function()
+    notice_timer = nil
+    task(SKETCHYBAR, { '--set', 'leader', 'drawing=off', 'label.color=' .. COLOR_LAVENDER })
+  end)
+end
+
+local CLAUDE_APP = '/Applications/Claude.app'
+
+-- Open another instance (c → o). `open -n` always starts a fresh process
+-- (the app cannot do it from inside); aerospace routes the window to C.
+-- The chat link rides along so the instance lands on the Chat tab with
+-- the composer, not on whatever the app's startup page would pick: open
+-- hands a URL given beside `-n -a` to the process it just launched, which
+-- hs.urlevent.openURL could not do (Launch Services would pick an
+-- instance). Observed on 4.4212.0: the launch-time link wins over the
+-- startup page, no re-send needed.
+function M.open_new()
+  task('/usr/bin/open', { '-n', '-a', CLAUDE_APP, M.links.new })
+end
+
+-- Every running Claude Desktop process (one per `open -n`).
+function M.instances()
+  local live = {}
+  for _, app in ipairs(hs.application.applicationsForBundleID(BUNDLE)) do
+    if app:isRunning() then
+      live[#live + 1] = app
+    end
+  end
+  return live
+end
+
+-- The instance c → q targets: the frontmost one if Claude is frontmost,
+-- otherwise the newest (highest pid: the one most recently opened).
+function M.pick()
+  local best
+  for _, app in ipairs(M.instances()) do
+    if app:isFrontmost() then
+      return app
+    end
+    if not best or app:pid() > best:pid() then
+      best = app
+    end
+  end
+  return best
+end
+
+local quit_timer
+
+-- Quit one instance (see pick) and leave the rest running. Graceful
+-- terminate, i.e. Cmd-Q scoped to that process. Reports on the sketchybar
+-- leader label like quit-app. Afterwards: if the quit instance was
+-- frontmost, macOS would hand focus to the next app in the activation
+-- order (observed: Firefox on B), so focus a surviving Claude window
+-- instead to stay on C; when it was the last instance, return to W the
+-- way q → c does.
+function M.quit_one()
+  if quit_timer then
+    quit_timer:stop()
+    quit_timer = nil
+  end
+  local target = M.pick()
+  if not target then
+    notice('✗ Claude not running', COLOR_RED)
+    return
+  end
+  local was_front = target:isFrontmost()
+  local pid = target:pid()
+  show_label('… Claude instance quitting', COLOR_LAVENDER)
+  target:kill()
+  local started = hs.timer.secondsSinceEpoch()
+  quit_timer = hs.timer.doEvery(0.1, function()
+    local alive = target:isRunning()
+    if alive and hs.timer.secondsSinceEpoch() - started < QUIT_TIMEOUT_S then
+      return
+    end
+    quit_timer:stop()
+    quit_timer = nil
+    if alive then
+      notice('✗ Claude instance quit failed', COLOR_RED)
+      return
+    end
+    local left = #M.instances()
+    notice(string.format('✓ Claude instance quit (%d left)', left), COLOR_GREEN)
+    if left == 0 then
+      task(AEROSPACE, { 'workspace', 'W' })
+      return
+    end
+    if was_front then
+      for _, app in ipairs(M.instances()) do
+        local win = app:pid() ~= pid and app:mainWindow()
+        if win then
+          win:focus()
+          break
+        end
+      end
+    end
+  end)
 end
 
 -- open('new' | 'recents' | 'usage' | 'code_new' | 'code_last')

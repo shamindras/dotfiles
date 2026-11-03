@@ -130,10 +130,17 @@ M.quit = {
 
 -- {{{ Group: c — Claude Desktop deep links
 
--- Every leaf opens a claude:// URL in Claude Desktop (launches the app if
+-- Route leaves open a claude:// URL in Claude Desktop (launches the app if
 -- needed; aerospace routes its window to workspace C) via claude.lua,
 -- which also dismisses the Settings overlay first and, for recents,
 -- expands and focuses the search box. URLs live in claude.lua.
+--
+-- o / q are the per-instance pair mirroring o → c / q → c: the app cannot
+-- open a second instance from inside, so c → o runs `open -n` with the
+-- chat link (always a fresh process on the Chat tab, lands on C next to
+-- the others) and c → q quits only the frontmost (else newest) instance;
+-- q → c quits them all. q takes the quit group's idle override so the
+-- sketchybar notice has room.
 local function claude(route)
   return function()
     require('claude').open(route)
@@ -146,6 +153,21 @@ M.claude = {
     { key = 'c', label = 'code-new', fn = claude('code_new') },
     { key = 'l', label = 'code-last', fn = claude('code_last') },
     { key = 'n', label = 'new', fn = claude('new') },
+    {
+      key = 'o',
+      label = 'open-new',
+      fn = function()
+        require('claude').open_new()
+      end,
+    },
+    {
+      key = 'q',
+      label = 'quit-one',
+      fn = function()
+        require('claude').quit_one()
+      end,
+      idle = QUIT_IDLE,
+    },
     { key = 'r', label = 'recents', fn = claude('recents') },
     { key = 'u', label = 'usage', fn = claude('usage') },
   },

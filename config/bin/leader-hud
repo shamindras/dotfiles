@@ -38,7 +38,7 @@ case "$ACTION" in
         LABEL="(q)▸ a:󰈔 b:󰈹 c:󰚩 d:󰋩 e:󰉋 g:󰭹 i:󰂽 m:󰓇 n:󰤨 p:󰈙 q:󰏫 s:󰨞 t:󰊠 u:󰍬 v:󰕼 w:󰆍 x:󰇚 1:󰌋 9:󰍹"
         ;;
       claude)
-        LABEL="(c)▸ c:󰅩 l:󰐊 n:󰎔 r:󰋚 u:󰄨"
+        LABEL="(c)▸ c:󰅩 l:󰐊 n:󰎔 o:󰐕 q:󰅖 r:󰋚 u:󰄨"
         ;;
       run)
         LABEL="(r)▸ b:󰏗 c:󰂜 e:󰈻 i:󰈔 m:󰉏 n:󰤨 r:󰑓 t:󰩹 u:󰖁 w:󰛌"
