@@ -40,7 +40,9 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
 - **ghostty**: assigned to workspace T
 - **vscode**: assigned to workspace S
 - **claude desktop**: assigned to workspace C (leader `RCmd → o/q → c`,
-  deep links under `RCmd → c`); Calendar moved to workspace 8 to free `C`
+  deep links under `RCmd → c`; a second instance from `RCmd → c → o` lands
+  on `C` too, `Alt-h/l` cycle the accordion, `RCmd → c → q` quits one);
+  Calendar moved to workspace 8 to free `C`
 - **vlc**: assigned to workspace V
 - **textedit**: assigned to workspace Q
 - **opensuperwhisper**: assigned to workspace U
