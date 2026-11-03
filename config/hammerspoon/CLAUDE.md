@@ -24,7 +24,7 @@ config/hammerspoon/
 ├── hud.lua                                 # SketchyBar leader HUD bridge
 ├── actions.lua                             # ~60-action data table (7 groups)
 ├── nordvpn.lua                             # NordVPN pause/resume/connect via AX ids
-├── claude.lua                              # Claude Desktop deep links + AX focus steps
+├── claude.lua                              # Claude Desktop deep links, AX focus, instances
 └── launchagents/
     └── com.local.hidutil-remap.plist       # Caps→F18 + F1..F12→media at login
 ```
@@ -81,7 +81,7 @@ to surface).
 | ------ | --- | ----- | ------------------------------------------------ |
 | open   | o   | 19    | Launch apps via `config/bin/fastopen`            |
 | quit   | q   | 19    | Quit apps via `config/bin/quit-app` (10s idle)   |
-| claude | c   | 5     | Claude Desktop deep links (`claude://`)          |
+| claude | c   | 7     | Claude Desktop deep links + instances (o/q)      |
 | run    | r   | 10    | Run utilities (brew, trash, mute, VPN pause, …)  |
 | search | s   | 3     | Raycast extensions                               |
 | github | g   | 5     | GitHub URLs                                      |
@@ -167,6 +167,48 @@ ready to type:
 | `c → r` | `claude://claude.ai/chat`                | Chat tab, Recents, search box  |
 | `c → u` | `claude://claude.ai/settings/usage`      | Settings → Usage, its search   |
 
+#### Several instances (`c → o`, `c → q`)
+
+The app cannot open a second copy of itself, but `open -n` starts another
+process with its own window, and aerospace routes it to `C` like the
+first (accordion layout, so `Alt-h` / `Alt-l` cycle between them). The
+two per-instance leaves mirror `o → c` / `q → c`:
+
+| Sequence | Meaning                             | Mechanism                                           |
+| -------- | ----------------------------------- | --------------------------------------------------- |
+| `c → o`  | Claude, open another, on Chat       | `claude.open_new()`: `open -n -a … <chat link>`     |
+| `c → q`  | Claude, quit this instance only     | `claude.quit_one()`: graceful terminate, in-process |
+| `q → c`  | Quit Claude entirely, all instances | `quit-app` loops a quit event per process           |
+| `o → c`  | Open / focus Claude (unchanged)     | `fastopen claude`                                   |
+| Cmd-Q    | Native quit of the focused instance | unchanged                                           |
+
+`c → o` passes the `new` chat link (`claude://claude.ai/new?surface=chat`)
+beside `-n -a`, so `open` delivers it to the process it just launched and
+the instance starts on the Chat tab with the composer rather than on the
+app's startup page (often the Code tab). The launch-time link won over the
+startup page on 4.4212.0; `hs.urlevent.openURL` could not target the new
+instance, since Launch Services picks one.
+
+`c → q` targets the frontmost instance when Claude is frontmost, else the
+most recently opened one (highest pid). It posts the same `…` / `✓` / `✗`
+notices on the sketchybar leader label as `quit-app`, with the surviving
+count. If the quit instance was frontmost, a surviving Claude window is
+focused (macOS would otherwise hand focus to the next app in the
+activation order, observed landing on Firefox's `B`); if it was the last
+one, focus goes to `W` like `q → c`.
+
+**Cmd-W does not quit.** In Claude's menu Cmd-W is `File → Close Window`
+and Cmd-Option-W is `Close All`: the process keeps running with zero
+windows, invisible on `C`, still sharing the app's single profile
+directory, and a later `c → o` starts a third process rather than reusing
+it. `c → q` from any workspace picks such a windowless duplicate when it
+is the newest instance, which is the cheap way to clean one up.
+
+With several instances running, `o → c` (plain `open`) and the `claude://`
+deep links go to whichever instance Launch Services resolves, so the route
+leaves (`c → n`, `c → r`, …) are best used with one instance, or with the
+intended one frontmost.
+
 The URL alone cannot deliver the last column: the Recents search box is
 collapsed behind a magnifier button, and the Settings overlay keeps
 keyboard focus over whatever `new` navigates to underneath. Claude
@@ -200,7 +242,8 @@ the header of `claude.lua`):
   the app's own startup landing page can win over the launch-time deep
   link, so the module waits for the web tree and re-sends the link once.
 
-The labels are the contract (verified against Claude 2.26454.2); if one
+The labels are the contract (verified against Claude 2.26454.2; on the
+installed 4.4212.0 only the composer label was re-checked); if one
 changes upstream the leaf silently degrades to a plain navigation:
 
 | Element       | Attribute       | Value                          | Role                      |
@@ -229,7 +272,10 @@ on `new` that pre-fills the prompt.
 `quit-app Claude` anchors its process match to the bundle executable
 (`/Applications/Claude.app/Contents/MacOS/Claude$`): a plain `pgrep -xi
 claude` also matches every running `claude` CLI process, so the quit
-would never observe the exit and time out after 10 s.
+would never observe the exit and time out after 10 s. Because the quit
+Apple Event is addressed by name and only one instance honours it,
+`quit-app` sends one per round until no process matches (SIGTERM fallback
+on a round with no progress), so `q → c` ends every instance.
 
 ### NordVPN pause / resume (`run → n`, nordvpn.lua)
 
