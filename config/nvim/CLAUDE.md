@@ -28,6 +28,7 @@ config/nvim/
 │   │   ├── markdown.lua              # Shared treesitter helpers (headings, folds, section ops)
 │   │   ├── slug.lua                  # Title <-> slug helpers shared by zk ideas and scratch notes
 │   │   ├── file.lua                  # rename_to / rename_prompt (behind <leader>br and <leader>nr)
+│   │   ├── essays.lua                # shamindras.com posts: new, open, preview, prose check
 │   │   ├── scratch.lua               # Markdown scratch notes: create, pick, rename, promote, delete
 │   │   └── themes.lua                # Theme registry (plugins, palettes, setup opts, separator colors)
 │   ├── core/
@@ -47,6 +48,7 @@ config/nvim/
 │       │   └── pickers.lua           # Custom Snacks picker configs (fd, rg, ivy, todo, colorscheme)
 │       ├── zk.lua                    # Zettelkasten integration
 │       ├── scratch.lua               # Virtual spec: <leader>n* keymaps over util/scratch.lua
+│       ├── essays.lua                # Virtual spec: <leader>e* keymaps over util/essays.lua
 │       ├── markdown.lua              # Markdown editing (tadmccorkle/markdown.nvim)
 │       ├── render-markdown.lua       # In-buffer markdown rendering
 │       ├── mini.lua                  # Single mini.nvim spec (12 modules)
@@ -72,6 +74,7 @@ config/nvim/
 | `<leader>b`  | Buffer ops (delete, yank, write, rename, chmod, copy path)   |
 | `<leader>c`  | Code/LSP (definition, references, actions, rename, format)   |
 | `<leader>d`  | Delete to black hole (depth-1 allow-list)                    |
+| `<leader>e`  | Essays: shamindras.com posts (new, open, preview, prose)     |
 | `<leader>f`  | Find (files, buffers, colorscheme, mini.files explorer)      |
 | `<leader>i`  | Insert (blank lines above/below)                             |
 | `<leader>k`  | Zettelkasten (daily, idea, search, grep, backlinks)          |
@@ -158,6 +161,25 @@ timestamp path. An existing `<slug>.md` is opened, never overwritten.
 Slug rule (one definition, two implementations kept in step):
 `util/slug.lua` and `config/bin/scratch-new` — see `config/zsh/CLAUDE.md`
 § Scratch slug rule.
+
+## Essays (`<leader>e`)
+
+Posts for shamindras.com, in `$DROPBOX_REPOS_DIR/ss_personal_website`.
+Logic in `util/essays.lua`, keymaps in `plugins/essays.lua` (virtual lazy
+spec depending on snacks). Thin wrappers over the site's `just` recipes;
+shell twins `just new`, `just open`, `just preview`, `just prose`, and the
+sesh `blog` session (alias `bb`) runs `just preview` in its preview window.
+
+| Key          | Action                                                            |
+| ------------ | ----------------------------------------------------------------- |
+| `<leader>en` | New post: template picker (previewed), then `just new` in a split |
+| `<leader>eo` | Open a post: Snacks picker, posts on the go first                 |
+| `<leader>ep` | Open the current post on the running preview                      |
+| `<leader>ec` | Prose check (`just prose`) in a split                             |
+
+`ep` reads the URL a running preview writes to `.cache/preview-url` (the
+post's worktree first, then the main checkout) and swaps in the post's
+`/pst-<short>/` path from its front matter.
 
 ## Cross-Tool Integration
 

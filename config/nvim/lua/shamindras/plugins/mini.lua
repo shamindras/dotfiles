@@ -341,6 +341,7 @@ return {
         { mode = 'n', keys = '<leader>b', desc = '+[b]uffer' },
         { mode = 'n', keys = '<leader>c', desc = '+[c]ode' },
         { mode = 'n', keys = '<leader>d', desc = '+[d]elete (black hole)' },
+        { mode = 'n', keys = '<leader>e', desc = '+[e]ssays' },
         { mode = 'n', keys = '<leader>f', desc = '+[f]ind' },
         { mode = 'n', keys = '<leader>i', desc = '+[i]nsert' },
         { mode = 'n', keys = '<leader>k', desc = '+[k]asten' },
