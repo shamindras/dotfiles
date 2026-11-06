@@ -60,7 +60,7 @@ icon = "💼"
 
 [[session]]
 name = "blog"
-path = "~/Dropbox/repos/ss_personal_quarto_blog"
+path = "~/Dropbox/repos/ss_personal_website"
 startup_command = "~/.config/sesh/scripts/blog.sh"
 alias = "bb"
 alias_auto_connect = true
