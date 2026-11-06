@@ -129,7 +129,7 @@ its WORK_DIR already is Downloads) so its yazi has 7 tabs instead of 9.
 | `nvim`     | `sesh_window_nvim` — nvim with Snacks file picker (`scratch` session: inline, opens the scratch picker `require("shamindras.util.scratch").pick()` instead) |
 | `term`     | `sesh_window_term` — plain terminal                                                     |
 | `yazi`     | `sesh_window_yazi_tabs` — persistent shell window running `yt -W` (preloaded tabs)       |
-| `preview`  | `quarto preview --no-browser` (`blog` session only, inline) — server up, Firefox not opened; click the printed `Browse at` URL |
+| `preview`  | `just preview` (`blog` session only, inline) — the site's live preview, drafts shown, no browser opened; click the printed `localhost:8080` URL; `just preview <short>` for one post's worktree |
 | `journal`  | Explicit cd + rsync + `zk new --print-path` + `nvim +'luafile journal-layout.lua'` (`notes` session only, inline — avoids alias race) |
 | `newsboat` | `newsboat` (`feed` session only, inline)                                                 |
 
