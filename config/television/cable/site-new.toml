@@ -1,0 +1,21 @@
+# site-new — shamindras.com post templates, previewed: Enter runs `just new`
+# from the chosen template. Neovim twin: <leader>en.
+
+[metadata]
+name = "site-new"
+description = "shamindras.com: start a post from a template"
+requirements = ["just", "bat"]
+
+[source]
+command = 'ls "$DROPBOX_REPOS_DIR/ss_personal_website/content/templates" | grep -v README | sed "s/\.md$//"'
+
+[preview]
+command = 'bat --color=always --style=plain "$DROPBOX_REPOS_DIR/ss_personal_website/content/templates/{}.md"'
+
+[keybindings]
+enter = "actions:new"
+
+[actions.new]
+description = "Start a post from this template"
+command = 'just --justfile "$DROPBOX_REPOS_DIR/ss_personal_website/justfile" new --template {}'
+mode = "execute"

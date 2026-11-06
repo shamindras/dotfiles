@@ -1,0 +1,27 @@
+# site-posts — shamindras.com posts (on the go first): Enter runs `just open`
+# (editor plus live preview). Neovim twin: <leader>eo.
+
+[metadata]
+name = "site-posts"
+description = "shamindras.com posts: open one with its live preview"
+requirements = ["just", "bat"]
+
+# Rows from `just posts --plain` are short|state|title|file; `|` is also the
+# template pipe operator, so it is escaped as `\|` in split.
+
+[source]
+command = 'just --justfile "$DROPBOX_REPOS_DIR/ss_personal_website/justfile" posts --all --plain'
+display = '{split:\|:2}  ·  {split:\|:1}  ·  {split:\|:0}'
+output = '{split:\|:0}'
+no_sort = true
+
+[preview]
+command = "bat --color=always --style=plain --line-range=:40 '{split:\\|:3}'"
+
+[keybindings]
+enter = "actions:open"
+
+[actions.open]
+description = "Open the post: editor plus live preview"
+command = 'just --justfile "$DROPBOX_REPOS_DIR/ss_personal_website/justfile" open {split:\|:0}'
+mode = "execute"
