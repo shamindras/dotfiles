@@ -255,7 +255,7 @@ M.search = {
 M.github = {
   group_name = 'github',
   bindings = {
-    { key = 'b', label = 'blog', cmd = url('https://github.com/shamindras/ss_personal_quarto_blog') },
+    { key = 'b', label = 'blog', cmd = url('https://github.com/shamindras/ss_personal_website') },
     { key = 'c', label = 'codebox', cmd = url('https://github.com/shamindras/codebox') },
     { key = 'd', label = 'dotfiles', cmd = url('https://github.com/shamindras/dotfiles') },
     { key = 'g', label = 'profile', cmd = url('https://github.com/shamindras') },
@@ -271,7 +271,7 @@ M.urls = {
   group_name = 'urls',
   bindings = {
     { key = 'a', label = 'amazon-orders', cmd = url('https://www.amazon.com.au/gp/css/order-history') },
-    { key = 'b', label = 'blog-posts', cmd = url('https://www.shamindras.com/posts') },
+    { key = 'b', label = 'writing', cmd = url('https://www.shamindras.com/writing/') },
     { key = 'h', label = 'homepage', cmd = url('https://www.shamindras.com/') },
     -- Private-window Firefox (no run-as-user wrapper around -na args; let
     -- /usr/bin/open invoke it directly via the user context wrapper).
