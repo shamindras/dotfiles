@@ -1,0 +1,66 @@
+##? es - shamindras.com essays: start, open, preview and list posts
+##?
+##? Thin wrapper over ~/.config/bin/site-post, which runs the site's post
+##? recipes in $DROPBOX_REPOS_DIR/ss_personal_website. Each post lives in
+##? its own worktree (.worktrees/<short>). In nvim: <leader>e*.
+##?
+##? usage:
+##?   es [short]
+##?   es -n [flags] | -p [short] | -l | -f | -h
+##?
+##? options:
+##?   (none)         list the posts on the go
+##?   short          open that post: nvim plus its live preview
+##?   -n, --new      start a post (asks template, title, short name, tags)
+##?   -p, --preview  live preview alone: the whole site, or one post
+##?   -l, --list     every post, published ones included
+##?   -f, --find     open nvim with the post picker (<leader>eo)
+##?   -h, --help     this help
+##?
+##? examples:
+##?   es                      # posts on the go
+##?   es -n                   # new post from a template
+##?   es teach                # edit /pst-teach/ with its preview
+
+es() {
+  local bin="${XDG_CONFIG_HOME:-$HOME/.config}/bin/site-post"
+
+  case "${1:-}" in
+    -h|--help)
+      grep "^##?" "${(%):-%x}" | cut -c 5-
+      return 0
+      ;;
+    "")
+      "$bin" posts
+      return
+      ;;
+    -l|--list)
+      "$bin" posts --all
+      return
+      ;;
+    -n|--new)
+      shift
+      tmux-resize
+      "$bin" new "$@"
+      clear
+      return
+      ;;
+    -p|--preview)
+      shift
+      "$bin" preview "$@"
+      return
+      ;;
+    -f|--find)
+      tmux-resize
+      nvim +'autocmd User VeryLazy ++once lua require("shamindras.util.essays").pick_post()'
+      clear
+      return
+      ;;
+  esac
+
+  tmux-resize
+  "$bin" open "$@"
+  clear
+}
+
+# vim: ft=zsh
