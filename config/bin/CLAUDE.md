@@ -22,6 +22,7 @@
 | `quit-app`            | Switch workspace first, then lazy-quit app in background with notify   |
 | `run-as-user`         | Execute a command as the console user (root→user context switch)       |
 | `scratch-new`         | Create (or reuse) a markdown scratch note in `$DROPBOX_NOTES_DIR/scratch` and print its path; `--open` prompts for a title when none given and execs nvim on line 3 in insert mode; `--last` prints the newest. Shell twin of nvim `util/scratch.lua` (slug rule in `config/zsh/CLAUDE.md`); called by zsh `ns`, tmux `prefix O s` / `CMD+S`, and `sesh` `scratch.sh` |
+| `site-post`           | Run a shamindras.com post recipe (`new`, `open`, `preview`, `posts`, `prose`) in `$DROPBOX_REPOS_DIR/ss_personal_website` (`--root <dir>` for a post worktree, `--repo` prints the path); single source of truth for where the site lives, called by zsh `es`, nvim `util/essays.lua` (`<leader>e*`) and the television `site-posts` / `site-new` channels |
 | `sesh-dir-picker`     | fzf picker for ad-hoc sesh sessions from `config/sesh/dirs.list`       |
 | `wipe-ds-store`       | Remove `.DS_Store`: recursive in books library + Downloads + Documents, depth-1 in `$HOME`; single source of truth for leader `RCmd → r → w` and the `move-books` preamble |
 | `yazi-tabs`           | Launch yazi with curated preloaded tabs (Documents, Downloads + books library incl. ebooks); single source of truth for tab data + name/index resolution, called by zsh `yt`, tmux `prefix O y`, and sesh scripts; feeds `YAZI_STARTUP_TABS`/`YAZI_ACTIVE_TAB` to `config/yazi/init.lua` |

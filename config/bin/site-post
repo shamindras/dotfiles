@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# site-post — run a shamindras.com post recipe in the site repo.
+#
+# Single source of truth for where the site lives and how its post
+# commands are called. Shell twin of config/nvim/lua/shamindras/util/essays.lua
+# (<leader>e*); called by the zsh `es` function and the television
+# `site-posts` / `site-new` channels. The recipes themselves live in the
+# site's justfile ($SITE_POST_REPO).
+#
+# usage:
+#   site-post new [flags]           start a post (just new)
+#   site-post open <short> [flags]  editor plus live preview (just open)
+#   site-post preview [short]       live preview alone (just preview)
+#   site-post posts [flags]         posts on the go (just posts)
+#   site-post prose                 prose check (just prose)
+#   site-post --root <dir> <cmd>    run in <dir> (a post worktree) instead
+#   site-post --repo                print the site repo path
+#   site-post --help
+set -Eeuo pipefail
+
+SITE_POST_REPO="${DROPBOX_REPOS_DIR:-$HOME/Dropbox/repos}/ss_personal_website"
+
+usage() {
+  sed -n '2,19p' "${BASH_SOURCE[0]}" | cut -c 3-
+}
+
+root="$SITE_POST_REPO"
+if [[ "${1:-}" == "--root" ]]; then
+  root="${2:?site-post: --root needs a directory}"
+  shift 2
+fi
+
+case "${1:-}" in
+  -h | --help | "")
+    usage
+    ;;
+  --repo)
+    printf '%s\n' "$SITE_POST_REPO"
+    ;;
+  new | open | preview | posts | prose)
+    if [[ ! -f "$root/justfile" ]]; then
+      echo "site-post: no site checkout at $root" >&2
+      exit 1
+    fi
+    cd "$root"
+    exec just "$@"
+    ;;
+  *)
+    echo "site-post: unknown command '$1' (see site-post --help)" >&2
+    exit 2
+    ;;
+esac
