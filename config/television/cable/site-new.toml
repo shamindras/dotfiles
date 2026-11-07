@@ -1,4 +1,4 @@
-# site-new — shamindras.com post templates, previewed: Enter runs `just new`
+# site-new — shamindras.com post templates, previewed: Enter runs `site-post new`
 # from the chosen template. Neovim twin: <leader>en.
 
 [metadata]
@@ -7,15 +7,15 @@ description = "shamindras.com: start a post from a template"
 requirements = ["just", "bat"]
 
 [source]
-command = 'ls "$DROPBOX_REPOS_DIR/ss_personal_website/content/templates" | grep -v README | sed "s/\.md$//"'
+command = 'ls "$("${XDG_CONFIG_HOME:-$HOME/.config}/bin/site-post" --repo)/content/templates" | grep -v README | sed "s/\.md$//"'
 
 [preview]
-command = 'bat --color=always --style=plain "$DROPBOX_REPOS_DIR/ss_personal_website/content/templates/{}.md"'
+command = 'bat --color=always --style=plain "$("${XDG_CONFIG_HOME:-$HOME/.config}/bin/site-post" --repo)/content/templates/{}.md"'
 
 [keybindings]
 enter = "actions:new"
 
 [actions.new]
 description = "Start a post from this template"
-command = 'just --justfile "$DROPBOX_REPOS_DIR/ss_personal_website/justfile" new --template {}'
+command = '"${XDG_CONFIG_HOME:-$HOME/.config}/bin/site-post" new --template {}'
 mode = "execute"

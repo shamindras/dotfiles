@@ -1,4 +1,4 @@
-# site-posts — shamindras.com posts (on the go first): Enter runs `just open`
+# site-posts — shamindras.com posts (on the go first): Enter runs `site-post open`
 # (editor plus live preview). Neovim twin: <leader>eo.
 
 [metadata]
@@ -10,7 +10,7 @@ requirements = ["just", "bat"]
 # template pipe operator, so it is escaped as `\|` in split.
 
 [source]
-command = 'just --justfile "$DROPBOX_REPOS_DIR/ss_personal_website/justfile" posts --all --plain'
+command = '"${XDG_CONFIG_HOME:-$HOME/.config}/bin/site-post" posts --all --plain'
 display = '{split:\|:2}  ·  {split:\|:1}  ·  {split:\|:0}'
 output = '{split:\|:0}'
 no_sort = true
@@ -23,5 +23,5 @@ enter = "actions:open"
 
 [actions.open]
 description = "Open the post: editor plus live preview"
-command = 'just --justfile "$DROPBOX_REPOS_DIR/ss_personal_website/justfile" open {split:\|:0}'
+command = '"${XDG_CONFIG_HOME:-$HOME/.config}/bin/site-post" open {split:\|:0}'
 mode = "execute"
