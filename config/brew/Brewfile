@@ -154,6 +154,8 @@ brew "luarocks"
 brew "tree-sitter"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Netlify command-line tool
+brew "netlify-cli"
 # RSS/Atom feed reader for text terminals
 brew "newsboat"
 # Open source suite of directory software
