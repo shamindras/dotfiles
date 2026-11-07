@@ -164,18 +164,18 @@ Slug rule (one definition, two implementations kept in step):
 
 ## Essays (`<leader>e`)
 
-Posts for shamindras.com, in `$DROPBOX_REPOS_DIR/ss_personal_website`.
-Logic in `util/essays.lua`, keymaps in `plugins/essays.lua` (virtual lazy
-spec depending on snacks). Thin wrappers over the site's `just` recipes;
-shell twins `just new`, `just open`, `just preview`, `just prose`, and the
-sesh `blog` session (alias `bb`) runs `just preview` in its preview window.
+Posts for shamindras.com. Logic in `util/essays.lua`, keymaps in
+`plugins/essays.lua` (virtual lazy spec depending on snacks). Every action
+goes through `~/.config/bin/site-post`, the single source of truth for
+where the site lives (`config/bin/CLAUDE.md`). Shell twin: zsh `es`; the
+sesh `blog` session (alias `bb`) runs the preview in its preview window.
 
 | Key          | Action                                                            |
 | ------------ | ----------------------------------------------------------------- |
-| `<leader>en` | New post: template picker (previewed), then `just new` in a split |
+| `<leader>en` | New post: template picker, then `site-post new` in a split        |
 | `<leader>eo` | Open a post: Snacks picker, posts on the go first                 |
 | `<leader>ep` | Open the current post on the running preview                      |
-| `<leader>ec` | Prose check (`just prose`) in a split                             |
+| `<leader>ec` | Prose check (`site-post prose`) in a split                        |
 
 `ep` reads the URL a running preview writes to `.cache/preview-url` (the
 post's worktree first, then the main checkout) and swaps in the post's
