@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+#
+# sandbox-install — link-only install into a throwaway HOME, per profile, twice.
+#
+# For each profile (home, work):
+#   - run `./install --dry-run --profile <p>` with HOME set to a fresh mktemp dir
+#   - run it a second time
+#   - assert: both runs exit 0, every link resolves, the second run leaves the
+#     same set of links (idempotent), and no link resolves into CloudStorage
+#
+# SAFETY: ./install is only executed when its source declares both --dry-run
+# and --profile (module E, node N5). Before that, the old ./install would run
+# brew and macOS settings against the real machine, so it is never called;
+# the test reports XFAIL with the node id instead. After N5 lands, the same
+# condition is a FAIL. It is never skipped silently.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+# CI runs one profile per matrix job via DOTFILES_TEST_PROFILES.
+PROFILES="${DOTFILES_TEST_PROFILES:-home work}"
+
+t_header "sandbox install"
+
+install_supports_dry_run() {
+    grep -q -- '--dry-run' "$TEST_REPO/install" && grep -q -- '--profile' "$TEST_REPO/install"
+}
+
+# link_map <dir> — "<link> -> <resolved target>" for every symlink under dir.
+link_map() {
+    local dir=$1 l
+    find "$dir" -type l | sort | while IFS= read -r l; do
+        printf '%s -> %s\n' "${l#"$dir"}" "$(cd "$(dirname "$l")" && readlink "$l")"
+    done
+}
+
+# run_profile <profile> — the whole check for one profile; non-zero on any problem.
+run_profile() {
+    local profile=$1 sandbox first second l dangling
+    sandbox="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-sandbox-$profile.XXXXXX")"
+    case "$sandbox" in /tmp/* | /var/folders/* | /private/* | "${TMPDIR:-/nonexistent}"*) ;; *)
+        echo "refusing: sandbox $sandbox is not under a temp dir"
+        return 1
+        ;;
+    esac
+    (cd "$TEST_REPO" && env HOME="$sandbox" ./install --dry-run --profile "$profile") || return 1
+    first="$(link_map "$sandbox")"
+    (cd "$TEST_REPO" && env HOME="$sandbox" ./install --dry-run --profile "$profile") || return 1
+    second="$(link_map "$sandbox")"
+    [[ -n "$first" ]] || { echo "no links created" && return 1; }
+    [[ "$first" == "$second" ]] || { echo "second run changed the links" && return 1; }
+    dangling=""
+    while IFS= read -r l; do
+        [[ -e "$l" ]] || dangling="$dangling ${l#"$sandbox"}"
+    done < <(find "$sandbox" -type l)
+    [[ -z "$dangling" ]] || { echo "dangling links:$dangling" && return 1; }
+    if printf '%s\n' "$first" | grep -q 'CloudStorage'; then
+        echo "a link resolves into CloudStorage"
+        return 1
+    fi
+    rm -rf "$sandbox"
+}
+
+if install_supports_dry_run; then
+    for p in $PROFILES; do
+        t_expect N5 "install --dry-run --profile $p into a throwaway HOME, twice" run_profile "$p"
+    done
+else
+    for p in $PROFILES; do
+        if node_landed N5; then
+            t_fail "install --dry-run --profile $p: ./install still has no --dry-run/--profile after N5"
+        else
+            t_xfail "install --dry-run --profile $p: ./install has no --dry-run/--profile yet, not run (expected until N5 lands)"
+        fi
+    done
+fi
+
+t_summary "sandbox-install"

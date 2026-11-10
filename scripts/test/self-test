@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+#
+# self-test — test the test harness against throwaway fixtures.
+#
+# Proves that check-docs and check-invariants catch what they claim to:
+# broken links, bad front matter, unknown graph references, and the
+# PASS / FAIL / XFAIL / XPASS rules that depend on whether a node has landed.
+# Fixtures live in a mktemp dir; nothing in the repo is read or written.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FIX="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-self-test.XXXXXX")"
+trap 'rm -rf "$FIX"' EXIT
+
+# fixture — a minimal valid docs tree in $FIX/docs.
+fixture() {
+    rm -rf "$FIX/docs"
+    mkdir -p "$FIX/docs/decisions" "$FIX/docs/plan"
+    cat >"$FIX/docs/decisions/adr-01-sample.md" <<'EOF'
+---
+id: adr-01-sample
+type: adr
+date: 2026-11-10
+status: accepted
+supersedes: none
+---
+
+# Sample
+
+See [the invariant](inv-sample.md).
+EOF
+    cat >"$FIX/docs/decisions/inv-sample.md" <<'EOF'
+---
+id: inv-sample
+type: invariant
+date: 2026-11-10
+status: accepted
+supersedes: none
+enforced_from: N9
+verify: false
+---
+
+# Sample invariant
+EOF
+    cat >"$FIX/docs/plan/graph.yaml" <<'EOF'
+nodes:
+  - id: N1
+    title: one
+    objective: o
+    depends_on: []
+    honors: [adr-01-sample]
+    mints: []
+    promise: {}
+    verify: []
+    floors: []
+    on_exhausted: default
+    human_gate: none
+    commit_scope: none
+  - id: N9
+    title: nine
+    objective: o
+    depends_on: [N1]
+    honors: [inv-sample]
+    mints: []
+    promise: {}
+    verify: []
+    floors: []
+    on_exhausted: default
+    human_gate: none
+    commit_scope: none
+EOF
+}
+
+# expect_rc <want> <name> <command...> — PASS when the command exits with <want>.
+expect_rc() {
+    local want=$1 name=$2 rc
+    shift 2
+    "$@" >"$FIX/out" 2>&1 && rc=0 || rc=$?
+    if [[ $rc -eq $want ]]; then
+        t_pass "$name"
+    else
+        t_fail "$name (exit $rc, wanted $want)"
+        sed 's/^/        /' "$FIX/out" | head -20
+    fi
+}
+
+# expect_out <pattern> <name> — PASS when the last command's output matches.
+expect_out() {
+    if grep -qE "$1" "$FIX/out"; then t_pass "$2"; else t_fail "$2 (no line matching '$1')"; fi
+}
+
+export NO_COLOR=1 GITHUB_STEP_SUMMARY=""
+
+t_header "self-test: check-docs"
+fixture
+expect_rc 0 "valid fixture passes" "$HERE/check-docs" "$FIX/docs"
+
+fixture
+printf '\nBroken [link](nope.md).\n' >>"$FIX/docs/decisions/adr-01-sample.md"
+expect_rc 1 "broken link fails" "$HERE/check-docs" "$FIX/docs"
+expect_out 'broken link.*nope\.md' "broken link is named"
+
+fixture
+sed -i.bak 's/^id: adr-01-sample$/id: adr-01-wrong/' "$FIX/docs/decisions/adr-01-sample.md"
+expect_rc 1 "id that differs from the file name fails" "$HERE/check-docs" "$FIX/docs"
+
+fixture
+sed -i.bak 's/^enforced_from: N9$/enforced_from: N42/' "$FIX/docs/decisions/inv-sample.md"
+expect_rc 1 "enforced_from naming an unknown node fails" "$HERE/check-docs" "$FIX/docs"
+
+fixture
+sed -i.bak 's/depends_on: \[N1\]/depends_on: [N7]/' "$FIX/docs/plan/graph.yaml"
+expect_rc 1 "depends_on naming an unknown node fails" "$HERE/check-docs" "$FIX/docs"
+
+fixture
+sed -i.bak '/^    human_gate: none$/d' "$FIX/docs/plan/graph.yaml"
+expect_rc 1 "node missing a required key fails" "$HERE/check-docs" "$FIX/docs"
+
+t_header "self-test: check-invariants"
+fixture
+expect_rc 0 "failing verify before its node lands is not a failure" \
+    env DOTFILES_TEST_LANDED="" "$HERE/check-invariants" "$FIX/docs/decisions"
+expect_out 'XFAIL.*inv-sample.*N9' "it is reported as XFAIL naming the node"
+
+expect_rc 1 "failing verify after its node lands fails" \
+    env DOTFILES_TEST_LANDED="N9" "$HERE/check-invariants" "$FIX/docs/decisions"
+expect_out 'FAIL +inv-sample' "it is reported as FAIL"
+
+sed -i.bak 's/^verify: false$/verify: true/' "$FIX/docs/decisions/inv-sample.md"
+expect_rc 0 "passing verify before its node lands is not a failure" \
+    env DOTFILES_TEST_LANDED="" "$HERE/check-invariants" "$FIX/docs/decisions"
+expect_out 'XPASS.*inv-sample' "it is reported as XPASS"
+
+sed -i.bak 's/^verify: true$/verify: pending (defined by N9)/' "$FIX/docs/decisions/inv-sample.md"
+expect_rc 1 "a pending verify after its node lands fails" \
+    env DOTFILES_TEST_LANDED="N9" "$HERE/check-invariants" "$FIX/docs/decisions"
+
+t_header "self-test: lib.sh"
+if DOTFILES_TEST_LANDED="" node_landed N1; then t_pass "N1 always counts as landed"; else t_fail "N1 not landed"; fi
+if DOTFILES_TEST_LANDED="N2" node_landed N3; then t_fail "N3 counted as landed"; else t_pass "an unlisted node is not landed"; fi
+
+t_summary "self-test"

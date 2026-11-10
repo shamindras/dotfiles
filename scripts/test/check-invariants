@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#
+# check-invariants — run the verify command of every invariant note.
+#
+# Each docs/decisions/inv-*.md declares `enforced_from: <node>` and
+# `verify: <command>`. The command runs with bash from the repo root.
+#   - node landed,     command passes  -> PASS
+#   - node landed,     command fails   -> FAIL
+#   - node not landed, command fails   -> XFAIL (names the node)
+#   - node not landed, command passes  -> XPASS (reported, not a failure)
+# A verify of `pending (defined by <node>)` has no command yet: XFAIL before
+# that node lands, FAIL after it, so an invariant can never stay unchecked.
+#
+# Usage: check-invariants [notes-dir]   (default: <repo>/docs/decisions)
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+NOTES="${1:-$TEST_REPO/docs/decisions}"
+
+front_value() {
+    awk -v k="$2" 'NR == 1 && $0 != "---" { exit } NR > 1 && $0 == "---" { exit }
+        NR > 1 { p = index($0, ":"); if (substr($0, 1, p - 1) == k) { print substr($0, p + 2); exit } }' "$1"
+}
+
+t_header "invariants"
+count=0
+for f in "$NOTES"/inv-*.md; do
+    [[ -e "$f" ]] || continue
+    count=$((count + 1))
+    name="$(basename "$f" .md)"
+    [[ "$(front_value "$f" status)" == "superseded" ]] && continue
+    node="$(front_value "$f" enforced_from)"
+    cmd="$(front_value "$f" verify)"
+    if [[ -z "$node" || -z "$cmd" ]]; then
+        t_fail "$name: missing enforced_from or verify"
+    elif [[ "$cmd" == pending* ]]; then
+        if node_landed "$node"; then
+            t_fail "$name: $node landed but verify is still '$cmd'"
+        else
+            t_xfail "$name: no verify command until $node lands"
+        fi
+    else
+        t_expect "$node" "$name" bash -c "cd \"$TEST_REPO\" && $cmd"
+    fi
+done
+[[ $count -gt 0 ]] || t_fail "no invariant notes found in $NOTES"
+
+t_summary "check-invariants"

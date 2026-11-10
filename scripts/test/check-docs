@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+#
+# check-docs — lint the decision notes and the plan graph.
+#
+# Checks:
+#   1. Every note in docs/decisions/ has front matter with id (= file name),
+#      type, date, status and supersedes; invariants also have enforced_from
+#      and verify. `supersedes` names an existing note or `none`.
+#   2. Every relative Markdown link under docs/ resolves to a file.
+#   3. docs/plan/graph.yaml: ids unique, required keys present, depends_on
+#      names existing nodes, honors/mints name existing notes, and every
+#      invariant's enforced_from names an existing node.
+#
+# Usage: check-docs [docs-dir]   (default: <repo>/docs; the self-test passes a fixture)
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+DOCS="${1:-$TEST_REPO/docs}"
+NOTES="$DOCS/decisions"
+GRAPH="$DOCS/plan/graph.yaml"
+TYPES=" adr invariant vocab pattern principle "
+NODE_KEYS="id title objective depends_on honors mints promise verify floors on_exhausted human_gate commit_scope"
+
+# front_value <file> <key> — value of a front-matter key, empty when absent.
+front_value() {
+    awk -v k="$2" 'NR == 1 && $0 != "---" { exit } NR > 1 && $0 == "---" { exit }
+        NR > 1 { p = index($0, ":"); if (substr($0, 1, p - 1) == k) { print substr($0, p + 2); exit } }' "$1"
+}
+
+t_header "decision notes"
+notes_ok=1
+for f in "$NOTES"/*.md; do
+    name="$(basename "$f" .md)"
+    [[ "$name" == "README" ]] && continue
+    problems=""
+    [[ "$(head -1 "$f")" == "---" ]] || problems="$problems no-front-matter"
+    for k in id type date status supersedes; do
+        [[ -n "$(front_value "$f" "$k")" ]] || problems="$problems missing:$k"
+    done
+    [[ "$(front_value "$f" id)" == "$name" ]] || problems="$problems id-not-file-name"
+    type="$(front_value "$f" type)"
+    case "$TYPES" in *" $type "*) ;; *) problems="$problems bad-type:$type" ;; esac
+    case "$(front_value "$f" status)" in accepted | superseded) ;; *) problems="$problems bad-status" ;; esac
+    sup="$(front_value "$f" supersedes)"
+    if [[ -n "$sup" && "$sup" != "none" && ! -f "$NOTES/$sup.md" ]]; then
+        problems="$problems supersedes-missing:$sup"
+    fi
+    if [[ "$type" == "invariant" ]]; then
+        [[ "$(front_value "$f" enforced_from)" =~ ^N[0-9]+$ ]] || problems="$problems bad-enforced_from"
+        [[ -n "$(front_value "$f" verify)" ]] || problems="$problems missing:verify"
+    fi
+    if [[ -n "$problems" ]]; then
+        t_fail "$name:$problems"
+        notes_ok=0
+    fi
+done
+if [[ $notes_ok -eq 1 ]]; then t_pass "front matter of every note in ${NOTES#"$TEST_REPO"/}"; fi
+
+t_header "links"
+links_ok=1
+while IFS= read -r f; do
+    dir="$(dirname "$f")"
+    # Inline links only: ](target). External, anchor-only and mailto links are skipped.
+    while IFS= read -r target; do
+        target="${target%%#*}"
+        [[ -z "$target" ]] && continue
+        case "$target" in http://* | https://* | mailto:*) continue ;; esac
+        if [[ ! -e "$dir/$target" ]]; then
+            t_fail "broken link in ${f#"$DOCS"/}: $target"
+            links_ok=0
+        fi
+    done < <(grep -o '\](\([^)]*\))' "$f" | sed -e 's/^](//' -e 's/)$//')
+done < <(find "$DOCS" -name '*.md' -type f | sort)
+if [[ $links_ok -eq 1 ]]; then t_pass "every relative link under ${DOCS#"$TEST_REPO"/} resolves"; fi
+
+t_header "plan graph"
+if [[ ! -f "$GRAPH" ]]; then
+    t_fail "missing ${GRAPH#"$TEST_REPO"/}"
+else
+    # Flatten nodes into "<id> <key> <value>" lines.
+    flat="$(awk '
+        /^  - id: / { id = $3; print id, "id", id; next }
+        id != "" && /^    [a-z_]+:/ { k = $1; sub(":", "", k); v = $0; sub(/^    [a-z_]+: ?/, "", v); print id, k, v }
+    ' "$GRAPH")"
+    ids="$(printf '%s\n' "$flat" | awk '$2 == "id" { print $1 }')"
+    graph_ok=1
+    dupes="$(printf '%s\n' "$ids" | sort | uniq -d | tr '\n' ' ')"
+    if [[ -n "$dupes" ]]; then
+        t_fail "duplicate node ids: $dupes"
+        graph_ok=0
+    fi
+    for id in $ids; do
+        for k in $NODE_KEYS; do
+            if ! printf '%s\n' "$flat" | awk -v i="$id" -v k="$k" '$1 == i && $2 == k { f = 1 } END { exit !f }'; then
+                t_fail "$id: missing key $k"
+                graph_ok=0
+            fi
+        done
+        for k in depends_on honors mints; do
+            refs="$(printf '%s\n' "$flat" | awk -v i="$id" -v k="$k" '$1 == i && $2 == k { $1 = ""; $2 = ""; print }' |
+                tr -d '[],' | xargs)"
+            for r in $refs; do
+                if [[ "$k" == "depends_on" ]]; then
+                    printf '%s\n' "$ids" | grep -qx "$r" || { t_fail "$id: depends_on unknown node $r" && graph_ok=0; }
+                else
+                    [[ -f "$NOTES/$r.md" ]] || { t_fail "$id: $k unknown note $r" && graph_ok=0; }
+                fi
+            done
+        done
+    done
+    for f in "$NOTES"/inv-*.md; do
+        [[ -e "$f" ]] || continue
+        n="$(front_value "$f" enforced_from)"
+        printf '%s\n' "$ids" | grep -qx "$n" || { t_fail "$(basename "$f" .md): enforced_from unknown node $n" && graph_ok=0; }
+    done
+    if [[ $graph_ok -eq 1 ]]; then t_pass "$(printf '%s\n' "$ids" | wc -l | tr -d ' ') nodes in ${GRAPH#"$TEST_REPO"/} are well formed"; fi
+fi
+
+t_summary "check-docs"

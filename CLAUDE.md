@@ -39,7 +39,14 @@ just audit            # Read-only audit: firefox drift + treesitter parsers + ya
 just clean            # Sweep .DS_Store, swap files, stale zsh sessions
 just update_brewfile  # Dump current Homebrew packages to Brewfile
 just update_submods   # Pull latest submodule revisions
+just test             # test_static + test_sandbox
+just test_static      # shellcheck tests, harness self-test, docs lint, invariants
+just test_sandbox     # Config load + install into a throwaway HOME (never the real one)
 ```
+
+Test results are PASS, FAIL, XFAIL (fails until a named plan node lands),
+XPASS (passes early) or SKIP (with a reason). Only FAIL makes a run fail.
+See `scripts/CLAUDE.md` and `docs/plan/program.md`.
 
 Recipes are grouped via `[group('<name>')]` attributes — see `just --list`.
 Composites emit two-tier progress: outer `▶ X/Y` across sub-targets and
@@ -67,6 +74,9 @@ inner `├─ n/total` within each extracted script.
 
 - `config/` - All application configurations organized by tool
 - `scripts/` - Setup and utility scripts for various components
+- `docs/decisions/` - Decision notes (adr, invariant, pattern, vocab), one fact per file, append-only
+- `docs/plan/` - Overhaul work graph (`graph.yaml`), control file (`program.md`), trial log (`trials.jsonl`)
+- `.github/workflows/ci.yml` - CI: static checks on Linux, static + sandbox tests on macOS per profile
 - `submods/` - Git submodules (`core/` for dotbot, `plugins/` for runtime plugins)
 - `install.conf.yaml` - Main dotbot configuration
 - `justfile` - Just command runner tasks
@@ -93,6 +103,7 @@ Organized by runtime role:
   - `setup-nvim-treesitter` - Install/update nvim-treesitter parsers
   - `sync-notes-config` - Copy prettier/markdownlint configs into `$DROPBOX_NOTES_DIR`
 - `scripts/_lib/` — sourced helpers (e.g., `step.sh` for two-tier progress)
+- `scripts/test/` — test harness run by `just test*` and CI (see `scripts/CLAUDE.md`)
 - `scripts/migrate/` — one-off migration utilities (unchanged)
 
 ### Supported Applications

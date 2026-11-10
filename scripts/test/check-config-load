@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+#
+# check-config-load — do the shell configs load cleanly, and do non-interactive
+# shells see the same environment as interactive ones?
+#
+# Works in a throwaway HOME (mktemp) with only the zsh and npm configs linked
+# in. Never touches the real HOME.
+#
+# Checks:
+#   1. zsh -n parses .zshenv, .zshrc and every conf.d file.            (now)
+#   2. Interactive zsh starts in the sandbox: exit 0, no errors.        (now on this Mac;
+#      on a clean CI runner XFAIL until N5, when bootstrap installs the tools)
+#   3. A non-interactive shell sees CURL_HOME and N_PREFIX, so curl and
+#      npm get their XDG config outside interactive zsh.                (field report #7, XFAIL until N5)
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+ZSH_DIR="$TEST_REPO/config/zsh"
+
+t_header "config load"
+
+if ! command -v zsh >/dev/null 2>&1; then
+    t_fail "zsh is not installed (install it to run this test)"
+    t_summary "check-config-load"
+    exit 1
+fi
+
+# 1. Syntax.
+syntax_errors=""
+for f in "$ZSH_DIR/.zshenv" "$ZSH_DIR/.zshrc" "$ZSH_DIR"/conf.d/*.zsh; do
+    zsh -n "$f" 2>/dev/null || syntax_errors="$syntax_errors ${f#"$TEST_REPO"/}"
+done
+if [[ -z "$syntax_errors" ]]; then
+    t_pass "zsh -n on .zshenv, .zshrc and conf.d/*.zsh"
+else
+    t_fail "zsh syntax errors in:$syntax_errors"
+fi
+
+# Sandbox HOME with the zsh and npm configs linked the way install links them.
+SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-config-load.XXXXXX")"
+trap 'rm -rf "$SANDBOX"' EXIT
+mkdir -p "$SANDBOX/.config"
+ln -s "$ZSH_DIR/.zshenv" "$SANDBOX/.zshenv"
+ln -s "$ZSH_DIR" "$SANDBOX/.config/zsh"
+ln -s "$TEST_REPO/config/npm" "$SANDBOX/.config/npm"
+SANDBOX_PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+
+# 2. Interactive start-up. The config is macOS-specific (Homebrew paths, apps).
+interactive_zsh_clean() {
+    local err="$SANDBOX/zsh-stderr"
+    env -i HOME="$SANDBOX" PATH="$SANDBOX_PATH" TERM=dumb zsh -i -c "exit 0" </dev/null >/dev/null 2>"$err" || {
+        sed 's/^/        /' "$err" | head -20
+        return 1
+    }
+    # "can't change option: zle" is zsh's own notice for -i without a terminal.
+    if grep -vE "can't change option: zle" "$err" | grep -qiE 'not found|no such file|parse error|error'; then
+        grep -vE "can't change option: zle" "$err" | sed 's/^/        /' | head -20
+        return 1
+    fi
+}
+if [[ "$(uname -s)" != "Darwin" ]]; then
+    t_skip "interactive zsh start-up: config targets macOS, running on $(uname -s)"
+elif [[ -n "${CI:-}" ]]; then
+    # A clean CI runner has none of the Brewfile tools until bootstrap runs there (N5).
+    t_expect N5 "interactive zsh starts in a throwaway HOME on a clean runner" interactive_zsh_clean
+elif out="$(interactive_zsh_clean)"; then
+    t_pass "interactive zsh starts in a throwaway HOME"
+else
+    t_fail "interactive zsh failed or printed errors in a throwaway HOME"
+    printf '%s\n' "$out"
+fi
+
+# 3. Non-interactive environment (what ./install and scripts see).
+noninteractive_env() {
+    local out
+    # shellcheck disable=SC2016 # expanded by the inner zsh, not here
+    out="$(env -i HOME="$SANDBOX" PATH="$SANDBOX_PATH" zsh -c 'print -r -- "${CURL_HOME:-}|${N_PREFIX:-}"')"
+    [[ "$out" == "$SANDBOX/.config/curl|$SANDBOX/.local/share/node" ]]
+}
+t_expect N5 "non-interactive shell sees CURL_HOME and N_PREFIX" noninteractive_env
+
+t_summary "check-config-load"

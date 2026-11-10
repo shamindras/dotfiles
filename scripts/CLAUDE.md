@@ -25,14 +25,21 @@ scripts/
 │   ├── audit-firefox
 │   ├── setup-firefox          # dual-use: install.conf.yaml + just firefox_sync
 │   └── setup-nvim-treesitter  # dual-use: install.conf.yaml + just treesitter_*
-└── setup/                     # one-time bootstrap scripts (install-only)
-    ├── post-install-hints
-    ├── setup-hammerspoon
-    ├── setup-macos
-    ├── setup-upgrade-homebrew
-    ├── setup-upgrade-rust-cargo
-    ├── setup-upgrade-ttyper
-    └── setup-zk
+├── setup/                     # one-time bootstrap scripts (install-only)
+│   ├── post-install-hints
+│   ├── setup-hammerspoon
+│   ├── setup-macos
+│   ├── setup-upgrade-homebrew
+│   ├── setup-upgrade-rust-cargo
+│   ├── setup-upgrade-ttyper
+│   └── setup-zk
+└── test/                      # test harness (just test, test_static, test_sandbox; CI)
+    ├── lib.sh                 # sourced: PASS/FAIL/XFAIL/XPASS/SKIP bookkeeping
+    ├── self-test
+    ├── check-docs
+    ├── check-invariants
+    ├── check-config-load
+    └── sandbox-install
 ```
 
 Directories reflect *runtime role*, not install-only status:
@@ -45,6 +52,8 @@ Directories reflect *runtime role*, not install-only status:
   libs (e.g., `step.sh`) and sibling-invoked utilities in any language (e.g.,
   `dropbox-info.py` called from `./bootstrap`). Not for direct user invocation.
 - **`migrate/`** — one-off migration helpers. Unchanged.
+- **`test/`** — tests for the repo itself. Run by `just test*` and CI; never
+  touch the real `HOME` (sandboxes come from `mktemp`).
 
 Filenames keep the `setup-` / `audit-` prefix for greppability even though
 the subdir already provides that context.
@@ -71,6 +80,24 @@ the subdir already provides that context.
 | `ensure-dropbox-link`        | Ensure `~/Dropbox` symlink points at the canonical CloudStorage path; called by bootstrap (Phase 6) and re-runnable for manual repair |
 | `setup-firefox`              | Sync user.js, chrome/, policies.json into active Firefox profile |
 | `setup-nvim-treesitter`      | Install/update treesitter parsers (`--status` for read-only table) |
+
+### test/
+
+| Script              | Recipe         | Checks                                                                           |
+| ------------------- | -------------- | -------------------------------------------------------------------------------- |
+| `self-test`         | `test_static`  | The harness itself, against throwaway fixtures                                   |
+| `check-docs`        | `test_static`  | Decision-note front matter, relative links under `docs/`, `docs/plan/graph.yaml` |
+| `check-invariants`  | `test_static`  | Runs each `docs/decisions/inv-*.md` `verify` command                             |
+| `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME     |
+| `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                 |
+
+Results: **PASS**, **FAIL**, **XFAIL** (fails until the named plan node lands),
+**XPASS** (passes before its node lands; promote it), **SKIP** (always with a
+reason). Only FAIL exits non-zero. A node has landed when a commit with the
+trailer `Node: <id>` is in `HEAD`'s history; CI fetches full history for this.
+`sandbox-install` never executes `./install` until its source declares
+`--dry-run` and `--profile` (node N5), because the current `./install` changes
+the real machine. Scripts are bash 3.2 compatible (macOS `/bin/bash`).
 
 ## step.sh — progress helper
 

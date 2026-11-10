@@ -163,3 +163,33 @@ update_submods:
 [group('cleanup')]
 clean:
 	@./scripts/ops/clean-dotfiles
+
+# Run every test: static checks, then the sandbox tests.
+[group('test')]
+test:
+	@scripts/step outer 1 2 🧪 "Running static checks"
+	@just test_static
+	@scripts/step outer 2 2 📦 "Running sandbox tests"
+	@just test_sandbox
+
+# Static checks: shellcheck the tests, harness self-test, docs lint, invariants.
+[group('test')]
+test_static:
+	@scripts/step inner 1 4 "shellcheck scripts/test"
+	@shellcheck -x scripts/test/*
+	@scripts/step inner 2 4 "Harness self-test"
+	@scripts/test/self-test
+	@scripts/step inner 3 4 "Decision notes and plan graph"
+	@scripts/test/check-docs
+	@scripts/step inner 4 4 "Invariants"
+	@scripts/test/check-invariants
+	@scripts/step done 🧪 "Static checks passed"
+
+# Sandbox tests in a throwaway HOME: config load, then link-only install.
+[group('test')]
+test_sandbox:
+	@scripts/step inner 1 2 "Config load"
+	@scripts/test/check-config-load
+	@scripts/step inner 2 2 "Install into a throwaway HOME"
+	@scripts/test/sandbox-install
+	@scripts/step done 📦 "Sandbox tests passed"
