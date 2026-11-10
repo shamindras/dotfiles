@@ -8,8 +8,7 @@
 #
 # Checks:
 #   1. zsh -n parses .zshenv, .zshrc and every conf.d file.            (now)
-#   2. Interactive zsh starts in the sandbox: exit 0, no errors.        (now on this Mac;
-#      on a clean CI runner XFAIL until N5, when bootstrap installs the tools)
+#   2. Interactive zsh starts in the sandbox: exit 0, no errors.        (now, macOS only)
 #   3. A non-interactive shell sees CURL_HOME and N_PREFIX, so curl and
 #      npm get their XDG config outside interactive zsh.                (field report #7, XFAIL until N5)
 
@@ -63,9 +62,6 @@ interactive_zsh_clean() {
 }
 if [[ "$(uname -s)" != "Darwin" ]]; then
     t_skip "interactive zsh start-up: config targets macOS, running on $(uname -s)"
-elif [[ -n "${CI:-}" ]]; then
-    # A clean CI runner has none of the Brewfile tools until bootstrap runs there (N5).
-    t_expect N5 "interactive zsh starts in a throwaway HOME on a clean runner" interactive_zsh_clean
 elif out="$(interactive_zsh_clean)"; then
     t_pass "interactive zsh starts in a throwaway HOME"
 else
