@@ -102,6 +102,7 @@ required unit the profile turned off is an error naming both. Setup steps with
 | `manifest_test.py`  | `test_static`  | Resolver unit tests: closure, off-but-required, pairs, leaders, render           |
 | `check-docs`        | `test_static`  | Decision-note front matter, relative links under `docs/`, `docs/plan/graph.yaml` |
 | `check-invariants`  | `test_static`  | Runs each `docs/decisions/inv-*.md` `verify` command                             |
+| `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`     |
 | `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME     |
 | `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                 |
 

@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""check-parity — rendered home equals the pre-overhaul install, minus agreed changes.
+
+Compares generated/home/ with the files at the baseline commit named in
+docs/plan/home-parity.json (main before the overhaul):
+  - package set: generated/home/Brewfile vs <baseline>:config/brew/Brewfile
+  - link map:    generated/home/dotbot.json vs <baseline>:install.conf.yaml
+Agreed removals and additions are listed in home-parity.json; anything else
+that differs is a failure. Reads the baseline with `git show`, so CI needs
+full history (fetch-depth: 0). Exit 0 on parity, 1 otherwise.
+"""
+
+import json
+import os
+import re
+import subprocess
+import sys
+
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+def git_show(rev, path):
+    return subprocess.run(
+        ["git", "-C", REPO, "show", "%s:%s" % (rev, path)], check=True, capture_output=True, text=True
+    ).stdout
+
+
+def brew_names(text):
+    return {m.group(2) for m in re.finditer(r'^(brew|cask) "([^"]+)"', text, re.M)}
+
+
+def yaml_links(text):
+    """Link entries of the old install.conf.yaml (the only mapping under `- link:`)."""
+    links, inside = {}, False
+    for line in text.splitlines():
+        if line.startswith("- "):
+            inside = line.strip() == "- link:"
+            continue
+        m = re.match(r"^\s+(\$\{[^}]+\}[^:]*):\s+(\S.*)$", line)
+        if inside and m:
+            links[m.group(1)] = m.group(2)
+    return links
+
+
+def main():
+    spec = json.load(open(os.path.join(REPO, "docs", "plan", "home-parity.json")))
+    base = spec["baseline"]
+    problems = []
+
+    want = brew_names(git_show(base, "config/brew/Brewfile"))
+    want -= set(spec["packages_removed"]["names"])
+    want |= set(spec["packages_added"]["names"])
+    have = brew_names(open(os.path.join(REPO, "generated", "home", "Brewfile")).read())
+    for p in sorted(want - have):
+        problems.append("package missing from generated/home/Brewfile: %s" % p)
+    for p in sorted(have - want):
+        problems.append("package not in the baseline (and not an agreed addition): %s" % p)
+
+    want_links = yaml_links(git_show(base, "install.conf.yaml"))
+    for d in spec["links_removed"]["dests"]:
+        want_links.pop(d, None)
+    dotbot = json.load(open(os.path.join(REPO, "generated", "home", "dotbot.json")))
+    have_links = {}
+    for directive in dotbot:
+        have_links.update(directive.get("link", {}))
+    added = set(spec["links_added"]["dests"])
+    for d in sorted(set(want_links) | set(have_links)):
+        if d in added:
+            continue
+        if d not in have_links:
+            problems.append("link missing: %s -> %s" % (d, want_links[d]))
+        elif d not in want_links:
+            problems.append("link not in the baseline: %s -> %s" % (d, have_links[d]))
+        elif want_links[d] != have_links[d]:
+            problems.append("link changed: %s: %s -> %s" % (d, want_links[d], have_links[d]))
+
+    if problems:
+        print("home parity FAILS against %s:" % base)
+        print("\n".join("  " + p for p in problems))
+        return 1
+    print("home parity holds against %s: %d packages, %d links" % (base, len(have), len(have_links)))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

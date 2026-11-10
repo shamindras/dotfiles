@@ -77,6 +77,8 @@ inner `├─ n/total` within each extracted script.
 
 ### Directory Structure
 
+- `manifest.json` - The one hand-maintained declaration of every tool (units, modules, profiles)
+- `generated/` - Resolver output per profile (Brewfile, dotbot.json, resolved.json, env.sh/env.zsh) and `compare.md`; never hand-edit
 - `config/` - All application configurations organized by tool
 - `scripts/` - Setup and utility scripts for various components
 - `docs/decisions/` - Decision notes (adr, invariant, pattern, vocab), one fact per file, append-only

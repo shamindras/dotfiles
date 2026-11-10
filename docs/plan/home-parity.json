@@ -1,0 +1,62 @@
+{
+  "baseline": "acec184",
+  "note": "Home parity: generated/home must equal the install at the baseline commit (main before the overhaul, tagged pre-overhaul locally), apart from the agreed changes listed here. Each change names where it was agreed.",
+  "packages_removed": {
+    "agreed": "Package review page, Home unticked (2026-11-10)",
+    "names": [
+      "aom",
+      "apache-arrow",
+      "ast-grep",
+      "checkmake",
+      "freetds",
+      "geos",
+      "glib",
+      "gmp",
+      "gnutls",
+      "grpc",
+      "harfbuzz",
+      "hdf5",
+      "jpeg-xl",
+      "krb5",
+      "leptonica",
+      "libgeotiff",
+      "libheif",
+      "libidn2",
+      "libpq",
+      "libraw",
+      "libspatialite",
+      "little-cms2",
+      "luacheck",
+      "luarocks",
+      "netcdf",
+      "numpy",
+      "openblas",
+      "openldap",
+      "pinentry-mac",
+      "pipx",
+      "prettierd",
+      "proj",
+      "proselint",
+      "python@3.9",
+      "qt@5",
+      "shellharden",
+      "thrift",
+      "tree-sitter",
+      "unixodbc",
+      "webp",
+      "yamlfmt"
+    ]
+  },
+  "packages_added": {
+    "agreed": "none yet",
+    "names": []
+  },
+  "links_removed": {
+    "agreed": "none yet",
+    "dests": []
+  },
+  "links_added": {
+    "agreed": "none yet",
+    "dests": []
+  }
+}

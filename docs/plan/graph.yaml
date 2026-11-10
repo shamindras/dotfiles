@@ -42,7 +42,7 @@ nodes:
     title: Manifest, schema and resolver
     objective: One declaration resolves into profiles with closure and clear errors.
     depends_on: [N1]
-    honors: [adr-04-engine, inv-off-unit-leaves-nothing]
+    honors: [adr-04-engine, inv-off-unit-leaves-nothing-2]
     mints: []
     promise:
       reads: [docs/decisions/]
@@ -59,14 +59,14 @@ nodes:
     title: Seed the manifest and prove home parity
     objective: manifest.json reproduces today's home install exactly.
     depends_on: [N2]
-    honors: [inv-home-parity, inv-generated-matches-manifest]
+    honors: [inv-home-parity-2, inv-generated-matches-manifest]
     mints: []
     promise:
       reads: [config/brew/Brewfile, install.conf.yaml, config/hammerspoon/, config/bin/, config/aerospace/]
-      writes: [manifest.json, generated/home/, docs/]
+      writes: [manifest.json, generated/, docs/, scripts/test/, scripts/ops/manifest, scripts/ops/manifest.schema.json, justfile, CLAUDE.md, scripts/CLAUDE.md]
       budget: { max_tries: 4 }
       evidence: [parity diff against the pre-overhaul tag]
-    verify: [home parity check, git diff --exit-code generated/ after a re-render]
+    verify: [scripts/test/check-parity, just manifest_check, git diff --exit-code generated/ after a re-render]
     floors: [home parity]
     on_exhausted: default
     human_gate: Module C proposal approved

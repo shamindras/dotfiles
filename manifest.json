@@ -1,0 +1,860 @@
+{
+  "schema_version": 1,
+  "note": "The one hand-maintained declaration. Edit, then run just manifest_render (or just manifest_set).",
+  "taps": {
+    "felixkratz/formulae": {
+      "trusted": true
+    },
+    "nikitabobko/tap": {
+      "trusted": true
+    }
+  },
+  "modules": {
+    "apps": {
+      "note": "Browsers, password manager, Claude, meetings, and the macOS apps the leader opens.",
+      "cask": ["1password-cli", "claude-code", "google-chrome", "microsoft-teams", "zoom"]
+    },
+    "core": {
+      "note": "Shell, navigation and everyday command-line tools.",
+      "brew": [
+        "bat-extras",
+        "broot",
+        "coreutils",
+        "direnv",
+        "duf",
+        "dust",
+        "eza",
+        "fd",
+        "fzf",
+        "gum",
+        "httpie",
+        "hyperfine",
+        "jq",
+        "just",
+        "ouch",
+        "p7zip",
+        "ripgrep-all",
+        "rsync",
+        "unar",
+        "xdg-ninja",
+        "yq",
+        "zoxide"
+      ]
+    },
+    "data-science": {
+      "note": "Python and R tooling, databases, publishing.",
+      "brew": ["duckdb", "gdal", "uv"],
+      "cask": ["quarto", "xquartz"]
+    },
+    "desktop": {
+      "note": "Window manager, status bar, keyboard automation and launcher.",
+      "cask": ["raycast", "scroll-reverser", "shottr"]
+    },
+    "docs": {
+      "note": "Pandoc, Typst, LaTeX, PDF and image tools, spell checkers, reference manager.",
+      "brew": [
+        "aspell",
+        "ghostscript",
+        "graphviz",
+        "hunspell",
+        "imagemagick",
+        "pandoc",
+        "pandoc-crossref",
+        "poppler",
+        "qpdf",
+        "typst"
+      ],
+      "cask": ["inkscape", "libreoffice", "mactex", "zotero"]
+    },
+    "editor": {
+      "note": "Neovim and what its config needs to build parsers and run Lua tooling.",
+      "brew": ["lua", "tree-sitter-cli"]
+    },
+    "fonts-extra": {
+      "note": "Fonts not referenced by a config.",
+      "cask": [
+        "font-cascadia-code-nf",
+        "font-commit-mono-nerd-font",
+        "font-fira-code-nerd-font",
+        "font-hack-nerd-font",
+        "font-hasklug-nerd-font",
+        "font-input",
+        "font-iosevka-nerd-font",
+        "font-lilex-nerd-font",
+        "font-maple-mono",
+        "font-monaspice-nerd-font",
+        "font-monoid",
+        "font-roboto-mono-nerd-font",
+        "font-sauce-code-pro-nerd-font",
+        "font-udev-gothic-nf",
+        "font-victor-mono"
+      ]
+    },
+    "git": {
+      "note": "Version control, signing and SSH.",
+      "brew": ["commitizen", "gnupg", "prek"]
+    },
+    "lint": {
+      "note": "Formatters and linters used by nvim and the repo's own recipes.",
+      "brew": ["jsonlint", "prettier", "shellcheck", "shfmt", "taplo", "yamllint"]
+    },
+    "notes": {
+      "note": "Zettelkasten."
+    },
+    "personal": {
+      "note": "Media, downloads, messaging, e-books.",
+      "cask": ["calibre", "dropbox", "notunes", "oracle-jdk"],
+      "brew": [
+        "djvulibre",
+        "exiftool",
+        "ffmpeg",
+        "netlify-cli",
+        "oxipng",
+        "speedtest-cli",
+        "subversion",
+        "taskwarrior-tui",
+        "tesseract",
+        "yt-dlp"
+      ]
+    },
+    "review": {
+      "note": "Kept on the package review; nothing installed depends on them. Home only.",
+      "brew": [
+        "gobject-introspection",
+        "libass",
+        "libmng",
+        "openssl@3.0",
+        "perl",
+        "php",
+        "poppler-qt5",
+        "shared-mime-info",
+        "srt",
+        "tcl-tk",
+        "unbound"
+      ]
+    },
+    "terminal": {
+      "note": "Terminal apps and the fonts they are configured to use.",
+      "cask": ["font-jetbrains-mono-nerd-font", "font-sf-pro", "font-symbols-only-nerd-font"]
+    }
+  },
+  "units": {
+    "1password": {
+      "module": "apps",
+      "cask": ["1password"],
+      "app": {
+        "path": "/Applications/1Password.app",
+        "bundle_id": "com.1password.1password",
+        "leader": "1",
+        "label": "1password",
+        "process": "1Password",
+        "workspace": "1",
+        "quit_workspace": "B"
+      }
+    },
+    "aerospace": {
+      "module": "desktop",
+      "cask": ["nikitabobko/tap/aerospace"],
+      "links": {
+        "${XDG_CONFIG_HOME}/aerospace": "config/aerospace"
+      },
+      "requires": ["borders", "sketchybar"]
+    },
+    "atuin": {
+      "module": "core",
+      "brew": ["atuin"],
+      "links": {
+        "${XDG_CONFIG_HOME}/atuin": "config/atuin"
+      }
+    },
+    "bat": {
+      "module": "core",
+      "brew": ["bat"],
+      "links": {
+        "${XDG_CONFIG_HOME}/bat": "config/bat"
+      },
+      "setup": [
+        {
+          "command": "command bat cache --build",
+          "description": "build the bat theme cache",
+          "needs": ["bat"]
+        }
+      ]
+    },
+    "bin": {
+      "module": "core",
+      "note": "Personal scripts on PATH.",
+      "links": {
+        "${XDG_CONFIG_HOME}/bin": "config/bin"
+      }
+    },
+    "booklib": {
+      "module": "personal",
+      "note": "config/booklib is run in place by config/bin scripts.",
+      "requires": ["1password-cli", "djvulibre", "exiftool", "imagemagick", "poppler", "tesseract"]
+    },
+    "books": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/Books.app",
+        "bundle_id": "com.apple.iBooksX",
+        "leader": "i",
+        "label": "books",
+        "process": "Books",
+        "workspace": "I",
+        "quit_workspace": "B"
+      }
+    },
+    "borders": {
+      "module": "desktop",
+      "brew": ["felixkratz/formulae/borders"],
+      "links": {
+        "${XDG_CONFIG_HOME}/borders": "config/borders"
+      },
+      "service": "borders",
+      "requires": ["aerospace"]
+    },
+    "bottom": {
+      "module": "core",
+      "brew": ["bottom"],
+      "links": {
+        "${XDG_CONFIG_HOME}/bottom": "config/bottom"
+      }
+    },
+    "btop": {
+      "module": "core",
+      "brew": ["btop"],
+      "links": {
+        "${XDG_CONFIG_HOME}/btop": "config/btop"
+      }
+    },
+    "claude": {
+      "module": "apps",
+      "cask": ["claude"],
+      "app": {
+        "path": "/Applications/Claude.app",
+        "bundle_id": "com.anthropic.claudefordesktop",
+        "leader": "c",
+        "label": "claude",
+        "process": "Claude",
+        "workspace": "C",
+        "quit_workspace": "W"
+      }
+    },
+    "curl": {
+      "module": "core",
+      "brew": ["curl"],
+      "links": {
+        "${XDG_CONFIG_HOME}/curl/.curlrc": "config/curl/curlrc"
+      }
+    },
+    "delta": {
+      "module": "git",
+      "brew": ["git-delta"],
+      "links": {
+        "${XDG_CONFIG_HOME}/delta": "config/delta"
+      }
+    },
+    "djview": {
+      "module": "personal",
+      "cask": ["djview"],
+      "app": {
+        "path": "/Applications/DjView.app",
+        "bundle_id": "org.djvu.DjView",
+        "leader": "a",
+        "label": "djview",
+        "process": "DjView",
+        "workspace": "A",
+        "quit_workspace": "W"
+      }
+    },
+    "espanso": {
+      "module": "desktop",
+      "cask": ["espanso"],
+      "links": {
+        "${HOME}/Library/Application Support/espanso": "config/espanso"
+      },
+      "setup": [
+        {
+          "command": "espanso service register",
+          "description": "register the espanso service",
+          "needs": ["espanso"]
+        }
+      ]
+    },
+    "fastfetch": {
+      "module": "core",
+      "brew": ["fastfetch"],
+      "links": {
+        "${XDG_CONFIG_HOME}/fastfetch": "config/fastfetch"
+      }
+    },
+    "finder": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Library/CoreServices/Finder.app",
+        "bundle_id": "com.apple.finder",
+        "leader": "e",
+        "label": "finder",
+        "process": "Finder",
+        "workspace": "E",
+        "quit_workspace": "W",
+        "open_command": "/usr/bin/osascript -e 'tell application \"Finder\"' -e 'reopen' -e 'activate' -e 'end tell'"
+      }
+    },
+    "firefox": {
+      "module": "apps",
+      "cask": ["firefox"],
+      "setup": [
+        {
+          "command": "./scripts/ops/setup-firefox",
+          "description": "install user.js, userChrome.css and policies.json"
+        }
+      ],
+      "app": {
+        "path": "/Applications/Firefox.app",
+        "bundle_id": "org.mozilla.firefox",
+        "leader": "b",
+        "label": "firefox",
+        "process": "Firefox",
+        "workspace": "B",
+        "quit_workspace": "W"
+      }
+    },
+    "gh": {
+      "module": "git",
+      "brew": ["gh"],
+      "links": {
+        "${XDG_CONFIG_HOME}/gh": "config/gh"
+      }
+    },
+    "gh-dash": {
+      "module": "git",
+      "note": "gh extension, installed by gh rather than Homebrew.",
+      "links": {
+        "${XDG_CONFIG_HOME}/gh-dash": "config/gh-dash"
+      },
+      "setup": [
+        {
+          "command": "gh extension install dlvhdr/gh-dash",
+          "description": "install the gh-dash extension",
+          "needs": ["gh"]
+        },
+        {
+          "command": "gh extension upgrade --all",
+          "description": "upgrade gh extensions",
+          "needs": ["gh"]
+        }
+      ],
+      "requires": ["gh"]
+    },
+    "ghostty": {
+      "module": "terminal",
+      "cask": ["ghostty"],
+      "links": {
+        "${XDG_CONFIG_HOME}/ghostty": "config/ghostty"
+      },
+      "requires": ["font-commit-mono-nerd-font"],
+      "app": {
+        "path": "/Applications/Ghostty.app",
+        "bundle_id": "com.mitchellh.ghostty",
+        "leader": "t",
+        "label": "ghostty",
+        "process": "Ghostty",
+        "workspace": "T",
+        "quit_workspace": "W",
+        "quit_check": "wezterm-gui",
+        "quit_fallback": "B"
+      }
+    },
+    "git": {
+      "module": "git",
+      "brew": ["git"],
+      "links": {
+        "${XDG_CONFIG_HOME}/git": "config/git"
+      },
+      "requires": ["delta"]
+    },
+    "glow": {
+      "module": "core",
+      "note": "Config kept; glow is not in the Brewfile today.",
+      "links": {
+        "${XDG_CONFIG_HOME}/glow": "config/glow"
+      }
+    },
+    "hammerspoon": {
+      "module": "desktop",
+      "cask": ["hammerspoon"],
+      "links": {
+        "${XDG_CONFIG_HOME}/hammerspoon": "config/hammerspoon"
+      },
+      "setup": [
+        {
+          "command": "./scripts/setup/setup-hammerspoon",
+          "description": "set MJConfigFile and load the hidutil LaunchAgent"
+        }
+      ],
+      "requires": ["aerospace", "sketchybar"]
+    },
+    "jdownloader": {
+      "module": "personal",
+      "cask": ["jdownloader"],
+      "app": {
+        "path": "/Applications/JDownloader 2/JDownloader2.app",
+        "bundle_id": "org.jdownloader.launcher",
+        "leader": "x",
+        "label": "jdownloader",
+        "process": "JDownloader2",
+        "quit_label": "JDownloader",
+        "workspace": "X",
+        "quit_workspace": "B"
+      }
+    },
+    "lazygit": {
+      "module": "git",
+      "brew": ["lazygit"],
+      "links": {
+        "${XDG_CONFIG_HOME}/lazygit": "config/lazygit"
+      },
+      "requires": ["delta"]
+    },
+    "macos": {
+      "module": "core",
+      "note": "macOS defaults; per-profile values arrive in module K.",
+      "setup": [
+        {
+          "command": "./scripts/setup/setup-macos",
+          "description": "apply macOS defaults"
+        }
+      ]
+    },
+    "marimo": {
+      "module": "data-science",
+      "note": "marimo itself is installed per project with uv.",
+      "links": {
+        "${XDG_CONFIG_HOME}/marimo": "config/marimo"
+      }
+    },
+    "newsboat": {
+      "module": "personal",
+      "brew": ["newsboat"],
+      "links": {
+        "${XDG_CONFIG_HOME}/newsboat": "config/newsboat"
+      }
+    },
+    "node": {
+      "module": "editor",
+      "note": "The npm step is kept for parity until module K moves eslint_d and prettier to Homebrew.",
+      "brew": ["node"],
+      "links": {
+        "${XDG_CONFIG_HOME}/npm": "config/npm"
+      },
+      "setup": [
+        {
+          "command": "npm install -g eslint_d prettier",
+          "description": "install eslint_d and prettier with npm",
+          "needs": ["npm"]
+        }
+      ]
+    },
+    "nordvpn": {
+      "module": "personal",
+      "note": "Installed outside Homebrew (the cask failed a checksum on the last fresh install).",
+      "app": {
+        "path": "/Applications/NordVPN.app",
+        "bundle_id": "com.nordvpn.macos",
+        "leader": "n",
+        "label": "nordvpn",
+        "process": "NordVPN",
+        "workspace": "N",
+        "quit_workspace": "B",
+        "fullscreen": "N",
+        "return_workspace": "B"
+      }
+    },
+    "nvim": {
+      "module": "editor",
+      "brew": ["neovim"],
+      "links": {
+        "${XDG_CONFIG_HOME}/nvim": "config/nvim"
+      },
+      "setup": [
+        {
+          "command": "./scripts/ops/setup-nvim-treesitter",
+          "description": "pre-install treesitter parsers",
+          "needs": ["nvim"]
+        }
+      ],
+      "requires": ["fd", "ripgrep", "tree-sitter-cli"]
+    },
+    "opensuperwhisper": {
+      "module": "personal",
+      "cask": ["opensuperwhisper"],
+      "app": {
+        "path": "/Applications/OpenSuperWhisper.app",
+        "bundle_id": "ru.starmel.OpenSuperWhisper",
+        "leader": "u",
+        "label": "opensuperwhisper",
+        "process": "OpenSuperWhisper",
+        "workspace": "U",
+        "quit_workspace": "W",
+        "fullscreen": "U",
+        "return_workspace": "B"
+      }
+    },
+    "parallel": {
+      "module": "core",
+      "brew": ["parallel"],
+      "links": {
+        "${XDG_CONFIG_HOME}/parallel": "config/parallel"
+      }
+    },
+    "preview": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/Preview.app",
+        "bundle_id": "com.apple.Preview",
+        "leader": "d",
+        "label": "preview",
+        "process": "Preview",
+        "workspace": "D",
+        "quit_workspace": "W"
+      }
+    },
+    "python": {
+      "module": "core",
+      "note": "Python startup and history config.",
+      "links": {
+        "${XDG_CONFIG_HOME}/python": "config/python"
+      }
+    },
+    "r": {
+      "module": "data-science",
+      "cask": ["r-app"],
+      "create": ["${XDG_DATA_HOME}/r"],
+      "setup": [
+        {
+          "command": "R_VER=$(R --version 2>/dev/null | head -1 | grep -oE '[0-9]+\\.[0-9]+' | head -1) && mkdir -p \"${XDG_DATA_HOME}/r/library/${R_VER}\"",
+          "description": "create the version-specific R user library",
+          "needs": ["R"]
+        }
+      ]
+    },
+    "ripgrep": {
+      "module": "core",
+      "brew": ["ripgrep"],
+      "links": {
+        "${XDG_CONFIG_HOME}/ripgrep": "config/ripgrep"
+      }
+    },
+    "rstudio": {
+      "module": "data-science",
+      "cask": ["rstudio"],
+      "links": {
+        "${XDG_CONFIG_HOME}/rstudio": "config/rstudio"
+      },
+      "requires": ["r"],
+      "app": {
+        "path": "/Applications/RStudio.app",
+        "bundle_id": "com.rstudio.desktop",
+        "workspace": "O"
+      }
+    },
+    "rust": {
+      "module": "core",
+      "note": "rustup and cargo under $CARGO_HOME; installer script until module K.",
+      "setup": [
+        {
+          "command": "./scripts/setup/setup-upgrade-rust-cargo",
+          "description": "install or upgrade rust and cargo"
+        }
+      ]
+    },
+    "sesh": {
+      "module": "core",
+      "brew": ["sesh"],
+      "links": {
+        "${XDG_CONFIG_HOME}/sesh": "config/sesh"
+      },
+      "requires": ["fzf", "tmux", "zoxide"]
+    },
+    "signal": {
+      "module": "personal",
+      "cask": ["signal"],
+      "app": {
+        "path": "/Applications/Signal.app",
+        "bundle_id": "org.whispersystems.signal-desktop",
+        "leader": "g",
+        "label": "signal",
+        "process": "Signal",
+        "workspace": "G",
+        "quit_workspace": "B"
+      }
+    },
+    "sketchybar": {
+      "module": "desktop",
+      "brew": ["felixkratz/formulae/sketchybar"],
+      "links": {
+        "${XDG_CONFIG_HOME}/sketchybar": "config/sketchybar"
+      },
+      "setup": [
+        {
+          "command": "chmod -R +x ${XDG_CONFIG_HOME}/sketchybar/plugins/",
+          "description": "make sketchybar plugins executable"
+        }
+      ],
+      "service": "sketchybar",
+      "requires": ["aerospace", "font-jetbrains-mono-nerd-font"]
+    },
+    "skim": {
+      "module": "docs",
+      "cask": ["skim"],
+      "app": {
+        "path": "/Applications/Skim.app",
+        "bundle_id": "net.sourceforge.skim-app.skim",
+        "leader": "p",
+        "label": "skim",
+        "process": "Skim",
+        "workspace": "P",
+        "quit_workspace": "W"
+      }
+    },
+    "spotify": {
+      "module": "personal",
+      "cask": ["spotify"],
+      "app": {
+        "path": "/Applications/Spotify.app",
+        "bundle_id": "com.spotify.client",
+        "leader": "m",
+        "label": "spotify",
+        "process": "Spotify",
+        "workspace": "M",
+        "quit_workspace": "B"
+      }
+    },
+    "ssh": {
+      "module": "git",
+      "brew": ["openssh"],
+      "links": {
+        "${XDG_CONFIG_HOME}/ssh": "config/ssh",
+        "${HOME}/.ssh/config": "${XDG_CONFIG_HOME}/ssh/config"
+      }
+    },
+    "starship": {
+      "module": "core",
+      "brew": ["starship"],
+      "links": {
+        "${XDG_CONFIG_HOME}/starship": "config/starship"
+      }
+    },
+    "stylua": {
+      "module": "lint",
+      "brew": ["stylua"],
+      "links": {
+        "${XDG_CONFIG_HOME}/stylua": "config/stylua"
+      }
+    },
+    "surfingkeys": {
+      "module": "apps",
+      "note": "Browser extension config; the extension is installed in the browser.",
+      "links": {
+        "${XDG_CONFIG_HOME}/surfingkeys": "config/surfingkeys"
+      }
+    },
+    "task": {
+      "module": "personal",
+      "brew": ["task"],
+      "links": {
+        "${XDG_CONFIG_HOME}/task": "config/task"
+      }
+    },
+    "tealdeer": {
+      "module": "core",
+      "brew": ["tealdeer"],
+      "links": {
+        "${XDG_CONFIG_HOME}/tealdeer": "config/tealdeer"
+      },
+      "setup": [
+        {
+          "command": "tldr --update",
+          "description": "update the tldr cache",
+          "needs": ["tldr"]
+        }
+      ]
+    },
+    "television": {
+      "module": "core",
+      "brew": ["television"],
+      "links": {
+        "${XDG_CONFIG_HOME}/television": "config/television"
+      }
+    },
+    "textedit": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/TextEdit.app",
+        "bundle_id": "com.apple.TextEdit",
+        "leader": "q",
+        "label": "textedit",
+        "process": "TextEdit",
+        "workspace": "Q",
+        "quit_workspace": "W",
+        "quit_save_check": "Q"
+      }
+    },
+    "tmux": {
+      "module": "core",
+      "brew": ["tmux"],
+      "links": {
+        "${XDG_CONFIG_HOME}/tmux": "config/tmux",
+        "${XDG_CONFIG_HOME}/tmux/plugins/tpm": "submods/plugins/tpm"
+      },
+      "create": ["${XDG_DATA_HOME}/tmux/plugins"],
+      "setup": [
+        {
+          "command": "[ -x \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" ] && \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" || true",
+          "description": "install tmux plugins with TPM",
+          "needs": ["tmux"]
+        }
+      ],
+      "requires": ["sesh"]
+    },
+    "ttyper": {
+      "module": "personal",
+      "setup": [
+        {
+          "command": "./scripts/setup/setup-upgrade-ttyper",
+          "description": "install or upgrade ttyper with cargo",
+          "needs": ["cargo"]
+        }
+      ],
+      "requires": ["rust"]
+    },
+    "vlc": {
+      "module": "personal",
+      "cask": ["vlc"],
+      "app": {
+        "path": "/Applications/VLC.app",
+        "bundle_id": "org.videolan.vlc",
+        "leader": "v",
+        "label": "vlc",
+        "process": "VLC",
+        "workspace": "V",
+        "quit_workspace": "B"
+      }
+    },
+    "vscode": {
+      "module": "editor",
+      "note": "Installed outside Homebrew today.",
+      "links": {
+        "${HOME}/Library/Application Support/Code/User/keybindings.json": "config/vscode/keybindings.json",
+        "${HOME}/Library/Application Support/Code/User/settings.json": "config/vscode/settings.json"
+      },
+      "app": {
+        "path": "/Applications/Visual Studio Code.app",
+        "bundle_id": "com.microsoft.VSCode",
+        "leader": "s",
+        "label": "vscode",
+        "process": "Code",
+        "quit_label": "VSCode",
+        "workspace": "S",
+        "quit_workspace": "W"
+      }
+    },
+    "wezterm": {
+      "module": "terminal",
+      "cask": ["wezterm"],
+      "links": {
+        "${XDG_CONFIG_HOME}/wezterm": "config/wezterm"
+      },
+      "app": {
+        "path": "/Applications/WezTerm.app",
+        "bundle_id": "com.github.wez.wezterm",
+        "leader": "w",
+        "label": "wezterm",
+        "process": "WezTerm",
+        "workspace": "W",
+        "quit_workspace": "T",
+        "quit_check": "ghostty",
+        "quit_fallback": "B"
+      }
+    },
+    "wget": {
+      "module": "core",
+      "brew": ["wget"],
+      "links": {
+        "${XDG_CONFIG_HOME}/wget": "config/wget"
+      }
+    },
+    "yazi": {
+      "module": "core",
+      "brew": ["yazi"],
+      "links": {
+        "${XDG_CONFIG_HOME}/yazi": "config/yazi"
+      },
+      "setup": [
+        {
+          "command": "ya pkg install",
+          "description": "install yazi plugins and flavors",
+          "needs": ["ya"]
+        }
+      ],
+      "requires": ["djvulibre", "ffmpeg", "imagemagick", "ouch", "p7zip", "poppler", "unar"]
+    },
+    "zk": {
+      "module": "notes",
+      "brew": ["zk"],
+      "links": {
+        "${XDG_CONFIG_HOME}/zk": "config/zk"
+      },
+      "setup": [
+        {
+          "command": "./scripts/setup/setup-zk",
+          "description": "set up the zk notebook",
+          "needs": ["zk"]
+        }
+      ]
+    },
+    "zsh": {
+      "module": "core",
+      "note": "System zsh; config only.",
+      "links": {
+        "${HOME}/.zshenv": "config/zsh/.zshenv",
+        "${XDG_CONFIG_HOME}/zsh": "config/zsh"
+      }
+    }
+  },
+  "profiles": {
+    "home": {
+      "note": "The home Mac. Every module is on.",
+      "modules": [
+        "apps",
+        "core",
+        "data-science",
+        "desktop",
+        "docs",
+        "editor",
+        "fonts-extra",
+        "git",
+        "lint",
+        "notes",
+        "personal",
+        "review",
+        "terminal"
+      ],
+      "roles": {
+        "browser": "firefox"
+      },
+      "settings": {
+        "repos_dir": "$HOME/Dropbox/repos",
+        "notes_dir": "$HOME/Dropbox/notes",
+        "remote_login": true,
+        "quarantine_warning": false
+      }
+    }
+  }
+}

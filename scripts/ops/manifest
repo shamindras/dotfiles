@@ -182,7 +182,7 @@ def semantic_errors(m, root=REPO, check_files=True):
             if dest in dests:
                 errs.append("link %s is claimed by %s and %s" % (dest, dests[dest], name))
             dests[dest] = name
-            if check_files and not os.path.lexists(os.path.join(root, src)):
+            if check_files and not src.startswith("${") and not os.path.lexists(os.path.join(root, src)):
                 errs.append("unit %s: link source %s does not exist" % (name, src))
     for pname, p in sorted(m.get("profiles", {}).items()):
         for mod in p.get("modules", []):

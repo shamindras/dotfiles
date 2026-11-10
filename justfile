@@ -172,19 +172,22 @@ test:
 	@scripts/step outer 2 2 📦 "Running sandbox tests"
 	@just test_sandbox
 
-# Static checks: shellcheck the tests, harness self-test, resolver tests, docs lint, invariants.
+# Static checks: shellcheck, harness self-test, resolver tests, docs lint, invariants, manifest, home parity.
 [group('test')]
 test_static:
-	@scripts/step inner 1 5 "shellcheck scripts/test"
+	@scripts/step inner 1 6 "shellcheck scripts/test"
 	@shellcheck -x scripts/test/lib.sh $(grep -l '^#!/usr/bin/env bash' scripts/test/*)
-	@scripts/step inner 2 5 "Harness self-test"
+	@scripts/step inner 2 6 "Harness self-test"
 	@scripts/test/self-test
-	@scripts/step inner 3 5 "Resolver unit tests"
+	@scripts/step inner 3 6 "Resolver unit tests"
 	@python3 scripts/test/manifest_test.py
-	@scripts/step inner 4 5 "Decision notes and plan graph"
+	@scripts/step inner 4 6 "Decision notes and plan graph"
 	@scripts/test/check-docs
-	@scripts/step inner 5 5 "Invariants"
+	@scripts/step inner 5 6 "Invariants"
 	@scripts/test/check-invariants
+	@scripts/step inner 6 6 "Manifest check and home parity"
+	@scripts/ops/manifest check
+	@scripts/test/check-parity
 	@scripts/step done 🧪 "Static checks passed"
 
 # Sandbox tests in a throwaway HOME: config load, then link-only install.
