@@ -1,0 +1,311 @@
+# Work graph for the profile-driven bootstrap overhaul.
+#
+# One entry per node. Each node runs the ratchet loop in program.md until its
+# verify commands pass or its try budget runs out. Keys, in this order:
+#   id, title, objective, depends_on, honors, mints,
+#   promise {reads, writes, budget {max_tries}, evidence},
+#   verify, floors, on_exhausted, human_gate, commit_scope
+# `honors` and `mints` name notes in docs/decisions/ (file name without .md).
+# Checked by scripts/test/check-docs: required keys present, ids unique,
+# depends_on and honors refer to things that exist.
+
+defaults:
+  budget:
+    max_tries: 4
+  floors:
+    - home parity holds (inv-home-parity)
+    - a second run of every entry point changes nothing
+  on_exhausted: stop, record the last trial, escalate the spec to Shamindra
+
+nodes:
+  - id: N1
+    title: Harness, decision notes and CI skeleton
+    objective: Later nodes have tests, notes and CI to loop against.
+    depends_on: []
+    honors: [adr-12-testing, adr-14-decision-memory]
+    mints: [pattern-ratchet-loop, vocab-expected-fail]
+    promise:
+      reads: [CLAUDE.md, scripts/CLAUDE.md, justfile, install, install.conf.yaml]
+      writes: [docs/, scripts/test/, .github/workflows/ci.yml, justfile, CLAUDE.md, scripts/CLAUDE.md, .gitignore]
+      budget: { max_tries: 4 }
+      evidence: [just test_static output, docs/plan/trials.jsonl]
+    verify:
+      - shellcheck scripts/test/*
+      - scripts/test/self-test
+      - just test_static
+    floors: []
+    on_exhausted: default
+    human_gate: Module A proposal approved
+    commit_scope: [docs, scripts, ci]
+
+  - id: N2
+    title: Manifest, schema and resolver
+    objective: One declaration resolves into profiles with closure and clear errors.
+    depends_on: [N1]
+    honors: [adr-04-engine, inv-off-unit-leaves-nothing]
+    mints: []
+    promise:
+      reads: [docs/decisions/]
+      writes: [scripts/ops/manifest, scripts/test/, justfile, docs/]
+      budget: { max_tries: 4 }
+      evidence: [resolver unit test output]
+    verify: [resolver unit tests, just manifest_check]
+    floors: []
+    on_exhausted: default
+    human_gate: Module B proposal approved
+    commit_scope: scripts
+
+  - id: N3
+    title: Seed the manifest and prove home parity
+    objective: manifest.json reproduces today's home install exactly.
+    depends_on: [N2]
+    honors: [inv-home-parity, inv-generated-matches-manifest]
+    mints: []
+    promise:
+      reads: [config/brew/Brewfile, install.conf.yaml, config/hammerspoon/, config/bin/, config/aerospace/]
+      writes: [manifest.json, generated/home/, docs/]
+      budget: { max_tries: 4 }
+      evidence: [parity diff against the pre-overhaul tag]
+    verify: [home parity check, git diff --exit-code generated/ after a re-render]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: Module C proposal approved
+    commit_scope: dotbot
+
+  - id: N4
+    title: Paths
+    objective: REPOS_DIR and NOTES_DIR replace every Dropbox repo and notes path.
+    depends_on: [N3]
+    honors: [adr-01-repos-dir, adr-02-repos-dir-var, adr-10-notes-at-work]
+    mints: []
+    promise:
+      reads: [config/]
+      writes: [config/, generated/, docs/]
+      budget: { max_tries: 4 }
+      evidence: [before and after table]
+    verify: [grep gates for Dropbox and /Users/shamindras, zsh -n on changed files]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: Module D proposal approved
+    commit_scope: zsh
+
+  - id: N5
+    title: Bootstrap and install rewrite
+    objective: Bootstrap runs from any clone path with no Dropbox and isolates package failures.
+    depends_on: [N3, N4]
+    honors: [inv-bootstrap-no-dropbox, adr-03-no-git-in-dropbox]
+    mints: []
+    promise:
+      reads: [bootstrap, install, install.conf.yaml]
+      writes: [bootstrap, install, install.conf.yaml, config/brew/Brewfile, scripts/, docs/]
+      budget: { max_tries: 4 }
+      evidence: [sandbox install output for both profiles, twice]
+    verify: [shellcheck, just test_sandbox, "! grep -n -i dropbox bootstrap install"]
+    floors: [home parity, idempotent second run]
+    on_exhausted: default
+    human_gate: Module E proposal approved
+    commit_scope: dotbot
+
+  - id: N6
+    title: Work profile
+    objective: The work profile renders and installs in the sandbox.
+    depends_on: [N5]
+    honors: [adr-05-work-modules, pattern-values-not-branches, inv-no-profile-branches]
+    mints: []
+    promise:
+      reads: [manifest.json]
+      writes: [manifest.json, generated/work/, docs/]
+      budget: { max_tries: 4 }
+      evidence: [home versus work comparison]
+    verify: [just manifest_check, just manifest_diff, sandbox install of work]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: resolved work profile approved
+    commit_scope: dotbot
+
+  - id: N7
+    title: Git identity and GitHub auth
+    objective: No identity or SSH dependency in tracked config; one idempotent auth step.
+    depends_on: [N3]
+    honors: [adr-06-git-identity, adr-07-home-github-auth, adr-08-work-github-auth, inv-bootstrap-no-ssh-key]
+    mints: []
+    promise:
+      reads: [config/git/, config/ssh/, .gitmodules]
+      writes: [config/git/, config/ssh/, .gitmodules, README.md, scripts/setup/setup-github-auth, scripts/test/]
+      budget: { max_tries: 4 }
+      evidence: [auth state table test output]
+    verify: [git config --file config/git/config --list has no identity, auth state table tested with gh stubbed]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: Module G proposal approved
+    commit_scope: git
+
+  - id: N8
+    title: doctor
+    objective: A read-only report that runs straight after git clone.
+    depends_on: [N3]
+    honors: [adr-12-testing]
+    mints: []
+    promise:
+      reads: [manifest.json]
+      writes: [scripts/ops/doctor, justfile, scripts/test/]
+      budget: { max_tries: 4 }
+      evidence: [doctor output on PATH=/usr/bin:/bin]
+    verify: [doctor runs with PATH=/usr/bin:/bin and changes nothing]
+    floors: []
+    on_exhausted: default
+    human_gate: Module H proposal approved
+    commit_scope: scripts
+
+  - id: N9
+    title: App registry into Hammerspoon and aerospace
+    objective: Open, quit, HUD and window rules come from resolved.json.
+    depends_on: [N6]
+    honors: [pattern-values-not-branches]
+    mints: []
+    promise:
+      reads: [config/hammerspoon/, config/aerospace/, config/bin/]
+      writes: [config/hammerspoon/, config/aerospace/, config/bin/, generated/]
+      budget: { max_tries: 4 }
+      evidence: [headless builder test against both profiles]
+    verify: [builder test, stylua --check, aerospace accepts the config]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: Module I proposal approved
+    commit_scope: hammerspoon
+
+  - id: N10
+    title: Dropbox data, notes and sessions
+    objective: Dropbox is a non-blocking home-only data step; notes work without it.
+    depends_on: [N6]
+    honors: [adr-03-no-git-in-dropbox, adr-10-notes-at-work]
+    mints: []
+    promise:
+      reads: [scripts/ops/ensure-dropbox-link, scripts/setup/setup-zk, config/sesh/]
+      writes: [scripts/, config/sesh/, config/zk/, justfile, generated/]
+      budget: { max_tries: 4 }
+      evidence: [sandbox install of home with no ~/Dropbox]
+    verify: [sandbox home install exits 0 and prints the hint, sesh list -c per profile]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: Module J proposal approved
+    commit_scope: zk
+
+  - id: N11
+    title: brew-update, updates and macOS settings
+    objective: Drift report instead of a dump; settings read from the profile.
+    depends_on: [N6]
+    honors: [adr-09-no-brewfile-dump, adr-11-macos-settings]
+    mints: []
+    promise:
+      reads: [config/bin/brew-update, scripts/setup/setup-macos]
+      writes: [config/bin/brew-update, scripts/setup/setup-macos, justfile, config/zsh/]
+      budget: { max_tries: 4 }
+      evidence: [dry run of work]
+    verify: [grep -c 'bundle dump' config/bin/brew-update is 0, update recipes run twice leave no diff]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: Module K proposal approved
+    commit_scope: brew
+
+  - id: N12
+    title: Cleanup sweep
+    objective: Every config dir and script is current, used and documented.
+    depends_on: [N9, N10, N11]
+    honors: [adr-13-dead-weight]
+    mints: []
+    promise:
+      reads: [config/, scripts/]
+      writes: [config/, scripts/, submods/, .gitmodules]
+      budget: { max_tries: 4 }
+      evidence: [one commit per tool]
+    verify: [each tool's own validator, shellcheck or stylua --check]
+    floors: [home parity]
+    on_exhausted: default
+    human_gate: Module L list approved
+    commit_scope: per tool
+
+  - id: N13
+    title: Weekly workflow and mise scoreboard
+    objective: One guarded weekly update PR plus a scoreboard row.
+    depends_on: [N12]
+    honors: [adr-15-keeping-fresh, adr-04-engine]
+    mints: []
+    promise:
+      reads: [.github/workflows/]
+      writes: [.github/workflows/, docs/plan/mise-scoreboard.md]
+      budget: { max_tries: 4 }
+      evidence: [workflow_dispatch run]
+    verify: [actionlint, a manual run produces a scoreboard row and a PR]
+    floors: []
+    on_exhausted: default
+    human_gate: Module M proposal approved
+    commit_scope: ci
+
+  - id: N14
+    title: Docs
+    objective: CLAUDE.md, README and the plan docs match the new layout.
+    depends_on: [N13]
+    honors: [adr-14-decision-memory]
+    mints: []
+    promise:
+      reads: [docs/, CLAUDE.md, README.md]
+      writes: [CLAUDE.md, README.md, scripts/CLAUDE.md, config/, docs/]
+      budget: { max_tries: 4 }
+      evidence: [lint output]
+    verify: [markdownlint-cli2, prettier --check]
+    floors: []
+    on_exhausted: default
+    human_gate: Module N proposal approved
+    commit_scope: docs
+
+  - id: N15
+    title: CI green on macOS for both profiles
+    objective: Layer 3 passes twice for each profile.
+    depends_on: [N14]
+    honors: [adr-12-testing]
+    mints: []
+    promise:
+      reads: [.github/workflows/]
+      writes: []
+      budget: { max_tries: 4 }
+      evidence: [CI run links]
+    verify: [macOS matrix green twice per profile]
+    floors: [home parity, idempotent second run]
+    on_exhausted: default
+    human_gate: push approved by Shamindra
+    commit_scope: none
+
+  - id: N16
+    title: Home Mac human checks
+    objective: The home Mac runs from ~/repos/dotfiles and behaves as before.
+    depends_on: [N15]
+    honors: [inv-no-link-into-cloudstorage]
+    mints: []
+    promise:
+      reads: []
+      writes: []
+      budget: { max_tries: 1 }
+      evidence: [Shamindra's report]
+    verify: [human checklist in the plan prompt]
+    floors: []
+    on_exhausted: report to Shamindra
+    human_gate: human only
+    commit_scope: none
+
+  - id: N17
+    title: Work Mac day one
+    objective: Clone, doctor, agree the profile, then bootstrap work.
+    depends_on: [N15]
+    honors: [adr-05-work-modules, adr-08-work-github-auth]
+    mints: []
+    promise:
+      reads: []
+      writes: []
+      budget: { max_tries: 1 }
+      evidence: [pasted doctor report]
+    verify: [human checklist in the plan prompt]
+    floors: []
+    on_exhausted: report to Shamindra
+    human_gate: human only
+    commit_scope: none

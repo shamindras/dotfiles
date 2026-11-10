@@ -254,6 +254,8 @@ vignettes/*.pdf
 
 # pkgdown site
 docs/
+# ...but this repo's own docs/ (decision notes, plan) is tracked.
+!/docs/
 
 # translation temp files
 po/*~
