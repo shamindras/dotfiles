@@ -164,4 +164,11 @@ t_header "self-test: lib.sh"
 if DOTFILES_TEST_LANDED="" node_landed N1; then t_pass "N1 always counts as landed"; else t_fail "N1 not landed"; fi
 if DOTFILES_TEST_LANDED="N2" node_landed N3; then t_fail "N3 counted as landed"; else t_pass "an unlisted node is not landed"; fi
 
+# Real git lookup (no override): this repo's own history has N1 and N2 commits.
+if (unset DOTFILES_TEST_LANDED && node_landed N2); then
+    t_pass "node_landed finds a Node trailer in real history"
+else
+    t_fail "node_landed missed the N2 trailer in real history"
+fi
+
 t_summary "self-test"

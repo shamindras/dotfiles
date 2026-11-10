@@ -62,7 +62,11 @@ node_landed() {
         case " $DOTFILES_TEST_LANDED " in *" $node "*) return 0 ;; esac
         return 1
     fi
-    git -C "$TEST_REPO" log --format=%B HEAD 2>/dev/null | grep -qx "Node: $node"
+    # No pipe into grep -q: the writer dies of SIGPIPE when grep exits early,
+    # and pipefail turns that into a false "not landed".
+    local log
+    log="$(git -C "$TEST_REPO" log --format=%B HEAD 2>/dev/null)" || return 1
+    grep -qx "Node: $node" <<<"$log"
 }
 
 # t_expect <node> <name> <command...> — run a command and classify the result.
