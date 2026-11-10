@@ -8,8 +8,9 @@
 #   - node landed,     command fails   -> FAIL
 #   - node not landed, command fails   -> XFAIL (names the node)
 #   - node not landed, command passes  -> XPASS (reported, not a failure)
-# A verify of `pending (defined by <node>)` has no command yet: XFAIL before
-# that node lands, FAIL after it, so an invariant can never stay unchecked.
+# A note superseded by a newer note is not run. A verify of
+# `pending (defined by <node>)` has no command yet: XFAIL before that node
+# lands, FAIL after it, so an invariant can never stay unchecked.
 #
 # Usage: check-invariants [notes-dir]   (default: <repo>/docs/decisions)
 
@@ -25,13 +26,17 @@ front_value() {
         NR > 1 { p = index($0, ":"); if (substr($0, 1, p - 1) == k) { print substr($0, p + 2); exit } }' "$1"
 }
 
+# A note is superseded when another note names it in `supersedes`; superseded
+# notes stay on disk unchanged (append-only) and are not run.
+superseded=" $(for f in "$NOTES"/*.md; do front_value "$f" supersedes; done | { grep -v '^none$' || true; } | tr '\n' ' ') "
+
 t_header "invariants"
 count=0
 for f in "$NOTES"/inv-*.md; do
     [[ -e "$f" ]] || continue
     count=$((count + 1))
     name="$(basename "$f" .md)"
-    [[ "$(front_value "$f" status)" == "superseded" ]] && continue
+    case "$superseded" in *" $name "*) continue ;; esac
     node="$(front_value "$f" enforced_from)"
     cmd="$(front_value "$f" verify)"
     if [[ -z "$node" || -z "$cmd" ]]; then

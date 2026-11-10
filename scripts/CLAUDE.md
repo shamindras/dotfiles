@@ -80,12 +80,26 @@ the subdir already provides that context.
 | `ensure-dropbox-link`        | Ensure `~/Dropbox` symlink points at the canonical CloudStorage path; called by bootstrap (Phase 6) and re-runnable for manual repair |
 | `setup-firefox`              | Sync user.js, chrome/, policies.json into active Firefox profile |
 | `setup-nvim-treesitter`      | Install/update treesitter parsers (`--status` for read-only table) |
+| `manifest`                   | Resolver for `manifest.json` (Python 3.9+ stdlib): `render`, `check`, `set`, `why`, `diff` |
+
+`manifest.schema.json` (next to the resolver) is the JSON Schema for
+`manifest.json`. The resolver validates against it with a small built-in
+validator, so no pip packages are needed. It runs at edit time and in CI only;
+a fresh Mac installs from the committed `generated/` files. Model: units own
+config, setup, service, `requires` and an `app` block; plain packages are
+one-word entries in a module list (each becomes an implicit unit named after
+the package). Each profile turns modules on and overrides single units as
+`managed`, `external` (on the Mac, installed by someone else: links and app
+block kept, no package or setup) or `off`. `requires` pulls units in; a
+required unit the profile turned off is an error naming both. Setup steps with
+`needs` are wrapped so a missing command skips the step with a reason.
 
 ### test/
 
 | Script              | Recipe         | Checks                                                                           |
 | ------------------- | -------------- | -------------------------------------------------------------------------------- |
 | `self-test`         | `test_static`  | The harness itself, against throwaway fixtures                                   |
+| `manifest_test.py`  | `test_static`  | Resolver unit tests: closure, off-but-required, pairs, leaders, render           |
 | `check-docs`        | `test_static`  | Decision-note front matter, relative links under `docs/`, `docs/plan/graph.yaml` |
 | `check-invariants`  | `test_static`  | Runs each `docs/decisions/inv-*.md` `verify` command                             |
 | `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME     |

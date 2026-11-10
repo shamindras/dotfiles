@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/shamindras/dotfiles/scripts/ops/manifest.schema.json",
+  "title": "dotfiles manifest",
+  "description": "The one hand-maintained declaration. scripts/ops/manifest validates against this file with its own small validator (Python stdlib only), which supports: type, properties, required, additionalProperties, patternProperties, items, enum, pattern, minItems, uniqueItems, $ref to #/$defs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "taps", "modules", "units", "profiles"],
+  "properties": {
+    "schema_version": { "type": "integer", "enum": [1] },
+    "note": { "type": "string" },
+    "taps": {
+      "type": "object",
+      "description": "Homebrew taps, keyed by tap name. A tap is emitted only when a package from it is on.",
+      "patternProperties": { "^[a-z0-9-]+/[a-z0-9-]+$": { "$ref": "#/$defs/tap" } },
+      "additionalProperties": false
+    },
+    "modules": {
+      "type": "object",
+      "description": "Grouping only. Packages with no config are one-word entries here.",
+      "patternProperties": { "^[a-z][a-z0-9-]*$": { "$ref": "#/$defs/module" } },
+      "additionalProperties": false
+    },
+    "units": {
+      "type": "object",
+      "description": "One entry per tool with config, setup, a service, dependencies or an app block.",
+      "patternProperties": { "^[a-z0-9][a-z0-9.@+-]*$": { "$ref": "#/$defs/unit" } },
+      "additionalProperties": false
+    },
+    "profiles": {
+      "type": "object",
+      "patternProperties": { "^[a-z][a-z0-9-]*$": { "$ref": "#/$defs/profile" } },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "tap": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "trusted": { "type": "boolean" }, "note": { "type": "string" } }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["note"],
+      "properties": {
+        "note": { "type": "string" },
+        "brew": { "$ref": "#/$defs/names" },
+        "cask": { "$ref": "#/$defs/names" }
+      }
+    },
+    "names": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9./@+-]*$" }
+    },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module"],
+      "properties": {
+        "module": { "type": "string" },
+        "note": { "type": "string" },
+        "brew": { "$ref": "#/$defs/names" },
+        "cask": { "$ref": "#/$defs/names" },
+        "links": {
+          "type": "object",
+          "description": "Destination (may use ${HOME} and ${XDG_*}) to a source path relative to the repo root.",
+          "additionalProperties": { "type": "string", "pattern": "^[^/~$]" }
+        },
+        "create": { "type": "array", "items": { "type": "string" } },
+        "setup": { "type": "array", "items": { "$ref": "#/$defs/step" } },
+        "service": { "type": "string", "description": "brew services name, restarted after packages install." },
+        "requires": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string" },
+          "description": "Units this unit's config calls. Config-level only; Homebrew resolves libraries."
+        },
+        "app": { "$ref": "#/$defs/app" }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "description"],
+      "properties": {
+        "command": { "type": "string" },
+        "description": { "type": "string" },
+        "needs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Commands that must be on PATH; when one is missing the step is skipped with a reason."
+        },
+        "stdin": { "type": "boolean" }
+      }
+    },
+    "app": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bundle_id"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "bundle_id": { "type": "string" },
+        "leader": { "type": "string", "pattern": "^[a-z0-9]$" },
+        "label": { "type": "string", "description": "Lower-case label for the open group and HUD." },
+        "process": { "type": "string", "description": "Process name used by quit-app and the quit label." },
+        "workspace": { "type": "string", "pattern": "^[A-Z0-9]$" },
+        "floating": { "type": "boolean" },
+        "quit_workspace": { "type": "string", "pattern": "^[A-Z0-9]$" },
+        "quit_check": { "type": "string" },
+        "quit_fallback": { "type": "string", "pattern": "^[A-Z0-9]$" },
+        "quit_save_check": { "type": "string", "pattern": "^[A-Z0-9]$" },
+        "fullscreen": { "type": "string", "pattern": "^[A-Z0-9]$" },
+        "return_workspace": { "type": "string", "pattern": "^[A-Z0-9]$" },
+        "open_command": { "type": "string", "description": "Replaces `open <path>` (Finder uses osascript reopen)." },
+        "note": { "type": "string" }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["modules", "settings"],
+      "properties": {
+        "note": { "type": "string" },
+        "modules": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "units": {
+          "type": "object",
+          "description": "Per-unit or per-package state overrides.",
+          "additionalProperties": { "enum": ["managed", "external", "off"] }
+        },
+        "roles": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "browser": { "type": "string" } }
+        },
+        "settings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repos_dir", "notes_dir", "remote_login", "quarantine_warning"],
+          "properties": {
+            "repos_dir": { "type": "string" },
+            "notes_dir": { "type": "string" },
+            "remote_login": { "type": "boolean" },
+            "quarantine_warning": { "type": "boolean" },
+            "sesh_sessions": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+          }
+        }
+      }
+    }
+  }
+}

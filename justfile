@@ -172,16 +172,18 @@ test:
 	@scripts/step outer 2 2 📦 "Running sandbox tests"
 	@just test_sandbox
 
-# Static checks: shellcheck the tests, harness self-test, docs lint, invariants.
+# Static checks: shellcheck the tests, harness self-test, resolver tests, docs lint, invariants.
 [group('test')]
 test_static:
-	@scripts/step inner 1 4 "shellcheck scripts/test"
-	@shellcheck -x scripts/test/*
-	@scripts/step inner 2 4 "Harness self-test"
+	@scripts/step inner 1 5 "shellcheck scripts/test"
+	@shellcheck -x scripts/test/lib.sh $(grep -l '^#!/usr/bin/env bash' scripts/test/*)
+	@scripts/step inner 2 5 "Harness self-test"
 	@scripts/test/self-test
-	@scripts/step inner 3 4 "Decision notes and plan graph"
+	@scripts/step inner 3 5 "Resolver unit tests"
+	@python3 scripts/test/manifest_test.py
+	@scripts/step inner 4 5 "Decision notes and plan graph"
 	@scripts/test/check-docs
-	@scripts/step inner 4 4 "Invariants"
+	@scripts/step inner 5 5 "Invariants"
 	@scripts/test/check-invariants
 	@scripts/step done 🧪 "Static checks passed"
 
@@ -193,3 +195,28 @@ test_sandbox:
 	@scripts/step inner 2 2 "Install into a throwaway HOME"
 	@scripts/test/sandbox-install
 	@scripts/step done 📦 "Sandbox tests passed"
+
+# Render generated/<profile>/ and generated/compare.md from manifest.json.
+[group('manifest')]
+manifest_render:
+	@scripts/ops/manifest render
+
+# Validate manifest.json (schema, closure, leader keys, links) and check generated/ is current.
+[group('manifest')]
+manifest_check:
+	@scripts/ops/manifest check
+
+# Set a unit's state in a profile: just manifest_set work zoom external (managed|external|off|default).
+[group('manifest')]
+manifest_set profile unit state:
+	@scripts/ops/manifest set {{profile}} {{unit}} {{state}}
+
+# Explain why a unit is on or off in a profile: just manifest_why work bat.
+[group('manifest')]
+manifest_why profile unit:
+	@scripts/ops/manifest why {{profile}} {{unit}}
+
+# Print the home-versus-work comparison.
+[group('manifest')]
+manifest_diff:
+	@scripts/ops/manifest diff

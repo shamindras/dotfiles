@@ -7,6 +7,8 @@
 !*/
 # Step 3: un-ignore markdown files in any directory
 !**/*.md
+# ...and the hand-maintained manifest (generated/ stays ignored: the resolver owns its format)
+!/manifest.json
 
 # Exclude directories we don't own
 submods/
@@ -21,3 +23,6 @@ submods/
 config/yazi/flavors/
 # Exclude ya pkg-managed plugins (except our hand-rolled ones are fine to touch)
 config/yazi/plugins/
+
+# Machine output of scripts/ops/manifest render
+generated/

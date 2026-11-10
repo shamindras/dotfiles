@@ -139,6 +139,27 @@ sed -i.bak 's/^verify: true$/verify: pending (defined by N9)/' "$FIX/docs/decisi
 expect_rc 1 "a pending verify after its node lands fails" \
     env DOTFILES_TEST_LANDED="N9" "$HERE/check-invariants" "$FIX/docs/decisions"
 
+cat >"$FIX/docs/decisions/inv-sample-2.md" <<'EOF2'
+---
+id: inv-sample-2
+type: invariant
+date: 2026-11-11
+status: accepted
+supersedes: inv-sample
+enforced_from: N1
+verify: true
+---
+
+# Sample invariant, second version
+EOF2
+expect_rc 0 "a superseded invariant is not run" \
+    env DOTFILES_TEST_LANDED="N9" "$HERE/check-invariants" "$FIX/docs/decisions"
+if grep -q 'inv-sample:' "$FIX/out" || grep -qE '(PASS|FAIL) +inv-sample$' "$FIX/out"; then
+    t_fail "superseded note still reported"
+else
+    t_pass "only the superseding note is reported"
+fi
+
 t_header "self-test: lib.sh"
 if DOTFILES_TEST_LANDED="" node_landed N1; then t_pass "N1 always counts as landed"; else t_fail "N1 not landed"; fi
 if DOTFILES_TEST_LANDED="N2" node_landed N3; then t_fail "N3 counted as landed"; else t_pass "an unlisted node is not landed"; fi

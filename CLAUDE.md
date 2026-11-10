@@ -42,6 +42,11 @@ just update_submods   # Pull latest submodule revisions
 just test             # test_static + test_sandbox
 just test_static      # shellcheck tests, harness self-test, docs lint, invariants
 just test_sandbox     # Config load + install into a throwaway HOME (never the real one)
+just manifest_check   # Validate manifest.json and check generated/ is current
+just manifest_render  # Regenerate generated/<profile>/ from manifest.json
+just manifest_set work zoom external   # Override one unit in one profile
+just manifest_why work bat             # Why a unit is on or off
+just manifest_diff    # Home-versus-work comparison
 ```
 
 Test results are PASS, FAIL, XFAIL (fails until a named plan node lands),
@@ -104,6 +109,7 @@ Organized by runtime role:
   - `sync-notes-config` - Copy prettier/markdownlint configs into `$DROPBOX_NOTES_DIR`
 - `scripts/_lib/` — sourced helpers (e.g., `step.sh` for two-tier progress)
 - `scripts/test/` — test harness run by `just test*` and CI (see `scripts/CLAUDE.md`)
+- `scripts/ops/manifest` — resolver: `manifest.json` → `generated/<profile>/` (Brewfile, dotbot.json, resolved.json, env.sh/env.zsh)
 - `scripts/migrate/` — one-off migration utilities (unchanged)
 
 ### Supported Applications

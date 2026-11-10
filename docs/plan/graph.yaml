@@ -46,10 +46,10 @@ nodes:
     mints: []
     promise:
       reads: [docs/decisions/]
-      writes: [scripts/ops/manifest, scripts/test/, justfile, docs/]
+      writes: [scripts/ops/manifest, scripts/ops/manifest.schema.json, scripts/test/, justfile, docs/, .prettierignore, CLAUDE.md, scripts/CLAUDE.md]
       budget: { max_tries: 4 }
       evidence: [resolver unit test output]
-    verify: [resolver unit tests, just manifest_check]
+    verify: [python3 scripts/test/manifest_test.py, just test_static]
     floors: []
     on_exhausted: default
     human_gate: Module B proposal approved
