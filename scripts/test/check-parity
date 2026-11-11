@@ -64,6 +64,7 @@ def main():
     for directive in dotbot:
         have_links.update(directive.get("link", {}))
     added = set(spec["links_added"]["dests"])
+    changed = set(spec.get("links_changed", {}).get("dests", []))
     for d in sorted(set(want_links) | set(have_links)):
         if d in added:
             continue
@@ -71,7 +72,7 @@ def main():
             problems.append("link missing: %s -> %s" % (d, want_links[d]))
         elif d not in want_links:
             problems.append("link not in the baseline: %s -> %s" % (d, have_links[d]))
-        elif want_links[d] != have_links[d]:
+        elif want_links[d] != have_links[d] and d not in changed:
             problems.append("link changed: %s: %s -> %s" % (d, want_links[d], have_links[d]))
 
     if problems:

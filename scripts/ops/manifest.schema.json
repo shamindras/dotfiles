@@ -223,6 +223,10 @@
           "type": "string",
           "description": "Lower-case label for the open group and HUD."
         },
+        "icon": {
+          "type": "string",
+          "description": "Nerd Font glyph for the leader HUD."
+        },
         "process": {
           "type": "string",
           "description": "Process name used by quit-app and the quit label."

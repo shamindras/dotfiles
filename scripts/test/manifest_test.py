@@ -269,6 +269,35 @@ class RenderTest(unittest.TestCase):
         self.assertNotIn("| fd ", text)
 
 
+class AerospaceTest(unittest.TestCase):
+    def test_rules_cover_workspace_floating_and_both(self):
+        units = {
+            "a": {"app": {"bundle_id": "x.a", "workspace": "A"}},
+            "b": {"app": {"bundle_id": "x.b", "floating": True}},
+            "c": {"app": {"bundle_id": "x.c", "workspace": "9", "floating": True}},
+            "d": {"module": "core"},
+        }
+        text = "\n".join(mf.aerospace_rules(units, ["c", "b", "a", "d"]))
+        self.assertIn('if.app-id = "x.a"\nrun = "move-node-to-workspace A"', text)
+        self.assertIn('if.app-id = "x.b"\nrun = "layout floating"', text)
+        self.assertIn("run = ['layout floating', 'move-node-to-workspace 9']", text)
+        self.assertLess(text.index("x.a"), text.index("x.b"))
+        self.assertNotIn("# d", text)
+
+    def test_off_unit_gets_no_rule(self):
+        units = mf.all_units(manifest(**{"units__music__app__workspace": "M"}))
+        states = mf.resolve(manifest(), "work")[0]
+        on = [n for n, st in states.items() if st != "off"]
+        text = "\n".join(mf.aerospace_rules(units, on))
+        self.assertIn("com.acme.term", text)
+        self.assertNotIn("com.acme.music", text)
+
+    def test_block_replacement_keeps_the_rest(self):
+        tpl = "a = 1\n# BEGIN manifest: window rules\n# note\nold\n# END manifest: window rules\nz = 2"
+        out = mf.with_rules(tpl, ["", "new"])
+        self.assertEqual(out, "a = 1\n# BEGIN manifest: window rules\n# note\n\nnew\n# END manifest: window rules\nz = 2")
+
+
 class CanonicalTest(unittest.TestCase):
     def test_canonical_sorts_units_and_orders_keys(self):
         m = manifest()

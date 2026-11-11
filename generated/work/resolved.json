@@ -29,6 +29,8 @@
     "bottom",
     "broot",
     "btop",
+    "calendar",
+    "cisco-secure-client",
     "claude",
     "commitizen",
     "coreutils",
@@ -41,6 +43,7 @@
     "dust",
     "espanso",
     "eza",
+    "facetime",
     "fastfetch",
     "fd",
     "ffmpeg",
@@ -64,24 +67,31 @@
     "jq",
     "jsonlint",
     "just",
+    "keychain-access",
     "lazygit",
     "lua",
     "macos",
     "marimo",
+    "messages",
+    "microsoft-teams",
     "newsboat",
     "node",
     "ripgrep",
     "tree-sitter-cli",
     "nvim",
     "ouch",
+    "outlook",
     "p7zip",
     "pandoc",
     "parallel",
+    "photo-booth",
     "poppler",
+    "positron",
     "prek",
     "prettier",
     "preview",
     "python",
+    "quicktime",
     "raycast",
     "ripgrep-all",
     "rsync",
@@ -97,6 +107,7 @@
     "ssh",
     "starship",
     "stylua",
+    "system-settings",
     "taplo",
     "tealdeer",
     "television",
@@ -106,11 +117,13 @@
     "vscode",
     "wezterm",
     "wget",
+    "word",
     "xdg-ninja",
     "yamllint",
     "yazi",
     "yq",
     "zk",
+    "zoom",
     "zsh"
   ],
   "leaders": {
@@ -161,6 +174,7 @@
         "bundle_id": "com.apple.iBooksX",
         "leader": "i",
         "label": "books",
+        "icon": "\udb80\udcbd",
         "process": "Books",
         "workspace": "I",
         "quit_workspace": "B"
@@ -186,6 +200,26 @@
       "module": "core",
       "reason": "module core is on"
     },
+    "calendar": {
+      "state": "managed",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/System/Applications/Calendar.app",
+        "bundle_id": "com.apple.iCal",
+        "workspace": "8"
+      }
+    },
+    "cisco-secure-client": {
+      "state": "external",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/Applications/Cisco/Cisco Secure Client.app",
+        "bundle_id": "com.cisco.anyconnect.gui",
+        "workspace": "7"
+      }
+    },
     "claude": {
       "state": "external",
       "module": "apps",
@@ -195,6 +229,7 @@
         "bundle_id": "com.anthropic.claudefordesktop",
         "leader": "c",
         "label": "claude",
+        "icon": "\udb81\udea9",
         "process": "Claude",
         "workspace": "C",
         "quit_workspace": "W"
@@ -248,12 +283,27 @@
     "espanso": {
       "state": "managed",
       "module": "desktop",
-      "reason": "module desktop is on"
+      "reason": "module desktop is on",
+      "app": {
+        "path": "/Applications/Espanso.app",
+        "bundle_id": "com.federicoterzi.espanso",
+        "floating": true
+      }
     },
     "eza": {
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
+    },
+    "facetime": {
+      "state": "managed",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/System/Applications/FaceTime.app",
+        "bundle_id": "com.apple.FaceTime",
+        "workspace": "5"
+      }
     },
     "fastfetch": {
       "state": "managed",
@@ -279,6 +329,7 @@
         "bundle_id": "com.apple.finder",
         "leader": "e",
         "label": "finder",
+        "icon": "\udb80\ude4b",
         "process": "Finder",
         "workspace": "E",
         "quit_workspace": "W",
@@ -329,6 +380,7 @@
         "bundle_id": "com.mitchellh.ghostty",
         "leader": "t",
         "label": "ghostty",
+        "icon": "\udb80\udea0",
         "process": "Ghostty",
         "workspace": "T",
         "quit_workspace": "W",
@@ -359,6 +411,7 @@
         "path": "/Applications/Google Chrome.app",
         "bundle_id": "com.google.Chrome",
         "label": "chrome",
+        "icon": "\udb80\udeaf",
         "process": "Google Chrome",
         "quit_label": "Chrome",
         "workspace": "B",
@@ -405,6 +458,16 @@
       "module": "core",
       "reason": "module core is on"
     },
+    "keychain-access": {
+      "state": "managed",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/System/Library/CoreServices/Applications/Keychain Access.app",
+        "bundle_id": "com.apple.keychainaccess",
+        "workspace": "2"
+      }
+    },
     "lazygit": {
       "state": "managed",
       "module": "git",
@@ -424,6 +487,26 @@
       "state": "managed",
       "module": "data-science",
       "reason": "module data-science is on"
+    },
+    "messages": {
+      "state": "managed",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/System/Applications/Messages.app",
+        "bundle_id": "com.apple.MobileSMS",
+        "workspace": "6"
+      }
+    },
+    "microsoft-teams": {
+      "state": "external",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/Applications/Microsoft Teams.app",
+        "bundle_id": "com.microsoft.teams2",
+        "workspace": "2"
+      }
     },
     "newsboat": {
       "state": "managed",
@@ -445,6 +528,16 @@
       "module": "core",
       "reason": "module core is on"
     },
+    "outlook": {
+      "state": "external",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/Applications/Microsoft Outlook.app",
+        "bundle_id": "com.microsoft.Outlook",
+        "workspace": "1"
+      }
+    },
     "p7zip": {
       "state": "managed",
       "module": "core",
@@ -460,10 +553,30 @@
       "module": "core",
       "reason": "module core is on"
     },
+    "photo-booth": {
+      "state": "managed",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/System/Applications/Photo Booth.app",
+        "bundle_id": "com.apple.PhotoBooth",
+        "floating": true
+      }
+    },
     "poppler": {
       "state": "managed",
       "module": "docs",
       "reason": "set in profile work"
+    },
+    "positron": {
+      "state": "managed",
+      "module": "data-science",
+      "reason": "module data-science is on",
+      "app": {
+        "path": "/Applications/Positron.app",
+        "bundle_id": "co.posit.positron",
+        "workspace": "O"
+      }
     },
     "prek": {
       "state": "managed",
@@ -484,6 +597,7 @@
         "bundle_id": "com.apple.Preview",
         "leader": "d",
         "label": "preview",
+        "icon": "\udb80\udee9",
         "process": "Preview",
         "workspace": "D",
         "quit_workspace": "W"
@@ -493,6 +607,17 @@
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
+    },
+    "quicktime": {
+      "state": "managed",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/System/Applications/QuickTime Player.app",
+        "bundle_id": "com.apple.QuickTimePlayerX",
+        "workspace": "9",
+        "floating": true
+      }
     },
     "raycast": {
       "state": "managed",
@@ -553,6 +678,7 @@
         "bundle_id": "net.sourceforge.skim-app.skim",
         "leader": "p",
         "label": "skim",
+        "icon": "\udb80\ude19",
         "process": "Skim",
         "workspace": "P",
         "quit_workspace": "W"
@@ -567,6 +693,7 @@
         "bundle_id": "com.spotify.client",
         "leader": "m",
         "label": "spotify",
+        "icon": "\udb81\udcc7",
         "process": "Spotify",
         "workspace": "M",
         "quit_workspace": "B"
@@ -586,6 +713,16 @@
       "state": "managed",
       "module": "lint",
       "reason": "module lint is on"
+    },
+    "system-settings": {
+      "state": "managed",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/System/Applications/System Settings.app",
+        "bundle_id": "com.apple.systempreferences",
+        "floating": true
+      }
     },
     "taplo": {
       "state": "managed",
@@ -611,6 +748,7 @@
         "bundle_id": "com.apple.TextEdit",
         "leader": "q",
         "label": "textedit",
+        "icon": "\udb80\udfeb",
         "process": "TextEdit",
         "workspace": "Q",
         "quit_workspace": "W",
@@ -646,6 +784,7 @@
         "bundle_id": "com.microsoft.VSCode",
         "leader": "s",
         "label": "vscode",
+        "icon": "\udb82\ude1e",
         "process": "Code",
         "quit_label": "VSCode",
         "workspace": "S",
@@ -661,6 +800,7 @@
         "bundle_id": "com.github.wez.wezterm",
         "leader": "w",
         "label": "wezterm",
+        "icon": "\udb80\udd8d",
         "process": "WezTerm",
         "workspace": "W",
         "quit_workspace": "T",
@@ -672,6 +812,16 @@
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
+    },
+    "word": {
+      "state": "external",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/Applications/Microsoft Word.app",
+        "bundle_id": "com.microsoft.Word",
+        "workspace": "3"
+      }
     },
     "xdg-ninja": {
       "state": "managed",
@@ -697,6 +847,16 @@
       "state": "managed",
       "module": "notes",
       "reason": "module notes is on"
+    },
+    "zoom": {
+      "state": "external",
+      "module": "apps",
+      "reason": "set in profile work",
+      "app": {
+        "path": "/Applications/zoom.us.app",
+        "bundle_id": "us.zoom.xos",
+        "workspace": "4"
+      }
     },
     "zoxide": {
       "state": "managed",

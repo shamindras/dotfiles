@@ -18,7 +18,7 @@
   "modules": {
     "apps": {
       "note": "Browsers, password manager, Claude, meetings, and the macOS apps the leader opens.",
-      "cask": ["1password-cli", "claude-code", "microsoft-teams", "zoom"]
+      "cask": ["1password-cli", "claude-code"]
     },
     "core": {
       "note": "Shell, navigation and everyday command-line tools.",
@@ -54,7 +54,7 @@
     },
     "desktop": {
       "note": "Window manager, status bar, keyboard automation and launcher.",
-      "cask": ["raycast", "scroll-reverser", "shottr"]
+      "cask": ["raycast", "scroll-reverser"]
     },
     "docs": {
       "note": "Pandoc, Typst, LaTeX, PDF and image tools, spell checkers, reference manager.",
@@ -153,6 +153,7 @@
         "bundle_id": "com.1password.1password",
         "leader": "1",
         "label": "1password",
+        "icon": "\udb80\udf0b",
         "process": "1Password",
         "workspace": "1",
         "quit_workspace": "B"
@@ -162,7 +163,7 @@
       "module": "desktop",
       "cask": ["nikitabobko/tap/aerospace"],
       "links": {
-        "${XDG_CONFIG_HOME}/aerospace": "config/aerospace"
+        "${XDG_CONFIG_HOME}/aerospace": "generated/{profile}/aerospace"
       },
       "requires": ["borders", "sketchybar"]
     },
@@ -207,6 +208,7 @@
         "bundle_id": "com.apple.iBooksX",
         "leader": "i",
         "label": "books",
+        "icon": "\udb80\udcbd",
         "process": "Books",
         "workspace": "I",
         "quit_workspace": "B"
@@ -235,6 +237,24 @@
         "${XDG_CONFIG_HOME}/btop": "config/btop"
       }
     },
+    "calendar": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/Calendar.app",
+        "bundle_id": "com.apple.iCal",
+        "workspace": "8"
+      }
+    },
+    "cisco-secure-client": {
+      "module": "apps",
+      "note": "VPN client (work), installed outside Homebrew. The old second rule (floating) never fired: AeroSpace stops at the first matching rule.",
+      "app": {
+        "path": "/Applications/Cisco/Cisco Secure Client.app",
+        "bundle_id": "com.cisco.anyconnect.gui",
+        "workspace": "7"
+      }
+    },
     "claude": {
       "module": "apps",
       "cask": ["claude"],
@@ -243,6 +263,7 @@
         "bundle_id": "com.anthropic.claudefordesktop",
         "leader": "c",
         "label": "claude",
+        "icon": "\udb81\udea9",
         "process": "Claude",
         "workspace": "C",
         "quit_workspace": "W"
@@ -270,6 +291,7 @@
         "bundle_id": "org.djvu.DjView",
         "leader": "a",
         "label": "djview",
+        "icon": "\udb80\ude14",
         "process": "DjView",
         "workspace": "A",
         "quit_workspace": "W"
@@ -296,7 +318,21 @@
           "description": "register the espanso service",
           "needs": ["espanso"]
         }
-      ]
+      ],
+      "app": {
+        "path": "/Applications/Espanso.app",
+        "bundle_id": "com.federicoterzi.espanso",
+        "floating": true
+      }
+    },
+    "facetime": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/FaceTime.app",
+        "bundle_id": "com.apple.FaceTime",
+        "workspace": "5"
+      }
     },
     "fastfetch": {
       "module": "core",
@@ -313,6 +349,7 @@
         "bundle_id": "com.apple.finder",
         "leader": "e",
         "label": "finder",
+        "icon": "\udb80\ude4b",
         "process": "Finder",
         "workspace": "E",
         "quit_workspace": "W",
@@ -332,6 +369,7 @@
         "path": "/Applications/Firefox.app",
         "bundle_id": "org.mozilla.firefox",
         "label": "firefox",
+        "icon": "\udb80\ude39",
         "process": "Firefox",
         "workspace": "B",
         "quit_workspace": "W"
@@ -376,6 +414,7 @@
         "bundle_id": "com.mitchellh.ghostty",
         "leader": "t",
         "label": "ghostty",
+        "icon": "\udb80\udea0",
         "process": "Ghostty",
         "workspace": "T",
         "quit_workspace": "W",
@@ -405,6 +444,7 @@
         "path": "/Applications/Google Chrome.app",
         "bundle_id": "com.google.Chrome",
         "label": "chrome",
+        "icon": "\udb80\udeaf",
         "process": "Google Chrome",
         "quit_label": "Chrome",
         "workspace": "B",
@@ -433,10 +473,20 @@
         "bundle_id": "org.jdownloader.launcher",
         "leader": "x",
         "label": "jdownloader",
+        "icon": "\udb80\uddda",
         "process": "JDownloader2",
         "quit_label": "JDownloader",
         "workspace": "X",
         "quit_workspace": "B"
+      }
+    },
+    "keychain-access": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Library/CoreServices/Applications/Keychain Access.app",
+        "bundle_id": "com.apple.keychainaccess",
+        "workspace": "2"
       }
     },
     "lazygit": {
@@ -462,6 +512,24 @@
       "note": "marimo itself is installed per project with uv.",
       "links": {
         "${XDG_CONFIG_HOME}/marimo": "config/marimo"
+      }
+    },
+    "messages": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/Messages.app",
+        "bundle_id": "com.apple.MobileSMS",
+        "workspace": "6"
+      }
+    },
+    "microsoft-teams": {
+      "module": "apps",
+      "cask": ["microsoft-teams"],
+      "app": {
+        "path": "/Applications/Microsoft Teams.app",
+        "bundle_id": "com.microsoft.teams2",
+        "workspace": "2"
       }
     },
     "newsboat": {
@@ -494,6 +562,7 @@
         "bundle_id": "com.nordvpn.macos",
         "leader": "n",
         "label": "nordvpn",
+        "icon": "\udb82\udd28",
         "process": "NordVPN",
         "workspace": "N",
         "quit_workspace": "B",
@@ -524,6 +593,7 @@
         "bundle_id": "ru.starmel.OpenSuperWhisper",
         "leader": "u",
         "label": "opensuperwhisper",
+        "icon": "\udb80\udf6c",
         "process": "OpenSuperWhisper",
         "workspace": "U",
         "quit_workspace": "W",
@@ -531,11 +601,38 @@
         "return_workspace": "B"
       }
     },
+    "outlook": {
+      "module": "apps",
+      "note": "Installed outside Homebrew (work).",
+      "app": {
+        "path": "/Applications/Microsoft Outlook.app",
+        "bundle_id": "com.microsoft.Outlook",
+        "workspace": "1"
+      }
+    },
     "parallel": {
       "module": "core",
       "brew": ["parallel"],
       "links": {
         "${XDG_CONFIG_HOME}/parallel": "config/parallel"
+      }
+    },
+    "photo-booth": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/Photo Booth.app",
+        "bundle_id": "com.apple.PhotoBooth",
+        "floating": true
+      }
+    },
+    "positron": {
+      "module": "data-science",
+      "note": "Installed outside Homebrew when used.",
+      "app": {
+        "path": "/Applications/Positron.app",
+        "bundle_id": "co.posit.positron",
+        "workspace": "O"
       }
     },
     "preview": {
@@ -546,6 +643,7 @@
         "bundle_id": "com.apple.Preview",
         "leader": "d",
         "label": "preview",
+        "icon": "\udb80\udee9",
         "process": "Preview",
         "workspace": "D",
         "quit_workspace": "W"
@@ -556,6 +654,16 @@
       "note": "Python startup and history config.",
       "links": {
         "${XDG_CONFIG_HOME}/python": "config/python"
+      }
+    },
+    "quicktime": {
+      "module": "apps",
+      "note": "Ships with macOS. Floating: the iPad mirror window for Zoom screen sharing (sized by ipad-mirror via Hammerspoon).",
+      "app": {
+        "path": "/System/Applications/QuickTime Player.app",
+        "bundle_id": "com.apple.QuickTimePlayerX",
+        "workspace": "9",
+        "floating": true
       }
     },
     "r": {
@@ -608,6 +716,15 @@
       },
       "requires": ["fzf", "tmux", "zoxide"]
     },
+    "shottr": {
+      "module": "desktop",
+      "cask": ["shottr"],
+      "app": {
+        "path": "/Applications/Shottr.app",
+        "bundle_id": "cc.ffitch.shottr",
+        "floating": true
+      }
+    },
     "signal": {
       "module": "personal",
       "cask": ["signal"],
@@ -616,6 +733,7 @@
         "bundle_id": "org.whispersystems.signal-desktop",
         "leader": "g",
         "label": "signal",
+        "icon": "\udb82\udf79",
         "process": "Signal",
         "workspace": "G",
         "quit_workspace": "B"
@@ -644,6 +762,7 @@
         "bundle_id": "net.sourceforge.skim-app.skim",
         "leader": "p",
         "label": "skim",
+        "icon": "\udb80\ude19",
         "process": "Skim",
         "workspace": "P",
         "quit_workspace": "W"
@@ -657,6 +776,7 @@
         "bundle_id": "com.spotify.client",
         "leader": "m",
         "label": "spotify",
+        "icon": "\udb81\udcc7",
         "process": "Spotify",
         "workspace": "M",
         "quit_workspace": "B"
@@ -689,6 +809,15 @@
       "note": "Browser extension config; the extension is installed in the browser.",
       "links": {
         "${XDG_CONFIG_HOME}/surfingkeys": "config/surfingkeys"
+      }
+    },
+    "system-settings": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/System Settings.app",
+        "bundle_id": "com.apple.systempreferences",
+        "floating": true
       }
     },
     "task": {
@@ -727,6 +856,7 @@
         "bundle_id": "com.apple.TextEdit",
         "leader": "q",
         "label": "textedit",
+        "icon": "\udb80\udfeb",
         "process": "TextEdit",
         "workspace": "Q",
         "quit_workspace": "W",
@@ -761,6 +891,15 @@
       ],
       "requires": ["rust"]
     },
+    "tv": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/TV.app",
+        "bundle_id": "com.apple.TV",
+        "workspace": "7"
+      }
+    },
     "vlc": {
       "module": "personal",
       "cask": ["vlc"],
@@ -769,9 +908,19 @@
         "bundle_id": "org.videolan.vlc",
         "leader": "v",
         "label": "vlc",
+        "icon": "\udb81\udd7c",
         "process": "VLC",
         "workspace": "V",
         "quit_workspace": "B"
+      }
+    },
+    "voice-memos": {
+      "module": "apps",
+      "note": "Ships with macOS.",
+      "app": {
+        "path": "/System/Applications/VoiceMemos.app",
+        "bundle_id": "com.apple.VoiceMemos",
+        "workspace": "A"
       }
     },
     "vscode": {
@@ -786,6 +935,7 @@
         "bundle_id": "com.microsoft.VSCode",
         "leader": "s",
         "label": "vscode",
+        "icon": "\udb82\ude1e",
         "process": "Code",
         "quit_label": "VSCode",
         "workspace": "S",
@@ -803,6 +953,7 @@
         "bundle_id": "com.github.wez.wezterm",
         "leader": "w",
         "label": "wezterm",
+        "icon": "\udb80\udd8d",
         "process": "WezTerm",
         "workspace": "W",
         "quit_workspace": "T",
@@ -815,6 +966,15 @@
       "brew": ["wget"],
       "links": {
         "${XDG_CONFIG_HOME}/wget": "config/wget"
+      }
+    },
+    "word": {
+      "module": "apps",
+      "note": "Installed outside Homebrew (work).",
+      "app": {
+        "path": "/Applications/Microsoft Word.app",
+        "bundle_id": "com.microsoft.Word",
+        "workspace": "3"
       }
     },
     "yazi": {
@@ -832,6 +992,15 @@
       ],
       "requires": ["djvulibre", "ffmpeg", "imagemagick", "ouch", "p7zip", "poppler", "unar"]
     },
+    "zen": {
+      "module": "personal",
+      "note": "Installed outside Homebrew when used.",
+      "app": {
+        "path": "/Applications/Zen.app",
+        "bundle_id": "app.zen-browser.zen",
+        "workspace": "B"
+      }
+    },
     "zk": {
       "module": "notes",
       "brew": ["zk"],
@@ -845,6 +1014,15 @@
           "needs": ["zk"]
         }
       ]
+    },
+    "zoom": {
+      "module": "apps",
+      "cask": ["zoom"],
+      "app": {
+        "path": "/Applications/zoom.us.app",
+        "bundle_id": "us.zoom.xos",
+        "workspace": "4"
+      }
     },
     "zsh": {
       "module": "core",
@@ -889,27 +1067,39 @@
       "modules": ["core", "data-science", "desktop", "editor", "git", "lint", "notes", "terminal"],
       "units": {
         "books": "managed",
+        "calendar": "managed",
+        "cisco-secure-client": "external",
         "claude": "external",
         "djvulibre": "managed",
         "duckdb": "off",
+        "facetime": "managed",
         "ffmpeg": "managed",
         "finder": "managed",
         "font-commit-mono-nerd-font": "managed",
         "gdal": "off",
         "google-chrome": "external",
         "imagemagick": "managed",
+        "keychain-access": "managed",
+        "messages": "managed",
+        "microsoft-teams": "external",
         "newsboat": "managed",
+        "outlook": "external",
         "pandoc": "managed",
+        "photo-booth": "managed",
         "poppler": "managed",
         "preview": "managed",
         "quarto": "off",
+        "quicktime": "managed",
         "r": "off",
         "rstudio": "off",
         "shottr": "off",
         "skim": "managed",
         "spotify": "managed",
+        "system-settings": "managed",
         "textedit": "managed",
-        "xquartz": "off"
+        "word": "external",
+        "xquartz": "off",
+        "zoom": "external"
       },
       "roles": {
         "browser": "google-chrome"

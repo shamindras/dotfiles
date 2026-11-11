@@ -41,7 +41,7 @@
       "${HOME}/Library/Application Support/Code/User/keybindings.json": "config/vscode/keybindings.json",
       "${HOME}/Library/Application Support/Code/User/settings.json": "config/vscode/settings.json",
       "${HOME}/Library/Application Support/espanso": "config/espanso",
-      "${XDG_CONFIG_HOME}/aerospace": "config/aerospace",
+      "${XDG_CONFIG_HOME}/aerospace": "generated/home/aerospace",
       "${XDG_CONFIG_HOME}/atuin": "config/atuin",
       "${XDG_CONFIG_HOME}/bat": "config/bat",
       "${XDG_CONFIG_HOME}/bin": "config/bin",

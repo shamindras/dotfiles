@@ -62,5 +62,11 @@
       "${XDG_CONFIG_HOME}/dotfiles/env.zsh",
       "${XDG_CONFIG_HOME}/dotfiles/resolved.json"
     ]
+  },
+  "links_changed": {
+    "agreed": "Plan v2, 'Generate in place': each profile links its own aerospace.toml with only its apps' window rules (module I, 2026-11-11)",
+    "dests": [
+      "${XDG_CONFIG_HOME}/aerospace"
+    ]
   }
 }
