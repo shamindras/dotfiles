@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+"""check-hammerspoon — test config/hammerspoon/apps.lua headless with plain lua.
+
+For each profile, feeds generated/<profile>/resolved.json to M.build and checks:
+  - every leader key in resolved.json gets one open and one quit binding;
+  - an off unit (in the other profile only) yields no binding and no HUD icon;
+  - open commands carry the app path, quit commands the process name;
+  - home matches the hand-written open/quit tables at the baseline commit
+    (same keys, labels and quit arguments);
+  - a missing registry (nil) still binds the extras and nothing else.
+Needs `lua` (5.x) on PATH; SKIPs with a reason when it is missing.
+"""
+
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASELINE = json.load(open(os.path.join(REPO, "docs", "plan", "home-parity.json")))["baseline"]
+results = {"pass": 0, "fail": 0}
+
+
+def report(ok, name, detail=""):
+    results["pass" if ok else "fail"] += 1
+    print("  %-5s %s%s" % ("PASS" if ok else "FAIL", name, ("\n        " + detail) if (detail and not ok) else ""))
+
+
+def lua_literal(v):
+    if v is None:
+        return "nil"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (int, float)):
+        return repr(v)
+    if isinstance(v, str):
+        return '"' + v.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n") + '"'
+    if isinstance(v, list):
+        return "{" + ", ".join(lua_literal(x) for x in v) + "}"
+    return "{" + ", ".join("[%s] = %s" % (lua_literal(k), lua_literal(x)) for k, x in v.items()) + "}"
+
+
+DRIVER = r"""
+package.path = %(dir)s .. '/?.lua;' .. package.path
+local apps = require('apps')
+local function bin(c) return '$HOME/.config/bin/' .. c end
+local function as_user(c) return bin('run-as-user ') .. c end
+local open, quit, ohud, qhud = apps.build(%(resolved)s, { bin = bin, as_user = as_user, extras = {
+  open = { { key = '9', label = 'ipad-mirror', cmd = bin('ipad-mirror'), icon = 'I' } },
+  quit = { { key = '9', label = 'QuickTime Player', cmd = bin('quit-app "QuickTime Player" W'), icon = 'I' } } } })
+local function dump(list)
+  for _, b in ipairs(list) do io.write(b.key, '\t', b.label, '\t', b.cmd, '\n') end
+end
+io.write('OPEN\n'); dump(open); io.write('QUIT\n'); dump(quit)
+io.write('OHUD\t', ohud, '\nQHUD\t', qhud, '\n')
+"""
+
+
+def run_build(resolved):
+    code = DRIVER % {
+        "dir": lua_literal(os.path.join(REPO, "config", "hammerspoon")),
+        "resolved": lua_literal(resolved),
+    }
+    out = subprocess.run(["lua", "-"], input=code, capture_output=True, text=True, check=True).stdout
+    open_, quit_, hud, cur = [], [], {}, None
+    for line in out.splitlines():
+        if line in ("OPEN", "QUIT"):
+            cur = open_ if line == "OPEN" else quit_
+        elif line.startswith(("OHUD\t", "QHUD\t")):
+            k, v = line.split("\t", 1)
+            hud[k] = v
+        else:
+            cur.append(line.split("\t"))
+    return open_, quit_, hud
+
+
+def baseline_tables():
+    """Keys, labels and quit commands from the hand-written actions.lua at the baseline."""
+    text = subprocess.run(
+        ["git", "-C", REPO, "show", "%s:config/hammerspoon/actions.lua" % BASELINE],
+        capture_output=True, text=True, check=True,
+    ).stdout
+
+    def group(name):
+        block = text[text.index("M.%s = {" % name):]
+        block = block[: block.index("\n}\n")]
+        found = {}
+        for m in re.finditer(r"key = '(\w)',\s*label = '([^']+)',\s*cmd = bin\('([^']*)'\)", block):
+            found[m.group(1)] = (m.group(2), m.group(3))
+        return found
+
+    return group("open"), group("quit")
+
+
+def norm(cmd):
+    return cmd.replace("'", "").replace('"', "").replace("$HOME/.config/bin/", "")
+
+
+def main():
+    print("── hammerspoon app registry ──")
+    if not shutil.which("lua"):
+        print("  SKIP  apps.lua builder: no lua on PATH")
+        print("check-hammerspoon: 0 pass, 0 fail, 0 xfail, 0 xpass, 1 skip")
+        return 0
+    profiles = sorted(d for d in os.listdir(os.path.join(REPO, "generated")) if os.path.isdir(os.path.join(REPO, "generated", d)))
+    resolved = {p: json.load(open(os.path.join(REPO, "generated", p, "resolved.json"))) for p in profiles}
+
+    for p in profiles:
+        r = resolved[p]
+        open_, quit_, hud = run_build(r)
+        keys = sorted(r["leaders"]) + ["9"]
+        report(sorted(b[0] for b in open_) == sorted(keys), "%s: one open binding per leader key (+9)" % p,
+               "got %s want %s" % (sorted(b[0] for b in open_), sorted(keys)))
+        report(sorted(b[0] for b in quit_) == sorted(keys), "%s: one quit binding per leader key (+9)" % p)
+        bad = [b for b in open_ if b[0] != "9" and r["units"][r["leaders"][b[0]]]["app"].get("path", "") not in b[2]
+               and "open_command" not in r["units"][r["leaders"][b[0]]]["app"]]
+        report(not bad, "%s: open commands carry the app path" % p, str(bad[:3]))
+        hud_keys = re.findall(r" (\w):", hud["OHUD"])
+        report(sorted(hud_keys) == sorted(keys), "%s: HUD lists exactly the bound keys" % p, hud["OHUD"])
+        for other in profiles:
+            if other == p:
+                continue
+            gone = [u for u in resolved[other]["units"] if u not in r["units"] and "app" in resolved[other]["units"][u]
+                    and resolved[other]["units"][u]["app"].get("leader")]
+            leaked = [b for b in open_ + quit_ if any(resolved[other]["units"][u]["app"]["path"] in b[2] for u in gone)]
+            report(not leaked, "%s: units off here (%s) get no binding" % (p, ", ".join(sorted(gone)) or "none"), str(leaked[:3]))
+
+    if "home" in resolved:
+        open_, quit_, _ = run_build(resolved["home"])
+        old_open, old_quit = baseline_tables()
+        new_open = {b[0]: b[1] for b in open_}
+        report(new_open == {k: v[0] for k, v in old_open.items()}, "home open labels match %s" % BASELINE,
+               "diff: %s" % ({k: (new_open.get(k), old_open.get(k, ('-',))[0]) for k in set(new_open) | set(old_open)
+                              if new_open.get(k) != old_open.get(k, (None,))[0]}))
+        new_quit = {b[0]: (b[1], norm(b[2])) for b in quit_}
+        want_quit = {k: (v[0], norm(v[1])) for k, v in old_quit.items()}
+        report(new_quit == want_quit, "home quit labels and arguments match %s" % BASELINE,
+               str({k: (new_quit.get(k), want_quit.get(k)) for k in set(new_quit) | set(want_quit) if new_quit.get(k) != want_quit.get(k)}))
+
+    open_, quit_, hud = run_build(None)
+    report([b[0] for b in open_] == ["9"] and [b[0] for b in quit_] == ["9"], "no registry: only the extras are bound")
+
+    print("check-hammerspoon: %d pass, %d fail, 0 xfail, 0 xpass, 0 skip" % (results["pass"], results["fail"]))
+    return 1 if results["fail"] else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

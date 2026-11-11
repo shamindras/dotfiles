@@ -165,10 +165,10 @@ nodes:
     mints: []
     promise:
       reads: [config/hammerspoon/, config/aerospace/, config/bin/]
-      writes: [config/hammerspoon/, config/aerospace/, config/bin/, generated/]
+      writes: [config/hammerspoon/, config/aerospace/, config/bin/, generated/, manifest.json, scripts/, justfile, docs/]
       budget: { max_tries: 4 }
       evidence: [headless builder test against both profiles]
-    verify: [builder test, stylua --check, aerospace accepts the config]
+    verify: [scripts/test/check-hammerspoon, python3 scripts/test/manifest_test.py, stylua --check config/hammerspoon, aerospace reload-config --dry-run]
     floors: [home parity]
     on_exhausted: default
     human_gate: Module I proposal approved

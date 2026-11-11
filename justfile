@@ -189,6 +189,7 @@ test_static:
 	@scripts/ops/manifest check
 	@scripts/test/check-parity
 	@scripts/test/check-paths
+	@scripts/test/check-hammerspoon
 	@scripts/step done 🧪 "Static checks passed"
 
 # Sandbox tests in a throwaway HOME: config load, link-only install, doctor.
