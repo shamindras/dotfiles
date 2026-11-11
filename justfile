@@ -192,15 +192,17 @@ test_static:
 	@scripts/test/check-hammerspoon
 	@scripts/step done 🧪 "Static checks passed"
 
-# Sandbox tests in a throwaway HOME: config load, link-only install, doctor.
+# Sandbox tests in a throwaway HOME: config load, link-only install, doctor, dropbox_finish.
 [group('test')]
 test_sandbox:
-	@scripts/step inner 1 3 "Config load"
+	@scripts/step inner 1 4 "Config load"
 	@scripts/test/check-config-load
-	@scripts/step inner 2 3 "Install into a throwaway HOME"
+	@scripts/step inner 2 4 "Install into a throwaway HOME"
 	@scripts/test/sandbox-install
-	@scripts/step inner 3 3 "doctor is read-only"
+	@scripts/step inner 3 4 "doctor is read-only"
 	@scripts/test/check-doctor
+	@scripts/step inner 4 4 "dropbox_finish against a fake Dropbox"
+	@scripts/test/check-dropbox
 	@scripts/step done 📦 "Sandbox tests passed"
 
 # Render generated/<profile>/ and generated/compare.md from manifest.json.
@@ -232,3 +234,24 @@ manifest_diff:
 [group('health')]
 doctor *args:
 	@scripts/ops/doctor {{args}}
+
+# Finish Dropbox after sign-in (home): ~/Dropbox link, then the notes notebook. Waits for nothing; safe any time.
+[group('notes')]
+dropbox_finish:
+	#!/usr/bin/env bash
+	set -Eeuo pipefail
+	if [[ ! -f "$HOME/.dropbox/info.json" ]]; then
+	    echo "Waiting for Dropbox sign-in (~/.dropbox/info.json is missing). Sign in in the app, then run this again."
+	    exit 0
+	fi
+	scripts/ops/ensure-dropbox-link
+	notes="${NOTES_DIR:?NOTES_DIR is not set: open a new shell, or run ./install first}"
+	if [[ ! -d "$notes" ]]; then
+	    echo "Waiting for $notes to sync. A first sync can take hours; run this again later."
+	    exit 0
+	fi
+	scripts/setup/setup-zk
+	echo
+	echo "One-time step (Dropbox has no command for it): in Finder, right-click"
+	echo "$notes and choose 'Make available offline', so zk, rg and nvim never"
+	echo "meet an online-only placeholder. just doctor reports any placeholders left."

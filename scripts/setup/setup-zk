@@ -1,82 +1,86 @@
 #!/usr/bin/env bash
 #
-# setup-zk — bootstrap the zk (zettelkasten) notebook on a fresh or existing
-# machine. Idempotent on re-runs; safe as ad-hoc recovery via
-# `./scripts/setup/setup-zk` from the repo root.
+# setup-zk — set up the zk (zettelkasten) notebook at $ZK_NOTEBOOK_DIR.
+# Idempotent; safe to re-run from install, from `just dropbox_finish`, or by
+# hand from any folder.
 #
-# Responsibilities:
-#   1. Verify Dropbox is set up (notebook lives at $ZK_NOTEBOOK_DIR under Dropbox).
-#   2. Create notebook dir structure (journal/, ideas/, .zk/templates/).
-#   3. Mark $ZK_NOTEBOOK_DIR/.zk/ as Dropbox-ignored (com.dropbox.ignored=1).
-#      The .zk/ tree holds notebook.db (SQLite) + transient -wal/-shm
-#      sidecars + a templates/ cache rsync'd from the dotfiles repo. None of
-#      it is canonical: markdown files under journal/ and ideas/ are the
-#      source of truth and stay Dropbox-synced. Keeping .zk/ local-only
-#      prevents Dropbox from racing SQLite writes (the Tahoe File Provider
-#      can serve partially-materialised files mid-write → B-tree corruption).
-#   4. Seed starter templates from config/zk/templates/ if .zk/templates/ is empty.
-#   5. If an existing notebook.db is corrupt, back it up to /tmp and remove it.
-#      The zk-nvim LSP rebuilds the index lazily on next markdown buffer open.
-#   6. Deploy markdown formatter/linter configs (prettier, markdownlint) from
-#      config/zk/notebook/ into $NOTES_DIR via scripts/ops/sync-notes-config.
+# The notebook lives at $NOTES_DIR/zk (a profile value: inside Dropbox at
+# home, ~/notes at work). Responsibilities:
+#   1. Find the notebook root. At home, if Dropbox has not delivered the notes
+#      folder yet, say so and exit 0 (`just dropbox_finish` re-runs this).
+#   2. Create journal/, ideas/ and .zk/templates/.
+#   3. Only when the notebook is under Dropbox: keep .zk/ out of sync by
+#      setting BOTH ignore attributes and reading them back:
+#        com.apple.fileprovider.ignore#P = 1  (File Provider, ~/Library/CloudStorage)
+#        com.dropbox.ignored             = 1  (the pre-File-Provider location)
+#      (help.dropbox.com/sync/ignored-files, read 2026-11-11). .zk/ holds
+#      notebook.db (SQLite) and its -wal/-shm sidecars; syncing them races
+#      SQLite writes. The markdown under journal/ and ideas/ stays synced.
+#   4. Seed starter templates from config/zk/templates/ if none exist.
+#   5. Back up and remove a corrupt notebook.db (zk-nvim rebuilds it).
+#   6. Deploy the notes formatter configs (scripts/ops/sync-notes-config).
 
 set -Eeuo pipefail
 
-echo "Setting up zk (zettelkasten) configuration..."
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+NOTES_DIR="${NOTES_DIR:-$HOME/notes}"
+ZK_NOTEBOOK_DIR="${ZK_NOTEBOOK_DIR:-$NOTES_DIR/zk}"
+export NOTES_DIR ZK_NOTEBOOK_DIR
 
-# 1. Check if Dropbox is set up
-if [ ! -d "$DROPBOX_DIR" ]; then
-  echo "ERROR: Dropbox directory not found at $DROPBOX_DIR"
-  echo "Please set up Dropbox first by running: make setup-dropbox"
-  echo "Then run ./install again after Dropbox sync completes"
-  exit 1
+echo "Setting up zk at $ZK_NOTEBOOK_DIR..."
+
+# 1. Where does the notebook live?
+under_dropbox=0
+case "$NOTES_DIR" in
+    "$HOME"/Dropbox/* | "$HOME"/Library/CloudStorage/*) under_dropbox=1 ;;
+esac
+if [[ $under_dropbox -eq 1 && ! -d "$NOTES_DIR" ]]; then
+    echo "Notes not synced yet: $NOTES_DIR does not exist. Run 'just dropbox_finish' once Dropbox has synced."
+    exit 0
 fi
 
-# 2. Create zk directory structure if needed
-echo "Creating zk directory structure..."
-mkdir -p "$ZK_NOTEBOOK_DIR/journal"
-mkdir -p "$ZK_NOTEBOOK_DIR/ideas"
-mkdir -p "$ZK_NOTEBOOK_DIR/.zk/templates"
+# 2. Directory structure
+mkdir -p "$ZK_NOTEBOOK_DIR/journal" "$ZK_NOTEBOOK_DIR/ideas" "$ZK_NOTEBOOK_DIR/.zk/templates"
 
-# 3. Mark .zk/ as Dropbox-ignored BEFORE anything else writes to it, so the
-#    notebook.db that zk-nvim creates lazily is born inside an unsynced dir.
-current_ignored="$(xattr -p com.dropbox.ignored "$ZK_NOTEBOOK_DIR/.zk" 2>/dev/null || true)"
-if [ "$current_ignored" != "1" ]; then
-  xattr -w com.dropbox.ignored 1 "$ZK_NOTEBOOK_DIR/.zk"
-  echo "✓ Marked .zk/ as Dropbox-ignored"
+# 3. Keep .zk/ out of Dropbox (before anything writes notebook.db).
+if [[ $under_dropbox -eq 1 ]]; then
+    for attr in 'com.apple.fileprovider.ignore#P' com.dropbox.ignored; do
+        if [[ "$(xattr -p "$attr" "$ZK_NOTEBOOK_DIR/.zk" 2>/dev/null || true)" != "1" ]]; then
+            xattr -w "$attr" 1 "$ZK_NOTEBOOK_DIR/.zk"
+        fi
+        if [[ "$(xattr -p "$attr" "$ZK_NOTEBOOK_DIR/.zk" 2>/dev/null || true)" == "1" ]]; then
+            echo "✓ .zk/ has $attr = 1"
+        else
+            echo "✗ could not set $attr on .zk/ (online-only folders cannot be ignored: make the notes folder available offline first)" >&2
+            exit 1
+        fi
+    done
 else
-  echo "✓ .zk/ already Dropbox-ignored"
+    echo "✓ notebook is not under Dropbox; no ignore attributes needed"
 fi
 
-# 4. Copy starter templates ONLY if none exist
-if [ -z "$(ls -A "$ZK_NOTEBOOK_DIR/.zk/templates/"*.md 2>/dev/null)" ]; then
-  echo "No templates found, copying starter templates..."
-  cp config/zk/templates/*.md "$ZK_NOTEBOOK_DIR/.zk/templates/"
-  echo "✓ Starter templates copied successfully"
+# 4. Starter templates, only if none exist
+if [[ -z "$(ls -A "$ZK_NOTEBOOK_DIR/.zk/templates/"*.md 2>/dev/null)" ]]; then
+    cp "$BASEDIR"/config/zk/templates/*.md "$ZK_NOTEBOOK_DIR/.zk/templates/"
+    echo "✓ starter templates copied"
 else
-  echo "✓ Templates already present, skipping copy"
+    echo "✓ templates already present"
 fi
 
-# 5. Detect + recover from a corrupt notebook.db (rare; happens after a clean
-#    macOS reset when Dropbox materialised the synced db while SQLite was
-#    writing). Missing db is fine — zk-nvim LSP rebuilds on first use.
+# 5. Corrupt notebook.db: back it up and remove it (a missing db is fine).
 db="$ZK_NOTEBOOK_DIR/.zk/notebook.db"
-if [ -f "$db" ]; then
-  integrity="$(sqlite3 "$db" 'PRAGMA integrity_check;' 2>&1 | head -1 || true)"
-  if [ "$integrity" = "ok" ]; then
-    echo "✓ notebook.db integrity verified"
-  else
-    backup="/tmp/notebook.db.corrupt-$(date +%Y%m%d-%H%M%S).bak"
-    cp "$db" "$backup"
-    rm "$db"
-    echo "⚠ Corrupt notebook.db backed up to $backup and removed."
-    echo "  zk-nvim LSP will rebuild the index on next markdown buffer open."
-  fi
+if [[ -f "$db" ]] && command -v sqlite3 >/dev/null 2>&1; then
+    if [[ "$(sqlite3 "$db" 'PRAGMA integrity_check;' 2>&1 | head -1 || true)" == "ok" ]]; then
+        echo "✓ notebook.db integrity verified"
+    else
+        backup="${TMPDIR:-/tmp}/notebook.db.corrupt-$(date +%Y%m%d-%H%M%S).bak"
+        cp "$db" "$backup"
+        rm "$db"
+        echo "⚠ corrupt notebook.db backed up to $backup and removed; zk-nvim rebuilds it on next use"
+    fi
 fi
 
-# 6. Deploy prettier + markdownlint configs for the notes tree (zk + scratch).
-#    Copies, not symlinks — see scripts/ops/sync-notes-config.
-echo "Syncing notes formatter configs..."
-./scripts/ops/sync-notes-config
+# 6. Formatter configs for the notes tree (copies, not links)
+"$BASEDIR/scripts/ops/sync-notes-config"
 
-echo "✓ zk setup complete!"
+echo "✓ zk setup complete"

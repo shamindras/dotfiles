@@ -25,7 +25,7 @@
 | Path                  | Synced? | Notes                                                              |
 | --------------------- | ------- | ------------------------------------------------------------------ |
 | `journal/`, `ideas/`  | Yes     | Markdown notes — canonical source of truth, cross-machine via Dropbox. |
-| `.zk/`                | **No**  | Marked `com.dropbox.ignored=1` by `setup-zk`. Local-only, regenerable. |
+| `.zk/`                | **No**  | `setup-zk` sets `com.apple.fileprovider.ignore#P=1` and `com.dropbox.ignored=1` (home only). Local-only, regenerable. |
 | `.zk/notebook.db`     | **No**  | SQLite index, rebuilt lazily by zk-nvim LSP from the markdown files.   |
 | `.zk/notebook.db-wal`, `.zk/notebook.db-shm` | **No** | Transient SQLite WAL sidecars (long-lived during nvim sessions).       |
 | `.zk/templates/`      | **No**  | Cache rsync'd locally from `config/zk/templates/` by `sync_templates()` in `config/nvim/lua/shamindras/plugins/zk.lua`. |
