@@ -5,22 +5,33 @@
 
 ## File Structure
 
-| File       | Purpose                                 |
-| ---------- | --------------------------------------- |
-| `Brewfile` | Package manifest (100+ formulas/casks)  |
+There is no hand-maintained Brewfile any more. Packages are declared in
+`manifest.json` (units and module lists); `just manifest_render` writes one
+Brewfile per profile:
+
+| File                         | Purpose                                         |
+| ---------------------------- | ----------------------------------------------- |
+| `generated/home/Brewfile`    | Home profile packages, grouped by module        |
+| `generated/work/Brewfile`    | Work profile packages, grouped by module        |
+| `config/brew/CLAUDE.md`      | This file                                       |
+
+`./install` installs the profile's Brewfile one module at a time (core
+first, per-package fallback). `brew-update` reconciles against the same file
+through `~/.config/dotfiles/resolved.json` (transitional fallback:
+`generated/home`).
 
 ## Key Settings
 
-- **Taps**: felixkratz/formulae, nikitabobko/tap
-- **Formulas**: 100+ CLI tools and libraries
-- **Casks**: GUI apps (aerospace, hammerspoon, wezterm, etc.)
+- **Taps**: felixkratz/formulae, nikitabobko/tap (declared in `manifest.json`, emitted only when used)
+- **Formulas and casks**: home 150, work 81 (see `generated/compare.md`)
+- **Not from Homebrew**: ttyper (`cargo install`), gh-dash (`gh extension`), yazi and tmux plugins
 
 ## Update Strategy
 
 **Policy**: Homebrew originates all updates. In-app update prompts are
 closed; upgrades are triggered by running the canonical pipeline
-(`config/bin/brew-update`, invoked by `./install`, the `bu` alias, and
-the Hammerspoon leader `RCmd → r → b`). `HOMEBREW_UPGRADE_GREEDY=1`
+(`config/bin/brew-update`, invoked by the `bu` alias and the Hammerspoon
+leader `RCmd → r → b`). `HOMEBREW_UPGRADE_GREEDY=1`
 is set in `config/zsh/conf.d/01-z1-env-vars-gen.zsh` to align with
 this policy.
 
@@ -30,9 +41,7 @@ this policy.
 2. Sweep broken Caskroom state *before* mode detection. Removes
    `*.upgrading` orphans from prior crashed runs, and stub Caskroom
    dirs that contain only `.metadata` (no version subdir — a shape
-   that makes `brew list --cask` wrongly report the cask as installed
-   while `brew bundle dump` skips it, which otherwise causes step 3
-   to silently drop the entry from the Brewfile).
+   that makes `brew list --cask` wrongly report the cask as installed).
 3. Tri-state mode detect — checks **set membership** of declared
    entries against `brew list` directly (not `brew bundle check`, which
    conflates "missing" with "outdated"; an outdated package would
@@ -41,20 +50,21 @@ this policy.
      Outdated versions are fine — step 6 handles upgrades.
    - **drift** — some declared entries are absent from `brew list` but
      brew is populated (user ran `brew uninstall foo`, or a prior run
-     crashed). Step 3 prints the pending-removal list before step 4 so
-     unintentional losses can be caught with Ctrl-C.
+     crashed).
    - **bootstrap** — brew is (near-)empty vs the Brewfile (fresh
      machine). Gated by `installed_count < brewfile_entries / 2`.
-4. `brew bundle dump --force --formula --cask --tap` in **steady + drift** — both
-   directions of change flow through (ad-hoc installs AND uninstalls
-   end up reflected in the Brewfile). Skipped in bootstrap so a fresh
-   machine doesn't overwrite the canonical Brewfile.
+4. **Manifest drift report** (read-only; replaces the old dump). Lists
+   packages installed on request but not declared (installed by hand)
+   and, in drift mode, packages declared but not installed (uninstalled
+   by hand), each with the command that records the change. Nothing is
+   written: not the Brewfile, not the manifest.
 5. `brew update`.
 6. `brew upgrade --greedy` — **tolerant** (`|| true`); individual cask
    failures do not abort the run.
 7. `brew bundle install` — upgrade-by-default; reconciles toward the
-   Brewfile, re-installing anything step 6 silently dropped. Doubles as
-   the install step on a fresh machine.
+   Brewfile, re-installing anything step 6 silently dropped, but never
+   what was uninstalled by hand (those entries are left out of the
+   reinstall list). In bootstrap mode it installs everything.
 8. `brew cleanup` + emoji summary.
 
 ### Known limitation: pkg-shaped auto-updating casks
@@ -122,46 +132,27 @@ surprises (e.g. NordVPN from a crashed run), they Ctrl-C, `brew install
 --cask nordvpn`, re-run `bu` — now bundle check passes → steady → no
 drop.
 
-## Dump scope: brew-only
-
-`brew-update` calls `brew bundle dump` with `--formula --cask --tap` so
-only brew's native package types land in the Brewfile. Brew's default
-dump also covers cargo/npm/go/vscode/uv/flatpak/krew; those are left to
-their own setup scripts where the cargo/uv/etc. invocation needs
-specific feature flags or repo-pinned versions that a vanilla brew
-bundle entry would silently break.
-
 ## Adding and Removing Packages
 
-Brewfile is never edited by hand — state flows *from* brew *to* Brewfile.
-Adds and removes are **symmetric**: both propagate through the next
-`brew-update` run via the dump step (which runs in steady + drift modes).
+`manifest.json` is the only declaration; `brew-update` reports drift and
+never writes it.
 
-- **Add a formula**: `brew install <name>`; next `brew-update` runs in
-  steady mode and the dump captures the new entry.
-- **Add a cask**: `brew install --cask <name>`; same.
-- **Remove a formula/cask**: `brew uninstall [--cask] <name>`; next
-  `brew-update` runs in **drift mode** (bundle check fails because the
-  entry is declared-but-missing, but brew is populated → not a fresh
-  machine). The dump captures the removal and writes a Brewfile without
-  it, so step 7 (`brew bundle install`) has nothing to reinstall.
-- **Verify the pending change before the run** (optional):
-  `just update_brewfile` performs only the dump; inspect
-  `git diff config/brew/Brewfile` before running `bu`.
-- Intentional pruning of entries installed outside the Brewfile:
-  `brew bundle cleanup --file=config/brew/Brewfile --force` (manual;
-  not part of the canonical pipeline). Use this only when you want
-  brew to *remove* packages that exist on the machine but are missing
-  from the Brewfile — e.g., if you previously hand-edited the Brewfile
-  to drop an entry but never ran `brew uninstall`.
+- **Add**: add the package to a module list (or a unit) in `manifest.json`,
+  `just manifest_render`, then `brew install` it or run `./install`. Or
+  `brew install` first and let the next `brew-update` remind you.
+- **Remove from one profile**: `just manifest_set <profile> <unit> off`.
+  This never uninstalls anything; uninstall by hand if wanted.
+- **Remove everywhere**: delete it from `manifest.json`, render, and
+  `brew uninstall` it. `brew bundle cleanup` and `brew autoremove` are
+  never run automatically.
 
 ## Development Notes
 
 - Canonical upgrade entry point: `config/bin/brew-update`.
-- Manual Brewfile refresh (without upgrade pass): `just update_brewfile`.
-- Install from Brewfile (without upgrade or cleanup):
-  `brew bundle --file=config/brew/Brewfile`.
-- Homebrew init handled by `scripts/setup/setup-upgrade-homebrew`.
+- Install a profile's Brewfile (without upgrade or cleanup):
+  `brew bundle --file=generated/<profile>/Brewfile`.
+- Homebrew itself is installed by `./bootstrap` (official installer, then
+  `brew shellenv` in the same run).
 - Brew env vars set in zsh `01-z1-env-vars-gen.zsh`:
   `HOMEBREW_UPGRADE_GREEDY=1`, `HOMEBREW_NO_ANALYTICS=1`,
   `HOMEBREW_NO_ENV_HINTS=1`, `HOMEBREW_NO_UPDATE_REPORT_NEW=1` (hides

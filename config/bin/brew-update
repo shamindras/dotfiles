@@ -4,13 +4,17 @@
 # Invoked by the `bu` zsh alias, and the Hammerspoon
 # leader `RCmd → r → b`. Flow: Caskroom sweep (*.upgrading orphans +
 # .metadata-only stubs) → tri-state mode detect (steady / drift /
-# bootstrap) → dump (steady + drift) → brew update → brew upgrade --greedy
-# (tolerant) → brew bundle install (recovery + bootstrap) → brew cleanup →
-# emoji summary. Sudo is invoked lazily — only when the Caskroom sweep has
-# orphans to remove or when brew itself escalates for a pkg-shaped cask —
-# so quiet runs never prompt for a password. Drift mode lets
-# `brew uninstall <name>` flow symmetrically with `brew install <name>` —
-# the dump captures both directions.
+# bootstrap) → manifest drift report (read-only) → brew update → brew
+# upgrade --greedy (tolerant) → brew bundle install (recovery + bootstrap)
+# → brew cleanup → emoji summary. Sudo is invoked lazily — only when the
+# Caskroom sweep has orphans to remove or when brew itself escalates for a
+# pkg-shaped cask — so quiet runs never prompt for a password.
+#
+# The Brewfile is this profile's generated/<profile>/Brewfile (rendered from
+# manifest.json). brew-update never writes it or the manifest: packages
+# installed by hand, or declared but uninstalled by hand, are reported with
+# the command that records the change (`just manifest_set ...`), and a
+# by-hand uninstall is not silently reinstalled.
 
 set -Eeuo pipefail
 
@@ -20,7 +24,17 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
 DOTFILES_DIR="$(cd "$SCRIPT_DIR/../.." && pwd -P)"
 
 BREW="/opt/homebrew/bin/brew"
-BREWFILE="$DOTFILES_DIR/config/brew/Brewfile"
+# This profile's Brewfile, through the registry link install creates.
+REGISTRY="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/resolved.json"
+if [ -L "$REGISTRY" ]; then
+  GEN_DIR="$(cd "$(dirname "$(readlink "$REGISTRY")")" && pwd -P)"
+else
+  # transitional: until install links ~/.config/dotfiles on this Mac (N16)
+  GEN_DIR="$DOTFILES_DIR/generated/home"
+  REGISTRY="$GEN_DIR/resolved.json"
+fi
+PROFILE="$(basename "$GEN_DIR")"
+BREWFILE="$GEN_DIR/Brewfile"
 
 # Autoremove is the default in modern brew; setting HOMEBREW_AUTOREMOVE=1
 # triggers a deprecation warning. We drop it here in case a stale shell
@@ -68,11 +82,11 @@ PRE_F=$(mktemp -t brew-update); PRE_C=$(mktemp -t brew-update)
 MID_F=$(mktemp -t brew-update); MID_C=$(mktemp -t brew-update)
 POST_C=$(mktemp -t brew-update); CLEAN_LOG=$(mktemp -t brew-update)
 INST_F=$(mktemp -t brew-update); INST_C=$(mktemp -t brew-update)
-PRE_BREWFILE=$(mktemp -t brew-update)
+KEEP_BREWFILE=$(mktemp -t brew-update)
 
 cleanup_tmp() {
   rm -f "$PRE_F" "$PRE_C" "$MID_F" "$MID_C" "$POST_C" "$CLEAN_LOG" \
-        "$INST_F" "$INST_C" "$PRE_BREWFILE"
+        "$INST_F" "$INST_C" "$KEEP_BREWFILE"
 }
 trap cleanup_tmp EXIT
 
@@ -89,9 +103,9 @@ trap cleanup_tmp EXIT
 #   2. Stub Caskroom dirs (only `.metadata`, no version subdir): a
 #      crashed uninstall or `brew update-reset` can leave this behind.
 #      `brew list --cask` still reports the cask as installed (directory
-#      exists) but `brew bundle dump` correctly skips it, so if step 2
-#      trusts `brew list`, mode is (wrongly) detected as steady and the
-#      dump silently removes the entry from the Brewfile.
+#      exists) but it is not really installed, so if step 2 trusts
+#      `brew list`, mode is (wrongly) detected as steady and the drift
+#      report misses it.
 #
 # Wiping both here makes the installed-cask check in step 2 (mode
 # detection) reflect the true state — they become missing → drift mode
@@ -133,15 +147,14 @@ fi
 #               brew is populated (user ran `brew uninstall foo`, or a
 #               prior run crashed mid-pipeline and left something out).
 #   bootstrap : brew is (near-)empty relative to the Brewfile — fresh
-#               machine. Dump is skipped so we don't overwrite the
-#               canonical Brewfile with a nearly-empty snapshot.
+#               machine. Everything declared is installed in step 6.
 #
 # We check set membership against `brew list` directly rather than using
 # `brew bundle check`, because bundle check flags *both* missing AND
 # outdated packages as failing — lumping "user uninstalled this" together
 # with "needs a normal version bump" and causing false drift triggers on
 # every routine run. The pre-step-2 sweep above ensures `brew list`'s
-# view matches `brew bundle dump`'s stricter definition of installed.
+# view matches what is really installed.
 "$BREW" list --formula >"$INST_F" 2>/dev/null || true
 "$BREW" list --cask    >"$INST_C" 2>/dev/null || true
 
@@ -182,35 +195,30 @@ else
 fi
 printf '🧭 [2/7] Mode: %s\n' "$MODE"
 
-# Drift visibility: surface the pending Brewfile removals so the user
-# can Ctrl-C if any of them are unintentional losses (crashed run,
-# external uninstall) rather than deliberate user uninstalls.
+# Step 3 — Manifest drift report (read-only). Two directions:
+#   NOT_DECLARED : installed on request (or a cask) but not in this
+#                  profile's Brewfile — installed by hand.
+#   MISSING_LIST : declared but not installed — uninstalled by hand (drift
+#                  mode only). These are left out of step 6's reinstall.
+printf '📋 [3/7] Manifest drift (%s profile)\n' "$PROFILE"
+DECLARED=$(sed -nE 's/^(brew|cask) "([^"]+)".*/\2/p' "$BREWFILE" | sed 's|.*/||' | sort -u)
+NOT_DECLARED=$(comm -13 <(printf '%s\n' "$DECLARED") \
+  <( ("$BREW" leaves --installed-on-request 2>/dev/null; cat "$INST_C") | sed 's|.*/||' | sort -u) \
+  | grep . || true)
+NOT_DECLARED_N=$(printf '%s' "$NOT_DECLARED" | grep -c . || true)
+MISSING_N=0
+if [ "$MODE" = drift ]; then MISSING_N=$MISSING_COUNT; fi
+printf '   %d installed but not declared, %d declared but not installed\n' "$NOT_DECLARED_N" "$MISSING_N"
+# Step 6 reinstalls only what upgrades dropped, not by-hand uninstalls.
 if [ "$MODE" = drift ] && [ -n "$MISSING_LIST" ]; then
-  printf '   Absent from brew — step 3 dump will drop from Brewfile:\n'
-  printf '%s' "$MISSING_LIST"
-  printf '   If any of these are unintentional, Ctrl-C now, run\n'
-  printf '   %sbrew install [--cask] <name>%s, then re-run bu.\n' "$DIM" "$NC"
-fi
-
-cp "$BREWFILE" "$PRE_BREWFILE" 2>/dev/null || true
-
-# Step 3 — Dump (steady + drift). Both modes are safe: brew is populated,
-# so the dump accurately reflects the user's intended state including
-# ad-hoc installs AND ad-hoc uninstalls. Bootstrap skips so we don't
-# overwrite the canonical Brewfile with a near-empty snapshot on a fresh
-# machine.
-#
-# --formula --cask --tap scopes the dump to brew's native package types.
-# Default dump also includes cargo/npm/go/vscode/uv/flatpak/krew; those are
-# managed by their own setup scripts where feature flags or repo-pinned
-# versions would be lost by a vanilla bundle entry.
-if [ "$MODE" != bootstrap ]; then
-  printf '📋 [3/7] brew bundle dump → Brewfile (brew-only scope)\n'
-  "$BREW" bundle dump --force --file="$BREWFILE" \
-    --formula --cask --tap
+  grep -vxF -f <(printf '%s\n' "$MISSING_LIST" | sed 's/^ *//') "$BREWFILE" >"$KEEP_BREWFILE" || true
 else
-  printf '📋 [3/7] Skipping dump (bootstrap mode)\n'
+  cp "$BREWFILE" "$KEEP_BREWFILE"
 fi
+unit_of() { # unit_of <package> -> manifest unit that owns it (or the name)
+  python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("packages",{}).get(sys.argv[2], sys.argv[2]))' \
+    "$REGISTRY" "$1" 2>/dev/null || printf '%s\n' "$1"
+}
 
 "$BREW" list --versions --formula >"$PRE_F" || true
 "$BREW" list --versions --cask    >"$PRE_C" || true
@@ -233,7 +241,7 @@ UPGRADE_EXIT=0
 # bootstraps missing entries and recovers anything step 5 dropped.
 printf '🔧 [6/7] brew bundle install (recovery + bootstrap)\n'
 BUNDLE_EXIT=0
-"$BREW" bundle install --file="$BREWFILE" || BUNDLE_EXIT=$?
+"$BREW" bundle install --file="$KEEP_BREWFILE" || BUNDLE_EXIT=$?
 
 "$BREW" list --versions --cask >"$POST_C" || true
 
@@ -271,23 +279,6 @@ RECOVERED=$(comm -23 <(printf '%s\n' "$DROPPED"     | sort -u) \
 DROPPED_N=$(printf '%s' "$DROPPED"       | grep -c . || true)
 RECOVERED_N=$(printf '%s' "$RECOVERED"   | grep -c . || true)
 
-# Line-level diff of brew/cask declarations only (ignores description
-# churn from --describe). Shows exactly which entries the dump added or
-# removed this run — so drift-mode drops (e.g. user ran `brew uninstall
-# slack`) are visible in the final summary alongside ad-hoc installs.
-ADDED_LINES=$(comm -13 \
-  <(grep -E '^(brew|cask) "' "$PRE_BREWFILE" 2>/dev/null | sort -u) \
-  <(grep -E '^(brew|cask) "' "$BREWFILE"     2>/dev/null | sort -u) || true)
-REMOVED_LINES=$(comm -23 \
-  <(grep -E '^(brew|cask) "' "$PRE_BREWFILE" 2>/dev/null | sort -u) \
-  <(grep -E '^(brew|cask) "' "$BREWFILE"     2>/dev/null | sort -u) || true)
-ADDED_N=$(printf '%s'   "$ADDED_LINES"   | grep -c . || true)
-REMOVED_N=$(printf '%s' "$REMOVED_LINES" | grep -c . || true)
-if [ "$ADDED_N" -eq 0 ] && [ "$REMOVED_N" -eq 0 ]; then
-  BREWFILE_DELTA="unchanged"
-else
-  BREWFILE_DELTA="updated"
-fi
 
 DISK_FREED=$(grep -oE 'freed approximately [0-9.]+ *[KMGT]?B' "$CLEAN_LOG" \
   | sed -E 's/freed approximately *//' | tail -1 || true)
@@ -300,9 +291,8 @@ if [ "$FORMULAE_UP"    -gt 0 ]      \
 || [ "$CASKS_UP"       -gt 0 ]      \
 || [ "$DROPPED_N"      -gt 0 ]      \
 || [ "$RECOVERED_N"    -gt 0 ]      \
-|| [ "$BREWFILE_DELTA" = updated ]  \
-|| [ "$ADDED_N"        -gt 0 ]      \
-|| [ "$REMOVED_N"      -gt 0 ]      \
+|| [ "$NOT_DECLARED_N" -gt 0 ]      \
+|| [ "$MISSING_N"      -gt 0 ]      \
 || [ "$DISK_FREED"     != 0B ]; then
   ZERO=0
 fi
@@ -313,17 +303,19 @@ if [ "$ZERO" -eq 1 ] && [ "$UPGRADE_EXIT" -eq 0 ] && [ "$BUNDLE_EXIT" -eq 0 ]; t
 else
   printf '🍺 brew-update summary\n'
   printf '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
-  printf '📋 Brewfile:          %s (mode: %s)\n' "$BREWFILE_DELTA" "$MODE"
-  # `|| [ -n "$line" ]` catches the last line when the piped string
-  # has no trailing newline (command substitution strips it).
-  if [ "$REMOVED_N" -gt 0 ]; then
-    printf '%s\n' "$REMOVED_LINES" | while IFS= read -r line || [ -n "$line" ]; do
-      [ -n "$line" ] && printf '   %s➖ %s%s\n' "$YEL" "$line" "$NC"
+  printf '📋 Manifest (%s):     %d not declared, %d declared but missing (mode: %s)\n' \
+    "$PROFILE" "$NOT_DECLARED_N" "$MISSING_N" "$MODE"
+  if [ "$NOT_DECLARED_N" -gt 0 ]; then
+    printf '%s\n' "$NOT_DECLARED" | while IFS= read -r name || [ -n "$name" ]; do
+      [ -n "$name" ] && printf '   %s➕ %s%s installed by hand: add it to a module in manifest.json, or brew uninstall %s\n' \
+        "$GRN" "$name" "$NC" "$name"
     done
   fi
-  if [ "$ADDED_N" -gt 0 ]; then
-    printf '%s\n' "$ADDED_LINES" | while IFS= read -r line || [ -n "$line" ]; do
-      [ -n "$line" ] && printf '   %s➕ %s%s\n' "$GRN" "$line" "$NC"
+  if [ "$MISSING_N" -gt 0 ]; then
+    printf '%s\n' "$MISSING_LIST" | sed -E 's/^ *(brew|cask) "([^"]+)"/\2/' | sed 's|.*/||' \
+      | while IFS= read -r name || [ -n "$name" ]; do
+      [ -n "$name" ] && printf '   %s➖ %s%s uninstalled by hand: just manifest_set %s %s off, or reinstall it\n' \
+        "$YEL" "$name" "$NC" "$PROFILE" "$(unit_of "$name")"
     done
   fi
   printf '⬆️  Upgraded:          %s formulae, %s casks\n' "$FORMULAE_UP" "$CASKS_UP"
