@@ -13,7 +13,7 @@ setting() { plutil -extract "settings.$1" raw -o - "$RESOLVED" 2>/dev/null || ec
 
 # Close any open System Settings panes, to prevent them from overriding
 # settings we’re about to change
-osascript -e ‘tell application "System Settings" to quit’ 2>/dev/null || true
+osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
 # Ask for the administrator password upfront
 sudo -v
