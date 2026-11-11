@@ -55,7 +55,7 @@ jobs:
   bootstrap:
     name: bootstrap (${{ matrix.profile }})
     runs-on: macos-latest
-    timeout-minutes: 180
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
