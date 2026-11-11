@@ -80,6 +80,7 @@ the subdir already provides that context.
 | `ensure-dropbox-link`        | Ensure `~/Dropbox` symlink points at the canonical CloudStorage path; called by bootstrap (Phase 6) and re-runnable for manual repair |
 | `setup-firefox`              | Sync user.js, chrome/, policies.json into active Firefox profile |
 | `setup-nvim-treesitter`      | Install/update treesitter parsers (`--status` for read-only table) |
+| `doctor`                     | Read-only report (system, clone, Homebrew, apps, links, auth, Dropbox) with a paste block; macOS built-ins only |
 | `manifest`                   | Resolver for `manifest.json` (Python 3.9+ stdlib): `render`, `check`, `set`, `why`, `diff` |
 
 `manifest.schema.json` (next to the resolver) is the JSON Schema for
@@ -103,6 +104,7 @@ required unit the profile turned off is an error naming both. Setup steps with
 | `check-docs`        | `test_static`  | Decision-note front matter, relative links under `docs/`, `docs/plan/graph.yaml` |
 | `check-invariants`  | `test_static`  | Runs each `docs/decisions/inv-*.md` `verify` command                             |
 | `check-paths`       | `test_static`  | Grep gates: repo and notes paths via `REPOS_DIR`/`NOTES_DIR`, no `/Users/<name>` |
+| `check-doctor`      | `test_sandbox` | doctor with `PATH=/usr/bin:/bin` changes nothing; paste block parses             |
 | `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`     |
 | `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME     |
 | `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                 |

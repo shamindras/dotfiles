@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+#
+# check-doctor — doctor runs with only the system PATH, changes nothing, and
+# ends with a paste block that parses.
+#
+# Runs doctor twice: against a throwaway HOME with this profile's links
+# (./install --links-only), and against the real HOME. For both, the file
+# listing (HOME, or the repo's git status) must be identical before and after.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+t_header "doctor"
+if [[ "$(uname -s)" != "Darwin" ]]; then
+    t_skip "doctor targets macOS, running on $(uname -s)"
+    t_summary "check-doctor"
+    exit 0
+fi
+
+SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-doctor.XXXXXX")"
+trap 'rm -rf "$SANDBOX"' EXIT
+(cd "$TEST_REPO" && env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME="$SANDBOX" ./install --links-only --profile home >/dev/null 2>&1) || true
+
+listing() { find "$1" -print 2>/dev/null | LC_ALL=C sort; }
+
+run_doctor() {
+    env -i HOME="$1" PATH=/usr/bin:/bin /bin/bash "$TEST_REPO/scripts/ops/doctor" "${@:2}"
+}
+
+# 1. Throwaway HOME: nothing under it changes.
+before="$(listing "$SANDBOX")"
+out="$(run_doctor "$SANDBOX" --profile home 2>&1)" && rc=0 || rc=$?
+after="$(listing "$SANDBOX")"
+if [[ $rc -eq 0 ]]; then t_pass "doctor exits 0 with PATH=/usr/bin:/bin"; else t_fail "doctor exited $rc"; fi
+if [[ "$before" == "$after" ]]; then t_pass "throwaway HOME unchanged"; else t_fail "doctor changed the throwaway HOME"; fi
+
+# 2. The paste block parses: markers present, every line is "key: value".
+block="$(printf '%s\n' "$out" | sed -n '/^DOCTOR-BEGIN$/,/^DOCTOR-END$/p' | sed '1d;$d')"
+if [[ -z "$block" ]]; then
+    t_fail "no DOCTOR-BEGIN/DOCTOR-END block"
+elif bad="$(printf '%s\n' "$block" | grep -vE '^(profile|macos|summary|ok|warn|info): ' || true)" && [[ -n "$bad" ]]; then
+    t_fail "unparsable block lines: $(printf '%s' "$bad" | head -3)"
+else
+    t_pass "paste block parses ($(printf '%s\n' "$block" | wc -l | tr -d ' ') lines)"
+fi
+if printf '%s\n' "$block" | grep -q '^ok: all [0-9]* links present and resolving$'; then
+    t_pass "doctor sees the links install made"
+else
+    t_fail "doctor did not report the throwaway links as present"
+fi
+
+# 3. Real HOME (read-only): the repo's git status is unchanged.
+st_before="$(git -C "$TEST_REPO" status --porcelain)"
+run_doctor "$HOME" >/dev/null 2>&1 || true
+st_after="$(git -C "$TEST_REPO" status --porcelain)"
+if [[ "$st_before" == "$st_after" ]]; then t_pass "repo unchanged after doctor on the real HOME"; else t_fail "doctor changed the repo"; fi
+
+t_summary "check-doctor"

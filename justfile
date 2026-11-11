@@ -191,13 +191,15 @@ test_static:
 	@scripts/test/check-paths
 	@scripts/step done 🧪 "Static checks passed"
 
-# Sandbox tests in a throwaway HOME: config load, then link-only install.
+# Sandbox tests in a throwaway HOME: config load, link-only install, doctor.
 [group('test')]
 test_sandbox:
-	@scripts/step inner 1 2 "Config load"
+	@scripts/step inner 1 3 "Config load"
 	@scripts/test/check-config-load
-	@scripts/step inner 2 2 "Install into a throwaway HOME"
+	@scripts/step inner 2 3 "Install into a throwaway HOME"
 	@scripts/test/sandbox-install
+	@scripts/step inner 3 3 "doctor is read-only"
+	@scripts/test/check-doctor
 	@scripts/step done 📦 "Sandbox tests passed"
 
 # Render generated/<profile>/ and generated/compare.md from manifest.json.
@@ -224,3 +226,8 @@ manifest_why profile unit:
 [group('manifest')]
 manifest_diff:
 	@scripts/ops/manifest diff
+
+# Read-only health report for this Mac and clone (works before anything is installed).
+[group('health')]
+doctor *args:
+	@scripts/ops/doctor {{args}}

@@ -148,10 +148,10 @@ nodes:
     mints: []
     promise:
       reads: [manifest.json]
-      writes: [scripts/ops/doctor, justfile, scripts/test/]
+      writes: [scripts/ops/doctor, justfile, scripts/test/, CLAUDE.md, scripts/CLAUDE.md, docs/]
       budget: { max_tries: 4 }
       evidence: [doctor output on PATH=/usr/bin:/bin]
-    verify: [doctor runs with PATH=/usr/bin:/bin and changes nothing]
+    verify: [scripts/test/check-doctor]
     floors: []
     on_exhausted: default
     human_gate: Module H proposal approved

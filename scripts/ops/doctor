@@ -1,0 +1,200 @@
+#!/bin/bash
+# shellcheck disable=SC2088 # "~/..." in messages is display text, not a path
+#
+# doctor — read-only health report for this Mac and this dotfiles clone.
+#
+# Usage: scripts/ops/doctor [--profile <name>]      (or: just doctor)
+#
+# Runs straight after `git clone`, before anything is installed: it uses only
+# what macOS ships (/bin/bash 3.2, osascript for JSON, plutil, mdfind) and
+# never installs, links, deletes or prints secrets. The profile comes from
+# --profile, else from the ~/.config/dotfiles link, else every profile's
+# apps are checked and package/link checks are skipped.
+#
+# Ends with a summary and a plain-text block between DOCTOR-BEGIN and
+# DOCTOR-END to paste into a conversation. Always exits 0 unless doctor
+# itself breaks; problems are reported, not fatal.
+
+set -Eeuo pipefail
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+PROFILE=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --profile) PROFILE="${2:-}" && shift ;;
+        --profile=*) PROFILE="${1#--profile=}" ;;
+        -h | --help) sed -n '3,15p' "$0" | sed 's/^# \{0,1\}//' && exit 0 ;;
+    esac
+    shift
+done
+
+# brew and gh write caches and state under HOME; send them to a scratch
+# folder so doctor leaves HOME exactly as it found it.
+SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-doctor.XXXXXX")"
+trap 'rm -rf "$SCRATCH"' EXIT
+export HOMEBREW_CACHE="$SCRATCH/brew-cache" HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_ANALYTICS=1
+export XDG_STATE_HOME="$SCRATCH/state" XDG_CACHE_HOME="$SCRATCH/cache"
+
+LINKED="$XDG_CONFIG_HOME/dotfiles/resolved.json"
+if [[ -z "$PROFILE" && -L "$LINKED" ]]; then
+    PROFILE="$(basename "$(dirname "$(readlink "$LINKED")")")"
+fi
+
+n_ok=0 n_warn=0 n_info=0
+BLOCK=""
+ok() {
+    n_ok=$((n_ok + 1))
+    printf '  ✓ %s\n' "$*"
+    BLOCK="${BLOCK}ok: $*"$'\n'
+}
+warn() {
+    n_warn=$((n_warn + 1))
+    printf '  ✗ %s\n' "$*"
+    BLOCK="${BLOCK}warn: $*"$'\n'
+}
+info() {
+    n_info=$((n_info + 1))
+    printf '  · %s\n' "$*"
+    BLOCK="${BLOCK}info: $*"$'\n'
+}
+section() { printf '\n%s\n' "$*"; }
+
+# json <file> <javascript expression on d> — query JSON with the built-in JXA.
+json() {
+    osascript -l JavaScript -e "
+        const d = JSON.parse(\$.NSString.stringWithContentsOfFileEncodingError('$1', 4, null).js);
+        $2" 2>/dev/null
+}
+
+printf 'dotfiles doctor — %s\n' "$(date '+%Y-%m-%d %H:%M')"
+
+# ── System ────────────────────────────────────────────────────────────────────
+section "System"
+info "macOS $(sw_vers -productVersion) ($(sw_vers -buildVersion)), $(uname -m)"
+if id -Gn | tr ' ' '\n' | grep -qx admin; then ok "user is an admin"; else warn "user is not an admin: casks and macOS settings that need sudo will be skipped"; fi
+mdm="$(profiles status -type enrollment 2>/dev/null | tr '\n' ' ' || true)"
+case "$mdm" in
+    *"MDM enrollment: Yes"*) info "device is MDM-enrolled (managed): expect policy limits" ;;
+    *"MDM enrollment: No"*) ok "not MDM-enrolled" ;;
+    *) info "MDM enrollment unknown" ;;
+esac
+free_gb="$(df -g / | awk 'NR == 2 { print $4 }')"
+if [[ "${free_gb:-0}" -ge 40 ]]; then ok "${free_gb} GB free on /"; else warn "only ${free_gb} GB free on / (a full home install needs about 40 GB)"; fi
+if /usr/bin/curl -fsS -m 8 -o /dev/null https://github.com 2>/dev/null; then ok "github.com reachable over HTTPS"; else warn "github.com not reachable over HTTPS"; fi
+cfg_mode="$(stat -f '%Lp' "$XDG_CONFIG_HOME" 2>/dev/null || echo missing)"
+case "$cfg_mode" in
+    missing) info "$XDG_CONFIG_HOME does not exist yet" ;;
+    *[2367]) warn "$XDG_CONFIG_HOME is world-writable (mode $cfg_mode); chmod 755 recommended" ;;
+    *) ok "$XDG_CONFIG_HOME mode $cfg_mode" ;;
+esac
+
+# ── This clone ────────────────────────────────────────────────────────────────
+section "Clone"
+info "clone at $BASEDIR ($(git -C "$BASEDIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?') @ $(git -C "$BASEDIR" rev-parse --short HEAD 2>/dev/null || echo '?'))"
+if [[ -n "$PROFILE" ]]; then
+    if [[ -f "$BASEDIR/generated/$PROFILE/env.sh" ]]; then ok "profile: $PROFILE"; else warn "profile '$PROFILE' has no generated/$PROFILE/"; fi
+else
+    info "no profile yet (pass --profile, or run ./bootstrap --profile <name>)"
+fi
+repos="$HOME/repos"
+if [[ -n "$PROFILE" && -f "$BASEDIR/generated/$PROFILE/env.sh" ]]; then
+    repos="$(sed -n 's/^export REPOS_DIR="\(.*\)"$/\1/p' "$BASEDIR/generated/$PROFILE/env.sh" | sed "s|\$HOME|$HOME|")"
+fi
+if [[ "$BASEDIR" == "$repos/dotfiles" ]]; then ok "clone is at \$REPOS_DIR/dotfiles"; else warn "clone is not at $repos/dotfiles"; fi
+case "$(cd "$BASEDIR" && pwd -P)" in
+    *CloudStorage*) warn "clone lives in a cloud-synced folder (CloudStorage)" ;;
+esac
+
+# ── Homebrew ──────────────────────────────────────────────────────────────────
+section "Homebrew"
+BREW=""
+for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do [[ -x "$b" ]] && BREW="$b" && break; done
+if [[ -z "$BREW" ]]; then
+    info "Homebrew not installed (bootstrap installs it)"
+    if [[ -d /opt/homebrew ]] && [[ ! -w /opt/homebrew ]]; then warn "/opt/homebrew exists but is not writable by $(id -un)"; fi
+else
+    ok "Homebrew at $BREW"
+    prefix="$(dirname "$(dirname "$BREW")")"
+    if [[ -w "$prefix" ]]; then ok "$prefix is writable"; else warn "$prefix is not writable by $(id -un)"; fi
+    if [[ -n "$PROFILE" && -f "$BASEDIR/generated/$PROFILE/Brewfile" ]]; then
+        want="$(sed -nE 's/^(brew|cask) "([^"]+)".*/\2/p' "$BASEDIR/generated/$PROFILE/Brewfile" | sed 's|.*/||' | sort -u)"
+        have="$( (HOMEBREW_NO_AUTO_UPDATE=1 "$BREW" list --formula -1 2>/dev/null; HOMEBREW_NO_AUTO_UPDATE=1 "$BREW" list --cask -1 2>/dev/null) | sort -u)"
+        missing="$(comm -23 <(printf '%s\n' "$want") <(printf '%s\n' "$have") | tr '\n' ' ')"
+        leaves="$(HOMEBREW_NO_AUTO_UPDATE=1 "$BREW" leaves --installed-on-request 2>/dev/null | sed 's|.*/||' | sort -u)"
+        casks="$(HOMEBREW_NO_AUTO_UPDATE=1 "$BREW" list --cask -1 2>/dev/null | sort -u)"
+        extra="$(comm -13 <(printf '%s\n' "$want") <(printf '%s\n%s\n' "$leaves" "$casks" | sort -u) | grep . | tr '\n' ' ' || true)"
+        if [[ -z "${missing// /}" ]]; then ok "every $PROFILE package is installed"; else warn "missing: $missing"; fi
+        if [[ -z "${extra// /}" ]]; then ok "nothing installed by hand beyond the profile"; else info "installed but not declared: $extra"; fi
+    fi
+fi
+
+# ── Apps (every unit with an app block, in any profile) ───────────────────────
+section "Apps"
+apps="$(for r in "$BASEDIR"/generated/*/resolved.json; do
+    json "$r" 'Object.entries(d.units).filter(([k, v]) => v.app).map(([k, v]) => [k, v.app.path, v.app.bundle_id].join("\t")).join("\n")'
+done | sort -u)"
+while IFS=$'\t' read -r name path bid; do
+    [[ -n "$name" ]] || continue
+    if [[ -d "$path" ]]; then
+        ok "$name: $path"
+    elif found="$(mdfind "kMDItemCFBundleIdentifier == '$bid'" 2>/dev/null | head -1)" && [[ -n "$found" ]]; then
+        info "$name: found at $found (expected $path)"
+    else
+        info "$name: not installed ($bid)"
+    fi
+done <<<"$apps"
+
+# ── Links ─────────────────────────────────────────────────────────────────────
+section "Links"
+if [[ -n "$PROFILE" && -f "$BASEDIR/generated/$PROFILE/dotbot.json" ]]; then
+    links="$(json "$BASEDIR/generated/$PROFILE/dotbot.json" 'd.filter(x => x.link).map(x => Object.keys(x.link).join("\n")).join("\n")')"
+    total=0 good=0 bad=""
+    while IFS= read -r dest; do
+        [[ -n "$dest" ]] || continue
+        total=$((total + 1))
+        p="$dest"
+        p="${p//\$\{HOME\}/$HOME}"
+        p="${p//\$\{XDG_CONFIG_HOME\}/$XDG_CONFIG_HOME}"
+        p="${p//\$\{XDG_DATA_HOME\}/${XDG_DATA_HOME:-$HOME/.local/share}}"
+        if [[ -L "$p" && -e "$p" ]]; then
+            good=$((good + 1))
+        else
+            bad="$bad ${p/#$HOME/~}"
+        fi
+    done <<<"$links"
+    if [[ -z "$bad" ]]; then ok "all $total links present and resolving"; else warn "$((total - good)) of $total links missing or broken:$bad"; fi
+else
+    info "link check skipped (no profile)"
+fi
+
+# ── SSH, git, GitHub (presence only; nothing is read or printed) ─────────────
+section "Identity and auth"
+if [[ -L "$HOME/.ssh/config" ]]; then
+    ok "~/.ssh/config is a link ($(readlink "$HOME/.ssh/config"))"
+elif [[ -e "$HOME/.ssh/config" ]]; then
+    info "~/.ssh/config exists and is not ours: it will be kept and ours Included"
+else
+    info "no ~/.ssh/config yet"
+fi
+if [[ -n "$(git config --global user.email 2>/dev/null || true)" ]]; then ok "git identity set"; else info "git identity not set (set it in ~/.config/git/config.local)"; fi
+if command -v gh >/dev/null 2>&1 || [[ -x /opt/homebrew/bin/gh ]]; then
+    if "$(command -v gh || echo /opt/homebrew/bin/gh)" auth status >/dev/null 2>&1; then ok "gh is logged in"; else info "gh is not logged in (gh auth login --web)"; fi
+else
+    info "gh not installed yet"
+fi
+
+# ── Dropbox (data only; status, never a failure) ──────────────────────────────
+section "Dropbox"
+if [[ -d /Applications/Dropbox.app ]]; then
+    info "Dropbox installed; $(pgrep -x Dropbox >/dev/null 2>&1 && echo running || echo 'not running')"
+    if [[ -f "$HOME/.dropbox/info.json" ]]; then info "signed in"; else info "not signed in yet"; fi
+    if [[ -L "$HOME/Dropbox" && -d "$HOME/Dropbox" ]]; then info "~/Dropbox -> $(readlink "$HOME/Dropbox")"; else info "~/Dropbox link not present"; fi
+else
+    info "Dropbox not installed"
+fi
+
+# ── Summary and paste block ───────────────────────────────────────────────────
+printf '\nSummary: %d ok, %d to look at, %d notes\n' "$n_ok" "$n_warn" "$n_info"
+printf '\nDOCTOR-BEGIN\nprofile: %s\nmacos: %s\nsummary: %d ok, %d warn, %d info\n%sDOCTOR-END\n' \
+    "${PROFILE:-none}" "$(sw_vers -productVersion)" "$n_ok" "$n_warn" "$n_info" "$BLOCK"

@@ -49,6 +49,7 @@ just manifest_render  # Regenerate generated/<profile>/ from manifest.json
 just manifest_set work zoom external   # Override one unit in one profile
 just manifest_why work bat             # Why a unit is on or off
 just manifest_diff    # Home-versus-work comparison
+just doctor           # Read-only health report; run it first on a new Mac
 ```
 
 Test results are PASS, FAIL, XFAIL (fails until a named plan node lands),
