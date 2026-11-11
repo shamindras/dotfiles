@@ -23,7 +23,7 @@ function z1_aliases {
   alias cpi='cp -iv'
   alias da='deactivate;clear'
   alias df='df -kH'
-  alias dn="n \$DROPBOX_REPOS_DIR/dotfiles"
+  alias dn="n \$REPOS_DIR/dotfiles"
   alias dus='du -sckx * | sort -nr'
   alias er='espanso restart'
   alias ghd='tmux-resize;gh dash;clear;'
@@ -103,11 +103,11 @@ function z1_aliases {
 
   # directory aliases
   alias conf="z ${XDG_CONFIG_HOME};clear;"
-  alias dots='z $DROPBOX_REPOS_DIR/dotfiles;clear;'
+  alias dots='z $REPOS_DIR/dotfiles;clear;'
   alias down='z ~/Downloads;clear;'
-  alias reps='z $DROPBOX_REPOS_DIR;clear;'
+  alias reps='z $REPOS_DIR;clear;'
   alias refs='z $DROPBOX_BOOKS_DIR/reference_books;clear;'
-  alias play='z $DROPBOX_REPOS_DIR/codebox;ua;clear;' # Also activates uv
+  alias play='z $REPOS_DIR/codebox;ua;clear;' # Also activates uv
 
   # source: running `xdg-ninja` in `$HOME` gave these suggestion
   # subversion

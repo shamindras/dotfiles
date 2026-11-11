@@ -25,6 +25,20 @@ export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 
+# Profile values (REPOS_DIR, NOTES_DIR, ZK_NOTEBOOK_DIR) from the rendered
+# generated/<profile>/env.zsh, which ./install links to this fixed path.
+# Sourced here so every zsh (scripts, zsh -c, tmux) sees them.
+if [[ -r "$XDG_CONFIG_HOME/dotfiles/env.zsh" ]]; then
+  source "$XDG_CONFIG_HOME/dotfiles/env.zsh"
+else
+  # transitional: home defaults until ./install links dotfiles/env.zsh on this
+  # Mac (the move to ~/repos, node N16). Remove once that link exists.
+  export REPOS_DIR="$HOME/repos"
+  [[ -d "$REPOS_DIR" ]] || REPOS_DIR="$HOME/Dropbox/repos" # transitional
+  export NOTES_DIR="$HOME/Dropbox/notes" # transitional
+  export ZK_NOTEBOOK_DIR="$NOTES_DIR/zk"
+fi
+
 # Ensure XDG directories exist.
 () {
   local zdir

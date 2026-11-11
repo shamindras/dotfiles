@@ -2,7 +2,7 @@
 ##?
 ##? Thin wrapper over ~/.config/bin/scratch-new: one title prompt, Enter
 ##? saves as a timestamp name, a title saves as its slug, cursor lands on
-##? line 3 in insert mode. Files live in $DROPBOX_NOTES_DIR/scratch, a
+##? line 3 in insert mode. Files live in $NOTES_DIR/scratch, a
 ##? sibling of the zk notebook (never inside it). In nvim: <leader>n*.
 ##?
 ##? usage:

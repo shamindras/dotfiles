@@ -16,12 +16,11 @@ export BATDIFF_USE_DELTA=true
 # Cache
 export CCACHE_DIR="$XDG_CACHE_HOME/ccache"
 
-# Dropbox
+# Dropbox (data only: books, resources, media). Repos and notes paths come
+# from REPOS_DIR / NOTES_DIR, set in .zshenv from the profile.
 export DROPBOX_DIR="$HOME/Dropbox"
-export DROPBOX_REPOS_DIR="$DROPBOX_DIR/repos"
 export DROPBOX_RESOURCES_DIR="$DROPBOX_DIR/resources"
 export DROPBOX_BOOKS_DIR="$DROPBOX_RESOURCES_DIR/books"
-export DROPBOX_NOTES_DIR="$DROPBOX_DIR/notes"
 
 # less
 # LESSKEY/LESSHISTFILE live in .zshenv (non-interactive shells need them).
@@ -110,7 +109,7 @@ export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export CURL_HOME="$XDG_CONFIG_HOME/curl"
 
 # zk - https://zk-org.github.io/zk/
-export ZK_NOTEBOOK_DIR="$DROPBOX_NOTES_DIR/zk"
+# ZK_NOTEBOOK_DIR is set in .zshenv ($NOTES_DIR/zk).
 
 # endregion --------------------------------------------------------------------
 

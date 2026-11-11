@@ -56,7 +56,10 @@ config/zsh/
 
 ### Loading Order
 
-1. `.zshenv` — sets `ZDOTDIR`, exports XDG variables, creates XDG directories
+1. `.zshenv` — sets `ZDOTDIR`, exports XDG variables, sources the profile values
+   (`REPOS_DIR`, `NOTES_DIR`, `ZK_NOTEBOOK_DIR`) from `$XDG_CONFIG_HOME/dotfiles/env.zsh`
+   (linked by install to `generated/<profile>/env.zsh`; a marked transitional
+   fallback covers a Mac where that link does not exist yet), creates XDG directories
 2. `.zshrc` — initializes Z1 framework, defines `z1_confd`
 3. `z1_confd` — sources all `conf.d/*.zsh` in alphabetical order
 4. Function calls in sequence: funcdir → directory → vi_keybindings →
@@ -236,7 +239,7 @@ one naming rule, implemented twice by decision — `config/bin/scratch-new`
 Slug: lowercase, runs of `[^a-z0-9]` → `-`, leading/trailing `-` stripped.
 Title Case: `-` → space, first letter of each word upper, rest lower.
 Files are written as heading + two blank lines; an existing slug is reused,
-never overwritten. Directory: `$DROPBOX_NOTES_DIR/scratch` (created on use).
+never overwritten. Directory: `$NOTES_DIR/scratch` (created on use).
 
 ## Startup Performance
 
