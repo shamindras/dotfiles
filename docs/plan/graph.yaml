@@ -253,7 +253,7 @@ nodes:
       writes: [CLAUDE.md, README.md, scripts/CLAUDE.md, config/, docs/]
       budget: { max_tries: 4 }
       evidence: [lint output]
-    verify: [markdownlint-cli2, prettier --check]
+    verify: [markdownlint-cli2 on docs and README, prettier --check, scripts/test/check-docs]
     floors: []
     on_exhausted: default
     human_gate: Module N proposal approved

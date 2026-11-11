@@ -4,7 +4,7 @@
   - [Personal dotfiles - philosophy](#personal-dotfiles---philosophy)
   - [Commands](#commands)
   - [Fresh macOS setup](#fresh-macos-setup)
-  - [Day-to-day refresh](#day-to-day-refresh)
+  - [Day-to-day](#day-to-day)
   - [Inspiration](#inspiration)
 
 ## Personal dotfiles - philosophy
@@ -19,46 +19,45 @@ This is a repo of my personal dotfiles for `macOS`. The main philosophy is to us
 
 ## Commands
 
-There are two commands. Both are idempotent; pick by where you are.
+| Command                     | Use it when                       | What it does                                                                                                                              |
+| --------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `./bootstrap --profile <p>` | Fresh Mac (any clone path).       | Installs Homebrew if missing, loads it into the same run, then runs `./install`. Needs no SSH key and no Dropbox.                         |
+| `./install`                 | Re-run on a Mac already set up.   | Links configs, installs packages one module at a time, runs setup steps. Reads the profile from `~/.config/dotfiles` after the first run. |
+| `just doctor`               | Before anything, or when in doubt | Read-only health report, using only what macOS ships. Ends with a block to paste into a conversation.                                     |
 
-| Command       | Use it when                                                                  | What it does                                                                                                                                                                  |
-| ------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `./bootstrap` | Fresh Mac, OR not sure of state.                                             | Installs Homebrew + Dropbox cask, opens Dropbox, waits for sign-in (one human pause), waits for the dotfiles repo to sync, then `exec`s `./install` from the synced location. |
-| `./install`   | You're already in `~/Dropbox/repos/dotfiles` and just want a dotbot refresh. | Runs [`dotbot`](https://github.com/anishathalye/dotbot): symlinks, Brewfile, npm, macOS defaults.                                                                             |
+Profiles are `home` and `work`. Flags: `--links-only` (links only), `--dry-run` (change nothing, print the plan),
+`--no-hints`.
 
-Flags (both commands accept):
-
-- `--no-hints` — suppress post-install reminders.
-
-
-`./bootstrap` re-runs are cheap because every phase has a skip-check (Homebrew installed? Dropbox cask installed? app
-running? signed in? repo synced?). On an already-configured machine it will fast-forward through all five detection
-phases and hand off to `./install`. Ctrl-C is safe at any time; the next invocation resumes at the unfinished phase.
+Everything installed is declared once in [`manifest.json`](manifest.json). `just manifest_render` turns it into
+`generated/<profile>/` (Brewfile, dotbot config, the app registry Hammerspoon reads, shell values, sesh config), and
+[`generated/compare.md`](generated/compare.md) shows how home and work differ. A package that fails to install never
+stops the rest: failures are listed at the end.
 
 ## Fresh macOS setup
 
 ```bash
-git clone --recurse-submodules --remote-submodules \
-  git@github.com:shamindras/dotfiles.git ~/dotfiles-bootstrap
-cd ~/dotfiles-bootstrap
-./bootstrap
+git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles
+~/repos/dotfiles/scripts/ops/doctor            # optional: see what the Mac has first
+~/repos/dotfiles/bootstrap --profile home      # or --profile work
 ```
 
-You'll be asked to sign in to Dropbox once, in the GUI window the script opens. After sign-in detection, `./bootstrap`
-waits for `~/Dropbox/repos/dotfiles` to sync, then runs `./install` from there. The temp clone at `~/dotfiles-bootstrap`
-is no longer needed afterward and can be removed.
+At home, Dropbox (notes, books, media only) is installed and opened at the very end; nothing waits for it. After signing
+in, and once it has synced (a first sync can take hours), run `just dropbox_finish`.
 
-## Day-to-day refresh
-
-From the synced repo:
+## Day-to-day
 
 ```bash
-cd ~/Dropbox/repos/dotfiles
-./install
+cd ~/repos/dotfiles
+./install                 # links, packages, setup steps (macOS defaults need sudo)
+just test                 # static checks and sandbox tests (never touch the real HOME)
+just update-all           # move the pinned versions; a weekly CI job does this as a PR
 ```
 
-`./install` applies macOS system defaults (`scripts/setup/setup-macos`), which needs `sudo` and may require a
-logout/reboot for some changes to take effect.
+Daily Homebrew upgrades run through `brew-update` (`bu`, or the leader `r → b`), which reports packages installed or
+removed by hand instead of rewriting any file.
+
+How the overhaul was planned and run (a graph of nodes, each closed by a verify loop) is in
+[`docs/plan/`](docs/plan/README.md); decisions live in [`docs/decisions/`](docs/decisions/README.md).
 
 ## Inspiration
 
