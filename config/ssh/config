@@ -1,3 +1,7 @@
+# Linked to ~/.ssh/config on a Mac with no SSH config of its own. On the work
+# Mac, an existing ~/.ssh/config is kept and this file is Included instead.
 Host github.com
   AddKeysToAgent yes
-  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/id_ed25519_github
+  IdentityFile ~/.ssh/id_ed25519 # transitional: the pre-overhaul key, until setup-github-auth has run (N16)

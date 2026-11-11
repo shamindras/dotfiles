@@ -1,0 +1,11 @@
+# transitional: identity and signing for the home Mac while the repo still
+# lives in Dropbox (before the move to ~/repos and the auth step, node N16).
+# config/git/config includes this file only by its Dropbox path, so it is
+# skipped on the work Mac and, after the move, on the home Mac too.
+# Delete it (and its include) once ~/.config/dotfiles/gitconfig is linked.
+[user]
+  name = Shamindra Shrotriya
+  email = shamindra.shrotriya@gmail.com
+  signingkey = ~/.ssh/id_ed25519.pub
+[gpg "ssh"]
+  allowedSignersFile = ~/.ssh/allowed_signers

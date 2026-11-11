@@ -90,24 +90,34 @@
 [rerere]
   enabled = true
 
-[user]
-  name = Shamindra Shrotriya
-  email = shamindra.shrotriya@gmail.com
-	signingkey = /Users/shamindras/.ssh/id_ed25519.pub
-
-[url "git@github.com:"]
-  insteadOf = https://github.com/
-
 [web]
   browser = firefox
 
 [gpg]
 	format = ssh
-[gpg "ssh"]
-	allowedSignersFile = ~/.ssh/allowed_signers
 [commit]
 	gpgsign = true
 [tag]
 	gpgsign = true
 [format]
 	signoff = true
+
+# HTTPS everywhere; gh supplies the credentials (no SSH key needed to clone).
+[credential "https://github.com"]
+  helper =
+  helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+  helper =
+  helper = !gh auth git-credential
+
+# Identity, signing key and allowed signers come from the profile: install
+# links generated/<profile>/gitconfig to ~/.config/dotfiles/gitconfig, and
+# setup-github-auth writes the work email to ~/.config/dotfiles/gitconfig.local
+# (never in the repo). Later files override earlier ones; missing files are
+# skipped by git.
+[include]
+  path = ~/Library/CloudStorage/Dropbox/repos/dotfiles/config/git/transitional.gitconfig # transitional
+[include]
+  path = ~/.config/dotfiles/gitconfig
+[include]
+  path = ~/.config/dotfiles/gitconfig.local

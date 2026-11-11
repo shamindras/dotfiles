@@ -36,3 +36,4 @@ and bat as pager.
 
 - No reload needed; changes apply immediately
 - Alias syntax validated on execution
+- **git_protocol**: `https` (HTTPS first: new clones need no SSH key; git uses `gh auth git-credential`)
