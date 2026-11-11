@@ -49,7 +49,7 @@ jobs:
           row="| $(date -u +%Y-%m-%d) | ${version} |"
           passed=0
           total=0
-          for mod in $(sed -n 's/^# module: //p' generated/work/Brewfile); do
+          while IFS= read -r mod; do
             total=$((total + 1))
             dir="$(mktemp -d)"
             {
@@ -64,7 +64,7 @@ jobs:
               row="$row ✗ $mod"
               tail -20 "$dir/log"
             fi
-          done
+          done < <(sed -n 's/^# module: //p' generated/work/Brewfile)
           echo "$row ($passed/$total) |" | tee scoreboard-row.txt
       - uses: actions/upload-artifact@v7
         with:
