@@ -6,6 +6,11 @@ set -Eeuo pipefail
 
 echo "Applying macOS defaults..."
 
+# Per-profile settings come from the linked resolved.json (no profile names
+# in this script). setting <key> -> true|false, or "unset" when absent.
+RESOLVED="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/resolved.json"
+setting() { plutil -extract "settings.$1" raw -o - "$RESOLVED" 2>/dev/null || echo unset; }
+
 # Close any open System Settings panes, to prevent them from overriding
 # settings we’re about to change
 osascript -e ‘tell application "System Settings" to quit’ 2>/dev/null || true
@@ -68,8 +73,13 @@ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
-# Disable the “Are you sure you want to open this application?” dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
+# The “Are you sure you want to open this application?” dialog: profile
+# setting quarantine_warning (off at home, on at work).
+case "$(setting quarantine_warning)" in
+  true) defaults write com.apple.LaunchServices LSQuarantine -bool true ;;
+  false) defaults write com.apple.LaunchServices LSQuarantine -bool false ;;
+  *) echo "  quarantine warning: left as is (no profile settings at $RESOLVED)" ;;
+esac
 
 # Display ASCII control characters using caret notation in standard text views
 # Try e.g. `cd /tmp; unidecode "\x{0000}" > cc.txt; open -e cc.txt`
@@ -480,8 +490,12 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "
 # is one `ssh user@<lan-ip>` away regardless of HID state.
 echo "  Remote Login (SSH)..."
 
+# Profile setting remote_login: on at home; at work it is left alone (never
+# switched off either: that is the employer's policy to set).
 remote_login_status="$(sudo systemsetup -getremotelogin 2>/dev/null || true)"
-if [[ "${remote_login_status}" != *"On"* ]]; then
+if [[ "$(setting remote_login)" != true ]]; then
+  echo "    Remote Login not managed for this profile; left as is."
+elif [[ "${remote_login_status}" != *"On"* ]]; then
   echo "    Enabling Remote Login (SSH)..."
   # `-f` skips the "this will allow remote users to access your computer" prompt.
   sudo systemsetup -f -setremotelogin on
