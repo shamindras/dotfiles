@@ -41,8 +41,8 @@ return {
     -- `--config` explicitly. markdownlint-cli2 only looks in the file's
     -- own directory for configs — it does NOT walk up. nvim-lint spawns
     -- with cwd = buffer dir, so without `--config` a file in
-    -- `~/Dropbox/notes/zk/ideas/foo.md` never sees
-    -- `~/Dropbox/notes/zk/.markdownlint-cli2.yaml` one level above.
+    -- `$NOTES_DIR/zk/ideas/foo.md` never sees
+    -- `$NOTES_DIR/zk/.markdownlint-cli2.yaml` one level above.
     -- We walk up from the buffer with `vim.fs.find` and inject the
     -- nearest config path as `--config <path>`.
     -- Per-call helper: find the nearest `.markdownlint-cli2.yaml` by

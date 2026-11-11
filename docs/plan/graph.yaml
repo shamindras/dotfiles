@@ -80,10 +80,10 @@ nodes:
     mints: []
     promise:
       reads: [config/]
-      writes: [config/, generated/, docs/]
+      writes: [config/, generated/, docs/, manifest.json, scripts/, justfile, CLAUDE.md]
       budget: { max_tries: 4 }
       evidence: [before and after table]
-    verify: [grep gates for Dropbox and /Users/shamindras, zsh -n on changed files]
+    verify: [scripts/test/check-paths, scripts/test/check-config-load, just test_static]
     floors: [home parity]
     on_exhausted: default
     human_gate: Module D proposal approved

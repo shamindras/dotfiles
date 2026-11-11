@@ -1,7 +1,7 @@
 # sesh ad-hoc directory list — read by ~/.config/bin/sesh-dir-picker.
 #
 # One pattern per line; blank lines and '#' comments ignored. Env vars
-# (${DROPBOX_DIR}, ${HOME}) are expanded at read time. Pattern kinds:
+# (${REPOS_DIR}, ${DROPBOX_DIR}, ${HOME}) are expanded at read time. Pattern kinds:
 #   <path>        exact entry — always shown (if the dir exists)
 #   <path>/*      every child directory is launchable
 #   <path>/*/*    grandchildren too (patterns are cumulative)
@@ -12,7 +12,7 @@
 # to the exact-entries section below (graduation).
 
 # --- roots ---
-${DROPBOX_DIR}/repos/*
+${REPOS_DIR}/*
 ${DROPBOX_DIR}/resources/**
 ${DROPBOX_DIR}/entertainment/**
 

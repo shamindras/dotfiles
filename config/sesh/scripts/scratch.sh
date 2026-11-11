@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 SESSION="scratch"
-WORK_DIR="${DROPBOX_NOTES_DIR:-${DROPBOX_DIR:-$HOME/Dropbox}/notes}/scratch"
+WORK_DIR="${NOTES_DIR:-$HOME/notes}/scratch"
 
 # shellcheck source=helpers.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

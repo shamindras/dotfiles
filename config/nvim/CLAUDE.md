@@ -129,7 +129,7 @@ revisit adopting the native defaults.
 ## Scratch Notes (`<leader>n`)
 
 Low-latency markdown scratchpads: plain `.md` files in
-`$DROPBOX_NOTES_DIR/scratch`, a Dropbox-backed **sibling** of the zk
+`$NOTES_DIR/scratch`, a **sibling** of the zk
 notebook (never inside it, so the zk index and `<leader>k*` stay clean;
 marksman is the LSP that attaches). Logic in `util/scratch.lua`, keymaps in
 `plugins/scratch.lua` (virtual lazy spec depending on snacks + zk-nvim).
@@ -313,7 +313,7 @@ Style keys: `b`=bold, `i`=italic, `s`=strikethrough, `c`=code span
 Both prettier and the markdownlint wiring in `nvim-lint.lua` search upward
 from the buffer, so a `.md` file with no config above it formats with
 prettier defaults (`proseWrap: preserve`, width 80) and lints with stock
-rules. The notes tree (`$DROPBOX_NOTES_DIR`: zk + scratch) gets the same
+rules. The notes tree (`$NOTES_DIR`: zk + scratch) gets the same
 120-column conventions from configs deployed by
 `scripts/ops/sync-notes-config` — see `config/zk/CLAUDE.md` § Markdown
 formatting config.

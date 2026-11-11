@@ -18,7 +18,7 @@
 #   5. If an existing notebook.db is corrupt, back it up to /tmp and remove it.
 #      The zk-nvim LSP rebuilds the index lazily on next markdown buffer open.
 #   6. Deploy markdown formatter/linter configs (prettier, markdownlint) from
-#      config/zk/notebook/ into $DROPBOX_NOTES_DIR via scripts/ops/sync-notes-config.
+#      config/zk/notebook/ into $NOTES_DIR via scripts/ops/sync-notes-config.
 
 set -Eeuo pipefail
 

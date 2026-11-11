@@ -2,7 +2,7 @@
 # See: https://github.com/zk-org/zk/blob/main/docs/config.md
 
 [notebook]
-dir = "$HOME/Dropbox/notes/zk"
+dir = "$NOTES_DIR/zk"
 
 # Default note settings
 [note]

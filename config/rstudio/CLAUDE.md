@@ -13,7 +13,7 @@
 
 - **Save workspace**: never
 - **Load workspace**: false
-- **Working directory**: ~/Dropbox/repos
+- **Working directory**: ~/repos (static JSON; the repos dir on both Macs)
 - **Theme**: Tomorrow Night Bright
 - **Shell**: bash
 - **Font size**: 12pt

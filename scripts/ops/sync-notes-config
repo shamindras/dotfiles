@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
 # sync-notes-config — deploy the markdown formatter/linter configs for the
-# notes tree from the dotfiles repo into $DROPBOX_NOTES_DIR.
+# notes tree from the dotfiles repo into $NOTES_DIR.
 #
-# config/zk/notebook/ mirrors $DROPBOX_NOTES_DIR:
+# config/zk/notebook/ mirrors $NOTES_DIR:
 #   .prettierrc.yaml          → notes/            (one copy serves zk + scratch:
 #   .prettierignore           → notes/             prettier and the nvim-lint
 #   .markdownlint-cli2.yaml   → notes/             markdownlint wiring both
@@ -18,11 +18,11 @@ set -Eeuo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 src="$repo_root/config/zk/notebook"
-notes="${DROPBOX_NOTES_DIR:-$HOME/Dropbox/notes}"
+notes="${NOTES_DIR:-$HOME/notes}"
 
 if [ ! -d "$notes" ]; then
   echo "ERROR: notes directory not found at $notes" >&2
-  echo "Dropbox must be synced before notes configs can be deployed." >&2
+  echo "On home, Dropbox must have synced the notes folder first." >&2
   exit 1
 fi
 

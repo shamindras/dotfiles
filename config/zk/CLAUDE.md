@@ -9,18 +9,18 @@
 | ------------- | -------------------------------------------------------------------- |
 | `config.toml` | Notebook config (groups, aliases, LSP)                               |
 | `templates/`  | Note templates (daily.md, idea.md)                                   |
-| `notebook/`   | Canonical prettier + markdownlint configs for `$DROPBOX_NOTES_DIR`   |
+| `notebook/`   | Canonical prettier + markdownlint configs for `$NOTES_DIR`   |
 
 ## Key Settings
 
-- **Notebook dir**: `$HOME/Dropbox/notes/zk`
+- **Notebook dir**: `$NOTES_DIR/zk` (`config.toml` `dir`; zk expands env vars there, and `ZK_NOTEBOOK_DIR` takes precedence). `NOTES_DIR` is `~/Dropbox/notes` at home, `~/notes` at work
 - **Filename**: `{{slug title}}-{{id}}` with 5-char alphanum IDs
 - **Groups**: journal (daily auto-numbered), ideas (with template)
 - **Aliases**: daily, edit (interactive), list, search
 - **Editor**: nvim, pager: less, fzf-preview: bat
 - **LSP**: wiki-title link hints, dead-link errors
 
-## Notebook layout (`$HOME/Dropbox/notes/zk/`)
+## Notebook layout (`$NOTES_DIR/zk/`)
 
 | Path                  | Synced? | Notes                                                              |
 | --------------------- | ------- | ------------------------------------------------------------------ |
@@ -30,7 +30,7 @@
 | `.zk/notebook.db-wal`, `.zk/notebook.db-shm` | **No** | Transient SQLite WAL sidecars (long-lived during nvim sessions).       |
 | `.zk/templates/`      | **No**  | Cache rsync'd locally from `config/zk/templates/` by `sync_templates()` in `config/nvim/lua/shamindras/plugins/zk.lua`. |
 
-## Markdown formatting config (`$DROPBOX_NOTES_DIR/`)
+## Markdown formatting config (`$NOTES_DIR/`)
 
 prettier (conform.nvim) and markdownlint-cli2 (nvim-lint) both search upward
 from the file being edited, so one config set at the notes root serves the zk
@@ -72,7 +72,7 @@ pages. Keeping `.zk/` local-only removes the entire race.
 - Zsh functions `k`/`ki` wrap zk with template sync from config to notebook
 - Nvim integration via zk-nvim plugin (`<leader>k` prefix)
 - Setup script: `scripts/setup/setup-zk`
-- Scratch notes live **outside** the notebook (`$DROPBOX_NOTES_DIR/scratch`,
+- Scratch notes live **outside** the notebook (`$NOTES_DIR/scratch`,
   see `config/nvim/CLAUDE.md` § Scratch Notes). `<leader>np` promotes one into
   `ideas/` via `zk.api.new` (title = H1, `idea.md` template, body appended
   after creation because the template does not render `{{content}}`)

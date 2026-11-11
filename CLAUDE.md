@@ -108,7 +108,7 @@ Organized by runtime role:
   - `audit-firefox` - Audit Firefox prefs for drift
   - `setup-firefox` - Sync Firefox user.js, chrome/, policies.json
   - `setup-nvim-treesitter` - Install/update nvim-treesitter parsers
-  - `sync-notes-config` - Copy prettier/markdownlint configs into `$DROPBOX_NOTES_DIR`
+  - `sync-notes-config` - Copy prettier/markdownlint configs into `$NOTES_DIR`
 - `scripts/_lib/` — sourced helpers (e.g., `step.sh` for two-tier progress)
 - `scripts/test/` — test harness run by `just test*` and CI (see `scripts/CLAUDE.md`)
 - `scripts/ops/manifest` — resolver: `manifest.json` → `generated/<profile>/` (Brewfile, dotbot.json, resolved.json, env.sh/env.zsh)

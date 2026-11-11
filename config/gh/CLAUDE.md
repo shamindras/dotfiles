@@ -21,7 +21,7 @@ and bat as pager.
 - **Browser**: firefox
 - **Pager**: bat
 - **Aliases** (25+):
-  - Repo: `clone` → `repo clone`, `clp` (clone to ~/Dropbox/repos/)
+  - Repo: `clone` → `repo clone`, `clp` (clone to `$REPOS_DIR/`, default `~/repos`)
   - PR: `co` (checkout), `diff`, `merge`, `vpr` (view in browser)
   - Issue: `add` (create), `todo` (assigned @me), `mine`, `bugs`, `homework`
   - Utility: `zen`, `il` (issue list), `browser` (repo page)

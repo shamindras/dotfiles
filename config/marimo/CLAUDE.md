@@ -3,8 +3,8 @@
 - **Docs**: https://docs.marimo.io/
 - **Installed version**: `0.23.1` (Apr 2026, checked via `uv run marimo --version` in `../codebox`)
 - **Runtime**: marimo is not installed globally — it's `uv`-managed in
-  `/Users/shamindras/Dropbox/repos/codebox`. Launch with
-  `cd ~/Dropbox/repos/codebox && uv run marimo edit <path>`.
+  `$REPOS_DIR/codebox`. Launch with
+  `cd $REPOS_DIR/codebox && uv run marimo edit <path>`.
 
 ## File Structure
 
@@ -91,7 +91,7 @@ plain `j`/`k` vim cell-nav work.
 is not enough. Kill and relaunch via:
 
 ```bash
-cd ~/Dropbox/repos/codebox && uv run marimo edit <notebook>
+cd $REPOS_DIR/codebox && uv run marimo edit <notebook>
 ```
 
 ## Development Notes

@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 SESSION="notes"
-WORK_DIR="${DROPBOX_DIR:-$HOME/Dropbox}/notes/zk"
+WORK_DIR="${NOTES_DIR:-$HOME/notes}/zk"
 IDEAS_DIR="${WORK_DIR}/ideas"
 JOURNAL_LAYOUT="$HOME/.config/sesh/scripts/journal-layout.lua"
 

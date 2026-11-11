@@ -231,7 +231,7 @@
             "path": "/bin/zsh",
             // "path": "/usr/local/bin/zsh",
             "env": {
-                "ZDOTDIR": "/Users/shamindras/.config/zsh",
+                "ZDOTDIR": "${env:HOME}/.config/zsh",
             }
         }
     },

@@ -17,7 +17,7 @@
 #   scratch-new --help
 set -Eeuo pipefail
 
-SCRATCH_DIR="${DROPBOX_NOTES_DIR:-$HOME/Dropbox/notes}/scratch"
+SCRATCH_DIR="${NOTES_DIR:-$HOME/notes}/scratch"
 
 usage() {
   sed -n '2,17p' "${BASH_SOURCE[0]}" | cut -c 3-

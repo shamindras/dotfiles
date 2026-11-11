@@ -4,9 +4,10 @@ compact = false
 use_pager = true
 
 [directories]
-# For `cache_dir`, need to hardcode the path.
+# The docs say no expansion, but tealdeer 1.9.1 expands a leading `~`
+# (src/config.rs expand_home; checked with `tldr --show-paths`).
 # source: https://dbrgn.github.io/tealdeer/config_directories.html#cache_dir
-cache_dir = "/Users/shamindras/.cache/tealdeer"
+cache_dir = "~/.cache/tealdeer"
 
 [style.command_name]
 foreground = "red"

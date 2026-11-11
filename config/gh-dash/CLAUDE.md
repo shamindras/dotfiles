@@ -27,7 +27,7 @@ pager, custom keybindings for lazygit and gum workflows.
   - `b` — view buildkite status URL
   - `a` — git add -A + lazygit
   - `v` — approve PR with gum prompt
-- **Repo paths**: shamindras/dotfiles → ~/Dropbox/repos/dotfiles
+- **Repo paths**: shamindras/dotfiles → ~/repos/dotfiles (the repos dir on both Macs; static YAML, no env expansion)
 
 ## Cross-Tool References
 

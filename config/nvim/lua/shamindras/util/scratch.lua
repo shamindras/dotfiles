@@ -1,6 +1,6 @@
 -- scratch.lua — low-latency markdown scratch notes
 --
--- Plain .md files in $DROPBOX_NOTES_DIR/scratch (a sibling of the zk
+-- Plain .md files in $NOTES_DIR/scratch (a sibling of the zk
 -- notebook, never inside it). One optional title prompt: Enter saves as a
 -- timestamp, a title saves as its slug. Keymaps live in
 -- plugins/scratch.lua; the shell twin is config/bin/scratch-new.
@@ -82,9 +82,9 @@ end
 -- Resolved scratch directory, created on first use.
 ---@return string
 function M.dir()
-  local notes = vim.env.DROPBOX_NOTES_DIR
+  local notes = vim.env.NOTES_DIR
   if not notes or notes == '' then
-    notes = vim.fn.expand('~/Dropbox/notes')
+    notes = vim.fn.expand('~/notes')
   end
   local dir = notes .. '/scratch'
   vim.fn.mkdir(dir, 'p')

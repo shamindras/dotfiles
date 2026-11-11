@@ -42,7 +42,7 @@ pager:
   issuesLimit: 20
 
 repoPaths:
-  shamindras/dotfiles: ~/Dropbox/repos/dotfiles
+  shamindras/dotfiles: ~/repos/dotfiles
 
 keybindings:
   universal:

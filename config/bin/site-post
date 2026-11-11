@@ -18,7 +18,7 @@
 #   site-post --help
 set -Eeuo pipefail
 
-SITE_POST_REPO="${DROPBOX_REPOS_DIR:-$HOME/Dropbox/repos}/ss_personal_website"
+SITE_POST_REPO="${REPOS_DIR:-$HOME/repos}/ss_personal_website"
 
 usage() {
   sed -n '2,19p' "${BASH_SOURCE[0]}" | cut -c 3-

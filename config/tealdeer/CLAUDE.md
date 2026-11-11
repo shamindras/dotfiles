@@ -14,7 +14,7 @@
 - **Display**: non-compact, with pager
 - **Styling**: red commands, green examples, blue code/variables
 - **Auto-update**: enabled
-- **Cache dir**: hardcoded `~/.cache/tealdeer` (env vars not supported)
+- **Cache dir**: `~/.cache/tealdeer` (env vars are not expanded, but a leading `~` is: tealdeer 1.9.1 `expand_home`, checked with `tldr --show-paths`)
 
 ## Development Notes
 

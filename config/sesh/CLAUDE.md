@@ -93,7 +93,7 @@ All scripts use:
 - `#!/usr/bin/env bash` shebang
 - `set -Eeuo pipefail` strict mode
 - `SESSION` var matching the session name in `sesh.toml`
-- `WORK_DIR` with `${DROPBOX_DIR:-$HOME/Dropbox}` fallback
+- `WORK_DIR` from `${REPOS_DIR:-$HOME/repos}` (repos) or `${NOTES_DIR:-$HOME/notes}` (notes, scratch)
 - `sesh_window_claude` renames window 1, all other windows use `tmux new-window` or inline rename
 
 ### Window Layout by Session
@@ -281,7 +281,7 @@ zsh function `sn` from a bare shell) fzf-picks a directory from
 `scripts/default.sh` (self-derives session/path; per-session
 startup_commands always win).
 
-`dirs.list` format — env-var literals (`${DROPBOX_DIR}`, `${HOME}`)
+`dirs.list` format — env-var literals (`${REPOS_DIR}`, `${DROPBOX_DIR}`, `${HOME}`)
 expanded at read time, `#` comments:
 
 | Pattern     | Meaning                                              |
