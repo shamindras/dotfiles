@@ -28,7 +28,7 @@ alongside wezterm (workspace W), assigned to workspace T in aerospace.
 ## Cross-Tool References
 
 - Assigned to workspace T in **aerospace**
-- Launched/quit via **leader-key**
+- Launched/quit via the **Hammerspoon leader**
 
 ## Theme Management
 

@@ -216,10 +216,10 @@ nodes:
     mints: []
     promise:
       reads: [config/, scripts/]
-      writes: [config/, scripts/, submods/, .gitmodules]
+      writes: [config/, scripts/, submods/, .gitmodules, Makefile, README.md, CLAUDE.md, justfile, docs/]
       budget: { max_tries: 4 }
       evidence: [one commit per tool]
-    verify: [each tool's own validator, shellcheck or stylua --check]
+    verify: [scripts/test/check-layout, just test, shellcheck and stylua on touched files]
     floors: [home parity]
     on_exhausted: default
     human_gate: Module L list approved

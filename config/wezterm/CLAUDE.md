@@ -51,9 +51,9 @@ WezTerm is assigned to **workspace W** in aerospace (`aerospace.toml`
 If changing the workspace letter, update these locations to stay in sync:
 - `config/aerospace/aerospace.toml`: `move-node-to-workspace W` rule for
   `com.github.wez.wezterm`
-- `config/leader-key/config.json`: 5 non-terminal quit targets (DJView,
-  Preview, Finder, Skim, VSCode) that navigate to workspace W after quitting
-- `config/leader-key/config.json`: quit-Ghostty conditional — navigates to
+- `manifest.json` app blocks (via `config/hammerspoon/apps.lua`): quit
+  targets with `quit_workspace` W, and the Ghostty quit conditional
+  (`quit_check` wezterm-gui, `quit_fallback` B) that navigates to
   WezTerm's workspace when WezTerm is running
 
 ## Theme Management

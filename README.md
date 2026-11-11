@@ -30,7 +30,6 @@ Flags (both commands accept):
 
 - `--no-hints` — suppress post-install reminders.
 
-Make aliases (no behavioral difference): `make bootstrap`, `make dotbot_install`.
 
 `./bootstrap` re-runs are cheap because every phase has a skip-check (Homebrew installed? Dropbox cask installed? app
 running? signed in? repo synced?). On an already-configured machine it will fast-forward through all five detection
@@ -55,7 +54,7 @@ From the synced repo:
 
 ```bash
 cd ~/Dropbox/repos/dotfiles
-./install              # or: make dotbot_install
+./install
 ```
 
 `./install` applies macOS system defaults (`scripts/setup/setup-macos`), which needs `sudo` and may require a

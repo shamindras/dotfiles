@@ -17,8 +17,7 @@ This is a personal macOS dotfiles repository that follows the XDG Base Directory
 
 Profiles are `home` and `work` (`generated/<profile>/`). Both commands accept
 `--links-only` (links only, no Homebrew or setup), `--dry-run` (change
-nothing, print the plan) and `--no-hints`. `make bootstrap` and
-`make dotbot_install` are aliases.
+nothing, print the plan) and `--no-hints`.
 
 ```bash
 git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles
@@ -92,7 +91,6 @@ with `brew bundle`, then runs the units' setup steps in dependency order.
 - `.github/workflows/ci.yml` - CI: static checks on Linux, static + sandbox tests on macOS per profile
 - `submods/` - Git submodules (`core/` for dotbot, `plugins/` for runtime plugins)
 - `justfile` - Just command runner tasks
-- `Makefile` - Basic make targets for setup
 
 ### Key Scripts
 
@@ -104,7 +102,6 @@ Organized by runtime role:
   (`--profile`, `--links-only`, `--dry-run`, `--no-hints`).
 - `scripts/setup/` — one-time bootstrap scripts run by `./install`:
   - `setup-macos` - macOS system defaults configuration
-  - `setup-upgrade-homebrew` - Homebrew installation/upgrade
   - `setup-upgrade-rust-cargo` - Rust toolchain management
   - `setup-hammerspoon` - Configure Hammerspoon MJConfigFile + hidutil LaunchAgent
   - `setup-upgrade-ttyper` - Install/upgrade ttyper
@@ -118,7 +115,6 @@ Organized by runtime role:
 - `scripts/_lib/` — sourced helpers (e.g., `step.sh` for two-tier progress)
 - `scripts/test/` — test harness run by `just test*` and CI (see `scripts/CLAUDE.md`)
 - `scripts/ops/manifest` — resolver: `manifest.json` → `generated/<profile>/` (Brewfile, dotbot.json, resolved.json, env.sh/env.zsh)
-- `scripts/migrate/` — one-off migration utilities (unchanged)
 
 ### Supported Applications
 

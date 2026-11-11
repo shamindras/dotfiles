@@ -191,7 +191,6 @@ post's worktree first, then the main checkout) and swaps in the post's
 | lazygit    | Snacks.lazygit() via `<leader>vg`                      |
 | borders    | Autocmd: restart service on bordersrc save             |
 | sketchybar | Autocmd: reload on sketchybarrc/colors/items save      |
-| leader-key | Autocmd: restart app on config.json save               |
 | zk         | zk-nvim with LSP attach on .md files in notebook       |
 | fd/rg      | Custom args in snacks/pickers.lua (exclude .git, submods) |
 

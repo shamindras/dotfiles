@@ -30,7 +30,7 @@ and bat as pager.
 
 - Uses **bat** for pager output
 - Used by **lazygit** for PR/issue commands
-- Referenced in **leader-key**
+- Referenced in the **Hammerspoon leader**
 
 ## Development Notes
 

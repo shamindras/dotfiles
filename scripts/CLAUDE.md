@@ -20,26 +20,38 @@ scripts/
 │   ├── dropbox-info.py        # prints synced Dropbox root from ~/.dropbox/info.json
 │   └── step.sh                # two-tier progress helper
 ├── step                       # thin wrapper for inline recipes
-├── migrate/                   # one-off migration utilities
 ├── ops/                       # ongoing-use scripts (justfile + install)
 │   ├── audit-firefox
+│   ├── clean-dotfiles
+│   ├── doctor                 # read-only health report (just doctor)
+│   ├── ensure-dropbox-link    # ~/Dropbox link (just dropbox_finish)
+│   ├── manifest               # resolver: render, check, set, why, diff
+│   ├── manifest.schema.json   # JSON Schema for manifest.json
 │   ├── setup-firefox          # dual-use: firefox unit setup + just firefox_sync
-│   └── setup-nvim-treesitter  # dual-use: nvim unit setup + just treesitter_*
+│   ├── setup-nvim-treesitter  # dual-use: nvim unit setup + just treesitter_*
+│   ├── sync-notes-config
+│   └── treesitter-sync
 ├── setup/                     # one-time bootstrap scripts (install-only)
 │   ├── post-install-hints
 │   ├── setup-hammerspoon
 │   ├── setup-macos
-│   ├── setup-upgrade-homebrew
 │   ├── setup-upgrade-rust-cargo
 │   ├── setup-upgrade-ttyper
 │   └── setup-zk
 └── test/                      # test harness (just test, test_static, test_sandbox; CI)
-    ├── lib.sh                 # sourced: PASS/FAIL/XFAIL/XPASS/SKIP bookkeeping
+    ├── lib.sh
     ├── self-test
+    ├── manifest_test.py
     ├── check-docs
     ├── check-invariants
+    ├── check-paths
+    ├── check-parity
+    ├── check-hammerspoon
+    ├── check-layout
     ├── check-config-load
-    └── sandbox-install
+    ├── sandbox-install
+    ├── check-doctor
+    └── check-dropbox
 ```
 
 Directories reflect *runtime role*, not install-only status:
@@ -51,7 +63,6 @@ Directories reflect *runtime role*, not install-only status:
 - **`_lib/`** — internal helpers used only by other repo scripts: sourced bash
   libs (e.g., `step.sh`) and sibling-invoked utilities in any language (e.g.,
   `dropbox-info.py` called from `./bootstrap`). Not for direct user invocation.
-- **`migrate/`** — one-off migration helpers. Unchanged.
 - **`test/`** — tests for the repo itself. Run by `just test*` and CI; never
   touch the real `HOME` (sandboxes come from `mktemp`).
 
@@ -65,7 +76,6 @@ the subdir already provides that context.
 | Script                       | Purpose                                                          |
 | ---------------------------- | ---------------------------------------------------------------- |
 | `setup-macos`                | macOS system defaults configuration                              |
-| `setup-upgrade-homebrew`     | Homebrew installation/upgrade                                    |
 | `setup-upgrade-rust-cargo`   | Stable toolchain via Homebrew's keg-only `rustup` (XDG `CARGO_HOME`/`RUSTUP_HOME`); skips when rustup is missing |
 | `setup-hammerspoon`          | Configure Hammerspoon MJConfigFile + hidutil Caps→F18 LaunchAgent |
 | `setup-upgrade-ttyper`       | `cargo install --locked ttyper` (the only cargo tool); skips when cargo is missing |
@@ -109,6 +119,7 @@ required unit the profile turned off is an error naming both. Setup steps with
 | `check-doctor`      | `test_sandbox` | doctor with `PATH=/usr/bin:/bin` changes nothing; paste block parses                      |
 | `check-hammerspoon` | `test_static`  | `apps.lua` builder headless with lua: both profiles, off units, baseline tables           |
 | `check-dropbox`     | `test_sandbox` | `just dropbox_finish` vs a fake Dropbox: link created/repointed, collision refused, notes |
+| `check-layout`      | `test_static`  | Top-level allow-list; no token-shaped value in `config/gh/hosts.yml`                      |
 | `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`              |
 | `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME              |
 | `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                          |

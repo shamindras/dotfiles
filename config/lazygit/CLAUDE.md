@@ -40,7 +40,7 @@ custom commands for commitizen and branch pruning.
 
 - Uses **nvim** as editor
 - Uses **delta** for diff display
-- Launched from **leader-key**, tmux (`prefix+g`)
+- Launched from the **Hammerspoon leader**, tmux (`prefix+g`)
 
 ## Theme Management
 

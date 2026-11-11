@@ -14,7 +14,7 @@ Git submodules used by this dotfiles repo.
 
 | Category   | Purpose                         | Contents                  |
 | ---------- | ------------------------------- | ------------------------- |
-| `core/`    | Dotbot installer + plugins      | dotbot, dotbot-brew       |
+| `core/`    | Dotbot installer                | dotbot                    |
 | `plugins/` | Runtime plugins loaded by tools | tpm (tmux plugin manager) |
 
 ### Future categories (create on-demand)

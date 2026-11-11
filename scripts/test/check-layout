@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# check-layout — the repo's top level matches the allow-list (plan: lean top
+# level), and no secret-shaped value is tracked in config/gh/hosts.yml (gh
+# rewrites that file; tokens must stay in the macOS keychain).
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+cd "$TEST_REPO"
+ALLOWED=(
+    CLAUDE.md README.md justfile manifest.json bootstrap install
+    config scripts generated submods docs .github
+    .claude .gitattributes .gitignore .gitmodules .markdownlint-cli2.yaml
+    .prettierignore .prettierrc.yaml .stylua.toml .taplo.toml .vscode
+    RECOVERY.md # moves to docs/recovery.md once Shamindra approves the trimmed text
+)
+
+t_header "layout"
+extra=""
+for top in $(git ls-files | cut -d/ -f1 | sort -u); do
+    found=0
+    for a in "${ALLOWED[@]}"; do [[ "$top" == "$a" ]] && found=1 && break; done
+    [[ $found -eq 1 ]] || extra="$extra $top"
+done
+if [[ -z "$extra" ]]; then t_pass "top level matches the allow-list"; else t_fail "not on the allow-list:$extra"; fi
+
+if git grep -nIqE 'oauth_token|gh[opsur]_[A-Za-z0-9]{20,}' -- config/gh/hosts.yml; then
+    t_fail "config/gh/hosts.yml contains a token-shaped value: remove it and run gh auth login (keychain)"
+else
+    t_pass "no token in config/gh/hosts.yml"
+fi
+
+t_summary "check-layout"

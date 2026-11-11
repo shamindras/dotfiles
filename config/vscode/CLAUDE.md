@@ -22,4 +22,4 @@
 ## Development Notes
 
 - Assigned to workspace V in **aerospace**
-- Launched/quit via **leader-key**
+- Launched/quit via the **Hammerspoon leader**
