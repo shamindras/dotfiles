@@ -354,7 +354,8 @@ def render_profile(m, profile):
         },
         {"create": create},
         {"clean": {"~/": {"force": True}, "~/.config": {"force": True}}},
-        {"link": dict(sorted(links.items()))},
+        # Links to other links (sources starting with ${) go last, after their targets exist.
+        {"link": dict(sorted(links.items(), key=lambda kv: (kv[1].startswith("${"), kv[0])))},
     ]
     if steps:
         dotbot.append({"shell": steps})

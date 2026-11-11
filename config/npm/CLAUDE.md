@@ -18,4 +18,4 @@
 ## Development Notes
 
 - XDG-compliant; relies on env vars set in zsh `00-z1-env-vars-xdg.zsh`
-- Global packages (eslint_d, prettier) installed via `install.conf.yaml`
+- Global packages (eslint_d, prettier) installed by the `node` unit setup step in `manifest.json`

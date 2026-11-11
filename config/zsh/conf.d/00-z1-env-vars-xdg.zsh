@@ -75,7 +75,7 @@ export GH_DASH_CONFIG="$XDG_CONFIG_HOME/gh-dash/config.yml"
 # Node
 # source: https://blog.mitsunee.com/post/n-xdg-setup
 export NVM_DIR="$XDG_DATA_HOME/nvm"
-export N_PREFIX="$XDG_DATA_HOME/node"
+# N_PREFIX lives in .zshenv (npmrc reads it; non-interactive shells need it).
 export N_CACHE_PREFIX="$XDG_CACHE_HOME"
 export N_PRESERVE_NPM=1
 export N_PRESERVE_COREPACK=1
@@ -92,7 +92,7 @@ export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 # R
 # source: https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html
 # R expands %v to the R minor version (e.g. "4.5"). Dir must exist for R to
-# use it — install.conf.yaml creates it after R is installed.
+# use it — the `r` unit setup step creates it after R is installed.
 export R_LIBS_USER="$XDG_DATA_HOME/r/library/%v"
 
 # ripgrep
@@ -106,7 +106,7 @@ export TMUX_PLUGIN_MANAGER_PATH="$XDG_DATA_HOME/tmux/plugins"
 export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 
 # curl
-export CURL_HOME="$XDG_CONFIG_HOME/curl"
+# CURL_HOME lives in .zshenv (non-interactive shells need it).
 
 # zk - https://zk-org.github.io/zk/
 # ZK_NOTEBOOK_DIR is set in .zshenv ($NOTES_DIR/zk).

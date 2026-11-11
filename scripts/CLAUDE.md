@@ -23,8 +23,8 @@ scripts/
 ├── migrate/                   # one-off migration utilities
 ├── ops/                       # ongoing-use scripts (justfile + install)
 │   ├── audit-firefox
-│   ├── setup-firefox          # dual-use: install.conf.yaml + just firefox_sync
-│   └── setup-nvim-treesitter  # dual-use: install.conf.yaml + just treesitter_*
+│   ├── setup-firefox          # dual-use: firefox unit setup + just firefox_sync
+│   └── setup-nvim-treesitter  # dual-use: nvim unit setup + just treesitter_*
 ├── setup/                     # one-time bootstrap scripts (install-only)
 │   ├── post-install-hints
 │   ├── setup-hammerspoon
@@ -44,7 +44,7 @@ scripts/
 
 Directories reflect *runtime role*, not install-only status:
 
-- **`setup/`** — scripts invoked only by `./install` / `install.conf.yaml` during
+- **`setup/`** — scripts invoked only by `./install` (unit setup steps in `manifest.json`) during
   first-time bootstrap or upgrade. Safe to re-run but rarely called directly.
 - **`ops/`** — scripts invoked repeatedly via justfile targets *and/or* `./install`.
   Dual-use lands here (directory reflects runtime role, not who calls it).
@@ -206,16 +206,16 @@ mechanism. Cleans up redundant login items for apps that do.
 | App                  | Startup mechanism          | Managed by          |
 | -------------------- | -------------------------- | ------------------- |
 | AeroSpace            | Login Item                 | `setup-macos`       |
-| borders              | brew service (LaunchAgent) | `install.conf.yaml` |
+| borders              | brew service (LaunchAgent) | `manifest.json`     |
 | Dropbox              | Login Item                 | `setup-macos`       |
-| Espanso              | `espanso service register` | `install.conf.yaml` |
+| Espanso              | `espanso service register` | `manifest.json`     |
 | Flux                 | Login Item                 | `setup-macos`       |
 | Hammerspoon          | Login Item (hs.autoLaunch) | `setup-hammerspoon` |
 | noTunes              | Login Item                 | `setup-macos`       |
 | Raycast              | Login Item                 | `setup-macos`       |
 | Scroll Reverser      | Login Item                 | `setup-macos`       |
 | Shottr               | Login Item                 | `setup-macos`       |
-| sketchybar           | brew service (LaunchAgent) | `install.conf.yaml` |
+| sketchybar           | brew service (LaunchAgent) | `manifest.json`     |
 
 To add a new login item, append its path to the `login_items` array in
 `setup-macos`. For apps with their own startup mechanism (brew services,

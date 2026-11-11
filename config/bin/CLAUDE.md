@@ -87,7 +87,7 @@ workspace-first quit.
 ## Development Notes
 
 - Symlinked to `~/.config/bin` during install (`${XDG_CONFIG_HOME}/bin` in
-  `install.conf.yaml`) — NOT on `PATH`; callers use absolute paths
+  `manifest.json` setup steps) — NOT on `PATH`; callers use absolute paths
 - Scripts must have executable permissions (`chmod +x`)
 - `fastopen` uses POSIX sh (not zsh) for minimal overhead
 - `nordvpn-pause` needs Hammerspoon running with `hs.ipc` loaded (it is the

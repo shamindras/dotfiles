@@ -1,123 +1,60 @@
 #!/usr/bin/env bash
 #
-# bootstrap — single-run dotfiles install for fresh macOS machines.
+# bootstrap — fresh-Mac entry point. Clone anywhere over HTTPS, then run it:
 #
-# Phases (idempotent; each detects-then-skips):
-#   1. Homebrew install/upgrade
-#   2. Dropbox cask install
-#   3. Launch Dropbox.app
-#   4. Wait for sign-in (~/.dropbox/info.json appears)
-#   5. Wait for the dotfiles repo to sync (sentinel file appears)
-#   6. Ensure ~/Dropbox -> $DROPBOX_ROOT symlink (canonical storage path)
-#   7. exec ./install from the synced ~/Dropbox/repos/dotfiles
+#   git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles
+#   ~/repos/dotfiles/bootstrap --profile home     # or --profile work
 #
-# Re-runs are safe at any time; Ctrl-C aborts cleanly and bootstrap resumes
-# at the unfinished phase on the next run. Sign-in is the only human step.
+# Phases (idempotent; each detects, then skips or does the work):
+#   1. Homebrew: install it if missing, then load `brew shellenv` into this
+#      run, so no new terminal is needed.
+#   2. Hand off to ./install with the same arguments.
+#
+# Needs no SSH key and no cloud-synced folder; nothing prompts except Homebrew's
+# own installer and sudo. Re-runs are safe; Ctrl-C aborts cleanly.
+# Flags are passed through to ./install (--profile, --links-only, --dry-run,
+# --no-hints; see ./install --help).
 
 set -Eeuo pipefail
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # shellcheck source=scripts/_lib/step.sh
-source "${BASEDIR}/scripts/_lib/step.sh"
+source "$BASEDIR/scripts/_lib/step.sh"
 
-PHASES_TOTAL=7
-DROPBOX_INFO="${HOME}/.dropbox/info.json"
-WAIT_TIMEOUT=${BOOTSTRAP_WAIT_TIMEOUT:-1800}    # 30 min default
-WAIT_INTERVAL=${BOOTSTRAP_WAIT_INTERVAL:-5}     # 5 sec default
-TICK_EVERY=30                                   # ~30s elapsed-time ticks during waits
+trap 'printf "\n⚠️  bootstrap interrupted; re-run ./bootstrap to resume.\n" >&2; exit 130' INT
 
-trap '_on_interrupt' INT
-
-_on_interrupt() {
-    printf '\n⚠️  bootstrap interrupted; re-run ./bootstrap to resume.\n' >&2
-    exit 130
-}
-
-# Poll until the given test command succeeds or WAIT_TIMEOUT elapses.
-# Emits an elapsed-time tick every TICK_EVERY seconds so the user sees progress.
-# Usage: _wait_for "<human description>" <test command...>
-_wait_for() {
-    local target=$1; shift
-    local elapsed=0 tick=0
-    while ! "$@" >/dev/null 2>&1; do
-        if (( elapsed >= WAIT_TIMEOUT )); then
-            printf '❌ Timed out after %ds waiting for %s.\n   Re-run ./bootstrap to resume once the issue is resolved.\n' \
-                "$WAIT_TIMEOUT" "$target" >&2
-            exit 1
-        fi
-        sleep "$WAIT_INTERVAL"
-        elapsed=$(( elapsed + WAIT_INTERVAL ))
-        tick=$(( tick + WAIT_INTERVAL ))
-        if (( tick >= TICK_EVERY )); then
-            step_inner "$elapsed" "$WAIT_TIMEOUT" "still waiting for ${target} (${elapsed}s elapsed)"
-            tick=0
+load_brew() {
+    local b
+    for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+        if [[ -x "$b" ]]; then
+            eval "$("$b" shellenv)"
+            return 0
         fi
     done
+    return 1
 }
 
+dry=0
+for a in "$@"; do
+    case "$a" in --dry-run | --links-only) dry=1 ;; esac
+done
+
 # ----- Phase 1: Homebrew -----
-if command -v brew >/dev/null 2>&1; then
-    step_outer 1 "$PHASES_TOTAL" 🍺 "Homebrew already present, skipping"
+if command -v brew >/dev/null 2>&1 || load_brew; then
+    step_outer 1 2 🍺 "Homebrew present ($(brew --version | head -1))"
+elif [[ $dry -eq 1 ]]; then
+    step_outer 1 2 🍺 "Homebrew missing; a real run would install it"
 else
-    step_outer 1 "$PHASES_TOTAL" 🍺 "Installing Homebrew"
-    "${BASEDIR}/scripts/setup/setup-upgrade-homebrew"
-    step_done 🍺 "Homebrew installed"
+    step_outer 1 2 🍺 "Installing Homebrew"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    load_brew || {
+        echo "❌ Homebrew installed but brew was not found in /opt/homebrew or /usr/local" >&2
+        exit 1
+    }
+    step_done 🍺 "Homebrew installed and loaded into this run"
 fi
 
-# ----- Phase 2: Dropbox cask -----
-if brew list --cask dropbox >/dev/null 2>&1; then
-    step_outer 2 "$PHASES_TOTAL" 📦 "Dropbox cask already installed, skipping"
-else
-    step_outer 2 "$PHASES_TOTAL" 📦 "Installing Dropbox cask"
-    brew install --cask dropbox
-    step_done 📦 "Dropbox cask installed"
-fi
-
-# ----- Phase 3: Launch Dropbox -----
-if pgrep -x Dropbox >/dev/null 2>&1; then
-    step_outer 3 "$PHASES_TOTAL" 🚀 "Dropbox already running, skipping"
-else
-    step_outer 3 "$PHASES_TOTAL" 🚀 "Launching Dropbox"
-    open -a Dropbox
-    step_done 🚀 "Dropbox launched"
-fi
-
-# ----- Phase 4: Wait for sign-in -----
-if [[ -f $DROPBOX_INFO ]]; then
-    step_outer 4 "$PHASES_TOTAL" 🔑 "Dropbox already signed in, skipping"
-else
-    step_outer 4 "$PHASES_TOTAL" 🔑 "Waiting for Dropbox sign-in"
-    cat <<'EOF'
-
-  >>> Please sign in to Dropbox in the app window that just opened.
-  >>> This script will resume automatically once sign-in completes.
-  >>> Press Ctrl-C any time to abort; re-run ./bootstrap to resume.
-
-EOF
-    _wait_for "Dropbox sign-in (~/.dropbox/info.json)" test -f "$DROPBOX_INFO"
-    step_done 🔑 "Dropbox sign-in detected"
-fi
-
-DROPBOX_ROOT="$("${BASEDIR}/scripts/_lib/dropbox-info.py")"
-DOTFILES_PATH="${DROPBOX_ROOT}/repos/dotfiles"
-SENTINEL="${DOTFILES_PATH}/install"
-
-# ----- Phase 5: Wait for sync of dotfiles repo -----
-if [[ -f $SENTINEL ]]; then
-    step_outer 5 "$PHASES_TOTAL" 🔄 "Dotfiles repo already synced, skipping"
-else
-    step_outer 5 "$PHASES_TOTAL" 🔄 "Waiting for ${DOTFILES_PATH} to sync"
-    _wait_for "dotfiles sync (${SENTINEL})" test -f "$SENTINEL"
-    step_done 🔄 "Dotfiles repo synced"
-fi
-
-# ----- Phase 6: Ensure ~/Dropbox symlink -----
-step_outer 6 "$PHASES_TOTAL" 🔗 "Ensuring ~/Dropbox -> ${DROPBOX_ROOT}"
-"${BASEDIR}/scripts/ops/ensure-dropbox-link" "$DROPBOX_ROOT"
-step_done 🔗 "~/Dropbox managed"
-
-# ----- Phase 7: Hand-off to ./install -----
-step_outer 7 "$PHASES_TOTAL" 🤝 "Handing off to ${DOTFILES_PATH}/install"
-cd "$DOTFILES_PATH"
-exec ./install "$@"
+# ----- Phase 2: Hand-off to ./install -----
+step_outer 2 2 🤝 "Handing off to ./install"
+exec "$BASEDIR/install" "$@"

@@ -1,8 +1,9 @@
 # CI for the profile-driven bootstrap (node N1 skeleton).
 #
 # static:  Linux, layer 1 (just test_static).
-# macos:   one job per profile, layers 1 and 2 (just test). Layer 3, a real
-#          ./bootstrap on the clean runner, is added by node N5.
+# macos:   one job per profile, layers 1 and 2 (just test).
+# bootstrap: layer 3, a real ./bootstrap on a clean runner, then the static
+#          checks again (work joins with node N6).
 # Every PASS, FAIL, XFAIL, XPASS and SKIP line goes to the run summary.
 name: ci
 
@@ -48,3 +49,20 @@ jobs:
         run: command -v shellcheck || brew install shellcheck
       - name: Static and sandbox tests
         run: just test
+
+  bootstrap:
+    name: bootstrap (${{ matrix.profile }})
+    runs-on: macos-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [home]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Real bootstrap on a clean runner
+        run: ./bootstrap --profile ${{ matrix.profile }} --no-hints
+      - name: Second run changes nothing it should not
+        run: ./install --links-only

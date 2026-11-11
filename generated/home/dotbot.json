@@ -37,7 +37,6 @@
   },
   {
     "link": {
-      "${HOME}/.ssh/config": "${XDG_CONFIG_HOME}/ssh/config",
       "${HOME}/.zshenv": "config/zsh/.zshenv",
       "${HOME}/Library/Application Support/Code/User/keybindings.json": "config/vscode/keybindings.json",
       "${HOME}/Library/Application Support/Code/User/settings.json": "config/vscode/settings.json",
@@ -85,7 +84,8 @@
       "${XDG_CONFIG_HOME}/wget": "config/wget",
       "${XDG_CONFIG_HOME}/yazi": "config/yazi",
       "${XDG_CONFIG_HOME}/zk": "config/zk",
-      "${XDG_CONFIG_HOME}/zsh": "config/zsh"
+      "${XDG_CONFIG_HOME}/zsh": "config/zsh",
+      "${HOME}/.ssh/config": "${XDG_CONFIG_HOME}/ssh/config"
     }
   },
   {

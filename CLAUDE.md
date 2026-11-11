@@ -10,23 +10,25 @@ This is a personal macOS dotfiles repository that follows the XDG Base Directory
 
 ### Two commands
 
-| Command       | Use it when                                                              |
-| ------------- | ------------------------------------------------------------------------ |
-| `./bootstrap` | Fresh Mac, OR you're not sure of state. Skip-checks make re-runs cheap.  |
-| `./install`   | You're already in `~/Dropbox/repos/dotfiles` and just want a dotbot refresh. |
+| Command                       | Use it when                                                           |
+| ----------------------------- | --------------------------------------------------------------------- |
+| `./bootstrap --profile <p>`   | Fresh Mac (any clone path, HTTPS). Installs Homebrew, then `./install`. |
+| `./install`                   | Re-run on a set-up Mac; reads the profile from `~/.config/dotfiles`.  |
 
-Both accept `--no-hints` to suppress post-install reminders. `make bootstrap`
-and `make dotbot_install` are aliases.
+Profiles are `home` and `work` (`generated/<profile>/`). Both commands accept
+`--links-only` (links only, no Homebrew or setup), `--dry-run` (change
+nothing, print the plan) and `--no-hints`. `make bootstrap` and
+`make dotbot_install` are aliases.
 
-`./bootstrap` is the canonical fresh-machine entry point: clone the repo to a
-temp location, then run it.
 ```bash
-git clone <repo-url> ~/dotfiles-bootstrap
-cd ~/dotfiles-bootstrap
-./bootstrap
+git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles
+~/repos/dotfiles/bootstrap --profile home
 ```
-Re-runs are safe and idempotent; Ctrl-C aborts cleanly and `./bootstrap`
-resumes at the unfinished phase.
+
+Re-runs are safe and idempotent. Packages install one module at a time (core
+first); a failing module falls back to one package at a time, and every
+failure is listed at the end instead of stopping the run. Neither command
+needs Dropbox or an SSH key.
 
 ### Development and Maintenance
 ```bash
@@ -61,10 +63,11 @@ inner `├─ n/total` within each extracted script.
 
 ### Core Components
 
-**Installation System**: Uses dotbot with `install.conf.yaml` configuration file. The `./install` script:
-- Sets up XDG environment variables
-- Updates dotbot submodule
-- Runs dotbot with brew plugin support
+**Installation System**: `manifest.json` declares every tool; `scripts/ops/manifest`
+renders `generated/<profile>/` (Brewfile, `dotbot.json`, `resolved.json`, `env.sh`/`env.zsh`).
+`./install` reads only those committed files: it initialises the dotbot
+submodule over HTTPS, links configs with dotbot, installs packages per module
+with `brew bundle`, then runs the units' setup steps in dependency order.
 
 **XDG Directory Structure**: All configs follow XDG specification:
 - `XDG_CONFIG_HOME` (~/.config) - application configs
@@ -85,7 +88,6 @@ inner `├─ n/total` within each extracted script.
 - `docs/plan/` - Overhaul work graph (`graph.yaml`), control file (`program.md`), trial log (`trials.jsonl`)
 - `.github/workflows/ci.yml` - CI: static checks on Linux, static + sandbox tests on macOS per profile
 - `submods/` - Git submodules (`core/` for dotbot, `plugins/` for runtime plugins)
-- `install.conf.yaml` - Main dotbot configuration
 - `justfile` - Just command runner tasks
 - `Makefile` - Basic make targets for setup
 
@@ -93,9 +95,10 @@ inner `├─ n/total` within each extracted script.
 
 Organized by runtime role:
 
-- `bootstrap` - top-level entry point for fresh-machine setup; orchestrates
-  Dropbox install/sign-in/sync, then re-execs `./install` from the synced
-  `~/Dropbox/repos/dotfiles`. Idempotent on re-runs.
+- `bootstrap` - fresh-Mac entry point: installs Homebrew if missing, loads
+  `brew shellenv`, then hands off to `./install` with the same flags.
+- `install` - links, packages per module, setup steps for one profile
+  (`--profile`, `--links-only`, `--dry-run`, `--no-hints`).
 - `scripts/setup/` — one-time bootstrap scripts run by `./install`:
   - `setup-macos` - macOS system defaults configuration
   - `setup-upgrade-homebrew` - Homebrew installation/upgrade
@@ -127,34 +130,21 @@ Major categories of tools configured:
 
 ### Installation Flow
 
-On a fresh machine, `./bootstrap` runs first: it installs Homebrew + the
-Dropbox cask, launches Dropbox, waits for sign-in (the only human step), waits
-for `~/Dropbox/repos/dotfiles` to sync, ensures the `~/Dropbox` symlink, then
-re-execs `./install` from there.
+`./bootstrap` installs Homebrew if missing and loads `brew shellenv` into the
+same run, then hands off to `./install`, which:
 
-#### `~/Dropbox` is a managed invariant
+1. Creates XDG directories, cleans dead links and links every config
+   (dotbot, `generated/<profile>/dotbot.json`), including
+   `~/.config/dotfiles/{env.sh,env.zsh,resolved.json}` for this profile
+2. Installs packages module by module from `generated/<profile>/Brewfile`
+3. Imports the environment `.zshenv` builds and runs the setup steps and
+   services (bat cache, gh extensions, espanso, Hammerspoon, treesitter,
+   yazi, TPM, macOS defaults, ...), skipping any whose command is missing
 
-On modern macOS, Dropbox stores files under `~/Library/CloudStorage/Dropbox`.
-`./bootstrap` (Phase 6) ensures a `~/Dropbox` symlink to that canonical path
-exists, because both shell-aware references (`$DROPBOX_DIR`) and inert config
-files (`sesh.toml`, `gh-dash/config.yml`, `gh/config.yml`, `rstudio-prefs.json`)
-rely on `~/Dropbox` resolving correctly. `./install` fails fast if the symlink
-is missing or broken. Manual repair without a full bootstrap re-run:
-`scripts/ops/ensure-dropbox-link`. The script handles five pre-existing
-states safely (already-correct symlink, wrong-target symlink, nothing there,
-real-directory collision, and storage canonically at `~/Dropbox`).
-
-The install process (`install.conf.yaml`) follows this sequence:
-1. Create XDG directories
-2. Clean existing symlinks
-3. Setup zk (zettelkasten)
-4. Create symlinks for all configs
-5. Install/upgrade Homebrew
-6. Install packages from Brewfile
-7. Install/upgrade Rust/Cargo
-8. Setup various tools (bat cache, tldr, gh extensions, espanso, ttyper)
-9. Install npm packages (eslint_d, prettier)
-10. Apply macOS system settings
+Dropbox is data only (notes, books, media). `scripts/ops/ensure-dropbox-link`
+still repairs the `~/Dropbox` symlink by hand; the home-only Dropbox step
+arrives with module J. `config/brew/Brewfile` remains only for `brew-update`
+until module K moves it to the generated Brewfile.
 
 ## Development Guidelines
 
@@ -162,7 +152,7 @@ The install process (`install.conf.yaml`) follows this sequence:
 - Configurations follow XDG specification strictly
 - Use existing patterns when adding new tool configs
 - All Lua configs should be formatted with stylua
-- Homebrew packages managed through Brewfile
+- Homebrew packages are declared in `manifest.json` (rendered to `generated/<profile>/Brewfile`)
 - Git submodules used for external dependencies
 - Shell scripts follow bash strict mode (`set -Eeuo pipefail`)
 

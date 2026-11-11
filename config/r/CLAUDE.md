@@ -29,7 +29,7 @@ export R_LIBS_USER="$XDG_DATA_HOME/r/library/%v"
 ```
 
 R expands `%v` to the minor version (e.g. `4.5`), so packages install to
-`~/.local/share/r/library/4.5/`. `install.conf.yaml` pre-creates the versioned
+`~/.local/share/r/library/4.5/`. the `r` unit in `manifest.json` pre-creates the versioned
 directory — R silently drops `R_LIBS_USER` from `.libPaths()` if the dir does
 not exist.
 
@@ -95,7 +95,7 @@ alias rq='R -q --no-save --no-restore-data'
   `.Rprofile`. Not set intentionally (renv). If one ever appears in `$HOME`,
   R will read it — delete it manually if unwanted.
 - **Versioned library dir must exist**: R only adds `R_LIBS_USER` to
-  `.libPaths()` if the directory exists. `install.conf.yaml` creates it
+  `.libPaths()` if the directory exists. the `r` unit setup step creates it
   after R is installed. After an R major.minor upgrade, re-run `./install`
   to create the new versioned dir.
 - **GUI launches from Dock/Spotlight**: do not inherit zsh env vars, so

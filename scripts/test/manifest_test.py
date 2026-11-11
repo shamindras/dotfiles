@@ -186,6 +186,15 @@ class ProfileLinkTest(unittest.TestCase):
             self.assertEqual(links["${XDG_CONFIG_HOME}/dotfiles/env.sh"], "generated/%s/env.sh" % p)
 
 
+class LinkOrderTest(unittest.TestCase):
+    def test_links_to_links_come_after_their_targets(self):
+        m = manifest()
+        m["units"]["term"]["links"] = {"${XDG_CONFIG_HOME}/term": "config/term", "${HOME}/.termrc": "${XDG_CONFIG_HOME}/term/rc"}
+        dotbot = json.loads(mf.render_profile(m, "home")["dotbot.json"])
+        order = list([d["link"] for d in dotbot if "link" in d][0])
+        self.assertGreater(order.index("${HOME}/.termrc"), order.index("${XDG_CONFIG_HOME}/term"))
+
+
 class RenderTest(unittest.TestCase):
     def setUp(self):
         self.home = mf.render_profile(manifest(**{"units__term__requires": ["font-mono", "wm"]}), "home")

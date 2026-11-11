@@ -97,7 +97,7 @@ nodes:
     mints: []
     promise:
       reads: [bootstrap, install, install.conf.yaml]
-      writes: [bootstrap, install, install.conf.yaml, config/brew/Brewfile, scripts/, docs/]
+      writes: [bootstrap, install, install.conf.yaml, scripts/, docs/, manifest.json, generated/, config/zsh/, .github/workflows/ci.yml, CLAUDE.md, config/]
       budget: { max_tries: 4 }
       evidence: [sandbox install output for both profiles, twice]
     verify: [shellcheck, just test_sandbox, "! grep -n -i dropbox bootstrap install"]

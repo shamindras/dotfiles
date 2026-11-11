@@ -33,7 +33,7 @@ config/hammerspoon/
 
 Hammerspoon defaults to `~/.hammerspoon/`. The project is symlinked
 to `$XDG_CONFIG_HOME/hammerspoon/` (the entire directory) by
-`install.conf.yaml`. The actual config path is overridden via:
+`manifest.json` (rendered into `generated/<profile>/dotbot.json`). The actual config path is overridden via:
 
 ```sh
 defaults write org.hammerspoon.Hammerspoon MJConfigFile \

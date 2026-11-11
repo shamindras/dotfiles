@@ -24,6 +24,8 @@ export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export N_PREFIX="$XDG_DATA_HOME/node"   # read by config/npm/npmrc (prefix)
+export CURL_HOME="$XDG_CONFIG_HOME/curl" # .curlrc location
 
 # Profile values (REPOS_DIR, NOTES_DIR, ZK_NOTEBOOK_DIR) from the rendered
 # generated/<profile>/env.zsh, which ./install links to this fixed path.
