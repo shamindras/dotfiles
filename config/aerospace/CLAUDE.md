@@ -27,7 +27,16 @@ layout with Alt-based keybindings and maps 40+ apps to named workspaces.
   `after-login-command` is deprecated since 0.19.0 and must stay empty.
   AeroSpace also registers the workspace-change trigger for sketchybar via
   `exec-on-workspace-change`
-- **App routing**: `on-window-detected` maps 40+ apps to workspaces (1-9, A-Z)
+- **App routing**: `on-window-detected` rules are generated (not hand-written)
+  from each unit's app block in `manifest.json` (`bundle_id`, `workspace`,
+  `floating`). `aerospace.toml` here is the template: `manifest_render`
+  rewrites the marked `BEGIN/END manifest: window rules` block with every
+  profile's apps, and writes `generated/<profile>/aerospace/aerospace.toml`
+  with only that profile's apps, which install links as `~/.config/aerospace`.
+  Edit `manifest.json` for rules and this file for everything else, then run
+  `just manifest_render`; `just manifest_check` fails on hand edits inside the
+  block. Rules match on app id only (38 today; a second Cisco rule that never
+  fired was dropped)
   by `app-id`; system utils float
 - **Keybindings**: Alt+hjkl (focus), Alt+Shift+hjkl (move), Alt+number/letter
   (workspace), service mode (`Alt+Shift+;`) for layout toggle and reload
