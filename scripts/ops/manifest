@@ -15,6 +15,8 @@ generated/ files and never needs this script. Python 3.9+ stdlib only.
 
 Model (see manifest.schema.json):
   - units are tools with config, setup, a service, requires or an app block;
+  - link sources may contain {profile}, replaced per profile (the fixed-path
+    links to generated/<profile>/ files);
   - module package lists hold plain packages; each becomes an implicit unit
     named after the package (last path segment for tap packages);
   - a profile turns modules on and overrides single units: managed, external
@@ -182,8 +184,12 @@ def semantic_errors(m, root=REPO, check_files=True):
             if dest in dests:
                 errs.append("link %s is claimed by %s and %s" % (dest, dests[dest], name))
             dests[dest] = name
-            if check_files and not src.startswith("${") and not os.path.lexists(os.path.join(root, src)):
-                errs.append("unit %s: link source %s does not exist" % (name, src))
+            if check_files and not src.startswith("${"):
+                profiles = sorted(m.get("profiles", {})) if "{profile}" in src else ["-"]
+                for pn in profiles:
+                    path = src.replace("{profile}", pn)
+                    if not os.path.lexists(os.path.join(root, path)) and not path.startswith("generated/"):
+                        errs.append("unit %s: link source %s does not exist" % (name, path))
     for pname, p in sorted(m.get("profiles", {}).items()):
         for mod in p.get("modules", []):
             if mod not in modules:
@@ -325,7 +331,7 @@ def render_profile(m, profile):
     for n in on:
         u = units[n]
         create += [c for c in u.get("create", []) if c not in create]
-        links.update(u.get("links", {}))
+        links.update({d: src.replace("{profile}", profile) for d, src in u.get("links", {}).items()})
         if states[n] == "managed":
             steps += [shell_step(n, s) for s in u.get("setup", [])]
             if u.get("service"):
@@ -368,7 +374,11 @@ def render_profile(m, profile):
         resolved["units"][n] = entry
 
     s = p["settings"]
-    env = ["export REPOS_DIR=\"%s\"" % s["repos_dir"], "export NOTES_DIR=\"%s\"" % s["notes_dir"]]
+    env = [
+        "export REPOS_DIR=\"%s\"" % s["repos_dir"],
+        "export NOTES_DIR=\"%s\"" % s["notes_dir"],
+        "export ZK_NOTEBOOK_DIR=\"$NOTES_DIR/zk\"",
+    ]
     env_sh = "# shellcheck shell=sh\n# %s\n# Profile: %s\n%s\n" % (HEADER, profile, "\n".join(env))
     env_zsh = "# %s\n# Profile: %s (zsh twin of env.sh)\n%s\n" % (HEADER, profile, "\n".join(env))
 

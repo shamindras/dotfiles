@@ -5,7 +5,7 @@
     "browser": "firefox"
   },
   "settings": {
-    "repos_dir": "$HOME/Dropbox/repos",
+    "repos_dir": "$HOME/repos",
     "notes_dir": "$HOME/Dropbox/notes",
     "remote_login": true,
     "quarantine_warning": false
@@ -41,6 +41,7 @@
     "delta",
     "direnv",
     "djview",
+    "dotfiles",
     "dropbox",
     "duckdb",
     "duf",
@@ -333,6 +334,11 @@
       "state": "managed",
       "module": "personal",
       "reason": "module personal is on"
+    },
+    "dotfiles": {
+      "state": "managed",
+      "module": "core",
+      "reason": "module core is on"
     },
     "dropbox": {
       "state": "managed",

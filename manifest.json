@@ -269,6 +269,15 @@
         "quit_workspace": "W"
       }
     },
+    "dotfiles": {
+      "module": "core",
+      "note": "Fixed paths every program reads; dotbot links them to this profile's generated files, so no tool asks which profile it is.",
+      "links": {
+        "${XDG_CONFIG_HOME}/dotfiles/env.sh": "generated/{profile}/env.sh",
+        "${XDG_CONFIG_HOME}/dotfiles/env.zsh": "generated/{profile}/env.zsh",
+        "${XDG_CONFIG_HOME}/dotfiles/resolved.json": "generated/{profile}/resolved.json"
+      }
+    },
     "espanso": {
       "module": "desktop",
       "cask": ["espanso"],
@@ -850,7 +859,7 @@
         "browser": "firefox"
       },
       "settings": {
-        "repos_dir": "$HOME/Dropbox/repos",
+        "repos_dir": "$HOME/repos",
         "notes_dir": "$HOME/Dropbox/notes",
         "remote_login": true,
         "quarantine_warning": false

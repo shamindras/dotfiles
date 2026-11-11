@@ -122,7 +122,7 @@
         },
         "links": {
           "type": "object",
-          "description": "Destination (may use ${HOME} and ${XDG_*}) to a source path relative to the repo root, or to another link (${...}).",
+          "description": "Destination (may use ${HOME} and ${XDG_*}) to a source path relative to the repo root ({profile} is replaced per profile), or to another link (${...}).",
           "additionalProperties": {
             "type": "string",
             "pattern": "^([^/~$]|\\$\\{)"

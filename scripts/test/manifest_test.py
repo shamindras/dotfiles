@@ -176,6 +176,16 @@ class RulesTest(unittest.TestCase):
         self.assertIn("link ${XDG_CONFIG_HOME}/term is claimed by browser and term", errors(m))
 
 
+class ProfileLinkTest(unittest.TestCase):
+    def test_profile_placeholder_is_replaced_per_profile(self):
+        m = manifest()
+        m["units"]["browser"]["links"]["${XDG_CONFIG_HOME}/dotfiles/env.sh"] = "generated/{profile}/env.sh"
+        for p in ("home", "work"):
+            dotbot = json.loads(mf.render_profile(m, p)["dotbot.json"])
+            links = [d["link"] for d in dotbot if "link" in d][0]
+            self.assertEqual(links["${XDG_CONFIG_HOME}/dotfiles/env.sh"], "generated/%s/env.sh" % p)
+
+
 class RenderTest(unittest.TestCase):
     def setUp(self):
         self.home = mf.render_profile(manifest(**{"units__term__requires": ["font-mono", "wm"]}), "home")

@@ -56,7 +56,11 @@
     "dests": []
   },
   "links_added": {
-    "agreed": "none yet",
-    "dests": []
+    "agreed": "Plan v2, 'The resolver and propagation': programs read one fixed path linked to this profile's generated files (module D, 2026-11-11)",
+    "dests": [
+      "${XDG_CONFIG_HOME}/dotfiles/env.sh",
+      "${XDG_CONFIG_HOME}/dotfiles/env.zsh",
+      "${XDG_CONFIG_HOME}/dotfiles/resolved.json"
+    ]
   }
 }
