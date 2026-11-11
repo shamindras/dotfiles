@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+#
+# setup-github-auth — one SSH key per Mac for GitHub (authentication and
+# commit signing), plus the work email. Idempotent; run by install (git unit)
+# and safe by hand at any time.
+#
+# Usage: scripts/setup/setup-github-auth [--email <address>]
+#
+# State table for ~/.ssh/id_ed25519_github:
+#   on disk, readable, registered on GitHub  -> nothing to do
+#   on disk, readable, not registered        -> register the existing key
+#   missing, or unreadable (ssh-keygen -y)   -> an unreadable file is renamed
+#                                               <name>.replaced-YYYY-MM-DD; a new
+#                                               ed25519 key (no passphrase) is made
+#                                               and registered
+# Registered twice with `gh ssh-key add` (authentication and signing), titled
+# "<hostname> (dotfiles YYYY-MM-DD)", after checking what GitHub already has.
+# Keys on GitHub with this Mac's name but a different key are reported, never
+# deleted. Writes ~/.config/dotfiles/allowed_signers (outside the repo).
+#
+# Email: the home profile tracks it in manifest.json. When `git config
+# user.email` is empty (the work profile keeps it out of the repo), this asks
+# for it once on a terminal, or takes --email, and writes
+# ~/.config/dotfiles/gitconfig.local. A valid file is never asked about again.
+#
+# Needs `gh auth login --web` once per Mac (the only human step). Without it,
+# or without the key scopes, it prints the exact command and exits 0.
+# Never prints key material or tokens.
+
+set -Eeuo pipefail
+
+GH="${GH:-gh}"
+KEY="$HOME/.ssh/id_ed25519_github"
+DOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles"
+LOCAL="$DOTDIR/gitconfig.local"
+TODAY="$(date +%Y-%m-%d)"
+HOST="$(scutil --get ComputerName 2>/dev/null || hostname -s)"
+TITLE="$HOST (dotfiles $TODAY)"
+EMAIL_RE='^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$'
+
+email_arg=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --email) email_arg="${2:-}" && shift ;;
+        --email=*) email_arg="${1#--email=}" ;;
+        -h | --help) sed -n '3,30p' "$0" | sed 's/^# \{0,1\}//' && exit 0 ;;
+        *) echo "setup-github-auth: unknown argument '$1'" >&2 && exit 2 ;;
+    esac
+    shift
+done
+
+mkdir -p "$DOTDIR"
+
+# ── 1. Email (work: outside the repo) ─────────────────────────────────────────
+current_email="$(git config --get user.email 2>/dev/null || true)"
+if [[ -n "$email_arg" ]]; then
+    [[ "$email_arg" =~ $EMAIL_RE ]] || { echo "✗ '$email_arg' does not look like an email address" >&2 && exit 1; }
+    printf '# Per-machine git identity (setup-github-auth). Not in the repo.\n[user]\n  email = %s\n' "$email_arg" >"$LOCAL"
+    echo "✓ git email set in ${LOCAL/#$HOME/~}"
+    current_email="$email_arg"
+elif [[ -z "$current_email" ]]; then
+    if [[ -t 0 ]]; then
+        read -r -p "Email for git commits on this Mac (stored only in ${LOCAL/#$HOME/~}): " reply
+        [[ "$reply" =~ $EMAIL_RE ]] || { echo "✗ not an email address; nothing written" >&2 && exit 1; }
+        printf '# Per-machine git identity (setup-github-auth). Not in the repo.\n[user]\n  email = %s\n' "$reply" >"$LOCAL"
+        echo "✓ git email set in ${LOCAL/#$HOME/~}"
+        current_email="$reply"
+    else
+        echo "skip git email: unset. Run: scripts/setup/setup-github-auth --email <you@example.com>"
+    fi
+else
+    echo "✓ git email already set"
+fi
+
+# ── 2. gh login and scopes ────────────────────────────────────────────────────
+if ! "$GH" auth status >/dev/null 2>&1; then
+    echo "skip GitHub key: gh is not logged in. Run: gh auth login --web  (then re-run this script)"
+    exit 0
+fi
+scopes="$("$GH" auth status 2>&1 | sed -n 's/.*Token scopes: //p' | tr -d "'" || true)"
+missing_scopes=""
+for s in admin:public_key admin:ssh_signing_key; do
+    case ",${scopes// /}," in *",$s,"*) ;; *) missing_scopes="$missing_scopes,$s" ;; esac
+done
+if [[ -n "$missing_scopes" ]]; then
+    echo "skip GitHub key: gh needs the key scopes. Run: gh auth refresh -h github.com -s ${missing_scopes#,}"
+    exit 0
+fi
+
+# ── 3. The key on disk ────────────────────────────────────────────────────────
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+if [[ -f "$KEY" ]] && ssh-keygen -y -f "$KEY" >/dev/null 2>&1; then
+    echo "✓ key on disk: ${KEY/#$HOME/~}"
+else
+    if [[ -e "$KEY" ]]; then
+        mv "$KEY" "$KEY.replaced-$TODAY"
+        [[ -e "$KEY.pub" ]] && mv "$KEY.pub" "$KEY.pub.replaced-$TODAY"
+        echo "  unreadable key renamed to ${KEY/#$HOME/~}.replaced-$TODAY"
+    fi
+    ssh-keygen -q -t ed25519 -N "" -C "$TITLE" -f "$KEY" </dev/null
+    echo "✓ new key created: ${KEY/#$HOME/~}"
+fi
+chmod 600 "$KEY"
+[[ -f "$KEY.pub" ]] || ssh-keygen -y -f "$KEY" >"$KEY.pub"
+chmod 644 "$KEY.pub"
+pub_body="$(awk '{print $2}' "$KEY.pub")"
+
+# ── 4. Registered on GitHub (authentication and signing) ─────────────────────
+register() { # register <type> <api path>
+    local type=$1 path=$2 keys
+    keys="$("$GH" api "$path" --jq '.[] | [.key, .title] | @tsv' 2>/dev/null || true)"
+    if printf '%s\n' "$keys" | awk -F'\t' '{split($1, k, " "); print k[2]}' | grep -qxF "$pub_body"; then
+        echo "✓ $type key registered"
+    else
+        "$GH" ssh-key add "$KEY.pub" --type "$type" --title "$TITLE" >/dev/null
+        echo "✓ $type key registered as \"$TITLE\""
+    fi
+    stale="$(printf '%s\n' "$keys" | awk -F'\t' -v h="$HOST (dotfiles" -v b="$pub_body" \
+        'index($2, h) == 1 { split($1, k, " "); if (k[2] != b) print $2 }' || true)"
+    [[ -z "$stale" ]] || echo "  note: older $type keys named after this Mac are still on GitHub (not deleted): $(printf '%s' "$stale" | tr '\n' ';')"
+}
+register authentication user/keys
+register signing user/ssh_signing_keys
+
+# ── 5. Allowed signers (verify your own signatures locally) ──────────────────
+if [[ -n "$current_email" ]]; then
+    printf '%s %s\n' "$current_email" "$(awk '{print $1, $2}' "$KEY.pub")" >"$DOTDIR/allowed_signers"
+    echo "✓ allowed signers: ${DOTDIR/#$HOME/~}/allowed_signers"
+fi
+
+echo "✓ GitHub auth ready on $HOST"

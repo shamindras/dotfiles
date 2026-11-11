@@ -177,7 +177,17 @@ elif [[ -e "$HOME/.ssh/config" ]]; then
 else
     info "no ~/.ssh/config yet"
 fi
-if [[ -n "$(git config --global user.email 2>/dev/null || true)" ]]; then ok "git identity set"; else info "git identity not set (set it in ~/.config/git/config.local)"; fi
+# Read through includes (profile gitconfig, then gitconfig.local), outside any repo.
+if [[ -n "$(cd / && git config --get user.email 2>/dev/null || true)" ]]; then
+    ok "git email set"
+else
+    warn "git email not set: run scripts/setup/setup-github-auth --email <you@example.com> (written to ~/.config/dotfiles/gitconfig.local, never the repo)"
+fi
+if [[ -f "$HOME/.ssh/id_ed25519_github" ]]; then
+    ok "GitHub key ~/.ssh/id_ed25519_github present"
+else
+    info "no GitHub key yet: run scripts/setup/setup-github-auth after gh auth login --web"
+fi
 if command -v gh >/dev/null 2>&1 || [[ -x /opt/homebrew/bin/gh ]]; then
     if "$(command -v gh || echo /opt/homebrew/bin/gh)" auth status >/dev/null 2>&1; then ok "gh is logged in"; else info "gh is not logged in (gh auth login --web)"; fi
 else
