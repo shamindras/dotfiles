@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #
 # check-layout — the repo's top level matches the allow-list (plan: lean top
-# level), and no secret-shaped value is tracked in config/gh/hosts.yml (gh
-# rewrites that file; tokens must stay in the macOS keychain).
+# level), no secret-shaped value is tracked in config/gh/hosts.yml (gh
+# rewrites that file; tokens must stay in the macOS keychain), and no
+# per-machine *.local file sits inside the repo tree.
 
 set -Eeuo pipefail
 
@@ -31,6 +32,16 @@ if git grep -nIqE 'oauth_token|gh[opsur]_[A-Za-z0-9]{20,}' -- config/gh/hosts.ym
     t_fail "config/gh/hosts.yml contains a token-shaped value: remove it and run gh auth login (keychain)"
 else
     t_pass "no token in config/gh/hosts.yml"
+fi
+
+# Per-machine files (identity, local sessions, overrides) live outside the
+# repo, under ~/.config/dotfiles; none may hide in the working tree, tracked
+# or ignored, where a fresh clone would silently lack them.
+local_files="$(git ls-files --others --ignored --exclude-standard --cached -- ':!.claude' | grep -E '(^|/)[^/]*\.local(\.[a-z]+)?$|(^|/)config\.local$' || true)"
+if [[ -z "$local_files" ]]; then
+    t_pass "no per-machine *.local files inside the repo"
+else
+    t_fail "per-machine files inside the repo: $(printf '%s' "$local_files" | tr '\n' ' ')"
 fi
 
 t_summary "check-layout"

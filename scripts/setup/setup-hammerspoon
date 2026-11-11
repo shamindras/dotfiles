@@ -136,9 +136,9 @@ fi
 
 echo "[INFO] Waiting for hs CLI (up to 5s)..."
 for _ in $(seq 1 10); do
-  if hs -c 'return 1' >/dev/null 2>&1; then
+  if hs -t 2 -c 'return 1' </dev/null >/dev/null 2>&1; then
     echo "[INFO] Asserting hs.autoLaunch(true) via CLI..."
-    hs -c 'hs.autoLaunch(true); return "ok"' >/dev/null 2>&1 || true
+    hs -t 2 -c 'hs.autoLaunch(true); return "ok"' </dev/null >/dev/null 2>&1 || true
     break
   fi
   sleep 0.5
