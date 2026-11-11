@@ -123,9 +123,11 @@ function z1_plugins {
 
   # Plugin list: autosuggestions first, syntax-highlighting last.
   # syntax-highlighting must be sourced after all ZLE widgets are created.
+  # Pinned by commit; `just zsh_plugins_update` moves the pins (and the
+  # local clones) to the latest upstream commit.
   local -a plugins=(
-    zsh-users/zsh-autosuggestions
-    zsh-users/zsh-syntax-highlighting
+    zsh-users/zsh-autosuggestions@85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5
+    zsh-users/zsh-syntax-highlighting@1d85c692615a25fe2293bdd44b34c217d5d2bf04
   )
 
   plugin-load $plugins

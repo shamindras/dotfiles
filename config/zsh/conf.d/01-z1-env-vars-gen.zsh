@@ -65,12 +65,9 @@ fi
 typeset -gU path
 
 path=(
-  # Rust CLI Utils
+  # Rust: cargo-installed tools, then Homebrew's keg-only rustup proxies
   $CARGO_HOME/bin(N)
-
-  # Pyenv CLI utils
-  $PYENV_ROOT/bin(N)
-  $PYENV_ROOT/shims(N)
+  $HOMEBREW_PREFIX/opt/rustup/bin(N)
 
   # core
   $HOME/{,s}bin(N)

@@ -18,4 +18,4 @@
 ## Development Notes
 
 - XDG-compliant; relies on env vars set in zsh `00-z1-env-vars-xdg.zsh`
-- Global packages (eslint_d, prettier) installed by the `node` unit setup step in `manifest.json`
+- No global npm packages: eslint_d and prettier come from Homebrew (`lint` module in `manifest.json`). `N_PREFIX` is exported in `.zshenv`, so the `prefix` here also resolves in scripts and non-interactive shells

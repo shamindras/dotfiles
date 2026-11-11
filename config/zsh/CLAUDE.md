@@ -82,6 +82,9 @@ one or more `z1_*` functions called by `.zshrc`.
   to `.zwc` so subsequent startups source the digest, not the text (~1ms)
 - **Plugin system**: zsh_unplugged-based `plugin-load/update/compile` functions;
   plugins stored at `$__zsh_user_data_dir/plugins` (`~/.local/share/zsh/plugins`)
+- **Plugin pins**: both plugins are pinned by commit (`user/repo@sha` in
+  `08-z1-plugins.zsh`); `just zsh_plugins_update` moves the pins and the
+  local clones, `just outdated` shows pending moves
 - **No .zwc pre-compilation of config files**: compiling `conf.d/*.zsh`,
   `.zshrc`, `.zshenv` gives 0ms (verified, interleaved bench) — their cost is
   execution (env exports, function defs), not parse — and would drop `.zwc`

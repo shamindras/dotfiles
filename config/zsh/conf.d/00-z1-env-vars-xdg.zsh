@@ -29,7 +29,6 @@ export DROPBOX_BOOKS_DIR="$DROPBOX_RESOURCES_DIR/books"
 export PARALLEL_HOME="$XDG_CONFIG_HOME/parallel"
 
 # Python
-export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 export PYTHONIOENCODING='UTF-8'
 export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
