@@ -101,8 +101,8 @@
       "brew": ["commitizen", "gnupg", "prek"]
     },
     "lint": {
-      "note": "Formatters and linters used by nvim and the repo's own recipes.",
-      "brew": ["eslint_d", "jsonlint", "prettier", "shellcheck", "shfmt", "taplo", "yamllint"]
+      "note": "Only the Homebrew copies that repo scripts, just recipes or CI call: prettier (just prettier_md, manifest_set) and shellcheck (just test_static). Mason installs every formatter and linter nvim uses (decision adr-16-formatters-mason). stylua is its own unit (just stylua_config).",
+      "brew": ["prettier", "shellcheck"]
     },
     "notes": {
       "note": "Zettelkasten."

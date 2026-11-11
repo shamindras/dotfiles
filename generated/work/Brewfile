@@ -82,14 +82,9 @@ brew "openssh"
 brew "prek"
 
 # module: lint
-brew "eslint_d"
-brew "jsonlint"
 brew "prettier"
 brew "shellcheck"
-brew "shfmt"
 brew "stylua"
-brew "taplo"
-brew "yamllint"
 
 # module: notes
 brew "zk"

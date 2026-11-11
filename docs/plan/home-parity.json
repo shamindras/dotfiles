@@ -2,7 +2,7 @@
   "baseline": "acec184",
   "note": "Home parity: generated/home must equal the install at the baseline commit (main before the overhaul, tagged pre-overhaul locally), apart from the agreed changes listed here. Each change names where it was agreed.",
   "packages_removed": {
-    "agreed": "Package review page, Home unticked (2026-11-10)",
+    "agreed": "Package review page, Home unticked (2026-11-10); formatter ownership, Mason owns nvim's tools (2026-11-11): jsonlint, shfmt, taplo, yamllint (no script or CI calls them)",
     "names": [
       "aom",
       "apache-arrow",
@@ -17,6 +17,7 @@
       "harfbuzz",
       "hdf5",
       "jpeg-xl",
+      "jsonlint",
       "krb5",
       "leptonica",
       "libgeotiff",
@@ -40,17 +41,19 @@
       "python@3.9",
       "qt@5",
       "shellharden",
+      "shfmt",
+      "taplo",
       "thrift",
       "tree-sitter",
       "unixodbc",
       "webp",
-      "yamlfmt"
+      "yamlfmt",
+      "yamllint"
     ]
   },
   "packages_added": {
-    "agreed": "Plan v2, 'Packages and updates': Homebrew only; eslint_d and rustup from brew instead of npm and the rustup installer (module K, 2026-11-11)",
+    "agreed": "Plan v2, 'Packages and updates': rustup from brew instead of the rustup installer (module K, 2026-11-11)",
     "names": [
-      "eslint_d",
       "rustup"
     ]
   },

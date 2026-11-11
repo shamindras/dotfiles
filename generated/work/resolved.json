@@ -42,7 +42,6 @@
     "dotfiles",
     "duf",
     "dust",
-    "eslint_d",
     "espanso",
     "eza",
     "facetime",
@@ -68,7 +67,6 @@
     "hyperfine",
     "imagemagick",
     "jq",
-    "jsonlint",
     "just",
     "keychain-access",
     "lazygit",
@@ -104,13 +102,11 @@
     "sesh",
     "tmux",
     "shellcheck",
-    "shfmt",
     "skim",
     "spotify",
     "starship",
     "stylua",
     "system-settings",
-    "taplo",
     "tealdeer",
     "television",
     "textedit",
@@ -121,7 +117,6 @@
     "wget",
     "word",
     "xdg-ninja",
-    "yamllint",
     "yazi",
     "yq",
     "zk",
@@ -160,7 +155,6 @@
     "djvulibre": "djvulibre",
     "duf": "duf",
     "dust": "dust",
-    "eslint_d": "eslint_d",
     "espanso": "espanso",
     "eza": "eza",
     "fastfetch": "fastfetch",
@@ -181,7 +175,6 @@
     "hyperfine": "hyperfine",
     "imagemagick": "imagemagick",
     "jq": "jq",
-    "jsonlint": "jsonlint",
     "just": "just",
     "lazygit": "lazygit",
     "lua": "lua",
@@ -206,12 +199,10 @@
     "sesh": "sesh",
     "tmux": "tmux",
     "shellcheck": "shellcheck",
-    "shfmt": "shfmt",
     "skim": "skim",
     "spotify": "spotify",
     "starship": "starship",
     "stylua": "stylua",
-    "taplo": "taplo",
     "tealdeer": "tealdeer",
     "television": "television",
     "unar": "unar",
@@ -219,7 +210,6 @@
     "wezterm": "wezterm",
     "wget": "wget",
     "xdg-ninja": "xdg-ninja",
-    "yamllint": "yamllint",
     "yazi": "yazi",
     "yq": "yq",
     "zk": "zk"
@@ -364,11 +354,6 @@
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
-    },
-    "eslint_d": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "espanso": {
       "state": "managed",
@@ -537,11 +522,6 @@
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
-    },
-    "jsonlint": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "just": {
       "state": "managed",
@@ -749,11 +729,6 @@
       "module": "lint",
       "reason": "module lint is on"
     },
-    "shfmt": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
-    },
     "sketchybar": {
       "state": "managed",
       "module": "desktop",
@@ -813,11 +788,6 @@
         "bundle_id": "com.apple.systempreferences",
         "floating": true
       }
-    },
-    "taplo": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "tealdeer": {
       "state": "managed",
@@ -917,11 +887,6 @@
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
-    },
-    "yamllint": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "yazi": {
       "state": "managed",

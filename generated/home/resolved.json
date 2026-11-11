@@ -59,7 +59,6 @@
     "duckdb",
     "duf",
     "dust",
-    "eslint_d",
     "espanso",
     "eza",
     "facetime",
@@ -106,7 +105,6 @@
     "inkscape",
     "jdownloader",
     "jq",
-    "jsonlint",
     "just",
     "keychain-access",
     "lazygit",
@@ -161,7 +159,6 @@
     "tmux",
     "shared-mime-info",
     "shellcheck",
-    "shfmt",
     "shottr",
     "signal",
     "skim",
@@ -173,7 +170,6 @@
     "subversion",
     "surfingkeys",
     "system-settings",
-    "taplo",
     "task",
     "taskwarrior-tui",
     "tcl-tk",
@@ -194,7 +190,6 @@
     "word",
     "xdg-ninja",
     "xquartz",
-    "yamllint",
     "yazi",
     "yq",
     "yt-dlp",
@@ -256,7 +251,6 @@
     "duckdb": "duckdb",
     "duf": "duf",
     "dust": "dust",
-    "eslint_d": "eslint_d",
     "espanso": "espanso",
     "eza": "eza",
     "fastfetch": "fastfetch",
@@ -299,7 +293,6 @@
     "inkscape": "inkscape",
     "jdownloader": "jdownloader",
     "jq": "jq",
-    "jsonlint": "jsonlint",
     "just": "just",
     "lazygit": "lazygit",
     "libass": "libass",
@@ -343,7 +336,6 @@
     "tmux": "tmux",
     "shared-mime-info": "shared-mime-info",
     "shellcheck": "shellcheck",
-    "shfmt": "shfmt",
     "shottr": "shottr",
     "signal": "signal",
     "skim": "skim",
@@ -353,7 +345,6 @@
     "starship": "starship",
     "stylua": "stylua",
     "subversion": "subversion",
-    "taplo": "taplo",
     "task": "task",
     "taskwarrior-tui": "taskwarrior-tui",
     "tcl-tk": "tcl-tk",
@@ -368,7 +359,6 @@
     "wget": "wget",
     "xdg-ninja": "xdg-ninja",
     "xquartz": "xquartz",
-    "yamllint": "yamllint",
     "yazi": "yazi",
     "yq": "yq",
     "yt-dlp": "yt-dlp",
@@ -581,11 +571,6 @@
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
-    },
-    "eslint_d": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "espanso": {
       "state": "managed",
@@ -889,11 +874,6 @@
       "state": "managed",
       "module": "core",
       "reason": "module core is on"
-    },
-    "jsonlint": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "just": {
       "state": "managed",
@@ -1230,11 +1210,6 @@
       "module": "lint",
       "reason": "module lint is on"
     },
-    "shfmt": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
-    },
     "shottr": {
       "state": "managed",
       "module": "desktop",
@@ -1339,11 +1314,6 @@
         "bundle_id": "com.apple.systempreferences",
         "floating": true
       }
-    },
-    "taplo": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "task": {
       "state": "managed",
@@ -1518,11 +1488,6 @@
       "state": "managed",
       "module": "data-science",
       "reason": "module data-science is on"
-    },
-    "yamllint": {
-      "state": "managed",
-      "module": "lint",
-      "reason": "module lint is on"
     },
     "yazi": {
       "state": "managed",
