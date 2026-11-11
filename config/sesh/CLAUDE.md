@@ -48,7 +48,7 @@ of the picker — `notes` is kept there on purpose.
 
 | File | Purpose |
 |------|---------|
-| `sesh.toml` | Session definitions (name/path/script/alias/icon), picker `[tui]`/`[icons]`/`sort_order`, `[[wildcard]]` tree icons, `[default_session]` fallback layout |
+| `sesh.toml` | Template: session definitions (name/path/script/alias/icon), picker `[tui]`/`[icons]`/`sort_order`, `[[wildcard]]` tree icons, `[default_session]` fallback layout. Paths use `$REPOS_DIR` / `$NOTES_DIR` (sesh expands env vars). `manifest_render` writes `generated/<profile>/sesh.toml` with only the profile's `sesh_sessions` (home: all 7; work: dots, feed, notes, scratch) plus `import = ["~/.config/dotfiles/sesh.local.toml"]`, an untracked per-machine file install creates empty (work project sessions go there, never in git). Install links `~/.config/sesh/{sesh.toml,scripts,dirs.list}` file by file |
 | `dirs.list` | Ad-hoc launchable directories (read by `sesh-dir-picker`) |
 | `scripts/helpers.sh` | Shared helper functions (sourceable library, not executable) |
 | `scripts/default.sh` | Generic ad-hoc layout (`[default_session]` startup) |

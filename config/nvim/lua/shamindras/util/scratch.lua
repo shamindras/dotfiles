@@ -87,6 +87,12 @@ function M.dir()
     notes = vim.fn.expand('~/notes')
   end
   local dir = notes .. '/scratch'
+  if vim.fn.isdirectory(notes) == 0 then
+    -- Notes that sync in (home: Dropbox) may not have arrived yet; creating
+    -- the root here would leave a real folder where the sync belongs.
+    vim.notify('notes not synced yet: ' .. notes .. ' is missing', vim.log.levels.WARN)
+    return dir
+  end
   vim.fn.mkdir(dir, 'p')
   return realpath(dir)
 end

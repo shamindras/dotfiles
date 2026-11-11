@@ -19,6 +19,13 @@ set -Eeuo pipefail
 
 SCRATCH_DIR="${NOTES_DIR:-$HOME/notes}/scratch"
 
+# Notes that sync in (home: Dropbox) may not have arrived yet; never create
+# the root here, or a real ~/Dropbox folder would block the Dropbox link.
+if [ ! -d "${NOTES_DIR:-$HOME/notes}" ]; then
+  echo "scratch-new: notes not synced yet (${NOTES_DIR:-$HOME/notes} is missing)" >&2
+  exit 1
+fi
+
 usage() {
   sed -n '2,17p' "${BASH_SOURCE[0]}" | cut -c 3-
 }

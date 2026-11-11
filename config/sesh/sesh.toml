@@ -28,7 +28,7 @@ zoxide = { icon = "", color = "cyan" }
 # row of the sesh picker — keep `notes` here.
 [[session]]
 name = "notes"
-path = "~/Dropbox/notes/zk"
+path = "$NOTES_DIR/zk"
 startup_command = "~/.config/sesh/scripts/notes.sh"
 alias = "nn"
 alias_auto_connect = true
@@ -36,7 +36,7 @@ icon = "📓"
 
 [[session]]
 name = "play"
-path = "~/Dropbox/repos/codebox"
+path = "$REPOS_DIR/codebox"
 startup_command = "~/.config/sesh/scripts/play.sh"
 alias = "pp"
 alias_auto_connect = true
@@ -44,7 +44,7 @@ icon = "🧪"
 
 [[session]]
 name = "dots"
-path = "~/Dropbox/repos/dotfiles"
+path = "$REPOS_DIR/dotfiles"
 startup_command = "~/.config/sesh/scripts/dots.sh"
 alias = "dd"
 alias_auto_connect = true
@@ -52,7 +52,7 @@ icon = "🔧"
 
 [[session]]
 name = "career"
-path = "~/Dropbox/repos/ss_applications"
+path = "$REPOS_DIR/ss_applications"
 startup_command = "~/.config/sesh/scripts/career.sh"
 alias = "cc"
 alias_auto_connect = true
@@ -60,7 +60,7 @@ icon = "💼"
 
 [[session]]
 name = "blog"
-path = "~/Dropbox/repos/ss_personal_website"
+path = "$REPOS_DIR/ss_personal_website"
 startup_command = "~/.config/sesh/scripts/blog.sh"
 alias = "bb"
 alias_auto_connect = true
@@ -76,7 +76,7 @@ icon = "📰"
 
 [[session]]
 name = "scratch"
-path = "~/Dropbox/notes/scratch"
+path = "$NOTES_DIR/scratch"
 startup_command = "~/.config/sesh/scripts/scratch.sh"
 alias = "ss"
 alias_auto_connect = true
@@ -84,18 +84,20 @@ icon = "📝"
 
 # Picker icons for the ad-hoc tier (dirs.list roots). Icon only — the
 # layout stays with [default_session] below; a wildcard startup_command
-# would silently override default.sh. Each root is listed twice because
-# sesh reports both the ~/Dropbox symlink and its CloudStorage target.
+# would silently override default.sh. Paths expand env vars (sesh
+# ExpandEnv). Dropbox data roots are listed twice because sesh reports both
+# the ~/Dropbox symlink and its CloudStorage target.
 [[wildcard]]
-pattern = "~/Dropbox/repos/*"
+pattern = "$REPOS_DIR/*"
+icon = "📦"
+
+# transitional: repos still under Dropbox on this Mac until the move (N16)
+[[wildcard]]
+pattern = "~/Library/CloudStorage/Dropbox/repos/*" # transitional
 icon = "📦"
 
 [[wildcard]]
-pattern = "~/Library/CloudStorage/Dropbox/repos/*"
-icon = "📦"
-
-[[wildcard]]
-pattern = "~/Dropbox/resources/**"
+pattern = "$DROPBOX_DIR/resources/**"
 icon = "📚"
 
 [[wildcard]]
@@ -103,7 +105,7 @@ pattern = "~/Library/CloudStorage/Dropbox/resources/**"
 icon = "📚"
 
 [[wildcard]]
-pattern = "~/Dropbox/entertainment/**"
+pattern = "$DROPBOX_DIR/entertainment/**"
 icon = "🎧"
 
 [[wildcard]]

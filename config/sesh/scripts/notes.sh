@@ -6,6 +6,12 @@ WORK_DIR="${NOTES_DIR:-$HOME/notes}/zk"
 IDEAS_DIR="${WORK_DIR}/ideas"
 JOURNAL_LAYOUT="$HOME/.config/sesh/scripts/journal-layout.lua"
 
+if [[ ! -d "${NOTES_DIR:-$HOME/notes}" ]]; then
+  tmux display-message "notes not synced yet: ${NOTES_DIR:-$HOME/notes} is missing" 2>/dev/null || true
+  echo "notes not synced yet: ${NOTES_DIR:-$HOME/notes} is missing"
+  exit 0
+fi
+
 # shellcheck source=helpers.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/helpers.sh"
