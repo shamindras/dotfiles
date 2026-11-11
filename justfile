@@ -90,10 +90,10 @@ firefox_sync:
 	@./scripts/ops/setup-firefox
 	@printf "✅ Firefox synced (restart Firefox for changes)\n"
 
-# Deploy prettier + markdownlint configs from config/zk/notebook/ into $DROPBOX_NOTES_DIR.
+# Deploy prettier + markdownlint configs from config/zk/notebook/ into $NOTES_DIR.
 [group('notes')]
 notes_config_sync:
-	@printf "📝 Syncing notes formatter configs to $DROPBOX_NOTES_DIR...\n"
+	@printf "📝 Syncing notes formatter configs to $NOTES_DIR...\n"
 	@./scripts/ops/sync-notes-config
 	@printf "✅ Notes configs synced\n"
 
@@ -185,9 +185,10 @@ test_static:
 	@scripts/test/check-docs
 	@scripts/step inner 5 6 "Invariants"
 	@scripts/test/check-invariants
-	@scripts/step inner 6 6 "Manifest check and home parity"
+	@scripts/step inner 6 6 "Manifest, home parity and path gates"
 	@scripts/ops/manifest check
 	@scripts/test/check-parity
+	@scripts/test/check-paths
 	@scripts/step done 🧪 "Static checks passed"
 
 # Sandbox tests in a throwaway HOME: config load, then link-only install.

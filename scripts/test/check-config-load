@@ -78,4 +78,19 @@ noninteractive_env() {
 }
 t_expect N5 "non-interactive shell sees CURL_HOME and N_PREFIX" noninteractive_env
 
+# 4. Profile values: with dotfiles/env.zsh linked (as install does), every
+#    zsh sees this profile's REPOS_DIR, NOTES_DIR and ZK_NOTEBOOK_DIR.
+profile_env() {
+    local out
+    mkdir -p "$SANDBOX/.config/dotfiles"
+    ln -sf "$TEST_REPO/generated/home/env.zsh" "$SANDBOX/.config/dotfiles/env.zsh"
+    # shellcheck disable=SC2016 # expanded by the inner zsh, not here
+    out="$(env -i HOME="$SANDBOX" PATH="$SANDBOX_PATH" zsh -c 'print -r -- "$REPOS_DIR|$ZK_NOTEBOOK_DIR"')"
+    [[ "$out" == "$SANDBOX/repos|$SANDBOX/Dropbox/notes/zk" ]] || {
+        echo "got: $out"
+        return 1
+    }
+}
+t_expect N4 "non-interactive zsh sources the linked profile env (REPOS_DIR, ZK_NOTEBOOK_DIR)" profile_env
+
 t_summary "check-config-load"

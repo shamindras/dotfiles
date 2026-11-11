@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# check-paths — grep gates for hard-coded repo, notes and user paths.
+#
+# Repo and notes paths must come from REPOS_DIR / NOTES_DIR (module D, N4).
+# Dropbox stays only for data (books, resources, media). Lines marked
+# `transitional` are allowed until the move to ~/repos (N16).
+# Gates owned by later nodes report XFAIL until that node lands.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+cd "$TEST_REPO"
+EXCLUDE=(':!config/archive' ':!scripts/migrate' ':!scripts/test' ':!docs' ':!*.md' ':!generated' ':!manifest.json')
+
+# gate <node> <name> <pathspec...> -- <regex>: no tracked line may match.
+gate() {
+    local node=$1 name=$2
+    shift 2
+    local specs=() regex
+    while [[ $1 != "--" ]]; do
+        specs+=("$1")
+        shift
+    done
+    regex=$2
+    t_expect "$node" "$name" no_match "$regex" "${specs[@]}"
+}
+no_match() {
+    local regex=$1 hits
+    shift
+    hits="$(git grep -nIE "$regex" -- "$@" "${EXCLUDE[@]}" | grep -v 'transitional' || true)"
+    [[ -z "$hits" ]] || {
+        printf '%s\n' "$hits"
+        return 1
+    }
+}
+
+t_header "path gates"
+gate N4 "no DROPBOX_REPOS_DIR or DROPBOX_NOTES_DIR" config scripts justfile -- 'DROPBOX_(REPOS|NOTES)_DIR'
+gate N4 "no Dropbox repo or notes paths in config, scripts or justfile" \
+    config scripts justfile ':!config/sesh/sesh.toml' -- 'Dropbox/(repos|notes)'
+gate N10 "no Dropbox repo or notes paths in sesh.toml" config/sesh/sesh.toml -- 'Dropbox/(repos|notes)'
+gate N5 "no Dropbox in bootstrap or install" bootstrap install -- '[Dd]ropbox'
+gate N4 "no /Users/<name> paths outside git config" config scripts ':!config/git/config' -- '/Users/[a-z]'
+gate N7 "no /Users/<name> path in git config" config/git/config -- '/Users/[a-z]'
+
+t_summary "check-paths"
