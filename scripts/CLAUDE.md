@@ -66,9 +66,9 @@ the subdir already provides that context.
 | ---------------------------- | ---------------------------------------------------------------- |
 | `setup-macos`                | macOS system defaults configuration                              |
 | `setup-upgrade-homebrew`     | Homebrew installation/upgrade                                    |
-| `setup-upgrade-rust-cargo`   | Rust toolchain management                                        |
+| `setup-upgrade-rust-cargo`   | Stable toolchain via Homebrew's keg-only `rustup` (XDG `CARGO_HOME`/`RUSTUP_HOME`); skips when rustup is missing |
 | `setup-hammerspoon`          | Configure Hammerspoon MJConfigFile + hidutil Caps→F18 LaunchAgent |
-| `setup-upgrade-ttyper`       | Install/upgrade ttyper                                           |
+| `setup-upgrade-ttyper`       | `cargo install --locked ttyper` (the only cargo tool); skips when cargo is missing |
 | `setup-zk`                   | zk setup at `$ZK_NOTEBOOK_DIR`: notebook dirs; when under Dropbox, both ignore xattrs on `.zk/` (File Provider + legacy) read back; templates; corrupt-`notebook.db` recovery. Exits 0 with a message when the notes have not synced yet |
 | `post-install-hints`         | Print manual post-install steps; suppressed by `DOTFILES_NO_HINTS=1` |
 
@@ -159,6 +159,12 @@ owns strict mode. The `scripts/step` wrapper does set strict mode (it's a
 standalone entry point).
 
 ## setup-macos
+
+Two settings come from the profile, read with `plutil` from
+`~/.config/dotfiles/resolved.json` (no profile names in the script):
+`remote_login` (home: Remote Login on; work: left alone) and
+`quarantine_warning` (home: off; work: on). Without the file both are left
+as they are.
 
 Applies `defaults write` commands for system preferences, Finder, Dock,
 Aerospace, and third-party apps (Skim, Preview, DjView). Manages Login Items

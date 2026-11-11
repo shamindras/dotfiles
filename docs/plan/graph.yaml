@@ -199,10 +199,10 @@ nodes:
     mints: []
     promise:
       reads: [config/bin/brew-update, scripts/setup/setup-macos]
-      writes: [config/bin/brew-update, scripts/setup/setup-macos, justfile, config/zsh/]
+      writes: [config/bin/brew-update, scripts/setup/, scripts/ops/, justfile, config/zsh/, config/brew/, config/npm/, manifest.json, generated/, docs/, CLAUDE.md, scripts/CLAUDE.md]
       budget: { max_tries: 4 }
       evidence: [dry run of work]
-    verify: [grep -c 'bundle dump' config/bin/brew-update is 0, update recipes run twice leave no diff]
+    verify: [grep -c 'bundle dump' config/bin/brew-update is 0, brew-update against a stubbed brew, just outdated, just test]
     floors: [home parity]
     on_exhausted: default
     human_gate: Module K proposal approved

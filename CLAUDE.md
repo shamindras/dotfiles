@@ -34,13 +34,14 @@ needs Dropbox or an SSH key.
 ```bash
 just                  # Interactive recipe picker (fzf + preview)
 just help             # List all targets grouped by area
-just all              # Write pipeline: clean → format → brewfile → firefox sync → treesitter → yazi (no audits)
+just all              # Write pipeline: clean → format → manifest render → firefox → treesitter → yazi
 just format           # Format Lua (stylua) + markdown (prettier)
 just sync-all         # Sync firefox + treesitter + yazi plugins + notes configs + submodules
 just audit            # Read-only audit: firefox drift + treesitter parsers + yazi plugins
 just clean            # Sweep .DS_Store, swap files, stale zsh sessions
-just update_brewfile  # Dump current Homebrew packages to Brewfile
-just update_submods   # Pull latest submodule revisions
+just submods_update   # Pull latest submodule revisions
+just update-all       # nvim plugins, zsh plugin pins, yazi, treesitter, submodules
+just outdated         # Read-only: Homebrew outdated, zsh plugin pins, submodules
 just test             # test_static + test_sandbox
 just test_static      # shellcheck tests, harness self-test, docs lint, invariants
 just test_sandbox     # Config load + install into a throwaway HOME (never the real one)
@@ -148,8 +149,7 @@ the cask and, as the very last step, opens the app and prints the sign-in
 hint; nothing waits for sign-in or sync. Once signed in, `just
 dropbox_finish` (safe any time) creates the `~/Dropbox` link with
 `scripts/ops/ensure-dropbox-link` and sets up the notes when they arrive,
-then prints the one-time Finder step to pin the notes offline. `config/brew/Brewfile` remains only for `brew-update`
-until module K moves it to the generated Brewfile.
+then prints the one-time Finder step to pin the notes offline.
 
 ## Development Guidelines
 

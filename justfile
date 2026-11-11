@@ -6,9 +6,9 @@ export JUST_CHOOSER := 'fzf --preview "just --show {}" --preview-window=right:60
 _default:
 	@just --choose
 
-# NOTE: we don't include update_submods or firefox_audit here;
+# NOTE: we don't include submods_update or firefox_audit here;
 # `just audit` is the home for read-only drift checks.
-# Run cleanup, format, brewfile dump, firefox sync, treesitter sync, yazi upgrade.
+# Run cleanup, format, manifest render, firefox sync, treesitter sync, yazi upgrade.
 all:
 	@scripts/step outer 1 7 🧹 "Cleaning artifacts"
 	@just clean
@@ -16,8 +16,8 @@ all:
 	@just stylua_config
 	@scripts/step outer 3 7 🎨 "Formatting markdown"
 	@just prettier_md
-	@scripts/step outer 4 7 🍺 "Dumping Brewfile"
-	@just update_brewfile
+	@scripts/step outer 4 7 🧾 "Rendering generated/ from manifest.json"
+	@just manifest_render
 	@scripts/step outer 5 7 🦊 "Syncing Firefox"
 	@just firefox_sync
 	@scripts/step outer 6 7 🔄 "Syncing treesitter"
@@ -56,7 +56,7 @@ sync-all:
 	@scripts/step outer 4 5 📝 "Syncing notes configs"
 	@just notes_config_sync
 	@scripts/step outer 5 5 📦 "Updating submodules"
-	@just update_submods
+	@just submods_update
 
 # Format markdown files with prettier.
 [group('format')]
@@ -71,11 +71,6 @@ stylua_config:
 	@printf "🎨 Formatting all Lua config files with stylua...\n"
 	@fd . 'config/' -e lua -j 4 -x sh -c 'stylua "$1" > /dev/null 2>&1 || true' sh {}
 	@printf "✅ Lua files formatted\n"
-
-# Dump current Homebrew packages to Brewfile.
-[group('packages')]
-update_brewfile:
-	@./scripts/ops/dump-brewfile
 
 # Audit Firefox config for drift against tracked user.js/policies.json.
 [group('firefox')]
@@ -153,8 +148,8 @@ raycast_import:
 	@open "raycast://extensions/raycast/raycast/import-settings-data"
 
 # Pull latest submodule revisions.
-[group('submodules')]
-update_submods:
+[group('update')]
+submods_update:
 	@printf "📦 Pulling latest submodules...\n"
 	git submodule update --recursive --remote
 	@printf "✅ Submodules up to date\n"
@@ -255,3 +250,57 @@ dropbox_finish:
 	echo "One-time step (Dropbox has no command for it): in Finder, right-click"
 	echo "$notes and choose 'Make available offline', so zk, rg and nvim never"
 	echo "meet an online-only placeholder. just doctor reports any placeholders left."
+
+# Update nvim plugins (lazy.nvim sync; lazy-lock.json changes in the repo).
+[group('update')]
+nvim_update:
+	@printf "💤 Syncing nvim plugins (Lazy sync)...\n"
+	@nvim --headless "+Lazy! sync" +qa
+	@printf "✅ nvim plugins synced (review git diff config/nvim/lazy-lock.json)\n"
+
+# Move the zsh plugin pins to the latest upstream commit, then check the local clones out there.
+[group('update')]
+zsh_plugins_update:
+	#!/usr/bin/env bash
+	set -Eeuo pipefail
+	f=config/zsh/conf.d/08-z1-plugins.zsh
+	for pin in $(grep -oE '[a-z0-9-]+/[a-z0-9-]+@[0-9a-f]{40}' "$f"); do
+	    repo="${pin%@*}"
+	    new="$(git ls-remote "https://github.com/$repo" HEAD | cut -f1)"
+	    [[ -n "$new" ]] || { echo "could not read $repo"; exit 1; }
+	    sed -i '' "s|$pin|$repo@$new|" "$f"
+	    dir="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/plugins/${repo#*/}"
+	    if [[ -d "$dir/.git" ]]; then
+	        git -C "$dir" fetch -q --depth 1 origin "$new" && git -C "$dir" checkout -q "$new"
+	    fi
+	    echo "$repo -> ${new:0:12}"
+	done
+
+# Update everything that is pinned in the repo: nvim, zsh plugins, yazi, treesitter, submodules.
+[group('update')]
+update-all:
+	@scripts/step outer 1 5 💤 "nvim plugins"
+	@just nvim_update
+	@scripts/step outer 2 5 🐚 "zsh plugin pins"
+	@just zsh_plugins_update
+	@scripts/step outer 3 5 🐱 "yazi plugins"
+	@just yazi_plugins_upgrade
+	@scripts/step outer 4 5 🔄 "treesitter parsers"
+	@just treesitter_update
+	@scripts/step outer 5 5 📦 "submodules"
+	@just submods_update
+
+# Read-only: what would update (Homebrew, zsh plugin pins, submodules).
+[group('update')]
+outdated:
+	#!/usr/bin/env bash
+	set -Eeuo pipefail
+	echo "── Homebrew (greedy) ──"
+	HOMEBREW_NO_AUTO_UPDATE=1 brew outdated --greedy || true
+	echo "── zsh plugin pins ──"
+	for pin in $(grep -oE '[a-z0-9-]+/[a-z0-9-]+@[0-9a-f]{40}' config/zsh/conf.d/08-z1-plugins.zsh); do
+	    repo="${pin%@*}"; new="$(git ls-remote "https://github.com/$repo" HEAD | cut -f1)"
+	    [[ "$new" == "${pin#*@}" ]] && echo "$repo: current" || echo "$repo: ${pin#*@} -> $new"
+	done
+	echo "── submodules ──"
+	git submodule status
