@@ -1,0 +1,134 @@
+# Weekly upkeep (node N13).
+#
+# scoreboard: on a clean macOS runner, translate the work profile's rendered
+#   Brewfile into a throwaway mise config, one group per module, and record
+#   pass or fail per group. mise is used ONLY here, never on the Macs and
+#   never in the install path. Docs read 2026-11-11:
+#   https://mise.jdx.dev/bootstrap/packages/ (brew:/brew-cask: entries,
+#   `mise bootstrap packages apply`; taps are not documented, so tap
+#   packages use their full tap/name).
+# update: move every pin (nvim lazy-lock, yazi package.toml, zsh plugin
+#   pins, submodules), append the scoreboard row, open ONE pull request, wait
+#   for every check, and merge only when all are green. A red run leaves the
+#   PR open.
+#
+# Scheduled workflows run from the default branch, so this starts once the
+# branch is merged. Pull requests opened with the default GITHUB_TOKEN do
+# not trigger CI; set the UPDATE_PR_TOKEN secret (a token that may push and
+# open PRs) so the checks run and the merge gate means something.
+name: weekly
+
+on:
+  schedule:
+    - cron: "17 3 * * 1" # Mondays 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: weekly
+  cancel-in-progress: false
+
+jobs:
+  scoreboard:
+    name: mise scoreboard (work)
+    runs-on: macos-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install mise (CI only)
+        run: |
+          curl -fsSL https://mise.run | sh
+          echo "$HOME/.local/bin" >>"$GITHUB_PATH"
+      - name: Try each module with mise
+        run: |
+          set -euo pipefail
+          version="$(mise --version | head -1)"
+          row="| $(date -u +%Y-%m-%d) | ${version} |"
+          passed=0
+          total=0
+          for mod in $(sed -n 's/^# module: //p' generated/work/Brewfile); do
+            total=$((total + 1))
+            dir="$(mktemp -d)"
+            {
+              echo "[bootstrap.packages]"
+              awk -v m="$mod" '/^# module: /{cur=$3; next} cur==m && /^brew /{gsub(/"/,"",$2); print "\"brew:" $2 "\" = { os = \"macos\" }"}
+                               cur==m && /^cask /{gsub(/"/,"",$2); print "\"brew-cask:" $2 "\" = { os = \"macos\" }"}' generated/work/Brewfile
+            } >"$dir/mise.toml"
+            if (cd "$dir" && mise trust -q . && mise bootstrap packages apply --yes) >"$dir/log" 2>&1; then
+              row="$row ✓ $mod"
+              passed=$((passed + 1))
+            else
+              row="$row ✗ $mod"
+              tail -20 "$dir/log"
+            fi
+          done
+          echo "$row ($passed/$total) |" | tee scoreboard-row.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: scoreboard-row
+          path: scoreboard-row.txt
+
+  update:
+    name: update pins and open one PR
+    needs: scoreboard
+    if: always()
+    runs-on: macos-latest
+    timeout-minutes: 360
+    env:
+      GH_TOKEN: ${{ secrets.UPDATE_PR_TOKEN || github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.UPDATE_PR_TOKEN || github.token }}
+      - uses: extractions/setup-just@v4
+      - name: Tools for the update recipes
+        run: brew install neovim yazi tree-sitter-cli
+      - name: Move the pins
+        run: |
+          set -euo pipefail
+          just zsh_plugins_update
+          git submodule update --init --remote submods/core/dotbot submods/plugins/tpm
+          # nvim and yazi read the repo's own config through a throwaway XDG home
+          sandbox="$(mktemp -d)"
+          mkdir -p "$sandbox/config"
+          ln -s "$PWD/config/nvim" "$sandbox/config/nvim"
+          XDG_CONFIG_HOME="$sandbox/config" nvim --headless "+Lazy! sync" +qa
+          YAZI_CONFIG_HOME="$PWD/config/yazi" ya pkg upgrade
+      - uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: scoreboard-row
+      - name: Append the scoreboard row
+        run: |
+          if [ -f scoreboard-row.txt ]; then
+            cat scoreboard-row.txt >>docs/plan/mise-scoreboard.md
+            rm scoreboard-row.txt
+          fi
+      - name: Open the PR, wait for every check, merge only if all are green
+        run: |
+          set -euo pipefail
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "Nothing moved this week."
+            exit 0
+          fi
+          branch="weekly-update/$(date -u +%Y-%m-%d)"
+          git config user.name "dotfiles weekly"
+          git config user.email "dotfiles-weekly@users.noreply.github.com"
+          git switch -c "$branch"
+          git add -A
+          git commit -q -m "chore(submods): weekly update of pinned versions" \
+            -m "nvim lazy-lock, yazi packages, zsh plugin pins, submodules and the mise scoreboard row." \
+            -m "Node: N13"
+          git push -u origin "$branch"
+          gh pr create --base main --head "$branch" --title "Weekly update $(date -u +%Y-%m-%d)" \
+            --body "Automated weekly update (.github/workflows/weekly.yml). Merged only if every check passes."
+          sleep 30
+          if gh pr checks "$branch" --watch --fail-fast; then
+            gh pr merge "$branch" --rebase --delete-branch
+          else
+            echo "A check failed: leaving the PR open for review."
+          fi

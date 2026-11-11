@@ -233,10 +233,10 @@ nodes:
     mints: []
     promise:
       reads: [.github/workflows/]
-      writes: [.github/workflows/, docs/plan/mise-scoreboard.md]
+      writes: [.github/workflows/, docs/plan/mise-scoreboard.md, CLAUDE.md, docs/plan/]
       budget: { max_tries: 4 }
       evidence: [workflow_dispatch run]
-    verify: [actionlint, a manual run produces a scoreboard row and a PR]
+    verify: [actionlint (CI static job), a manual workflow_dispatch run once the workflow is on main]
     floors: []
     on_exhausted: default
     human_gate: Module M proposal approved

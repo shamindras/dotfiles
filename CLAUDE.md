@@ -88,7 +88,8 @@ with `brew bundle`, then runs the units' setup steps in dependency order.
 - `scripts/` - Setup and utility scripts for various components
 - `docs/decisions/` - Decision notes (adr, invariant, pattern, vocab), one fact per file, append-only
 - `docs/plan/` - Overhaul work graph (`graph.yaml`), control file (`program.md`), trial log (`trials.jsonl`)
-- `.github/workflows/ci.yml` - CI: static checks on Linux, static + sandbox tests on macOS per profile
+- `.github/workflows/ci.yml` - CI: static checks + actionlint on Linux, static + sandbox tests on macOS per profile, a real bootstrap per profile
+- `.github/workflows/weekly.yml` - Weekly: one PR moving every pin, merged only when all checks pass; mise scoreboard (`docs/plan/mise-scoreboard.md`)
 - `submods/` - Git submodules (`core/` for dotbot, `plugins/` for runtime plugins)
 - `justfile` - Just command runner tasks
 

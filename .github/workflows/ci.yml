@@ -30,6 +30,8 @@ jobs:
       - uses: extractions/setup-just@v4
       - name: Static checks
         run: just test_static
+      - name: actionlint
+        run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest -color
 
   macos:
     name: macos (${{ matrix.profile }})
