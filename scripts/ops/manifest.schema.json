@@ -344,6 +344,15 @@
               "items": {
                 "type": "string"
               }
+            },
+            "git_name": {
+              "type": "string",
+              "description": "git user.name for this profile."
+            },
+            "git_email": {
+              "type": "string",
+              "pattern": "^[^@\\s]+@[^@\\s]+$",
+              "description": "git user.email; omit to keep it out of the repo (setup-github-auth --email writes ~/.config/dotfiles/gitconfig.local)."
             }
           }
         }

@@ -61,14 +61,15 @@
     ]
   },
   "links_added": {
-    "agreed": "Plan v2, 'The resolver and propagation': programs read one fixed path linked to this profile's generated files (module D, 2026-11-11); module J: per-profile sesh.toml with file-level sesh links",
+    "agreed": "Plan v2, 'The resolver and propagation': programs read one fixed path linked to this profile's generated files (module D, 2026-11-11); module J: per-profile sesh.toml with file-level sesh links; module G: profile git identity at ~/.config/dotfiles/gitconfig",
     "dests": [
       "${XDG_CONFIG_HOME}/dotfiles/env.sh",
       "${XDG_CONFIG_HOME}/dotfiles/env.zsh",
       "${XDG_CONFIG_HOME}/dotfiles/resolved.json",
       "${XDG_CONFIG_HOME}/sesh/dirs.list",
       "${XDG_CONFIG_HOME}/sesh/scripts",
-      "${XDG_CONFIG_HOME}/sesh/sesh.toml"
+      "${XDG_CONFIG_HOME}/sesh/sesh.toml",
+      "${XDG_CONFIG_HOME}/dotfiles/gitconfig"
     ]
   },
   "links_changed": {

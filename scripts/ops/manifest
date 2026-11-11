@@ -404,6 +404,16 @@ def render_profile(m, profile):
         resolved["units"][n] = entry
 
     s = p["settings"]
+    git = ["# %s" % HEADER, "# Profile: %s. Linked to ~/.config/dotfiles/gitconfig;" % profile,
+           "# config/git/config includes it, then ~/.config/dotfiles/gitconfig.local.", "[user]"]
+    if s.get("git_name"):
+        git.append("  name = %s" % s["git_name"])
+    if s.get("git_email"):
+        git.append("  email = %s" % s["git_email"])
+    else:
+        git.append("  # email: not in the repo for this profile; setup-github-auth --email writes gitconfig.local")
+    git += ["  signingkey = ~/.ssh/id_ed25519_github.pub", '[gpg "ssh"]',
+            "  allowedSignersFile = ~/.config/dotfiles/allowed_signers"]
     env = [
         "export REPOS_DIR=\"%s\"" % s["repos_dir"],
         "export NOTES_DIR=\"%s\"" % s["notes_dir"],
@@ -427,6 +437,7 @@ def render_profile(m, profile):
         "resolved.json": json.dumps(resolved, indent=2) + "\n",
         "env.sh": env_sh,
         "env.zsh": env_zsh,
+        "gitconfig": "\n".join(git) + "\n",
     })
     return out
 

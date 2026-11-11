@@ -51,6 +51,7 @@
       "${XDG_CONFIG_HOME}/delta": "config/delta",
       "${XDG_CONFIG_HOME}/dotfiles/env.sh": "generated/work/env.sh",
       "${XDG_CONFIG_HOME}/dotfiles/env.zsh": "generated/work/env.zsh",
+      "${XDG_CONFIG_HOME}/dotfiles/gitconfig": "generated/work/gitconfig",
       "${XDG_CONFIG_HOME}/dotfiles/resolved.json": "generated/work/resolved.json",
       "${XDG_CONFIG_HOME}/fastfetch": "config/fastfetch",
       "${XDG_CONFIG_HOME}/gh": "config/gh",
@@ -115,6 +116,10 @@
       {
         "command": "if command -v gh >/dev/null 2>&1; then gh extension upgrade --all; else echo \"skip gh-dash: needs gh\"; fi",
         "description": "gh-dash: upgrade gh extensions"
+      },
+      {
+        "command": "if command -v gh >/dev/null 2>&1; then ./scripts/setup/setup-github-auth; else echo \"skip git: needs gh\"; fi",
+        "description": "git: SSH key for GitHub (authentication + signing), allowed signers, work email"
       },
       {
         "command": "./scripts/setup/setup-hammerspoon",

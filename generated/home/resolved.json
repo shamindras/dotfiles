@@ -17,7 +17,9 @@
       "notes",
       "play",
       "scratch"
-    ]
+    ],
+    "git_name": "Shamindra Shrotriya",
+    "git_email": "shamindra.shrotriya@gmail.com"
   },
   "order": [
     "1password",
@@ -89,6 +91,7 @@
     "gh-dash",
     "ghostscript",
     "ghostty",
+    "ssh",
     "git",
     "glow",
     "gnupg",
@@ -165,7 +168,6 @@
     "speedtest-cli",
     "spotify",
     "srt",
-    "ssh",
     "starship",
     "stylua",
     "subversion",
@@ -283,6 +285,7 @@
     "gh": "gh",
     "ghostscript": "ghostscript",
     "ghostty": "ghostty",
+    "openssh": "ssh",
     "git": "git",
     "gnupg": "gnupg",
     "gobject-introspection": "gobject-introspection",
@@ -347,7 +350,6 @@
     "speedtest-cli": "speedtest-cli",
     "spotify": "spotify",
     "srt": "srt",
-    "openssh": "ssh",
     "starship": "starship",
     "stylua": "stylua",
     "subversion": "subversion",

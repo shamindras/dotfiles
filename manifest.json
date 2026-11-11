@@ -438,9 +438,17 @@
       "module": "git",
       "brew": ["git"],
       "links": {
-        "${XDG_CONFIG_HOME}/git": "config/git"
+        "${XDG_CONFIG_HOME}/git": "config/git",
+        "${XDG_CONFIG_HOME}/dotfiles/gitconfig": "generated/{profile}/gitconfig"
       },
-      "requires": ["delta"]
+      "setup": [
+        {
+          "command": "./scripts/setup/setup-github-auth",
+          "description": "SSH key for GitHub (authentication + signing), allowed signers, work email",
+          "needs": ["gh"]
+        }
+      ],
+      "requires": ["delta", "gh", "ssh"]
     },
     "glow": {
       "module": "core",
@@ -1074,7 +1082,9 @@
         "notes_dir": "$HOME/Dropbox/notes",
         "remote_login": true,
         "quarantine_warning": false,
-        "sesh_sessions": ["blog", "career", "dots", "feed", "notes", "play", "scratch"]
+        "sesh_sessions": ["blog", "career", "dots", "feed", "notes", "play", "scratch"],
+        "git_name": "Shamindra Shrotriya",
+        "git_email": "shamindra.shrotriya@gmail.com"
       }
     },
     "work": {
@@ -1124,7 +1134,8 @@
         "notes_dir": "$HOME/notes",
         "remote_login": false,
         "quarantine_warning": true,
-        "sesh_sessions": ["dots", "feed", "notes", "scratch"]
+        "sesh_sessions": ["dots", "feed", "notes", "scratch"],
+        "git_name": "Shamindra Shrotriya"
       }
     }
   }

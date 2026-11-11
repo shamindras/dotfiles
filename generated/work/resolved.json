@@ -14,7 +14,8 @@
       "feed",
       "notes",
       "scratch"
-    ]
+    ],
+    "git_name": "Shamindra Shrotriya"
   },
   "order": [
     "font-jetbrains-mono-nerd-font",
@@ -56,6 +57,7 @@
     "gh",
     "gh-dash",
     "ghostty",
+    "ssh",
     "git",
     "glow",
     "gnupg",
@@ -105,7 +107,6 @@
     "shfmt",
     "skim",
     "spotify",
-    "ssh",
     "starship",
     "stylua",
     "system-settings",
@@ -171,6 +172,7 @@
     "fzf": "fzf",
     "gh": "gh",
     "ghostty": "ghostty",
+    "openssh": "ssh",
     "git": "git",
     "gnupg": "gnupg",
     "gum": "gum",
@@ -207,7 +209,6 @@
     "shfmt": "shfmt",
     "skim": "skim",
     "spotify": "spotify",
-    "openssh": "ssh",
     "starship": "starship",
     "stylua": "stylua",
     "taplo": "taplo",
