@@ -197,8 +197,9 @@ test_sandbox:
 	@scripts/test/sandbox-install
 	@scripts/step inner 3 4 "doctor is read-only"
 	@scripts/test/check-doctor
-	@scripts/step inner 4 4 "dropbox_finish against a fake Dropbox"
+	@scripts/step inner 4 4 "dropbox_finish and GitHub auth against stubs"
 	@scripts/test/check-dropbox
+	@scripts/test/check-github-auth
 	@scripts/step done 📦 "Sandbox tests passed"
 
 # Render generated/<profile>/ and generated/compare.md from manifest.json.

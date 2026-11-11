@@ -37,6 +37,17 @@ no_match() {
     }
 }
 
+# has_no <regex> <pathspec...> — like no_match, but transitional lines count.
+has_no() {
+    local regex=$1 hits
+    shift
+    hits="$(git grep -nIE "$regex" -- "$@" "${EXCLUDE[@]}" || true)"
+    [[ -z "$hits" ]] || {
+        printf '%s\n' "$hits" | head -5
+        return 1
+    }
+}
+
 t_header "path gates"
 gate N4 "no DROPBOX_REPOS_DIR or DROPBOX_NOTES_DIR" config scripts justfile -- 'DROPBOX_(REPOS|NOTES)_DIR'
 gate N4 "no Dropbox repo or notes paths in config, scripts or justfile" \
@@ -44,6 +55,12 @@ gate N4 "no Dropbox repo or notes paths in config, scripts or justfile" \
 gate N10 "no Dropbox repo or notes paths in sesh.toml" config/sesh/sesh.toml -- 'Dropbox/(repos|notes)'
 gate N5 "no Dropbox in bootstrap or install" bootstrap install -- '[Dd]ropbox'
 gate N4 "no /Users/<name> paths outside git config" config scripts ':!config/git/config' -- '/Users/[a-z]'
-gate N7 "no /Users/<name> path in git config" config/git/config -- '/Users/[a-z]'
+gate N7 "no /Users/<name> path in git config" config/git -- '/Users/[a-z]'
+gate N7 "tracked git config has no identity, signing key or ssh rewrite" config/git/config -- '^[[:space:]]*(email|signingkey|insteadOf)[[:space:]]*='
+# Transitional fallbacks keep this Mac working until the move to ~/repos and
+# the auth step (N16); after N16 any one left behind is a failure.
+t_expect N16 "transitional git identity and ssh key are gone" has_no 'transitional' config/git config/ssh
+t_expect N16 "transitional zsh, sesh, hammerspoon and brew-update fallbacks are gone" \
+    has_no 'transitional' config/zsh config/sesh config/hammerspoon config/bin
 
 t_summary "check-paths"

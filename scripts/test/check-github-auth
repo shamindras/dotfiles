@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+#
+# check-github-auth — setup-github-auth's state table against a stubbed gh in
+# a throwaway HOME. Never calls the real gh, never touches the real ~/.ssh.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+SCRIPT="$TEST_REPO/scripts/setup/setup-github-auth"
+T="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-auth.XXXXXX")"
+trap 'rm -rf "$T"' EXIT
+mkdir -p "$T/home" "$T/state" "$T/bin"
+
+# Stub gh: login and scopes from env; keys kept as "<key>\t<title>" lines.
+cat >"$T/bin/gh" <<'EOF'
+#!/usr/bin/env bash
+state="$STUB_STATE"
+case "$1 $2" in
+    "auth status")
+        [[ "${STUB_LOGGED_IN:-1}" == 1 ]] || exit 1
+        echo "  - Token scopes: ${STUB_SCOPES:-'admin:public_key', 'admin:ssh_signing_key', 'repo'}"
+        ;;
+    "api user/keys") cat "$state/authentication" 2>/dev/null || true ;;
+    "api user/ssh_signing_keys") cat "$state/signing" 2>/dev/null || true ;;
+    "ssh-key add")
+        file=$3 type="" title=""
+        shift 3
+        while [[ $# -gt 0 ]]; do
+            case "$1" in --type) type=$2 && shift ;; --title) title=$2 && shift ;; esac
+            shift
+        done
+        printf '%s\t%s\n' "$(awk '{print $1, $2}' "$file")" "$title" >>"$state/$type"
+        echo "add $type" >>"$state/calls"
+        ;;
+    *) echo "stub gh: unexpected $*" >&2 && exit 9 ;;
+esac
+EOF
+chmod +x "$T/bin/gh"
+
+run() { # run [args...] — the script in the throwaway HOME with the stub
+    env -i HOME="$T/home" PATH="/usr/bin:/bin:/usr/sbin" GH="$T/bin/gh" STUB_STATE="$T/state" \
+        STUB_LOGGED_IN="${STUB_LOGGED_IN:-1}" STUB_SCOPES="${STUB_SCOPES:-}" \
+        GIT_CONFIG_NOSYSTEM=1 "$SCRIPT" "$@" </dev/null >"$T/out" 2>&1
+}
+calls() { [[ -f "$T/state/calls" ]] && wc -l <"$T/state/calls" | tr -d ' ' || echo 0; }
+ok() { if "$@"; then return 0; else sed 's/^/        /' "$T/out" | head -10 && return 1; fi; }
+
+t_header "github auth (stubbed gh)"
+
+STUB_LOGGED_IN=0 run && rc=0 || rc=$?
+if [[ $rc -eq 0 ]] && grep -q 'gh auth login --web' "$T/out" && [[ ! -e "$T/home/.ssh/id_ed25519_github" ]]; then
+    t_pass "not logged in: prints gh auth login, makes no key"
+else t_fail "not logged in" && sed 's/^/        /' "$T/out"; fi
+
+STUB_SCOPES="'repo'" run && rc=0 || rc=$?
+if [[ $rc -eq 0 ]] && grep -q 'gh auth refresh -h github.com -s admin:public_key,admin:ssh_signing_key' "$T/out"; then
+    t_pass "missing scopes: prints the refresh command"
+else t_fail "missing scopes" && sed 's/^/        /' "$T/out"; fi
+
+run && rc=0 || rc=$?
+key="$T/home/.ssh/id_ed25519_github"
+if ok [ "$rc" -eq 0 ] && [[ -f "$key" && "$(stat -f '%Lp' "$key")" == 600 ]]; then
+    t_pass "no key: creates one, mode 600"
+else t_fail "key creation"; fi
+if [[ "$(calls)" == 2 ]]; then t_pass "registers it twice (authentication, signing)"; else t_fail "expected 2 gh ssh-key add calls, got $(calls)"; fi
+if grep -q 'skip git email' "$T/out" && [[ ! -e "$T/home/.config/dotfiles/gitconfig.local" ]]; then
+    t_pass "no email and no terminal: prints the --email command, writes nothing"
+else t_fail "email skip on a non-terminal"; fi
+
+run --email work.person@example.com && rc=0 || rc=$?
+local_file="$T/home/.config/dotfiles/gitconfig.local"
+if [[ $rc -eq 0 ]] && grep -q 'email = work.person@example.com' "$local_file" &&
+    grep -q '^work.person@example.com ssh-ed25519 ' "$T/home/.config/dotfiles/allowed_signers"; then
+    t_pass "--email writes gitconfig.local and allowed_signers outside the repo"
+else t_fail "--email" && sed 's/^/        /' "$T/out"; fi
+if [[ "$(calls)" == 2 ]]; then t_pass "second run registers nothing new (idempotent)"; else t_fail "second run added keys: $(calls) calls"; fi
+
+run --email not-an-email && rc=0 || rc=$?
+if [[ $rc -ne 0 ]] && grep -q 'email = work.person@example.com' "$local_file"; then
+    t_pass "a bad --email is refused and the file is kept"
+else t_fail "bad email handling"; fi
+
+printf 'not a key\n' >"$key"
+run && rc=0 || rc=$?
+replaced=("$T"/home/.ssh/id_ed25519_github.replaced-*)
+if [[ $rc -eq 0 && -e "${replaced[0]}" ]] && ssh-keygen -y -f "$key" >/dev/null 2>&1; then
+    t_pass "unreadable key: renamed .replaced-DATE, new key made"
+else t_fail "unreadable key handling" && sed 's/^/        /' "$T/out"; fi
+if grep -q 'older authentication keys named after this Mac' "$T/out"; then
+    t_pass "the old registered key is reported, not deleted"
+else t_fail "stale key not reported"; fi
+if ! grep -qE 'BEGIN OPENSSH|ssh-ed25519 AAAA' "$T/out"; then
+    t_pass "no key material in the output"
+else t_fail "key material printed"; fi
+
+t_summary "check-github-auth"

@@ -127,14 +127,14 @@ nodes:
     title: Git identity and GitHub auth
     objective: No identity or SSH dependency in tracked config; one idempotent auth step.
     depends_on: [N3]
-    honors: [adr-06-git-identity, adr-07-home-github-auth, adr-08-work-github-auth, inv-bootstrap-no-ssh-key]
+    honors: [adr-06-git-identity-2, adr-07-home-github-auth, adr-08-work-github-auth, inv-bootstrap-no-ssh-key]
     mints: []
     promise:
       reads: [config/git/, config/ssh/, .gitmodules]
-      writes: [config/git/, config/ssh/, .gitmodules, README.md, scripts/setup/setup-github-auth, scripts/test/]
+      writes: [config/git/, config/ssh/, config/gh/, .gitmodules, README.md, scripts/setup/setup-github-auth, scripts/test/, scripts/ops/, manifest.json, generated/, docs/, justfile, scripts/CLAUDE.md]
       budget: { max_tries: 4 }
       evidence: [auth state table test output]
-    verify: [git config --file config/git/config --list has no identity, auth state table tested with gh stubbed]
+    verify: [scripts/test/check-paths (git gates), scripts/test/check-github-auth (stubbed gh), signed probe commit with the live config]
     floors: [home parity]
     on_exhausted: default
     human_gate: Module G proposal approved
