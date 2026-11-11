@@ -9,10 +9,16 @@
       "trusted": true
     }
   },
+  "roles": {
+    "browser": {
+      "leader": "b",
+      "note": "Leader o b / q b open and quit whichever browser the profile names."
+    }
+  },
   "modules": {
     "apps": {
       "note": "Browsers, password manager, Claude, meetings, and the macOS apps the leader opens.",
-      "cask": ["1password-cli", "claude-code", "google-chrome", "microsoft-teams", "zoom"]
+      "cask": ["1password-cli", "claude-code", "microsoft-teams", "zoom"]
     },
     "core": {
       "note": "Shell, navigation and everyday command-line tools.",
@@ -325,7 +331,6 @@
       "app": {
         "path": "/Applications/Firefox.app",
         "bundle_id": "org.mozilla.firefox",
-        "leader": "b",
         "label": "firefox",
         "process": "Firefox",
         "workspace": "B",
@@ -391,6 +396,19 @@
       "note": "Config kept; glow is not in the Brewfile today.",
       "links": {
         "${XDG_CONFIG_HOME}/glow": "config/glow"
+      }
+    },
+    "google-chrome": {
+      "module": "apps",
+      "cask": ["google-chrome"],
+      "app": {
+        "path": "/Applications/Google Chrome.app",
+        "bundle_id": "com.google.Chrome",
+        "label": "chrome",
+        "process": "Google Chrome",
+        "quit_label": "Chrome",
+        "workspace": "B",
+        "quit_workspace": "W"
       }
     },
     "hammerspoon": {
@@ -862,7 +880,46 @@
         "repos_dir": "$HOME/repos",
         "notes_dir": "$HOME/Dropbox/notes",
         "remote_login": true,
-        "quarantine_warning": false
+        "quarantine_warning": false,
+        "sesh_sessions": ["blog", "career", "dots", "feed", "notes", "play", "scratch"]
+      }
+    },
+    "work": {
+      "note": "The Xero work Mac: the decision-5 modules plus lint and notes, with per-package choices from the package review page (2026-11-10). Chrome and Claude come from Xero (external).",
+      "modules": ["core", "data-science", "desktop", "editor", "git", "lint", "notes", "terminal"],
+      "units": {
+        "books": "managed",
+        "claude": "external",
+        "djvulibre": "managed",
+        "duckdb": "off",
+        "ffmpeg": "managed",
+        "finder": "managed",
+        "font-commit-mono-nerd-font": "managed",
+        "gdal": "off",
+        "google-chrome": "external",
+        "imagemagick": "managed",
+        "newsboat": "managed",
+        "pandoc": "managed",
+        "poppler": "managed",
+        "preview": "managed",
+        "quarto": "off",
+        "r": "off",
+        "rstudio": "off",
+        "shottr": "off",
+        "skim": "managed",
+        "spotify": "managed",
+        "textedit": "managed",
+        "xquartz": "off"
+      },
+      "roles": {
+        "browser": "google-chrome"
+      },
+      "settings": {
+        "repos_dir": "$HOME/repos",
+        "notes_dir": "$HOME/notes",
+        "remote_login": false,
+        "quarantine_warning": true,
+        "sesh_sessions": ["dots", "feed", "notes", "scratch"]
       }
     }
   }

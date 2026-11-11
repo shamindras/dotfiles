@@ -52,6 +52,23 @@
       },
       "additionalProperties": false
     },
+    "roles": {
+      "type": "object",
+      "description": "Roles a profile fills with one of its units; a role may own a leader key (bound to whichever unit fills it).",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "leader": {
+            "type": "string",
+            "pattern": "^[a-z0-9]$"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "profiles": {
       "type": "object",
       "patternProperties": {

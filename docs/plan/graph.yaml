@@ -114,10 +114,10 @@ nodes:
     mints: []
     promise:
       reads: [manifest.json]
-      writes: [manifest.json, generated/work/, docs/]
+      writes: [manifest.json, generated/, docs/, scripts/ops/manifest, scripts/ops/manifest.schema.json, scripts/test/, .github/workflows/ci.yml, scripts/CLAUDE.md]
       budget: { max_tries: 4 }
       evidence: [home versus work comparison]
-    verify: [just manifest_check, just manifest_diff, sandbox install of work]
+    verify: [just manifest_check, scripts/test/check-parity, sandbox install of work (scripts/test/sandbox-install)]
     floors: [home parity]
     on_exhausted: default
     human_gate: resolved work profile approved

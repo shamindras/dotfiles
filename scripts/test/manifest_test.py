@@ -28,6 +28,7 @@ SETTINGS = {"repos_dir": "$HOME/repos", "notes_dir": "$HOME/notes", "remote_logi
 BASE = {
     "schema_version": 1,
     "taps": {"acme/tap": {"trusted": True}},
+    "roles": {"browser": {"note": "fixture role"}},
     "modules": {
         "core": {"note": "core tools", "brew": ["fd", "ripgrep"]},
         "desktop": {"note": "desktop", "cask": ["acme/tap/winmgr"]},
@@ -148,6 +149,22 @@ class RulesTest(unittest.TestCase):
         m = manifest(**{"units__music__app__leader": "t"})
         self.assertEqual(mf.resolve(m, "home")[3], ["profile home: leader key t is used by music and term"])
         self.assertEqual(mf.resolve(m, "work")[3], [])
+
+    def test_role_leader_goes_to_the_unit_filling_the_role(self):
+        m = manifest(**{"roles__browser__leader": "r"})
+        states = mf.resolve(m, "work")[0]
+        self.assertEqual(mf.leader_map(m, "work", states)[0]["r"], "browser")
+        resolved = json.loads(mf.render_profile(m, "work")["resolved.json"])
+        self.assertEqual(resolved["leaders"]["r"], "browser")
+
+    def test_role_leader_clashing_with_a_unit_key_fails(self):
+        m = manifest(**{"roles__browser__leader": "t"})
+        self.assertIn("profile work: leader key t is used by term and browser", mf.resolve(m, "work")[3])
+
+    def test_unknown_role_fails(self):
+        m = manifest()
+        m["profiles"]["home"]["roles"]["editor"] = "term"
+        self.assertTrue(any("editor" in e for e in errors(m)))
 
     def test_package_declared_twice_fails(self):
         m = manifest()

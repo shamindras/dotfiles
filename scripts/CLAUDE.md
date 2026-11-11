@@ -89,7 +89,9 @@ validator, so no pip packages are needed. It runs at edit time and in CI only;
 a fresh Mac installs from the committed `generated/` files. Model: units own
 config, setup, service, `requires` and an `app` block; plain packages are
 one-word entries in a module list (each becomes an implicit unit named after
-the package). Each profile turns modules on and overrides single units as
+the package). Top-level `roles` (today: `browser`) can own a leader key; each
+profile names the unit that fills the role, and `resolved.json` carries the
+final `leaders` map (key to unit) per profile. Each profile turns modules on and overrides single units as
 `managed`, `external` (on the Mac, installed by someone else: links and app
 block kept, no package or setup) or `off`. `requires` pulls units in; a
 required unit the profile turned off is an error naming both. Setup steps with

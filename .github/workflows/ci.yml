@@ -2,8 +2,8 @@
 #
 # static:  Linux, layer 1 (just test_static).
 # macos:   one job per profile, layers 1 and 2 (just test).
-# bootstrap: layer 3, a real ./bootstrap on a clean runner, then the static
-#          checks again (work joins with node N6).
+# bootstrap: layer 3, a real ./bootstrap per profile on a clean runner, then a
+#          second links-only run.
 # Every PASS, FAIL, XFAIL, XPASS and SKIP line goes to the run summary.
 name: ci
 
@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        profile: [home]
+        profile: [home, work]
     steps:
       - uses: actions/checkout@v7
         with:

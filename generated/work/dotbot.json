@@ -1,0 +1,155 @@
+[
+  {
+    "defaults": {
+      "link": {
+        "create": true,
+        "relink": true
+      },
+      "shell": {
+        "stdin": false,
+        "stdout": true,
+        "stderr": true
+      }
+    }
+  },
+  {
+    "create": [
+      "${XDG_BIN_HOME}",
+      "${XDG_CONFIG_HOME}",
+      "${XDG_CACHE_HOME}",
+      "${XDG_DATA_HOME}",
+      "${XDG_STATE_HOME}",
+      "${XDG_RUNTIME_DIR}",
+      "${XDG_PROJECTS_DIR}",
+      "${XDG_DATA_HOME}/tmux/plugins"
+    ]
+  },
+  {
+    "clean": {
+      "~/": {
+        "force": true
+      },
+      "~/.config": {
+        "force": true
+      }
+    }
+  },
+  {
+    "link": {
+      "${HOME}/.zshenv": "config/zsh/.zshenv",
+      "${HOME}/Library/Application Support/Code/User/keybindings.json": "config/vscode/keybindings.json",
+      "${HOME}/Library/Application Support/Code/User/settings.json": "config/vscode/settings.json",
+      "${HOME}/Library/Application Support/espanso": "config/espanso",
+      "${XDG_CONFIG_HOME}/aerospace": "config/aerospace",
+      "${XDG_CONFIG_HOME}/atuin": "config/atuin",
+      "${XDG_CONFIG_HOME}/bat": "config/bat",
+      "${XDG_CONFIG_HOME}/bin": "config/bin",
+      "${XDG_CONFIG_HOME}/borders": "config/borders",
+      "${XDG_CONFIG_HOME}/bottom": "config/bottom",
+      "${XDG_CONFIG_HOME}/btop": "config/btop",
+      "${XDG_CONFIG_HOME}/curl/.curlrc": "config/curl/curlrc",
+      "${XDG_CONFIG_HOME}/delta": "config/delta",
+      "${XDG_CONFIG_HOME}/dotfiles/env.sh": "generated/work/env.sh",
+      "${XDG_CONFIG_HOME}/dotfiles/env.zsh": "generated/work/env.zsh",
+      "${XDG_CONFIG_HOME}/dotfiles/resolved.json": "generated/work/resolved.json",
+      "${XDG_CONFIG_HOME}/fastfetch": "config/fastfetch",
+      "${XDG_CONFIG_HOME}/gh": "config/gh",
+      "${XDG_CONFIG_HOME}/gh-dash": "config/gh-dash",
+      "${XDG_CONFIG_HOME}/ghostty": "config/ghostty",
+      "${XDG_CONFIG_HOME}/git": "config/git",
+      "${XDG_CONFIG_HOME}/glow": "config/glow",
+      "${XDG_CONFIG_HOME}/hammerspoon": "config/hammerspoon",
+      "${XDG_CONFIG_HOME}/lazygit": "config/lazygit",
+      "${XDG_CONFIG_HOME}/marimo": "config/marimo",
+      "${XDG_CONFIG_HOME}/newsboat": "config/newsboat",
+      "${XDG_CONFIG_HOME}/npm": "config/npm",
+      "${XDG_CONFIG_HOME}/nvim": "config/nvim",
+      "${XDG_CONFIG_HOME}/parallel": "config/parallel",
+      "${XDG_CONFIG_HOME}/python": "config/python",
+      "${XDG_CONFIG_HOME}/ripgrep": "config/ripgrep",
+      "${XDG_CONFIG_HOME}/sesh": "config/sesh",
+      "${XDG_CONFIG_HOME}/sketchybar": "config/sketchybar",
+      "${XDG_CONFIG_HOME}/ssh": "config/ssh",
+      "${XDG_CONFIG_HOME}/starship": "config/starship",
+      "${XDG_CONFIG_HOME}/stylua": "config/stylua",
+      "${XDG_CONFIG_HOME}/tealdeer": "config/tealdeer",
+      "${XDG_CONFIG_HOME}/television": "config/television",
+      "${XDG_CONFIG_HOME}/tmux": "config/tmux",
+      "${XDG_CONFIG_HOME}/tmux/plugins/tpm": "submods/plugins/tpm",
+      "${XDG_CONFIG_HOME}/wezterm": "config/wezterm",
+      "${XDG_CONFIG_HOME}/wget": "config/wget",
+      "${XDG_CONFIG_HOME}/yazi": "config/yazi",
+      "${XDG_CONFIG_HOME}/zk": "config/zk",
+      "${XDG_CONFIG_HOME}/zsh": "config/zsh",
+      "${HOME}/.ssh/config": "${XDG_CONFIG_HOME}/ssh/config"
+    }
+  },
+  {
+    "shell": [
+      {
+        "command": "if command -v brew >/dev/null 2>&1; then brew services restart borders; else echo \"skip borders: needs brew\"; fi",
+        "description": "borders: restart the borders service"
+      },
+      {
+        "command": "chmod -R +x ${XDG_CONFIG_HOME}/sketchybar/plugins/",
+        "description": "sketchybar: make sketchybar plugins executable"
+      },
+      {
+        "command": "if command -v brew >/dev/null 2>&1; then brew services restart sketchybar; else echo \"skip sketchybar: needs brew\"; fi",
+        "description": "sketchybar: restart the sketchybar service"
+      },
+      {
+        "command": "if command -v bat >/dev/null 2>&1; then command bat cache --build; else echo \"skip bat: needs bat\"; fi",
+        "description": "bat: build the bat theme cache"
+      },
+      {
+        "command": "if command -v espanso >/dev/null 2>&1; then espanso service register; else echo \"skip espanso: needs espanso\"; fi",
+        "description": "espanso: register the espanso service"
+      },
+      {
+        "command": "if command -v gh >/dev/null 2>&1; then gh extension install dlvhdr/gh-dash; else echo \"skip gh-dash: needs gh\"; fi",
+        "description": "gh-dash: install the gh-dash extension"
+      },
+      {
+        "command": "if command -v gh >/dev/null 2>&1; then gh extension upgrade --all; else echo \"skip gh-dash: needs gh\"; fi",
+        "description": "gh-dash: upgrade gh extensions"
+      },
+      {
+        "command": "./scripts/setup/setup-hammerspoon",
+        "description": "hammerspoon: set MJConfigFile and load the hidutil LaunchAgent"
+      },
+      {
+        "command": "./scripts/setup/setup-macos",
+        "description": "macos: apply macOS defaults"
+      },
+      {
+        "command": "if command -v npm >/dev/null 2>&1; then npm install -g eslint_d prettier; else echo \"skip node: needs npm\"; fi",
+        "description": "node: install eslint_d and prettier with npm"
+      },
+      {
+        "command": "if command -v nvim >/dev/null 2>&1; then ./scripts/ops/setup-nvim-treesitter; else echo \"skip nvim: needs nvim\"; fi",
+        "description": "nvim: pre-install treesitter parsers"
+      },
+      {
+        "command": "./scripts/setup/setup-upgrade-rust-cargo",
+        "description": "rust: install or upgrade rust and cargo"
+      },
+      {
+        "command": "if command -v tmux >/dev/null 2>&1; then [ -x \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" ] && \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" || true; else echo \"skip tmux: needs tmux\"; fi",
+        "description": "tmux: install tmux plugins with TPM"
+      },
+      {
+        "command": "if command -v tldr >/dev/null 2>&1; then tldr --update; else echo \"skip tealdeer: needs tldr\"; fi",
+        "description": "tealdeer: update the tldr cache"
+      },
+      {
+        "command": "if command -v ya >/dev/null 2>&1; then ya pkg install; else echo \"skip yazi: needs ya\"; fi",
+        "description": "yazi: install yazi plugins and flavors"
+      },
+      {
+        "command": "if command -v zk >/dev/null 2>&1; then ./scripts/setup/setup-zk; else echo \"skip zk: needs zk\"; fi",
+        "description": "zk: set up the zk notebook"
+      }
+    ]
+  }
+]

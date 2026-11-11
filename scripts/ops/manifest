@@ -198,6 +198,8 @@ def semantic_errors(m, root=REPO, check_files=True):
             if u not in names:
                 errs.append("profile %s: override for unknown unit %s" % (pname, u))
         for role, u in p.get("roles", {}).items():
+            if role not in m.get("roles", {}):
+                errs.append("profile %s: unknown role %s" % (pname, role))
             if u not in units or "app" not in units[u]:
                 errs.append("profile %s: role %s names %s, which is not a unit with an app block" % (pname, role, u))
     return errs
@@ -236,14 +238,31 @@ def resolve(m, profile):
         if states.get(u, "off") == "off":
             errs.append("profile %s: role %s names %s, which is off" % (profile, role, u))
     on = sorted(n for n, s in states.items() if s != "off")
-    leaders = {}
-    for n in on:
+    _, lerrs = leader_map(m, profile, states)
+    errs += lerrs
+    return states, reasons, topo_order(units, on), errs
+
+
+def leader_map(m, profile, states):
+    """Leader key -> unit for one profile: unit app keys plus role keys
+    (a role's key goes to the unit that fills the role). Returns (map, errors)."""
+    units = all_units(m)
+    leaders, errs = {}, []
+
+    def claim(key, who):
+        if key in leaders:
+            errs.append("profile %s: leader key %s is used by %s and %s" % (profile, key, leaders[key], who))
+        leaders[key] = who
+
+    for n in sorted(n for n, s in states.items() if s != "off"):
         key = units[n].get("app", {}).get("leader")
         if key:
-            if key in leaders:
-                errs.append("profile %s: leader key %s is used by %s and %s" % (profile, key, leaders[key], n))
-            leaders[key] = n
-    return states, reasons, topo_order(units, on), errs
+            claim(key, n)
+    for role, spec in sorted(m.get("roles", {}).items()):
+        unit = m["profiles"][profile].get("roles", {}).get(role)
+        if spec.get("leader") and unit and states.get(unit, "off") != "off":
+            claim(spec["leader"], unit)
+    return dict(sorted(leaders.items())), errs
 
 
 def topo_order(units, on):
@@ -366,6 +385,7 @@ def render_profile(m, profile):
         "roles": p.get("roles", {}),
         "settings": p["settings"],
         "order": on,
+        "leaders": leader_map(m, profile, states)[0],
         "units": {},
     }
     for n in sorted(on):
@@ -486,6 +506,8 @@ def canonical(m):
     if "note" in m:
         out["note"] = m["note"]
     out["taps"] = dict(sorted(m["taps"].items()))
+    if "roles" in m:
+        out["roles"] = dict(sorted(m["roles"].items()))
     out["modules"] = dict(sorted(m["modules"].items()))
     out["units"] = {
         n: {k: m["units"][n][k] for k in UNIT_KEYS if k in m["units"][n]} for n in sorted(m["units"])

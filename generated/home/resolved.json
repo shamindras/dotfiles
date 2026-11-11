@@ -8,7 +8,16 @@
     "repos_dir": "$HOME/repos",
     "notes_dir": "$HOME/Dropbox/notes",
     "remote_login": true,
-    "quarantine_warning": false
+    "quarantine_warning": false,
+    "sesh_sessions": [
+      "blog",
+      "career",
+      "dots",
+      "feed",
+      "notes",
+      "play",
+      "scratch"
+    ]
   },
   "order": [
     "1password",
@@ -178,6 +187,26 @@
     "zotero",
     "zsh"
   ],
+  "leaders": {
+    "1": "1password",
+    "a": "djview",
+    "b": "firefox",
+    "c": "claude",
+    "d": "preview",
+    "e": "finder",
+    "g": "signal",
+    "i": "books",
+    "m": "spotify",
+    "n": "nordvpn",
+    "p": "skim",
+    "q": "textedit",
+    "s": "vscode",
+    "t": "ghostty",
+    "u": "opensuperwhisper",
+    "v": "vlc",
+    "w": "wezterm",
+    "x": "jdownloader"
+  },
   "units": {
     "1password": {
       "state": "managed",
@@ -412,7 +441,6 @@
       "app": {
         "path": "/Applications/Firefox.app",
         "bundle_id": "org.mozilla.firefox",
-        "leader": "b",
         "label": "firefox",
         "process": "Firefox",
         "workspace": "B",
@@ -573,7 +601,16 @@
     "google-chrome": {
       "state": "managed",
       "module": "apps",
-      "reason": "module apps is on"
+      "reason": "module apps is on",
+      "app": {
+        "path": "/Applications/Google Chrome.app",
+        "bundle_id": "com.google.Chrome",
+        "label": "chrome",
+        "process": "Google Chrome",
+        "quit_label": "Chrome",
+        "workspace": "B",
+        "quit_workspace": "W"
+      }
     },
     "graphviz": {
       "state": "managed",
