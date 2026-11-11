@@ -69,7 +69,7 @@ the subdir already provides that context.
 | `setup-upgrade-rust-cargo`   | Rust toolchain management                                        |
 | `setup-hammerspoon`          | Configure Hammerspoon MJConfigFile + hidutil Caps→F18 LaunchAgent |
 | `setup-upgrade-ttyper`       | Install/upgrade ttyper                                           |
-| `setup-zk`                   | Zettelkasten (zk) setup: notebook dirs, Dropbox-ignore xattr on `.zk/`, starter template seed, corrupt-`notebook.db` recovery |
+| `setup-zk`                   | zk setup at `$ZK_NOTEBOOK_DIR`: notebook dirs; when under Dropbox, both ignore xattrs on `.zk/` (File Provider + legacy) read back; templates; corrupt-`notebook.db` recovery. Exits 0 with a message when the notes have not synced yet |
 | `post-install-hints`         | Print manual post-install steps; suppressed by `DOTFILES_NO_HINTS=1` |
 
 ### ops/
@@ -99,18 +99,19 @@ required unit the profile turned off is an error naming both. Setup steps with
 
 ### test/
 
-| Script              | Recipe         | Checks                                                                           |
-| ------------------- | -------------- | -------------------------------------------------------------------------------- |
-| `self-test`         | `test_static`  | The harness itself, against throwaway fixtures                                   |
-| `manifest_test.py`  | `test_static`  | Resolver unit tests: closure, off-but-required, pairs, leaders, render           |
-| `check-docs`        | `test_static`  | Decision-note front matter, relative links under `docs/`, `docs/plan/graph.yaml` |
-| `check-invariants`  | `test_static`  | Runs each `docs/decisions/inv-*.md` `verify` command                             |
-| `check-paths`       | `test_static`  | Grep gates: repo and notes paths via `REPOS_DIR`/`NOTES_DIR`, no `/Users/<name>` |
-| `check-doctor`      | `test_sandbox` | doctor with `PATH=/usr/bin:/bin` changes nothing; paste block parses             |
-| `check-hammerspoon` | `test_static`  | `apps.lua` builder headless with lua: both profiles, off units, baseline tables  |
-| `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`     |
-| `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME     |
-| `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                 |
+| Script              | Recipe         | Checks                                                                                    |
+| ------------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `self-test`         | `test_static`  | The harness itself, against throwaway fixtures                                            |
+| `manifest_test.py`  | `test_static`  | Resolver unit tests: closure, off-but-required, pairs, leaders, render                    |
+| `check-docs`        | `test_static`  | Decision-note front matter, relative links under `docs/`, `docs/plan/graph.yaml`          |
+| `check-invariants`  | `test_static`  | Runs each `docs/decisions/inv-*.md` `verify` command                                      |
+| `check-paths`       | `test_static`  | Grep gates: repo and notes paths via `REPOS_DIR`/`NOTES_DIR`, no `/Users/<name>`          |
+| `check-doctor`      | `test_sandbox` | doctor with `PATH=/usr/bin:/bin` changes nothing; paste block parses                      |
+| `check-hammerspoon` | `test_static`  | `apps.lua` builder headless with lua: both profiles, off units, baseline tables           |
+| `check-dropbox`     | `test_sandbox` | `just dropbox_finish` vs a fake Dropbox: link created/repointed, collision refused, notes |
+| `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`              |
+| `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME              |
+| `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                          |
 
 Results: **PASS**, **FAIL**, **XFAIL** (fails until the named plan node lands),
 **XPASS** (passes before its node lands; promote it), **SKIP** (always with a

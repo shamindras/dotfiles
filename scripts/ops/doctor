@@ -193,6 +193,24 @@ if [[ -d /Applications/Dropbox.app ]]; then
 else
     info "Dropbox not installed"
 fi
+notes="${NOTES_DIR:-}"
+if [[ -z "$notes" && -n "$PROFILE" && -f "$BASEDIR/generated/$PROFILE/env.sh" ]]; then
+    notes="$(sed -n 's/^export NOTES_DIR="\(.*\)"$/\1/p' "$BASEDIR/generated/$PROFILE/env.sh" | sed "s|\$HOME|$HOME|")"
+fi
+if [[ -n "$notes" && -d "$notes" ]]; then
+    placeholders="$(find "$notes" -flags +dataless 2>/dev/null | wc -l | tr -d ' ')"
+    if [[ "$placeholders" == 0 ]]; then info "notes at $notes: no online-only placeholders"; else info "notes at $notes: $placeholders online-only placeholders (Finder: Make available offline)"; fi
+    zkdir="$notes/zk/.zk"
+    if [[ -d "$zkdir" ]]; then
+        case "$notes" in
+            "$HOME"/Dropbox/* | "$HOME"/Library/CloudStorage/*)
+                if [[ "$(xattr -p 'com.apple.fileprovider.ignore#P' "$zkdir" 2>/dev/null || true)" == 1 ]]; then info ".zk/ is ignored by Dropbox (File Provider)"; else info ".zk/ is NOT ignored by Dropbox (run scripts/setup/setup-zk)"; fi
+                ;;
+        esac
+    fi
+elif [[ -n "$notes" ]]; then
+    info "notes folder $notes not present yet"
+fi
 
 # ── Summary and paste block ───────────────────────────────────────────────────
 printf '\nSummary: %d ok, %d to look at, %d notes\n' "$n_ok" "$n_warn" "$n_info"

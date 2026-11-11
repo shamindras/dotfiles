@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+#
+# check-dropbox — `just dropbox_finish` against a fake Dropbox in a throwaway HOME.
+#
+# A temp folder stands in for ~/Library/CloudStorage/Dropbox, with a
+# hand-written ~/.dropbox/info.json. Covers: not signed in yet, link created,
+# notes missing, link repointed, collision with a real ~/Dropbox refused,
+# notes present (zk set up, both ignore attributes on .zk/), second run
+# idempotent. The real sign-in and the real multi-hour sync are not tested
+# here: they are a human-only check.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+t_header "dropbox finish"
+if [[ "$(uname -s)" != "Darwin" ]]; then
+    t_skip "dropbox_finish targets macOS (xattr), running on $(uname -s)"
+    t_summary "check-dropbox"
+    exit 0
+fi
+if ! command -v just >/dev/null 2>&1; then
+    t_fail "just is not installed"
+    t_summary "check-dropbox"
+    exit 1
+fi
+
+H="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-dropbox.XXXXXX")"
+trap 'rm -rf "$H"' EXIT
+ROOT="$H/Library/CloudStorage/Dropbox"
+
+finish() {
+    (cd "$TEST_REPO" && env HOME="$H" NOTES_DIR="$H/Dropbox/notes" ZK_NOTEBOOK_DIR="$H/Dropbox/notes/zk" \
+        just dropbox_finish) >"$H.out" 2>&1
+}
+check() { # check <name> <command...>
+    local name=$1
+    shift
+    if "$@"; then t_pass "$name"; else
+        t_fail "$name"
+        sed 's/^/        /' "$H.out" | head -12
+    fi
+}
+
+finish && rc=0 || rc=$?
+check "not signed in: exits 0 and says what it waits for" bash -c "[[ $rc -eq 0 ]] && grep -q 'Waiting for Dropbox sign-in' '$H.out'"
+
+mkdir -p "$ROOT" "$H/.dropbox"
+printf '{"personal": {"path": "%s"}}\n' "$ROOT" >"$H/.dropbox/info.json"
+finish && rc=0 || rc=$?
+check "signed in, notes not synced: link created, waits for notes" \
+    bash -c "[[ $rc -eq 0 && -L '$H/Dropbox' && \$(readlink '$H/Dropbox') == '$ROOT' ]] && grep -q 'Waiting for .*notes to sync' '$H.out'"
+
+rm "$H/Dropbox"
+ln -s "$H/elsewhere" "$H/Dropbox"
+finish || true
+check "wrong link target is repointed" bash -c "[[ \$(readlink '$H/Dropbox') == '$ROOT' ]]"
+
+rm "$H/Dropbox"
+mkdir "$H/Dropbox"
+finish && rc=0 || rc=$?
+check "a real ~/Dropbox folder is refused, not replaced" bash -c "[[ $rc -ne 0 && -d '$H/Dropbox' && ! -L '$H/Dropbox' ]]"
+rmdir "$H/Dropbox"
+
+mkdir -p "$ROOT/notes"
+finish && rc=0 || rc=$?
+zk="$ROOT/notes/zk/.zk"
+check "notes present: zk notebook set up" bash -c "[[ $rc -eq 0 && -d '$ROOT/notes/zk/journal' && -d '$zk/templates' ]]"
+check "both ignore attributes set on .zk/" bash -c "[[ \$(xattr -p 'com.apple.fileprovider.ignore#P' '$zk') == 1 && \$(xattr -p com.dropbox.ignored '$zk') == 1 ]]"
+check "notes formatter configs deployed" test -f "$ROOT/notes/.prettierrc.yaml"
+check "prints the one-time offline step" grep -q "Make available offline" "$H.out"
+
+before="$(find "$H" | LC_ALL=C sort)"
+finish && rc=0 || rc=$?
+after="$(find "$H" | LC_ALL=C sort)"
+check "second run changes nothing" bash -c "[[ $rc -eq 0 && '$before' == '$after' ]]"
+
+rm -f "$H.out"
+t_summary "check-dropbox"

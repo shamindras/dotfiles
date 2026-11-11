@@ -182,10 +182,10 @@ nodes:
     mints: []
     promise:
       reads: [scripts/ops/ensure-dropbox-link, scripts/setup/setup-zk, config/sesh/]
-      writes: [scripts/, config/sesh/, config/zk/, justfile, generated/]
+      writes: [scripts/, config/sesh/, config/zk/, config/bin/, config/nvim/, justfile, generated/, manifest.json, install, docs/, CLAUDE.md]
       budget: { max_tries: 4 }
       evidence: [sandbox install of home with no ~/Dropbox]
-    verify: [sandbox home install exits 0 and prints the hint, sesh list -c per profile]
+    verify: [scripts/test/check-dropbox, scripts/test/sandbox-install (sesh per profile), scripts/test/check-paths]
     floors: [home parity]
     on_exhausted: default
     human_gate: Module J proposal approved

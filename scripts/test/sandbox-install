@@ -69,12 +69,33 @@ no_cloudstorage() {
 LINKS_DIR="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-sandbox-links.XXXXXX")"
 trap 'rm -rf "$LINKS_DIR"' EXIT
 
+# sesh_sessions <profile> — the sandbox's linked sesh.toml lists exactly the
+# profile's sessions (needs sesh; the untracked import file is created first,
+# as the sesh unit's setup step would).
+sesh_sessions() {
+    local profile=$1 sandbox want got
+    command -v sesh >/dev/null 2>&1 || { echo "sesh not installed" && return 1; }
+    sandbox="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-sandbox-sesh.XXXXXX")"
+    (cd "$TEST_REPO" && env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME="$sandbox" ./install --links-only --profile "$profile" >/dev/null) || return 1
+    printf '# local\n' >"$sandbox/.config/dotfiles/sesh.local.toml"
+    want="$(sed -n '/"sesh_sessions"/,/]/p' "$TEST_REPO/generated/$profile/resolved.json" | grep -oE '"[a-z]+"' | grep -v sesh_sessions | tr -d '"' | sort | tr '\n' ' ')"
+    got="$(env -i HOME="$sandbox" PATH="$PATH" REPOS_DIR="$sandbox/repos" NOTES_DIR="$sandbox/notes" \
+        sesh -C "$sandbox/.config/sesh/sesh.toml" list -c --json | grep -oE '"Name": *"[^"]+"' | sed -E 's/.*"([^"]+)"$/\1/' | sort | tr '\n' ' ')"
+    rm -rf "$sandbox"
+    [[ -n "$want" && "$want" == "$got" ]] || { echo "want: $want got: $got" && return 1; }
+}
+
 node_for() { if [[ "$1" == work ]]; then echo N6; else echo N5; fi; }
 
 if install_supports_dry_run; then
     for p in $PROFILES; do
         t_expect "$(node_for "$p")" "install --links-only --profile $p into a throwaway HOME, twice" run_profile "$p"
         t_expect N16 "no $p link resolves into CloudStorage" no_cloudstorage "$p"
+        if command -v sesh >/dev/null 2>&1; then
+            t_expect N10 "sesh in a throwaway HOME lists the $p sessions" sesh_sessions "$p"
+        else
+            t_skip "sesh sessions for $p: sesh not installed here"
+        fi
     done
 else
     for p in $PROFILES; do

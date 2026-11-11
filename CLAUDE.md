@@ -50,6 +50,7 @@ just manifest_set work zoom external   # Override one unit in one profile
 just manifest_why work bat             # Why a unit is on or off
 just manifest_diff    # Home-versus-work comparison
 just doctor           # Read-only health report; run it first on a new Mac
+just dropbox_finish   # Home: ~/Dropbox link + notes once Dropbox has synced
 ```
 
 Test results are PASS, FAIL, XFAIL (fails until a named plan node lands),
@@ -142,9 +143,12 @@ same run, then hands off to `./install`, which:
    services (bat cache, gh extensions, espanso, Hammerspoon, treesitter,
    yazi, TPM, macOS defaults, ...), skipping any whose command is missing
 
-Dropbox is data only (notes, books, media). `scripts/ops/ensure-dropbox-link`
-still repairs the `~/Dropbox` symlink by hand; the home-only Dropbox step
-arrives with module J. `config/brew/Brewfile` remains only for `brew-update`
+Dropbox is data only (notes, books, media) and home only. Its unit installs
+the cask and, as the very last step, opens the app and prints the sign-in
+hint; nothing waits for sign-in or sync. Once signed in, `just
+dropbox_finish` (safe any time) creates the `~/Dropbox` link with
+`scripts/ops/ensure-dropbox-link` and sets up the notes when they arrive,
+then prints the one-time Finder step to pin the notes offline. `config/brew/Brewfile` remains only for `brew-update`
 until module K moves it to the generated Brewfile.
 
 ## Development Guidelines
