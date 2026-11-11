@@ -1,12 +1,12 @@
 #!/bin/sh
-# fastopen — launch macOS apps by short name
+# fastopen — launch a macOS app by path
 #
 # Uses /usr/bin/open with full app path (no -a name resolution).
 # Centralized lookup: change launch strategy in one place.
 # run-as-user is a no-op wrapper here (Hammerspoon already runs as the
 # console user); kept so the script tolerates being invoked under sudo.
 #
-# Usage: fastopen <app-name> [--fullscreen <workspace> --return <workspace>]
+# Usage: fastopen <app-path> [--fullscreen <workspace> --return <workspace>]
 #
 # Flags (evaluated after the app opens):
 #   --fullscreen <ws>  Poll for the window on <ws> and fullscreen it
@@ -21,29 +21,11 @@ APP="$1"
 shift
 
 # ── Fast path: open the app immediately ────────────────────────
+# The app path comes from the registry (manifest.json app blocks, built into
+# Hammerspoon's open group by apps.lua); there is no name table here.
 case "$APP" in
-  1password)    "$RUN" /usr/bin/open /Applications/1Password.app ;;
-  djview)       "$RUN" /usr/bin/open /Applications/DjView.app ;;
-  firefox)      "$RUN" /usr/bin/open /Applications/Firefox.app ;;
-  claude)       "$RUN" /usr/bin/open /Applications/Claude.app ;;
-  preview)      "$RUN" /usr/bin/open /System/Applications/Preview.app ;;
-  # Finder is always running, often with zero windows; plain `open` only
-  # activates it (no window, so no aerospace workspace switch). Send the
-  # Dock's "reopen" event instead: creates a window only if none exist.
-  finder)       "$RUN" /usr/bin/osascript -e 'tell application "Finder"' -e 'reopen' -e 'activate' -e 'end tell' ;;
-  signal)       "$RUN" /usr/bin/open /Applications/Signal.app ;;
-  books)        "$RUN" /usr/bin/open /System/Applications/Books.app ;;
-  spotify)      "$RUN" /usr/bin/open /Applications/Spotify.app ;;
-  nordvpn)      "$RUN" /usr/bin/open /Applications/NordVPN.app ;;
-  skim)         "$RUN" /usr/bin/open /Applications/Skim.app ;;
-  ghostty)      "$RUN" /usr/bin/open /Applications/Ghostty.app ;;
-  textedit)     "$RUN" /usr/bin/open /System/Applications/TextEdit.app ;;
-  vscode)       "$RUN" /usr/bin/open "/Applications/Visual Studio Code.app" ;;
-  vlc)          "$RUN" /usr/bin/open /Applications/VLC.app ;;
-  opensuperwhisper) "$RUN" /usr/bin/open /Applications/OpenSuperWhisper.app ;;
-  wezterm)      "$RUN" /usr/bin/open /Applications/WezTerm.app ;;
-  jdownloader)  "$RUN" /usr/bin/open "/Applications/JDownloader 2/JDownloader2.app" ;;
-  *) echo "fastopen: unknown app '$1'" >&2; exit 1 ;;
+  /*.app) "$RUN" /usr/bin/open "$APP" ;;
+  *) echo "fastopen: expected an app path ending in .app, got '$APP'" >&2; exit 1 ;;
 esac
 
 # ── Optional flags: evaluated after the app is already opening ─

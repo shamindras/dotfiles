@@ -21,8 +21,9 @@ local function fire(args)
     :start()
 end
 
-function M.show(group)
-  fire({ 'show', group })
+-- label: optional HUD text (open/quit pass the one apps.lua built).
+function M.show(group, label)
+  fire(label and { 'show', group, label } or { 'show', group })
 end
 
 function M.hide()

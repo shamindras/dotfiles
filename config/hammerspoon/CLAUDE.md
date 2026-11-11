@@ -23,6 +23,7 @@ config/hammerspoon/
 ├── taphold.lua                             # 4 tap-hold remaps via hs.eventtap
 ├── hud.lua                                 # SketchyBar leader HUD bridge
 ├── actions.lua                             # ~60-action data table (7 groups)
+├── apps.lua                                # open/quit groups + HUD labels from resolved.json
 ├── nordvpn.lua                             # NordVPN pause/resume/connect via AX ids
 ├── claude.lua                              # Claude Desktop deep links, AX focus, instances
 └── launchagents/
@@ -70,6 +71,25 @@ Implementation notes:
   attach/detach to mitigate documented hidutil drift on long uptime
   (amarsyla/hidutil-key-remapping-generator [#3](https://github.com/amarsyla/hidutil-key-remapping-generator/issues/3)).
 
+## App registry (apps.lua)
+
+The open (`o`) and quit (`q`) groups are not hand-written. `apps.lua`
+reads `~/.config/dotfiles/resolved.json` (install links it to
+`generated/<profile>/resolved.json`) and builds one open and one quit leaf
+per entry in its `leaders` map, plus the HUD label for each group. A
+profile only gets leaves for the apps it has, and leader key `b` follows
+the browser role (Firefox at home, Chrome at work). Only the two key-9
+leaves (`ipad-mirror`, quit QuickTime) stay in `actions.lua` as extras.
+
+`M.build` is pure Lua (tested headless by `scripts/test/check-hammerspoon`
+against both profiles and against the old hand-written tables); `M.load`
+reads the file and, if it is missing or malformed, binds only the extras
+and shows an alert. Until install has linked `~/.config/dotfiles` on this
+Mac, a marked transitional fallback reads `generated/home/resolved.json`
+next to this config. To add or change an app, edit its unit's `app` block in
+`manifest.json` (path, bundle_id, leader, label, icon, process, quit_*),
+run `just manifest_render`, then reload Hammerspoon.
+
 ## Leader system (leader.lua + actions.lua)
 
 `hs.hotkey.modal` scaffold with one modal for the leader layer and
@@ -79,8 +99,8 @@ to surface).
 
 | Group  | Key | Count | Purpose                                          |
 | ------ | --- | ----- | ------------------------------------------------ |
-| open   | o   | 19    | Launch apps via `config/bin/fastopen`            |
-| quit   | q   | 19    | Quit apps via `config/bin/quit-app` (10s idle)   |
+| open   | o   | 19    | Launch apps via `config/bin/fastopen` (registry) |
+| quit   | q   | 19    | Quit apps via `config/bin/quit-app` (registry)   |
 | claude | c   | 7     | Claude Desktop deep links + instances (o/q)      |
 | run    | r   | 10    | Run utilities (brew, trash, mute, VPN pause, …)  |
 | search | s   | 3     | Raycast extensions                               |
@@ -137,7 +157,8 @@ Hammerspoon shells out to these scripts with the argv they expect:
   chains into `config/bin/rename-ebooks`, then detaches
   `config/bin/book-librarian sweep --async --apply`)
 - `config/sketchybar/items/leader.sh` + the
-  `leader-hud show | hide <group>` interface
+  `leader-hud show <group> [label] | hide` interface (open/quit pass the
+  label `apps.lua` built)
 - Group names recognised by the HUD (`leader`, `open`, `quit`,
   `claude`, `run`, `search`, `github`, `urls`)
 
@@ -179,7 +200,7 @@ two per-instance leaves mirror `o → c` / `q → c`:
 | `c → o`  | Claude, open another, on Chat       | `claude.open_new()`: `open -n -a … <chat link>`     |
 | `c → q`  | Claude, quit this instance only     | `claude.quit_one()`: graceful terminate, in-process |
 | `q → c`  | Quit Claude entirely, all instances | `quit-app` loops a quit event per process           |
-| `o → c`  | Open / focus Claude (unchanged)     | `fastopen claude`                                   |
+| `o → c`  | Open / focus Claude (unchanged)     | `fastopen /Applications/Claude.app`                 |
 | Cmd-Q    | Native quit of the focused instance | unchanged                                           |
 
 `c → o` passes the `new` chat link (`claude://claude.ai/new?surface=chat`)

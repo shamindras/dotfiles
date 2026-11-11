@@ -6,7 +6,9 @@
 # here (Hammerspoon already runs as the console user).
 #
 # Usage:
-#   leader-hud show <group>   Show HUD label for group
+#   leader-hud show <group> [label]   Show HUD label for group; a given label
+#                                     wins (open/quit labels come from the
+#                                     app registry via Hammerspoon)
 #   leader-hud hide           Hide HUD
 
 # Caller-agnostic PATH. hs.task spawns subprocesses with the minimal
@@ -24,6 +26,7 @@ RUN_AS_USER="$SCRIPT_DIR/run-as-user"
 
 ACTION="${1:?Usage: leader-hud show|hide [group]}"
 GROUP="${2:-}"
+GIVEN="${3:-}"
 
 case "$ACTION" in
   show)
@@ -57,6 +60,7 @@ case "$ACTION" in
         exit 1
         ;;
     esac
+    [ -n "$GIVEN" ] && LABEL="$GIVEN"
     "$RUN_AS_USER" sketchybar --set leader label="$LABEL" drawing=on
     ;;
   hide)

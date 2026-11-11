@@ -12,7 +12,7 @@
 | `btm-popup`           | Opens bottom (btm) monitor in popup terminal                           |
 | `close-notifications` | Dismisses all macOS Notification Center alerts (grouped and individual) |
 | `empty-trash`         | Empty Finder trash and switch to aerospace workspace B                 |
-| `fastopen`            | Launch macOS apps by short name (centralized path lookup, POSIX sh); Finder is special-cased via AppleScript `reopen` (always running, often windowless — plain `open` activates without creating a window, so no aerospace switch) |
+| `fastopen`            | Launch a macOS app by path (`fastopen <app-path> [--fullscreen W --return W]`, POSIX sh). Paths come from the app registry (`manifest.json` app blocks) via Hammerspoon's `apps.lua`; Finder's AppleScript `reopen` is its unit's `open_command` |
 | `gc`                  | Git-related utility script                                             |
 | `ipad-mirror`         | Open QuickTime straight into a movie-recording window (bypasses the launch file picker, where Cancel quits the app); live view of a USB-connected iPad for Zoom screen sharing, routed to aerospace workspace 9 with focus following; leader `RCmd → o → 9` opens, `RCmd → q → 9` quits back to workspace W; `ipad-mirror` zsh alias |
 | `leader-hud`          | Update sketchybar leader key HUD (show/hide with group labels)         |

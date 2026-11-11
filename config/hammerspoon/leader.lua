@@ -104,7 +104,7 @@ local function enter_group(spec)
   leader_modal:exit()
   local m = group_modals[spec.name]
   m:enter()
-  hud.show(spec.name)
+  hud.show(spec.name, spec.hud)
   arm_idle(DEFAULT_IDLE_MS, function()
     to_base('idle-expire-group')
   end)
