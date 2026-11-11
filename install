@@ -92,9 +92,8 @@ fail() { FAILURES+=("$*"); }
 
 # ── 1. dotbot (submodule over HTTPS) ──────────────────────────────────────────
 DOTBOT="submods/core/dotbot/bin/dotbot"
-if [[ ! -x "$DOTBOT" ]]; then
-    git submodule update --init submods/core/dotbot
-fi
+# --recursive: dotbot vendors PyYAML as its own submodule (lib/pyyaml).
+git submodule update --init --recursive submods/core/dotbot
 dotbot() { "$DOTBOT" -d "$BASEDIR" -c "$GEN/dotbot.json" "$@"; }
 
 if [[ "$MODE" == dry ]]; then
