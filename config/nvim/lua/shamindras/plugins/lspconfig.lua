@@ -212,11 +212,10 @@ return {
       end
 
       -- mason-tool-installer: single source of truth for every nvim-managed
-      -- tool — LSP servers, linters, and formatters. Mason owns the global
-      -- fallback for nvim-only tools; tools that are also shell-shared
-      -- (jq, yq, shfmt, prettier, etc.) remain in Brewfile/npm in parallel
-      -- so the shell context has its own canonical install. nvim resolves
-      -- via Mason's PATH prepend regardless.
+      -- tool — LSP servers, linters, and formatters (decision
+      -- adr-16-formatters-mason). Homebrew keeps a second copy only of the
+      -- tools repo scripts or CI call (prettier, shellcheck, stylua, jq, yq);
+      -- nvim resolves Mason's copy first via its PATH prepend.
       local ensure_installed = vim.tbl_keys(servers)
       vim.list_extend(ensure_installed, {
         -- Linters (consumed by nvim-lint)

@@ -337,12 +337,14 @@ LSP capabilities provided by `require('blink.cmp').get_lsp_capabilities()`.
 linters, AND formatters. nvim-lint and conform contain only their wiring;
 they do not own install responsibility.
 
-Architectural principle: **Mason owns the global fallback for nvim-only
-tools; Homebrew/npm own the install for shell-shared tools** (jq, yq, shfmt,
-prettier, taplo). Tools that are both nvim-used AND shell-shared are
-installed in **both** package managers in parallel — each context has its
-own canonical install. nvim resolves via Mason's automatic PATH prepend
-(mason.nvim default `PATH = "prepend"`); the shell resolves via brew/npm.
+Ownership (decision `adr-16-formatters-mason`): **Mason installs every
+formatter and linter nvim uses**; Homebrew keeps a copy only where a repo
+script, just recipe or CI job calls the tool. Two copies therefore exist
+for prettier (`just prettier_md`), shellcheck (`just test_static`), stylua
+(`just stylua_config`) and the general CLIs jq and yq (scripts, shell use).
+jsonlint, shfmt, taplo, yamllint, markdownlint-cli2, ruff, selene and
+cmakelint come from Mason only. nvim resolves via Mason's automatic PATH
+prepend (mason.nvim default `PATH = "prepend"`); the shell resolves via brew.
 
 **Local-first tool resolution** for `ruff` and `ty`: project's
 `.venv/bin/<tool>` if present, else Mason's binary, else PATH. Single
