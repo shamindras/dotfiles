@@ -485,9 +485,9 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "
 ###############################################################################
 # Remote Login (SSH)                                                          #
 ###############################################################################
-# SSH is the only defensive measure that survives a fully-frozen keyboard
-# — see RECOVERY.md. With SSH enabled, the phone-as-keyboard escape hatch
-# is one `ssh user@<lan-ip>` away regardless of HID state.
+# SSH is the only defensive measure that survives a fully-frozen keyboard:
+# with it enabled, `ssh user@<lan-ip>` from a phone and `pkill -x Hammerspoon`
+# gives the raw keyboard back, regardless of HID state.
 echo "  Remote Login (SSH)..."
 
 # Profile setting remote_login: on at home; at work it is left alone (never

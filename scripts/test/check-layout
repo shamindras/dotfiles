@@ -16,7 +16,6 @@ ALLOWED=(
     config scripts generated submods docs .github
     .claude .gitattributes .gitignore .gitmodules .markdownlint-cli2.yaml
     .prettierignore .prettierrc.yaml .stylua.toml .taplo.toml .vscode
-    RECOVERY.md # moves to docs/recovery.md once Shamindra approves the trimmed text
 )
 
 t_header "layout"

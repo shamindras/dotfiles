@@ -11,7 +11,8 @@ remaps, the right-cmd leader sequence, and Caps→F18 at the HID layer.
 
 Hammerspoon requires only an Accessibility grant — no root, no
 kernel extension, no DriverKit. The most defensive escape hatch
-on a fully-frozen keyboard is SSH-from-phone (see `RECOVERY.md`).
+on a fully-frozen keyboard is SSH-from-phone (home profile, where Remote
+Login is on), then `pkill -x Hammerspoon`.
 
 ## File Structure
 

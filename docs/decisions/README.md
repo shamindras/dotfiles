@@ -23,6 +23,7 @@ matter and links, and `scripts/test/check-invariants` runs each invariant's `ver
 | [adr-14-decision-memory](adr-14-decision-memory.md)                 | adr       | Decisions live in docs/decisions                            |
 | [adr-15-keeping-fresh](adr-15-keeping-fresh.md)                     | adr       | Weekly update PR and mise scoreboard                        |
 | [adr-16-formatters-mason](adr-16-formatters-mason.md)               | adr       | Mason owns the formatters and linters nvim uses             |
+| [adr-17-no-recovery-guide](adr-17-no-recovery-guide.md)             | adr       | No recovery guide in the repo                               |
 | [inv-bootstrap-no-dropbox](inv-bootstrap-no-dropbox.md)             | invariant | Bootstrap needs no Dropbox                                  |
 | [inv-bootstrap-no-ssh-key](inv-bootstrap-no-ssh-key.md)             | invariant | Bootstrap needs no SSH key                                  |
 | [inv-generated-matches-manifest](inv-generated-matches-manifest.md) | invariant | Generated files match the manifest                          |
