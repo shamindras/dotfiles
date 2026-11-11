@@ -394,6 +394,7 @@ def render_profile(m, profile):
         "settings": p["settings"],
         "order": on,
         "leaders": leader_map(m, profile, states)[0],
+        "packages": {short(pkg): n for n in managed for k in ("brew", "cask") for pkg in units[n].get(k, [])},
         "units": {},
     }
     for n in sorted(on):

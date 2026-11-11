@@ -48,8 +48,11 @@
     ]
   },
   "packages_added": {
-    "agreed": "none yet",
-    "names": []
+    "agreed": "Plan v2, 'Packages and updates': Homebrew only; eslint_d and rustup from brew instead of npm and the rustup installer (module K, 2026-11-11)",
+    "names": [
+      "eslint_d",
+      "rustup"
+    ]
   },
   "links_removed": {
     "agreed": "Plan v2, 'Notes and sessions': rendered sesh.toml per profile (module J, 2026-11-11); ~/.config/sesh becomes a real folder with three links",

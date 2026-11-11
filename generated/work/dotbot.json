@@ -125,16 +125,12 @@
         "description": "macos: apply macOS defaults"
       },
       {
-        "command": "if command -v npm >/dev/null 2>&1; then npm install -g eslint_d prettier; else echo \"skip node: needs npm\"; fi",
-        "description": "node: install eslint_d and prettier with npm"
-      },
-      {
         "command": "if command -v nvim >/dev/null 2>&1; then ./scripts/ops/setup-nvim-treesitter; else echo \"skip nvim: needs nvim\"; fi",
         "description": "nvim: pre-install treesitter parsers"
       },
       {
-        "command": "./scripts/setup/setup-upgrade-rust-cargo",
-        "description": "rust: install or upgrade rust and cargo"
+        "command": "if command -v brew >/dev/null 2>&1; then ./scripts/setup/setup-upgrade-rust-cargo; else echo \"skip rust: needs brew\"; fi",
+        "description": "rust: install or update the stable toolchain with rustup"
       },
       {
         "command": "[ -e \"$HOME/.config/dotfiles/sesh.local.toml\" ] || printf '# Per-machine sesh sessions, not in git (for example work project sessions).\\n' > \"$HOME/.config/dotfiles/sesh.local.toml\"",

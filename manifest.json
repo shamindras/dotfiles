@@ -102,7 +102,7 @@
     },
     "lint": {
       "note": "Formatters and linters used by nvim and the repo's own recipes.",
-      "brew": ["jsonlint", "prettier", "shellcheck", "shfmt", "taplo", "yamllint"]
+      "brew": ["eslint_d", "jsonlint", "prettier", "shellcheck", "shfmt", "taplo", "yamllint"]
     },
     "notes": {
       "note": "Zettelkasten."
@@ -553,18 +553,11 @@
     },
     "node": {
       "module": "editor",
-      "note": "The npm step is kept for parity until module K moves eslint_d and prettier to Homebrew.",
+      "note": "npm config only. eslint_d and prettier come from Homebrew (lint module), not npm install -g.",
       "brew": ["node"],
       "links": {
         "${XDG_CONFIG_HOME}/npm": "config/npm"
-      },
-      "setup": [
-        {
-          "command": "npm install -g eslint_d prettier",
-          "description": "install eslint_d and prettier with npm",
-          "needs": ["npm"]
-        }
-      ]
+      }
     },
     "nordvpn": {
       "module": "personal",
@@ -712,11 +705,13 @@
     },
     "rust": {
       "module": "core",
-      "note": "rustup and cargo under $CARGO_HOME; installer script until module K.",
+      "note": "rustup from Homebrew (keg-only; its bin folder is on PATH via zsh). Toolchains in $RUSTUP_HOME, cargo tools in $CARGO_HOME.",
+      "brew": ["rustup"],
       "setup": [
         {
           "command": "./scripts/setup/setup-upgrade-rust-cargo",
-          "description": "install or upgrade rust and cargo"
+          "description": "install or update the stable toolchain with rustup",
+          "needs": ["brew"]
         }
       ]
     },
