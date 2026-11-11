@@ -197,6 +197,10 @@
         },
         "stdin": {
           "type": "boolean"
+        },
+        "last": {
+          "type": "boolean",
+          "description": "Run after every other step (the Dropbox hand-off)."
         }
       }
     },

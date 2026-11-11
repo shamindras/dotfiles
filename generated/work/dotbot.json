@@ -67,7 +67,9 @@
       "${XDG_CONFIG_HOME}/parallel": "config/parallel",
       "${XDG_CONFIG_HOME}/python": "config/python",
       "${XDG_CONFIG_HOME}/ripgrep": "config/ripgrep",
-      "${XDG_CONFIG_HOME}/sesh": "config/sesh",
+      "${XDG_CONFIG_HOME}/sesh/dirs.list": "config/sesh/dirs.list",
+      "${XDG_CONFIG_HOME}/sesh/scripts": "config/sesh/scripts",
+      "${XDG_CONFIG_HOME}/sesh/sesh.toml": "generated/work/sesh.toml",
       "${XDG_CONFIG_HOME}/sketchybar": "config/sketchybar",
       "${XDG_CONFIG_HOME}/ssh": "config/ssh",
       "${XDG_CONFIG_HOME}/starship": "config/starship",
@@ -133,6 +135,10 @@
       {
         "command": "./scripts/setup/setup-upgrade-rust-cargo",
         "description": "rust: install or upgrade rust and cargo"
+      },
+      {
+        "command": "[ -e \"$HOME/.config/dotfiles/sesh.local.toml\" ] || printf '# Per-machine sesh sessions, not in git (for example work project sessions).\\n' > \"$HOME/.config/dotfiles/sesh.local.toml\"",
+        "description": "sesh: create the untracked per-machine sessions file"
       },
       {
         "command": "if command -v tmux >/dev/null 2>&1; then [ -x \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" ] && \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" || true; else echo \"skip tmux: needs tmux\"; fi",

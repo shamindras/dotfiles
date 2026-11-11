@@ -69,7 +69,9 @@
       "${XDG_CONFIG_HOME}/python": "config/python",
       "${XDG_CONFIG_HOME}/ripgrep": "config/ripgrep",
       "${XDG_CONFIG_HOME}/rstudio": "config/rstudio",
-      "${XDG_CONFIG_HOME}/sesh": "config/sesh",
+      "${XDG_CONFIG_HOME}/sesh/dirs.list": "config/sesh/dirs.list",
+      "${XDG_CONFIG_HOME}/sesh/scripts": "config/sesh/scripts",
+      "${XDG_CONFIG_HOME}/sesh/sesh.toml": "generated/home/sesh.toml",
       "${XDG_CONFIG_HOME}/sketchybar": "config/sketchybar",
       "${XDG_CONFIG_HOME}/ssh": "config/ssh",
       "${XDG_CONFIG_HOME}/starship": "config/starship",
@@ -147,6 +149,10 @@
         "description": "rust: install or upgrade rust and cargo"
       },
       {
+        "command": "[ -e \"$HOME/.config/dotfiles/sesh.local.toml\" ] || printf '# Per-machine sesh sessions, not in git (for example work project sessions).\\n' > \"$HOME/.config/dotfiles/sesh.local.toml\"",
+        "description": "sesh: create the untracked per-machine sessions file"
+      },
+      {
         "command": "if command -v tmux >/dev/null 2>&1; then [ -x \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" ] && \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" || true; else echo \"skip tmux: needs tmux\"; fi",
         "description": "tmux: install tmux plugins with TPM"
       },
@@ -165,6 +171,10 @@
       {
         "command": "if command -v zk >/dev/null 2>&1; then ./scripts/setup/setup-zk; else echo \"skip zk: needs zk\"; fi",
         "description": "zk: set up the zk notebook"
+      },
+      {
+        "command": "if [ -d /Applications/Dropbox.app ]; then pgrep -x Dropbox >/dev/null || open -a Dropbox; [ -f \"$HOME/.dropbox/info.json\" ] || echo \"Dropbox: sign in in the app window; any time later run: just dropbox_finish\"; fi",
+        "description": "dropbox: open Dropbox and print the sign-in hint (never waits)"
       }
     ]
   }

@@ -109,7 +109,7 @@
     },
     "personal": {
       "note": "Media, downloads, messaging, e-books.",
-      "cask": ["calibre", "dropbox", "notunes", "oracle-jdk"],
+      "cask": ["calibre", "notunes", "oracle-jdk"],
       "brew": [
         "djvulibre",
         "exiftool",
@@ -305,6 +305,18 @@
         "${XDG_CONFIG_HOME}/dotfiles/env.zsh": "generated/{profile}/env.zsh",
         "${XDG_CONFIG_HOME}/dotfiles/resolved.json": "generated/{profile}/resolved.json"
       }
+    },
+    "dropbox": {
+      "module": "personal",
+      "note": "Data only (notes, books, media), home only. Its own unit so a failure cannot affect other packages. The setup step runs last, opens the app and prints the sign-in hint without waiting; just dropbox_finish completes the ~/Dropbox link and the notes once sync has started.",
+      "cask": ["dropbox"],
+      "setup": [
+        {
+          "command": "if [ -d /Applications/Dropbox.app ]; then pgrep -x Dropbox >/dev/null || open -a Dropbox; [ -f \"$HOME/.dropbox/info.json\" ] || echo \"Dropbox: sign in in the app window; any time later run: just dropbox_finish\"; fi",
+          "description": "open Dropbox and print the sign-in hint (never waits)",
+          "last": true
+        }
+      ]
     },
     "espanso": {
       "module": "desktop",
@@ -712,8 +724,16 @@
       "module": "core",
       "brew": ["sesh"],
       "links": {
-        "${XDG_CONFIG_HOME}/sesh": "config/sesh"
+        "${XDG_CONFIG_HOME}/sesh/dirs.list": "config/sesh/dirs.list",
+        "${XDG_CONFIG_HOME}/sesh/scripts": "config/sesh/scripts",
+        "${XDG_CONFIG_HOME}/sesh/sesh.toml": "generated/{profile}/sesh.toml"
       },
+      "setup": [
+        {
+          "command": "[ -e \"$HOME/.config/dotfiles/sesh.local.toml\" ] || printf '# Per-machine sesh sessions, not in git (for example work project sessions).\\n' > \"$HOME/.config/dotfiles/sesh.local.toml\"",
+          "description": "create the untracked per-machine sessions file"
+        }
+      ],
       "requires": ["fzf", "tmux", "zoxide"]
     },
     "shottr": {

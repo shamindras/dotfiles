@@ -110,6 +110,28 @@ TOTAL=3
 [[ "$MODE" == links ]] && TOTAL=1
 
 step_outer 1 "$TOTAL" 🔗 "Linking configs ($PROFILE)"
+# A folder that used to be one link into this repo (for example ~/.config/sesh)
+# may now hold several file links. dotbot would follow the old folder link
+# into the repo, so remove such a parent link first. Only links that point
+# into this clone are touched.
+repo_real="$(cd "$BASEDIR" && pwd -P)"
+while IFS= read -r dest; do
+    dest="${dest//\$\{HOME\}/$HOME}"
+    dest="${dest//\$\{XDG_CONFIG_HOME\}/$XDG_CONFIG_HOME}"
+    dest="${dest//\$\{XDG_DATA_HOME\}/$XDG_DATA_HOME}"
+    parent="$(dirname "$dest")"
+    while [[ "$parent" == "$HOME"/* ]]; do
+        if [[ -L "$parent" ]]; then
+            target="$(cd "$parent" 2>/dev/null && pwd -P || true)"
+            if [[ -n "$target" && "$target" == "$repo_real"/* ]]; then
+                echo "  ├─ replacing folder link ${parent/#$HOME/~} (now holds file links)"
+                rm "$parent"
+            fi
+            break
+        fi
+        parent="$(dirname "$parent")"
+    done
+done < <(sed -nE 's/^ *"(\$\{[A-Z_]+\}[^"]*)": "[^"]*",?$/\1/p' "$GEN/dotbot.json")
 dotbot --only create clean link || fail "links"
 if [[ "$MODE" == links ]]; then
     if [[ ${#FAILURES[@]} -gt 0 ]]; then
