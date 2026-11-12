@@ -70,7 +70,7 @@ no_cloudstorage() {
 # copy): folder links into it are replaced by real folders, and files that
 # clone does not track there (gh's hosts.yml) are copied, not lost.
 old_clone_folder_links() {
-    local box old
+    local profile=$1 box old
     box="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-sandbox-old.XXXXXX")"
     old="$box/old-clone"
     git clone -q "$TEST_REPO" "$old" && git -C "$old" remote set-url origin https://github.com/shamindras/dotfiles.git
@@ -79,7 +79,7 @@ old_clone_folder_links() {
     printf 'github.com:\n    user: someone\n' >"$old/config/gh/hosts.yml"
     ln -s "$old/config/gh" "$box/home/.config/gh"
     ln -s "$old/config/sesh" "$box/home/.config/sesh"
-    (cd "$TEST_REPO" && env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME="$box/home" ./install --links-only --profile home >/dev/null 2>&1) || { echo "install failed" && return 1; }
+    (cd "$TEST_REPO" && env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME="$box/home" ./install --links-only --profile "$profile" >/dev/null 2>&1) || { echo "install failed" && return 1; }
     [[ -d "$box/home/.config/gh" && ! -L "$box/home/.config/gh" ]] || { echo "gh still a folder link" && return 1; }
     cmp -s "$old/config/gh/hosts.yml" "$box/home/.config/gh/hosts.yml" || { echo "hosts.yml not kept" && return 1; }
     [[ "$(readlink "$box/home/.config/gh/config.yml")" == "$TEST_REPO"/config/gh/config.yml ]] || { echo "config.yml not linked to this clone" && return 1; }
@@ -109,9 +109,7 @@ sesh_sessions() {
 node_for() { if [[ "$1" == work ]]; then echo N6; else echo N5; fi; }
 
 if install_supports_dry_run; then
-    if [[ " $PROFILES " == *" home "* ]]; then
-        t_expect N12 "folder links into an older clone are replaced; untracked files kept" old_clone_folder_links
-    fi
+    t_expect N12 "folder links into an older clone are replaced; untracked files kept" old_clone_folder_links "${PROFILES%% *}"
     for p in $PROFILES; do
         t_expect "$(node_for "$p")" "install --links-only --profile $p into a throwaway HOME, twice" run_profile "$p"
         t_expect N16 "no $p link resolves into CloudStorage" no_cloudstorage "$p"

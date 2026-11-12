@@ -113,8 +113,8 @@ step_outer 1 "$TOTAL" 🔗 "Linking configs ($PROFILE)"
 # A folder that used to be one link into a dotfiles clone (for example
 # ~/.config/sesh or ~/.config/gh) may now hold several file links. dotbot
 # would follow the old folder link into that clone, so replace such a link
-# with a real folder first. Any clone of this repo counts (this one, or the
-# old copy in Dropbox). Files the clone does not track there, such as gh's
+# with a real folder first. Any clone of this repo counts (this one, or an
+# older copy elsewhere). Files the clone does not track there, such as gh's
 # login state in hosts.yml, are copied into the new folder, never lost.
 is_dotfiles_clone() { # is_dotfiles_clone <dir> -> true if <dir> is inside a clone of this repo
     local top url
