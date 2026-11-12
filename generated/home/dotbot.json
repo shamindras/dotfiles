@@ -118,11 +118,11 @@
         "description": "firefox: install user.js, userChrome.css and policies.json"
       },
       {
-        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then gh extension install dlvhdr/gh-dash; else echo \"skip gh-dash: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: gh-dash: install the gh-dash extension\"; exit $rc; }",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then if gh auth status >/dev/null 2>&1; then gh extension install dlvhdr/gh-dash; else echo \"skip gh-dash: gh is not logged in (gh auth login --web)\"; fi; else echo \"skip gh-dash: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: gh-dash: install the gh-dash extension\"; exit $rc; }",
         "description": "gh-dash: install the gh-dash extension"
       },
       {
-        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then gh extension upgrade --all; else echo \"skip gh-dash: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: gh-dash: upgrade gh extensions\"; exit $rc; }",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then if gh auth status >/dev/null 2>&1; then gh extension upgrade --all; else echo \"skip gh extensions: gh is not logged in\"; fi; else echo \"skip gh-dash: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: gh-dash: upgrade gh extensions\"; exit $rc; }",
         "description": "gh-dash: upgrade gh extensions"
       },
       {
@@ -170,7 +170,7 @@
         "description": "zk: set up the zk notebook"
       },
       {
-        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if [ -d /Applications/Dropbox.app ]; then pgrep -x Dropbox >/dev/null || open -a Dropbox; [ -f \"$HOME/.dropbox/info.json\" ] || echo \"Dropbox: sign in in the app window; any time later run: just dropbox_finish\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: dropbox: open Dropbox and print the sign-in hint (never waits)\"; exit $rc; }",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if [ -d /Applications/Dropbox.app ]; then pgrep -x Dropbox >/dev/null || (nohup /usr/bin/open -g -a Dropbox </dev/null >/dev/null 2>&1 &); [ -f \"$HOME/.dropbox/info.json\" ] || echo \"Dropbox: sign in in the app window; any time later run: just dropbox_finish\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: dropbox: open Dropbox and print the sign-in hint (never waits)\"; exit $rc; }",
         "description": "dropbox: open Dropbox and print the sign-in hint (never waits)"
       }
     ]

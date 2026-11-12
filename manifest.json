@@ -312,7 +312,7 @@
       "cask": ["dropbox"],
       "setup": [
         {
-          "command": "if [ -d /Applications/Dropbox.app ]; then pgrep -x Dropbox >/dev/null || open -a Dropbox; [ -f \"$HOME/.dropbox/info.json\" ] || echo \"Dropbox: sign in in the app window; any time later run: just dropbox_finish\"; fi",
+          "command": "if [ -d /Applications/Dropbox.app ]; then pgrep -x Dropbox >/dev/null || (nohup /usr/bin/open -g -a Dropbox </dev/null >/dev/null 2>&1 &); [ -f \"$HOME/.dropbox/info.json\" ] || echo \"Dropbox: sign in in the app window; any time later run: just dropbox_finish\"; fi",
           "description": "open Dropbox and print the sign-in hint (never waits)",
           "last": true
         }
@@ -404,12 +404,12 @@
       },
       "setup": [
         {
-          "command": "gh extension install dlvhdr/gh-dash",
+          "command": "if gh auth status >/dev/null 2>&1; then gh extension install dlvhdr/gh-dash; else echo \"skip gh-dash: gh is not logged in (gh auth login --web)\"; fi",
           "description": "install the gh-dash extension",
           "needs": ["gh"]
         },
         {
-          "command": "gh extension upgrade --all",
+          "command": "if gh auth status >/dev/null 2>&1; then gh extension upgrade --all; else echo \"skip gh extensions: gh is not logged in\"; fi",
           "description": "upgrade gh extensions",
           "needs": ["gh"]
         }

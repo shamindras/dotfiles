@@ -137,11 +137,15 @@ fi
 # for the CLI to come up before giving up. Failure is non-fatal — the next
 # successful init.lua load re-asserts it.
 
+# `hs -t` does not bound the wait when Hammerspoon never starts (seen on a CI
+# runner with no desktop session), so each call also gets a hard 3 s limit.
+hs_quick() { perl -e 'alarm 3; exec @ARGV' hs "$@" </dev/null >/dev/null 2>&1; }
 echo "[INFO] Waiting for hs CLI (up to 5s)..."
 for _ in $(seq 1 10); do
-  if hs -t 2 -c 'return 1' </dev/null >/dev/null 2>&1; then
+  pgrep -x Hammerspoon >/dev/null 2>&1 || { sleep 0.5; continue; }
+  if hs_quick -t 2 -c 'return 1'; then
     echo "[INFO] Asserting hs.autoLaunch(true) via CLI..."
-    hs -t 2 -c 'hs.autoLaunch(true); return "ok"' </dev/null >/dev/null 2>&1 || true
+    hs_quick -t 2 -c 'hs.autoLaunch(true); return "ok"' || true
     break
   fi
   sleep 0.5
