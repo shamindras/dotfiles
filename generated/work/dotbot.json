@@ -90,71 +90,71 @@
   {
     "shell": [
       {
-        "command": "if command -v brew >/dev/null 2>&1; then brew services restart borders; else echo \"skip borders: needs brew\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v brew >/dev/null 2>&1; then brew services restart borders; else echo \"skip borders: needs brew\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: borders: restart the borders service\"; exit $rc; }",
         "description": "borders: restart the borders service"
       },
       {
-        "command": "chmod -R +x ${XDG_CONFIG_HOME}/sketchybar/plugins/",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'chmod -R +x ${XDG_CONFIG_HOME}/sketchybar/plugins/' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: sketchybar: make sketchybar plugins executable\"; exit $rc; }",
         "description": "sketchybar: make sketchybar plugins executable"
       },
       {
-        "command": "if command -v brew >/dev/null 2>&1; then brew services restart sketchybar; else echo \"skip sketchybar: needs brew\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v brew >/dev/null 2>&1; then brew services restart sketchybar; else echo \"skip sketchybar: needs brew\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: sketchybar: restart the sketchybar service\"; exit $rc; }",
         "description": "sketchybar: restart the sketchybar service"
       },
       {
-        "command": "if command -v bat >/dev/null 2>&1; then command bat cache --build; else echo \"skip bat: needs bat\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v bat >/dev/null 2>&1; then command bat cache --build; else echo \"skip bat: needs bat\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: bat: build the bat theme cache\"; exit $rc; }",
         "description": "bat: build the bat theme cache"
       },
       {
-        "command": "if command -v espanso >/dev/null 2>&1; then espanso service register; else echo \"skip espanso: needs espanso\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v espanso >/dev/null 2>&1; then espanso service register; else echo \"skip espanso: needs espanso\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: espanso: register the espanso service\"; exit $rc; }",
         "description": "espanso: register the espanso service"
       },
       {
-        "command": "if command -v gh >/dev/null 2>&1; then gh extension install dlvhdr/gh-dash; else echo \"skip gh-dash: needs gh\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then gh extension install dlvhdr/gh-dash; else echo \"skip gh-dash: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: gh-dash: install the gh-dash extension\"; exit $rc; }",
         "description": "gh-dash: install the gh-dash extension"
       },
       {
-        "command": "if command -v gh >/dev/null 2>&1; then gh extension upgrade --all; else echo \"skip gh-dash: needs gh\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then gh extension upgrade --all; else echo \"skip gh-dash: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: gh-dash: upgrade gh extensions\"; exit $rc; }",
         "description": "gh-dash: upgrade gh extensions"
       },
       {
-        "command": "if command -v gh >/dev/null 2>&1; then ./scripts/setup/setup-github-auth; else echo \"skip git: needs gh\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then ./scripts/setup/setup-github-auth; else echo \"skip git: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: git: SSH key for GitHub (authentication + signing), allowed signers, work email\"; exit $rc; }",
         "description": "git: SSH key for GitHub (authentication + signing), allowed signers, work email"
       },
       {
-        "command": "./scripts/setup/setup-hammerspoon",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c './scripts/setup/setup-hammerspoon' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: hammerspoon: set MJConfigFile and load the hidutil LaunchAgent\"; exit $rc; }",
         "description": "hammerspoon: set MJConfigFile and load the hidutil LaunchAgent"
       },
       {
-        "command": "./scripts/setup/setup-macos",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c './scripts/setup/setup-macos' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: macos: apply macOS defaults\"; exit $rc; }",
         "description": "macos: apply macOS defaults"
       },
       {
-        "command": "if command -v nvim >/dev/null 2>&1; then ./scripts/ops/setup-nvim-treesitter; else echo \"skip nvim: needs nvim\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v nvim >/dev/null 2>&1; then ./scripts/ops/setup-nvim-treesitter; else echo \"skip nvim: needs nvim\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: nvim: pre-install treesitter parsers\"; exit $rc; }",
         "description": "nvim: pre-install treesitter parsers"
       },
       {
-        "command": "if command -v brew >/dev/null 2>&1; then ./scripts/setup/setup-upgrade-rust-cargo; else echo \"skip rust: needs brew\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v brew >/dev/null 2>&1; then ./scripts/setup/setup-upgrade-rust-cargo; else echo \"skip rust: needs brew\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: rust: install or update the stable toolchain with rustup\"; exit $rc; }",
         "description": "rust: install or update the stable toolchain with rustup"
       },
       {
-        "command": "[ -e \"$HOME/.config/dotfiles/sesh.local.toml\" ] || printf '# Per-machine sesh sessions, not in git (for example work project sessions).\\n' > \"$HOME/.config/dotfiles/sesh.local.toml\"",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c '[ -e \"$HOME/.config/dotfiles/sesh.local.toml\" ] || printf '\\''# Per-machine sesh sessions, not in git (for example work project sessions).\\n'\\'' > \"$HOME/.config/dotfiles/sesh.local.toml\"' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: sesh: create the untracked per-machine sessions file\"; exit $rc; }",
         "description": "sesh: create the untracked per-machine sessions file"
       },
       {
-        "command": "if command -v tmux >/dev/null 2>&1; then [ -x \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" ] && \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" || true; else echo \"skip tmux: needs tmux\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v tmux >/dev/null 2>&1; then [ -x \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" ] && \"${XDG_CONFIG_HOME}/tmux/plugins/tpm/bin/install_plugins\" || true; else echo \"skip tmux: needs tmux\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: tmux: install tmux plugins with TPM\"; exit $rc; }",
         "description": "tmux: install tmux plugins with TPM"
       },
       {
-        "command": "if command -v tldr >/dev/null 2>&1; then tldr --update; else echo \"skip tealdeer: needs tldr\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v tldr >/dev/null 2>&1; then tldr --update; else echo \"skip tealdeer: needs tldr\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: tealdeer: update the tldr cache\"; exit $rc; }",
         "description": "tealdeer: update the tldr cache"
       },
       {
-        "command": "if command -v ya >/dev/null 2>&1; then ya pkg install; else echo \"skip yazi: needs ya\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v ya >/dev/null 2>&1; then ya pkg install; else echo \"skip yazi: needs ya\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: yazi: install yazi plugins and flavors\"; exit $rc; }",
         "description": "yazi: install yazi plugins and flavors"
       },
       {
-        "command": "if command -v zk >/dev/null 2>&1; then ./scripts/setup/setup-zk; else echo \"skip zk: needs zk\"; fi",
+        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v zk >/dev/null 2>&1; then ./scripts/setup/setup-zk; else echo \"skip zk: needs zk\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: zk: set up the zk notebook\"; exit $rc; }",
         "description": "zk: set up the zk notebook"
       }
     ]

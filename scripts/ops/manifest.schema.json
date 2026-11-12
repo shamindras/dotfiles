@@ -201,6 +201,10 @@
         "last": {
           "type": "boolean",
           "description": "Run after every other step (the Dropbox hand-off)."
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Seconds before the step is stopped and reported as failed (default 1200)."
         }
       }
     },

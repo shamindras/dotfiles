@@ -121,8 +121,11 @@ echo "[INFO] Kickstarting ${HIDUTIL_AGENT_LABEL} to re-apply Caps→F18 mapping"
 if pgrep -x Hammerspoon >/dev/null 2>&1; then
   echo "[INFO] Hammerspoon already running"
 else
-  echo "[INFO] Launching Hammerspoon..."
-  open -a Hammerspoon
+  echo "[INFO] Launching Hammerspoon (in the background; not waiting for it)..."
+  # Detached and silenced: with no logged-in desktop (a CI runner) or a
+  # first-launch dialog, `open -a` can block indefinitely.
+  nohup /usr/bin/open -g -a Hammerspoon </dev/null >/dev/null 2>&1 &
+  disown || true
 fi
 
 # ── 5. Assert auto-launch at login (belt-and-suspenders) ──────────────────────

@@ -249,7 +249,7 @@ class RenderTest(unittest.TestCase):
         term = [i for i, c in enumerate(commands) if "term --init" in c][0]
         self.assertLess(max(wm, bar), term)
         guarded = [c for c in commands if "term --init" in c][0]
-        self.assertTrue(guarded.startswith("if command -v term >/dev/null 2>&1; then"))
+        self.assertIn("/bin/sh -c 'if command -v term >/dev/null 2>&1; then", guarded)
         self.assertIn('echo "skip term: needs term"', guarded)
 
     def test_taps_are_emitted_only_when_used(self):
@@ -296,6 +296,25 @@ class AerospaceTest(unittest.TestCase):
         tpl = "a = 1\n# BEGIN manifest: window rules\n# note\nold\n# END manifest: window rules\nz = 2"
         out = mf.with_rules(tpl, ["", "new"])
         self.assertEqual(out, "a = 1\n# BEGIN manifest: window rules\n# note\n\nnew\n# END manifest: window rules\nz = 2")
+
+
+class StepTimeoutTest(unittest.TestCase):
+    def run_step(self, step):
+        import subprocess
+        cmd = mf.shell_step("u", step)["command"]
+        return subprocess.run(["/bin/sh", "-c", cmd], capture_output=True, text=True)
+
+    def test_a_hung_step_is_stopped_and_named(self):
+        r = self.run_step({"command": "sleep 5", "description": "hang", "timeout": 1})
+        self.assertEqual(r.returncode, 142)
+        self.assertIn("timed out after 1s: u: hang", r.stdout)
+
+    def test_quotes_survive_the_wrapper(self):
+        r = self.run_step({"command": "printf '%s|%s' 'a b' \"c'd\"", "description": "quotes"})
+        self.assertEqual((r.returncode, r.stdout), (0, "a b|c'd"))
+
+    def test_failure_keeps_its_exit_code(self):
+        self.assertEqual(self.run_step({"command": "exit 3", "description": "fails"}).returncode, 3)
 
 
 class CanonicalTest(unittest.TestCase):

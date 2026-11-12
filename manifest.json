@@ -285,7 +285,7 @@
     },
     "djview": {
       "module": "personal",
-      "cask": ["djview"],
+      "note": "App-only: Homebrew disabled the djview cask (Gatekeeper signature failure, 2026-09-01); the installed app keeps working.",
       "app": {
         "path": "/Applications/DjView.app",
         "bundle_id": "org.djvu.DjView",

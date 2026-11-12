@@ -246,7 +246,6 @@
     "curl": "curl",
     "git-delta": "delta",
     "direnv": "direnv",
-    "djview": "djview",
     "dropbox": "dropbox",
     "duckdb": "duckdb",
     "duf": "duf",

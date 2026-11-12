@@ -108,7 +108,10 @@ final `leaders` map (key to unit) per profile. Each profile turns modules on and
 `managed`, `external` (on the Mac, installed by someone else: links and app
 block kept, no package or setup) or `off`. `requires` pulls units in; a
 required unit the profile turned off is an error naming both. Setup steps with
-`needs` are wrapped so a missing command skips the step with a reason.
+`needs` are wrapped so a missing command skips the step with a reason, and
+every step runs under a time limit (`timeout`, default 1200 s, via `perl
+alarm` since macOS has no `timeout`): a hung step exits 142, prints
+"timed out after Ns" and is listed as failed at the end of install.
 
 ### test/
 

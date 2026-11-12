@@ -65,6 +65,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Real bootstrap on a clean runner
-        run: ./bootstrap --profile ${{ matrix.profile }} --no-hints
+        run: ./bootstrap --profile ${{ matrix.profile }} --no-hints </dev/null
       - name: Second run changes nothing it should not
         run: ./install --links-only

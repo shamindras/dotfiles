@@ -2,12 +2,13 @@
   "baseline": "acec184",
   "note": "Home parity: generated/home must equal the install at the baseline commit (main before the overhaul, tagged pre-overhaul locally), apart from the agreed changes listed here. Each change names where it was agreed.",
   "packages_removed": {
-    "agreed": "Package review page, Home unticked (2026-11-10); formatter ownership, Mason owns nvim's tools (2026-11-11): jsonlint, shfmt, taplo, yamllint (no script or CI calls them)",
+    "agreed": "Package review page, Home unticked (2026-11-10); formatter ownership, Mason owns nvim's tools (2026-11-11): jsonlint, shfmt, taplo, yamllint (no script or CI calls them); djview cask, disabled by Homebrew 2026-09-01 (app-only unit now)",
     "names": [
       "aom",
       "apache-arrow",
       "ast-grep",
       "checkmake",
+      "djview",
       "freetds",
       "geos",
       "glib",

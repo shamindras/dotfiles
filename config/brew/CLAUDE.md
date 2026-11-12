@@ -23,7 +23,7 @@ through `~/.config/dotfiles/resolved.json` (transitional fallback:
 ## Key Settings
 
 - **Taps**: felixkratz/formulae, nikitabobko/tap (declared in `manifest.json`, emitted only when used)
-- **Formulas and casks**: home 145, work 76 (see `generated/compare.md`)
+- **Formulas and casks**: home 144, work 76 (see `generated/compare.md`)
 - **Formatters and linters**: only the copies repo scripts or CI call (prettier, shellcheck, stylua); Mason installs
   nvim's own (decision `adr-16-formatters-mason`)
 - **Not from Homebrew**: ttyper (`cargo install`), gh-dash (`gh extension`), yazi and tmux plugins
