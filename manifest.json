@@ -390,9 +390,10 @@
     },
     "gh": {
       "module": "git",
+      "note": "Only config.yml is linked; hosts.yml (login state) is gh's own file in ~/.config/gh.",
       "brew": ["gh"],
       "links": {
-        "${XDG_CONFIG_HOME}/gh": "config/gh"
+        "${XDG_CONFIG_HOME}/gh/config.yml": "config/gh/config.yml"
       }
     },
     "gh-dash": {

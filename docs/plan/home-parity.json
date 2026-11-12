@@ -59,8 +59,9 @@
     ]
   },
   "links_removed": {
-    "agreed": "Plan v2, 'Notes and sessions': rendered sesh.toml per profile (module J, 2026-11-11); ~/.config/sesh becomes a real folder with three links",
+    "agreed": "Plan v2, 'Notes and sessions': rendered sesh.toml per profile (module J, 2026-11-11); ~/.config/sesh becomes a real folder with three links; ~/.config/gh becomes a real folder so gh owns hosts.yml (2026-11-12)",
     "dests": [
+      "${XDG_CONFIG_HOME}/gh",
       "${XDG_CONFIG_HOME}/sesh"
     ]
   },
@@ -73,7 +74,8 @@
       "${XDG_CONFIG_HOME}/sesh/dirs.list",
       "${XDG_CONFIG_HOME}/sesh/scripts",
       "${XDG_CONFIG_HOME}/sesh/sesh.toml",
-      "${XDG_CONFIG_HOME}/dotfiles/gitconfig"
+      "${XDG_CONFIG_HOME}/dotfiles/gitconfig",
+      "${XDG_CONFIG_HOME}/gh/config.yml"
     ]
   },
   "links_changed": {

@@ -335,3 +335,6 @@ tags
 # Neovim compiled spell files
 *.spl
 config/parallel/tmp/sshlogin/Shamindras-MacBook-Pro.local
+
+# gh login state (gh writes it; never tracked). Lives at ~/.config/gh/hosts.yml.
+/config/gh/hosts.yml

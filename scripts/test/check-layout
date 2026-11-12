@@ -43,4 +43,9 @@ else
     t_fail "per-machine files inside the repo: $(printf '%s' "$local_files" | tr '\n' ' ')"
 fi
 
+# gh's login state used to live in the repo (config/gh/hosts.yml, now
+# untracked and ignored). After the move (N16) it lives only in ~/.config/gh.
+no_gh_login_in_repo() { [[ ! -e config/gh/hosts.yml ]]; }
+t_expect N16 "no gh login state (config/gh/hosts.yml) inside the repo" no_gh_login_in_repo
+
 t_summary "check-layout"

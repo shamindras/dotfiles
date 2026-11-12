@@ -13,7 +13,6 @@ and bat as pager.
 | File         | Purpose                                |
 | ------------ | -------------------------------------- |
 | `config.yml` | Main config (protocol, pager, aliases) |
-| `hosts.yml`  | Host auth (github.com, user shamindras)|
 
 ## Key Settings
 
@@ -37,3 +36,5 @@ and bat as pager.
 - No reload needed; changes apply immediately
 - Alias syntax validated on execution
 - **git_protocol**: `https` (HTTPS first: new clones need no SSH key; git uses `gh auth git-credential`)
+- **Login state**: `hosts.yml` is gh's own file in `~/.config/gh/` (a real folder; only `config.yml` is linked). It is
+  not tracked; the token itself is in the macOS keychain.
