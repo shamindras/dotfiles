@@ -81,7 +81,23 @@ case "$mdm" in
 esac
 free_gb="$(df -g / | awk 'NR == 2 { print $4 }')"
 if [[ "${free_gb:-0}" -ge 40 ]]; then ok "${free_gb} GB free on /"; else warn "only ${free_gb} GB free on / (a full home install needs about 40 GB)"; fi
-if /usr/bin/curl -fsS -m 8 -o /dev/null https://github.com 2>/dev/null; then ok "github.com reachable over HTTPS"; else warn "github.com not reachable over HTTPS"; fi
+# Every host bootstrap reads anonymously over HTTPS: the repo and taps,
+# Homebrew's installer, its bottles, its package metadata.
+for host in github.com raw.githubusercontent.com ghcr.io formulae.brew.sh; do
+    rc=0
+    code="$(/usr/bin/curl -sS -m 8 -o /dev/null -w '%{http_code}' "https://$host/" 2>/dev/null)" || rc=$?
+    case "$rc" in
+        0)
+            if [[ "$code" == 407 ]]; then warn "$host: the proxy wants a login (HTTP 407)"; else ok "$host reachable over HTTPS"; fi
+            ;;
+        35 | 51 | 58 | 60 | 77 | 83 | 90 | 91)
+            warn "$host: certificate error (curl $rc): a network that inspects TLS needs its CA trusted (ask IT)"
+            ;;
+        5 | 6) warn "$host: name not resolved (curl $rc): DNS or proxy settings" ;;
+        7 | 28 | 52 | 56) warn "$host: blocked or not answering (curl $rc)" ;;
+        *) warn "$host: not reachable (curl $rc)" ;;
+    esac
+done
 cfg_mode="$(stat -f '%Lp' "$XDG_CONFIG_HOME" 2>/dev/null || echo missing)"
 case "$cfg_mode" in
     missing) info "$XDG_CONFIG_HOME does not exist yet" ;;
