@@ -110,11 +110,20 @@ TOTAL=3
 [[ "$MODE" == links ]] && TOTAL=1
 
 step_outer 1 "$TOTAL" 🔗 "Linking configs ($PROFILE)"
-# A folder that used to be one link into this repo (for example ~/.config/sesh)
-# may now hold several file links. dotbot would follow the old folder link
-# into the repo, so remove such a parent link first. Only links that point
-# into this clone are touched.
-repo_real="$(cd "$BASEDIR" && pwd -P)"
+# A folder that used to be one link into a dotfiles clone (for example
+# ~/.config/sesh or ~/.config/gh) may now hold several file links. dotbot
+# would follow the old folder link into that clone, so replace such a link
+# with a real folder first. Any clone of this repo counts (this one, or the
+# old copy in Dropbox). Files the clone does not track there, such as gh's
+# login state in hosts.yml, are copied into the new folder, never lost.
+is_dotfiles_clone() { # is_dotfiles_clone <dir> -> true if <dir> is inside a clone of this repo
+    local top url
+    top="$(git -C "$1" rev-parse --show-toplevel 2>/dev/null)" || return 1
+    url="$(git -C "$top" remote get-url origin 2>/dev/null || true)"
+    [[ "$top" == "$(cd "$BASEDIR" && pwd -P)" || "$url" == *shamindras/dotfiles* ]] && [[ -f "$top/manifest.json" || -f "$top/install" ]]
+}
+dests="$(sed -nE 's/^ *"(\$\{[A-Z_]+\}[^"]*)": "[^"]*",?$/\1/p' "$GEN/dotbot.json" |
+    sed -e "s|\${HOME}|$HOME|g" -e "s|\${XDG_CONFIG_HOME}|$XDG_CONFIG_HOME|g" -e "s|\${XDG_DATA_HOME}|$XDG_DATA_HOME|g")"
 while IFS= read -r dest; do
     dest="${dest//\$\{HOME\}/$HOME}"
     dest="${dest//\$\{XDG_CONFIG_HOME\}/$XDG_CONFIG_HOME}"
@@ -122,10 +131,20 @@ while IFS= read -r dest; do
     parent="$(dirname "$dest")"
     while [[ "$parent" == "$HOME"/* ]]; do
         if [[ -L "$parent" ]]; then
+            # A parent that is itself a declared link (tmux holds tpm) stays.
+            grep -qxF "$parent" <<<"$dests" && break
             target="$(cd "$parent" 2>/dev/null && pwd -P || true)"
-            if [[ -n "$target" && "$target" == "$repo_real"/* ]]; then
+            if [[ -n "$target" ]] && is_dotfiles_clone "$target"; then
                 echo "  ├─ replacing folder link ${parent/#$HOME/~} (now holds file links)"
+                keep="$(git -C "$target" ls-files --others -- . 2>/dev/null || true)"
                 rm "$parent"
+                mkdir -p "$parent"
+                while IFS= read -r f; do
+                    [[ -n "$f" ]] || continue
+                    mkdir -p "$parent/$(dirname "$f")"
+                    cp -a "$target/$f" "$parent/$f"
+                    echo "  │  kept untracked ${parent/#$HOME/~}/$f"
+                done <<<"$keep"
             fi
             break
         fi
