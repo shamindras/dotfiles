@@ -118,10 +118,6 @@
         "description": "gh-dash: upgrade gh extensions"
       },
       {
-        "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c 'if command -v gh >/dev/null 2>&1; then ./scripts/setup/setup-github-auth; else echo \"skip git: needs gh\"; fi' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: git: SSH key for GitHub (authentication + signing), allowed signers, work email\"; exit $rc; }",
-        "description": "git: SSH key for GitHub (authentication + signing), allowed signers, work email"
-      },
-      {
         "command": "perl -e 'alarm shift @ARGV; exec @ARGV' 1200 /bin/sh -c './scripts/setup/setup-hammerspoon' || { rc=$?; [ $rc -eq 142 ] && echo \"timed out after 1200s: hammerspoon: set MJConfigFile and load the hidutil LaunchAgent\"; exit $rc; }",
         "description": "hammerspoon: set MJConfigFile and load the hidutil LaunchAgent"
       },

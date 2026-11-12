@@ -320,6 +320,38 @@ class GitconfigTest(unittest.TestCase):
         self.assertNotIn("email =", mf.render_profile(manifest(), "work")["gitconfig"])
 
 
+class NonInteractiveTest(unittest.TestCase):
+    """bootstrap and install must never stop for input (the real manifest)."""
+
+    def setUp(self):
+        with open(mf.MANIFEST) as f:
+            self.m = json.load(f)
+
+    def steps(self):
+        for p in sorted(self.m["profiles"]):
+            for d in json.loads(mf.render_profile(self.m, p)["dotbot.json"]):
+                for s in d.get("shell", []):
+                    yield p, s
+
+    def test_no_step_reads_stdin_or_runs_the_auth_script(self):
+        for p, s in self.steps():
+            self.assertFalse(s.get("stdin"), "%s: %s reads stdin" % (p, s["description"]))
+            self.assertNotIn("setup-github-auth", s["command"], p)
+
+    def test_scripts_called_by_steps_never_prompt(self):
+        import re
+        root = os.path.dirname(mf.MANIFEST)
+        scripts = {"bootstrap", "install"}
+        for _, s in self.steps():
+            scripts |= set(re.findall(r"\./(scripts/[\w/.-]+)", s["command"]))
+        for rel in sorted(scripts):
+            with open(os.path.join(root, rel)) as f:
+                for n, line in enumerate(f, 1):
+                    code = line.split("#", 1)[0]
+                    if re.search(r"\bread\b[^|]*-p\b|\bread -r -p\b", code):
+                        self.fail("%s:%d prompts: %s" % (rel, n, line.strip()))
+
+
 class StepTimeoutTest(unittest.TestCase):
     def run_step(self, step):
         import subprocess

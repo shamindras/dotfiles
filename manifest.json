@@ -437,18 +437,12 @@
     },
     "git": {
       "module": "git",
+      "note": "setup-github-auth is run by hand (it needs gh auth login first); install never runs it. post-install-hints and doctor print the command.",
       "brew": ["git"],
       "links": {
         "${XDG_CONFIG_HOME}/git": "config/git",
         "${XDG_CONFIG_HOME}/dotfiles/gitconfig": "generated/{profile}/gitconfig"
       },
-      "setup": [
-        {
-          "command": "./scripts/setup/setup-github-auth",
-          "description": "SSH key for GitHub (authentication + signing), allowed signers, work email",
-          "needs": ["gh"]
-        }
-      ],
       "requires": ["delta", "gh", "ssh"]
     },
     "glow": {

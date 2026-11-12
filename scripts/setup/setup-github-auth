@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #
 # setup-github-auth — one SSH key per Mac for GitHub (authentication and
-# commit signing), plus the work email. Idempotent; run by install (git unit)
-# and safe by hand at any time.
+# commit signing), plus the work email. Run by hand, once per Mac, after
+# `gh auth login --web`; install never runs it (no prompts in install).
+# Idempotent and safe to re-run.
 #
 # Usage: scripts/setup/setup-github-auth [--email <address>]
 #

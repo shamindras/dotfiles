@@ -81,7 +81,7 @@ the subdir already provides that context.
 | `setup-upgrade-rust-cargo`   | Stable toolchain via Homebrew's keg-only `rustup` (XDG `CARGO_HOME`/`RUSTUP_HOME`); skips when rustup is missing |
 | `setup-hammerspoon`          | Configure Hammerspoon MJConfigFile + hidutil Caps→F18 LaunchAgent |
 | `setup-upgrade-ttyper`       | `cargo install --locked ttyper` (the only cargo tool); skips when cargo is missing |
-| `setup-github-auth`          | One SSH key per Mac (`~/.ssh/id_ed25519_github`), registered for authentication and signing via `gh`; allowed signers; work email to `~/.config/dotfiles/gitconfig.local`. State table in the header; prints the command and exits 0 when gh is not logged in |
+| `setup-github-auth`          | Run by hand, never by install. One SSH key per Mac (`~/.ssh/id_ed25519_github`), registered for authentication and signing via `gh`; allowed signers; work email to `~/.config/dotfiles/gitconfig.local`. State table in the header; prints the command and exits 0 when gh is not logged in |
 | `setup-zk`                   | zk setup at `$ZK_NOTEBOOK_DIR`: notebook dirs; when under Dropbox, both ignore xattrs on `.zk/` (File Provider + legacy) read back; templates; corrupt-`notebook.db` recovery. Exits 0 with a message when the notes have not synced yet |
 | `post-install-hints`         | Print manual post-install steps; suppressed by `DOTFILES_NO_HINTS=1` |
 
