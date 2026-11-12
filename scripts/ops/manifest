@@ -424,6 +424,12 @@ def render_profile(m, profile):
         git.append("  # email: not in the repo for this profile; setup-github-auth --email writes gitconfig.local")
     git += ["  signingkey = ~/.ssh/id_ed25519_github.pub", '[gpg "ssh"]',
             "  allowedSignersFile = ~/.config/dotfiles/allowed_signers"]
+    sign = "true" if s.get("git_signing") else "false"
+    git += ["[commit]", "  gpgsign = %s" % sign, "[tag]", "  gpgsign = %s" % sign]
+    browser = p.get("roles", {}).get("browser")
+    web = units.get(browser, {}).get("app", {}).get("web_browser") if browser else None
+    if web:
+        git += ["[web]", "  browser = %s" % web]
     env = [
         "export REPOS_DIR=\"%s\"" % s["repos_dir"],
         "export NOTES_DIR=\"%s\"" % s["notes_dir"],

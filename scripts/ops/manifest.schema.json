@@ -277,6 +277,10 @@
           "type": "string",
           "description": "Replaces `open <path>` (Finder uses osascript reopen)."
         },
+        "web_browser": {
+          "type": "string",
+          "description": "Name git's web.browser uses for this app when it fills the browser role (firefox, chrome)."
+        },
         "note": {
           "type": "string"
         }
@@ -327,7 +331,8 @@
             "repos_dir",
             "notes_dir",
             "remote_login",
-            "quarantine_warning"
+            "quarantine_warning",
+            "git_signing"
           ],
           "properties": {
             "repos_dir": {
@@ -357,6 +362,10 @@
               "type": "string",
               "pattern": "^[^@\\s]+@[^@\\s]+$",
               "description": "git user.email; omit to keep it out of the repo (setup-github-auth --email writes ~/.config/dotfiles/gitconfig.local)."
+            },
+            "git_signing": {
+              "type": "boolean",
+              "description": "Sign every commit and tag with ~/.ssh/id_ed25519_github (home: true; work: false until Xero's policy is known)."
             }
           }
         }

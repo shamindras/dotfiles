@@ -23,7 +23,13 @@ _loader.exec_module(mf)
 with open(mf.SCHEMA) as _f:
     SCHEMA = json.load(_f)
 
-SETTINGS = {"repos_dir": "$HOME/repos", "notes_dir": "$HOME/notes", "remote_login": False, "quarantine_warning": True}
+SETTINGS = {
+    "repos_dir": "$HOME/repos",
+    "notes_dir": "$HOME/notes",
+    "remote_login": False,
+    "quarantine_warning": True,
+    "git_signing": False,
+}
 
 BASE = {
     "schema_version": 1,
@@ -296,6 +302,22 @@ class AerospaceTest(unittest.TestCase):
         tpl = "a = 1\n# BEGIN manifest: window rules\n# note\nold\n# END manifest: window rules\nz = 2"
         out = mf.with_rules(tpl, ["", "new"])
         self.assertEqual(out, "a = 1\n# BEGIN manifest: window rules\n# note\n\nnew\n# END manifest: window rules\nz = 2")
+
+
+class GitconfigTest(unittest.TestCase):
+    def test_signing_follows_the_profile_setting(self):
+        m = manifest()
+        m["profiles"]["home"]["settings"] = dict(SETTINGS, git_signing=True)
+        self.assertIn("[commit]\n  gpgsign = true", mf.render_profile(m, "home")["gitconfig"])
+        self.assertIn("[commit]\n  gpgsign = false", mf.render_profile(m, "work")["gitconfig"])
+
+    def test_web_browser_comes_from_the_browser_role(self):
+        m = manifest()
+        m["units"]["browser"]["app"]["web_browser"] = "firefox"
+        self.assertIn("[web]\n  browser = firefox", mf.render_profile(m, "home")["gitconfig"])
+
+    def test_email_omitted_when_the_profile_has_none(self):
+        self.assertNotIn("email =", mf.render_profile(manifest(), "work")["gitconfig"])
 
 
 class StepTimeoutTest(unittest.TestCase):

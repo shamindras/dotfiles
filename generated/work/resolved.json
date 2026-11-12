@@ -15,7 +15,8 @@
       "notes",
       "scratch"
     ],
-    "git_name": "Shamindra Shrotriya"
+    "git_name": "Shamindra Shrotriya",
+    "git_signing": false
   },
   "order": [
     "font-jetbrains-mono-nerd-font",
@@ -490,7 +491,8 @@
         "process": "Google Chrome",
         "quit_label": "Chrome",
         "workspace": "B",
-        "quit_workspace": "W"
+        "quit_workspace": "W",
+        "web_browser": "chrome"
       }
     },
     "gum": {

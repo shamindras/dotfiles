@@ -7,3 +7,9 @@
   signingkey = ~/.ssh/id_ed25519_github.pub
 [gpg "ssh"]
   allowedSignersFile = ~/.config/dotfiles/allowed_signers
+[commit]
+  gpgsign = true
+[tag]
+  gpgsign = true
+[web]
+  browser = firefox

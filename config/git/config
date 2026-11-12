@@ -90,15 +90,8 @@
 [rerere]
   enabled = true
 
-[web]
-  browser = firefox
-
 [gpg]
 	format = ssh
-[commit]
-	gpgsign = true
-[tag]
-	gpgsign = true
 [format]
 	signoff = true
 

@@ -31,8 +31,12 @@ aliases. Includes global ignore file.
   `manifest.json`: name, home email, `signingkey = ~/.ssh/id_ed25519_github.pub`,
   allowed signers) and `~/.config/dotfiles/gitconfig.local` (the work email,
   written once by `scripts/setup/setup-github-auth`; never in the repo).
-- **Signing**: SSH (`gpg.format = ssh`), every commit and tag. One key per Mac,
-  made and registered by `setup-github-auth`.
+- **Signing**: SSH (`gpg.format = ssh`). Whether commits and tags are signed
+  is the profile's `git_signing` (home on, work off until Xero's policy is
+  known), rendered into `~/.config/dotfiles/gitconfig`. One key per Mac, made
+  and registered by `setup-github-auth`, which you run by hand.
+- **Browser**: `web.browser` comes from the profile's browser role (Firefox
+  at home, Chrome at work).
 - **Transport**: HTTPS first. No https-to-ssh `insteadOf` rewrite; `gh auth
   git-credential` is the credential helper for github.com, so a fresh Mac
   clones and taps with no SSH key. Remotes already set to SSH keep working.

@@ -19,7 +19,8 @@
       "scratch"
     ],
     "git_name": "Shamindra Shrotriya",
-    "git_email": "shamindra.shrotriya@gmail.com"
+    "git_email": "shamindra.shrotriya@gmail.com",
+    "git_signing": true
   },
   "order": [
     "1password",
@@ -643,7 +644,8 @@
         "icon": "\udb80\ude39",
         "process": "Firefox",
         "workspace": "B",
-        "quit_workspace": "W"
+        "quit_workspace": "W",
+        "web_browser": "firefox"
       }
     },
     "font-cascadia-code-nf": {
@@ -810,7 +812,8 @@
         "process": "Google Chrome",
         "quit_label": "Chrome",
         "workspace": "B",
-        "quit_workspace": "W"
+        "quit_workspace": "W",
+        "web_browser": "chrome"
       }
     },
     "graphviz": {
