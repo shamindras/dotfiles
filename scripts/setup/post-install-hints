@@ -25,6 +25,11 @@ printf "      1. gh auth login --web\n"
 printf "      2. gh auth refresh -h github.com -s admin:public_key,admin:ssh_signing_key\n"
 printf "      3. scripts/setup/setup-github-auth          # SSH key for push and signing\n"
 printf "      Work Mac: scripts/setup/setup-github-auth --email you@xero.com\n"
+helper_on="$(plutil -extract settings.git_gh_credential_helper raw -o - "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/resolved.json" 2>/dev/null || echo unset)"
+if [[ "$helper_on" == false ]]; then
+    printf "      This profile has no git credential helper for github.com: HTTPS pushes need\n"
+    printf "      gh auth login plus git_gh_credential_helper set to true in manifest.json, or Xero's own method.\n"
+fi
 printf "\n"
 printf "   🛟 SSH-from-phone (home: Remote Login is on)\n"
 printf "      1. Find this Mac's LAN IP: System Settings → Wi-Fi → Details… (or 'ipconfig getifaddr en0')\n"

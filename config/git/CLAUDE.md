@@ -37,9 +37,12 @@ aliases. Includes global ignore file.
   and registered by `setup-github-auth`, which you run by hand.
 - **Browser**: `web.browser` comes from the profile's browser role (Firefox
   at home, Chrome at work).
-- **Transport**: HTTPS first. No https-to-ssh `insteadOf` rewrite; `gh auth
-  git-credential` is the credential helper for github.com, so a fresh Mac
-  clones and taps with no SSH key. Remotes already set to SSH keep working.
+- **Transport**: HTTPS first. No https-to-ssh `insteadOf` rewrite, so a fresh
+  Mac clones and taps with no SSH key. Remotes already set to SSH keep working.
+- **Credential helper**: the profile's `git_gh_credential_helper` (home on,
+  work off until Xero's setup is known) renders `gh auth git-credential` for
+  github.com and gist.github.com into the profile gitconfig. Without it, HTTPS
+  pushes need another method; doctor reports which helper is set.
 - `git config --global --get` does not follow includes: use `git config --get`
   (outside a repo) or `--global --includes` to see the identity.
 

@@ -7,6 +7,12 @@
   signingkey = ~/.ssh/id_ed25519_github.pub
 [gpg "ssh"]
   allowedSignersFile = ~/.config/dotfiles/allowed_signers
+[credential "https://github.com"]
+  helper =
+  helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+  helper =
+  helper = !gh auth git-credential
 [commit]
   gpgsign = true
 [tag]

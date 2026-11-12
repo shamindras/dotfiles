@@ -56,7 +56,7 @@ gate N10 "no Dropbox repo or notes paths in sesh.toml" config/sesh/sesh.toml -- 
 gate N5 "no Dropbox in bootstrap or install" bootstrap install -- '[Dd]ropbox'
 gate N4 "no /Users/<name> paths outside git config" config scripts ':!config/git/config' -- '/Users/[a-z]'
 gate N7 "no /Users/<name> path in git config" config/git -- '/Users/[a-z]'
-gate N7 "tracked git config has no identity, signing, browser or ssh rewrite" config/git/config -- '^[[:space:]]*(email|signingkey|insteadOf|gpgsign|browser)[[:space:]]*='
+gate N7 "tracked git config has no identity, signing, browser, credential helper or ssh rewrite" config/git/config -- '^[[:space:]]*(email|signingkey|insteadOf|gpgsign|browser|helper)[[:space:]]*='
 # Transitional fallbacks keep this Mac working until the move to ~/repos and
 # the auth step (N16); after N16 any one left behind is a failure.
 t_expect N16 "transitional git identity and ssh key are gone" has_no 'transitional' config/git config/ssh

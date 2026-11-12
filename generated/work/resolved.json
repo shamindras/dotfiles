@@ -16,7 +16,8 @@
       "scratch"
     ],
     "git_name": "Shamindra Shrotriya",
-    "git_signing": false
+    "git_signing": false,
+    "git_gh_credential_helper": false
   },
   "order": [
     "font-jetbrains-mono-nerd-font",

@@ -332,7 +332,8 @@
             "notes_dir",
             "remote_login",
             "quarantine_warning",
-            "git_signing"
+            "git_signing",
+            "git_gh_credential_helper"
           ],
           "properties": {
             "repos_dir": {
@@ -366,6 +367,10 @@
             "git_signing": {
               "type": "boolean",
               "description": "Sign every commit and tag with ~/.ssh/id_ed25519_github (home: true; work: false until Xero's policy is known)."
+            },
+            "git_gh_credential_helper": {
+              "type": "boolean",
+              "description": "Use gh as git's credential helper for github.com HTTPS (home: true; work: false until Xero's setup is known)."
             }
           }
         }

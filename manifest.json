@@ -1082,7 +1082,8 @@
         "sesh_sessions": ["blog", "career", "dots", "feed", "notes", "play", "scratch"],
         "git_name": "Shamindra Shrotriya",
         "git_email": "shamindra.shrotriya@gmail.com",
-        "git_signing": true
+        "git_signing": true,
+        "git_gh_credential_helper": true
       }
     },
     "work": {
@@ -1134,7 +1135,8 @@
         "quarantine_warning": true,
         "sesh_sessions": ["dots", "feed", "notes", "scratch"],
         "git_name": "Shamindra Shrotriya",
-        "git_signing": false
+        "git_signing": false,
+        "git_gh_credential_helper": false
       }
     }
   }

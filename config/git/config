@@ -95,13 +95,9 @@
 [format]
 	signoff = true
 
-# HTTPS everywhere; gh supplies the credentials (no SSH key needed to clone).
-[credential "https://github.com"]
-  helper =
-  helper = !gh auth git-credential
-[credential "https://gist.github.com"]
-  helper =
-  helper = !gh auth git-credential
+# HTTPS everywhere (no SSH key needed to clone). Whether gh supplies the
+# credentials for github.com is a profile setting, rendered into the profile
+# gitconfig below.
 
 # Identity, signing key and allowed signers come from the profile: install
 # links generated/<profile>/gitconfig to ~/.config/dotfiles/gitconfig, and

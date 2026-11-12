@@ -88,3 +88,15 @@ Units whose state differs:
 | zen                           | personal     | managed | off      |
 | zoom                          | apps         | managed | external |
 | zotero                        | docs         | managed | off      |
+
+Settings that differ:
+
+| Setting                  | home                                                           | work                                 |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------------ |
+| git_email                | "shamindra.shrotriya@gmail.com"                                | null                                 |
+| git_gh_credential_helper | true                                                           | false                                |
+| git_signing              | true                                                           | false                                |
+| notes_dir                | "$HOME/Dropbox/notes"                                          | "$HOME/notes"                        |
+| quarantine_warning       | false                                                          | true                                 |
+| remote_login             | true                                                           | false                                |
+| sesh_sessions            | ["blog", "career", "dots", "feed", "notes", "play", "scratch"] | ["dots", "feed", "notes", "scratch"] |

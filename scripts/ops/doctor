@@ -199,6 +199,12 @@ if [[ -n "$(cd / && git config --get user.email 2>/dev/null || true)" ]]; then
 else
     warn "git email not set: run scripts/setup/setup-github-auth --email <you@example.com> (written to ~/.config/dotfiles/gitconfig.local, never the repo)"
 fi
+helper="$(cd / && git config --get-all credential.https://github.com.helper 2>/dev/null | tail -1 || true)"
+if [[ -n "$helper" ]]; then
+    info "git credential helper for github.com: $helper"
+else
+    info "no git credential helper for github.com: HTTPS pushes need gh auth login plus git_gh_credential_helper on, or Xero's own method"
+fi
 if [[ -f "$HOME/.ssh/id_ed25519_github" ]]; then
     ok "GitHub key ~/.ssh/id_ed25519_github present"
 else

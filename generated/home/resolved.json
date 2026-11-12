@@ -20,7 +20,8 @@
     ],
     "git_name": "Shamindra Shrotriya",
     "git_email": "shamindra.shrotriya@gmail.com",
-    "git_signing": true
+    "git_signing": true,
+    "git_gh_credential_helper": true
   },
   "order": [
     "1password",

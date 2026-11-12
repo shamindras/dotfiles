@@ -29,6 +29,7 @@ SETTINGS = {
     "remote_login": False,
     "quarantine_warning": True,
     "git_signing": False,
+    "git_gh_credential_helper": False,
 }
 
 BASE = {
@@ -315,6 +316,13 @@ class GitconfigTest(unittest.TestCase):
         m = manifest()
         m["units"]["browser"]["app"]["web_browser"] = "firefox"
         self.assertIn("[web]\n  browser = firefox", mf.render_profile(m, "home")["gitconfig"])
+
+    def test_gh_credential_helper_follows_the_profile_setting(self):
+        m = manifest()
+        m["profiles"]["home"]["settings"] = dict(SETTINGS, git_gh_credential_helper=True)
+        self.assertIn('[credential "https://github.com"]\n  helper =\n  helper = !gh auth git-credential',
+                      mf.render_profile(m, "home")["gitconfig"])
+        self.assertNotIn("credential", mf.render_profile(m, "work")["gitconfig"])
 
     def test_email_omitted_when_the_profile_has_none(self):
         self.assertNotIn("email =", mf.render_profile(manifest(), "work")["gitconfig"])
