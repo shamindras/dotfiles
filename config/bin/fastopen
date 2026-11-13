@@ -24,7 +24,15 @@ shift
 # The app path comes from the registry (manifest.json app blocks, built into
 # Hammerspoon's open group by apps.lua); there is no name table here.
 case "$APP" in
-  /*.app) "$RUN" /usr/bin/open "$APP" ;;
+  /*.app)
+    if [ -d "$APP" ]; then
+      "$RUN" /usr/bin/open "$APP"
+    else
+      # Not at the registry path (yet): open the app by name, wherever it is
+      # (e.g. /Applications/DjView.app before djview4 is installed).
+      "$RUN" /usr/bin/open -a "$(basename "$APP" .app)"
+    fi
+    ;;
   *) echo "fastopen: expected an app path ending in .app, got '$APP'" >&2; exit 1 ;;
 esac
 

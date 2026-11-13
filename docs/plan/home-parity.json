@@ -53,8 +53,9 @@
     ]
   },
   "packages_added": {
-    "agreed": "Plan v2, 'Packages and updates': rustup from brew instead of the rustup installer (module K, 2026-11-11)",
+    "agreed": "Plan v2, 'Packages and updates': rustup from brew instead of the rustup installer (module K, 2026-11-11); djview4 formula replaces the disabled djview cask (Shamindra, 2026-11-14)",
     "names": [
+      "djview4",
       "rustup"
     ]
   },

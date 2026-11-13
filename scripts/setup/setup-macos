@@ -422,14 +422,18 @@ fi
 ###############################################################################
 echo "  DjView DjVu defaults..."
 
-if [[ -d /Applications/DjView.app ]]; then
+djview_app=""
+for candidate in /opt/homebrew/opt/djview4/DjView.app /Applications/DjView.app; do
+  [[ -d "$candidate" ]] && djview_app="$candidate" && break
+done
+if [[ -n "$djview_app" ]]; then
   echo "    DjView defaults..."
   osascript -e 'tell application "DjView" to quit' 2>/dev/null || true
 
   # Pipe-separated flag string. Diff vs djview's out-of-box default:
   #   - drop SHOW_SIDEBAR        → sidebar hidden
   #   - swap LAYOUT_CONTINUOUS → LAYOUT_SIDEBYSIDE (two-up, non-continuous)
-  # Available flags (from `strings /Applications/DjView.app/Contents/MacOS/djview`):
+  # Available flags (from `strings "$djview_app"/Contents/MacOS/djview`):
   #   Layout: CONTINUOUS | SIDEBYSIDE | COVERPAGE | RIGHTTOLEFT
   #   Show:   TOOLBAR | SIDEBAR | STATUSBAR | SCROLLBARS | FRAME | MAPAREAS | MENUBAR
   #   Handle: MOUSE | KEYBOARD | LINKS | CONTEXTMENU

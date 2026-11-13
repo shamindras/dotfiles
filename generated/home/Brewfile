@@ -132,6 +132,7 @@ brew "stylua"
 brew "zk"
 
 # module: personal
+brew "djview4"
 brew "djvulibre"
 brew "exiftool"
 brew "ffmpeg"

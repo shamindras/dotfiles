@@ -285,9 +285,10 @@
     },
     "djview": {
       "module": "personal",
-      "note": "App-only: Homebrew disabled the djview cask (Gatekeeper signature failure, 2026-09-01); the installed app keeps working.",
+      "note": "DjView 4 from the Homebrew core formula djview4 (the djview cask was disabled 2026-09-01). The formula installs DjView.app in its own prefix, not /Applications; same bundle id org.djvu.DjView (upstream src/djview.plist).",
+      "brew": ["djview4"],
       "app": {
-        "path": "/Applications/DjView.app",
+        "path": "/opt/homebrew/opt/djview4/DjView.app",
         "bundle_id": "org.djvu.DjView",
         "leader": "a",
         "label": "djview",

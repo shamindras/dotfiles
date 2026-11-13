@@ -248,6 +248,7 @@
     "curl": "curl",
     "git-delta": "delta",
     "direnv": "direnv",
+    "djview4": "djview",
     "dropbox": "dropbox",
     "duckdb": "duckdb",
     "duf": "duf",
@@ -533,7 +534,7 @@
       "module": "personal",
       "reason": "module personal is on",
       "app": {
-        "path": "/Applications/DjView.app",
+        "path": "/opt/homebrew/opt/djview4/DjView.app",
         "bundle_id": "org.djvu.DjView",
         "leader": "a",
         "label": "djview",
