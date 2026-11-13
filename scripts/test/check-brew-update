@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+#
+# check-brew-update — brew-update's drift report against a stubbed brew.
+#
+# Runs a copy of config/bin/brew-update with brew replaced by a stub and its
+# WezTerm pop-up (used when there is no terminal) turned off, in a throwaway
+# HOME. Nothing real is installed, upgraded or removed.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+t_header "brew-update (stubbed brew)"
+T="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-bu.XXXXXX")"
+trap 'rm -rf "$T"' EXIT
+mkdir -p "$T/hb/bin" "$T/cargo/bin" "$T/gen/home" "$T/home/.config/dotfiles"
+
+# Installed: fd, extra-tool (not declared), firefox; rustup lives outside Homebrew.
+cat >"$T/hb/bin/brew" <<'EOF'
+#!/bin/sh
+echo "brew $*" >>"$STUB_LOG"
+case "$1 $2" in
+    "list --formula") printf 'fd\nextra-tool\n' ;;
+    "list --cask") printf 'firefox\n' ;;
+    "leaves --installed-on-request") printf 'fd\nextra-tool\n' ;;
+esac
+[ "$1" = bundle ] && cp "${3#--file=}" "$STUB_LOG.bundle"
+exit 0
+EOF
+printf '#!/bin/sh\nexit 0\n' >"$T/cargo/bin/rustup"
+chmod +x "$T/hb/bin/brew" "$T/cargo/bin/rustup"
+printf '# module: core\nbrew "fd"\nbrew "rustup"\nbrew "djview4"\ncask "firefox"\n' >"$T/gen/home/Brewfile"
+printf '{"packages": {"djview4": "djview"}}\n' >"$T/gen/home/resolved.json"
+ln -s "$T/gen/home/resolved.json" "$T/home/.config/dotfiles/resolved.json"
+
+# shellcheck disable=SC2016 # the $( ) in the pattern is text to match, not to expand
+sed -e "s|^BREW=\"/opt/homebrew/bin/brew\"|BREW=\"$T/hb/bin/brew\"|" \
+    -e 's|^if \[ "\$(id -u)" -eq 0 \] \|\| ! \[ -t 0 \]; then|if false; then|' \
+    "$TEST_REPO/config/bin/brew-update" >"$T/bu"
+if ! grep -q '^if false; then' "$T/bu"; then
+    t_fail "could not disable brew-update's terminal pop-up in the test copy"
+    t_summary "check-brew-update"
+    exit 1
+fi
+env HOME="$T/home" XDG_CONFIG_HOME="$T/home/.config" PATH="$T/cargo/bin:/usr/bin:/bin" \
+    STUB_LOG="$T/log" NO_COLOR=1 bash "$T/bu" </dev/null >"$T/out" 2>&1 || true
+plain="$(sed $'s/\x1b\\[[0-9;]*m//g' "$T/out")"
+
+check() { # check <name> <pattern>
+    if grep -qE "$2" <<<"$plain"; then t_pass "$1"; else t_fail "$1" && printf '%s\n' "$plain" | tail -15; fi
+}
+check "names packages installed but not in the manifest" 'extra-tool installed but not in the manifest'
+check "names packages in the manifest but not installed, with both fixes" 'djview4 in the manifest but not installed: brew install djview4 \(or \./install\), or just manifest_set home djview off'
+check "a command provided outside Homebrew is not drift" "rustup \\($T/cargo/bin/rustup\\) provided outside Homebrew"
+check "the summary counts" '1 not in the manifest, 1 not installed \(mode: drift\)'
+if [[ -f "$T/log.bundle" ]] && ! grep -q djview4 "$T/log.bundle" && grep -q '"fd"' "$T/log.bundle"; then
+    t_pass "drift mode does not install what is missing; it keeps what is declared and present"
+else
+    t_fail "bundle step got the wrong Brewfile"
+fi
+if grep -qE 'brew (uninstall|remove|autoremove)|bundle cleanup' "$T/log"; then t_fail "brew-update removed something"; else t_pass "nothing is uninstalled"; fi
+
+t_summary "check-brew-update"

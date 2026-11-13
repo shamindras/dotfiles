@@ -12,9 +12,9 @@
 #
 # The Brewfile is this profile's generated/<profile>/Brewfile (rendered from
 # manifest.json). brew-update never writes it or the manifest: packages
-# installed by hand, or declared but uninstalled by hand, are reported with
-# the command that records the change (`just manifest_set ...`), and a
-# by-hand uninstall is not silently reinstalled.
+# installed but not in the manifest, or in the manifest but not installed,
+# are reported with the command that resolves them, and nothing missing is
+# installed behind your back (./install does that).
 
 set -Eeuo pipefail
 
@@ -178,6 +178,29 @@ MISSING_LIST=$(awk -v fpath="$INST_F" -v cpath="$INST_C" '
     if (!(name in installed_c)) printf "       cask \"%s\"\n", full
   }
 ' "$BREWFILE")
+# A declared formula whose command already exists outside Homebrew (rust's
+# rustup from the rustup.rs installer in $CARGO_HOME, before the move to
+# brew's rustup) is not drift: report it as provided elsewhere instead.
+OUTSIDE_LIST=""
+KEPT_MISSING=""
+while IFS= read -r line; do
+  [ -n "$line" ] || continue
+  name=$(printf '%s' "$line" | sed -E 's/^ *(brew|cask) "([^"]+)".*/\2/' | sed 's|.*/||')
+  # Also look in $CARGO_HOME/bin: the Hammerspoon path runs a non-interactive
+  # zsh, whose PATH lacks it.
+  where=$(PATH="$PATH:${CARGO_HOME:-$HOME/.local/share/cargo}/bin" command -v "$name" 2>/dev/null || true)
+  case "$line" in
+    *'brew "'*)
+      if [ -n "$where" ] && case "$where" in "$(dirname "$(dirname "$BREW")")"/*) false ;; *) true ;; esac; then
+        OUTSIDE_LIST="${OUTSIDE_LIST}${name} (${where})"$'\n'
+        continue
+      fi
+      ;;
+  esac
+  KEPT_MISSING="${KEPT_MISSING}${line}"$'\n'
+done <<<"$MISSING_LIST"
+MISSING_LIST="$KEPT_MISSING"
+OUTSIDE_N=$(printf '%s' "$OUTSIDE_LIST" | grep -c . || true)
 MISSING_COUNT=$(printf '%s' "$MISSING_LIST" | grep -c '^ ' || true)
 
 if [ "$MISSING_COUNT" -eq 0 ]; then
@@ -197,9 +220,12 @@ printf '🧭 [2/7] Mode: %s\n' "$MODE"
 
 # Step 3 — Manifest drift report (read-only). Two directions:
 #   NOT_DECLARED : installed on request (or a cask) but not in this
-#                  profile's Brewfile — installed by hand.
-#   MISSING_LIST : declared but not installed — uninstalled by hand (drift
-#                  mode only). These are left out of step 6's reinstall.
+#                  profile's Brewfile (installed by hand, or dropped from
+#                  the manifest).
+#   MISSING_LIST : in the manifest but not installed (new in the manifest,
+#                  or uninstalled by hand; brew-update cannot tell which).
+#                  Drift mode leaves these out of step 6: run ./install or
+#                  brew install to add a new one. Bootstrap mode installs all.
 printf '📋 [3/7] Manifest drift (%s profile)\n' "$PROFILE"
 DECLARED=$(sed -nE 's/^(brew|cask) "([^"]+)".*/\2/p' "$BREWFILE" | sed 's|.*/||' | sort -u)
 NOT_DECLARED=$(comm -13 <(printf '%s\n' "$DECLARED") \
@@ -208,7 +234,7 @@ NOT_DECLARED=$(comm -13 <(printf '%s\n' "$DECLARED") \
 NOT_DECLARED_N=$(printf '%s' "$NOT_DECLARED" | grep -c . || true)
 MISSING_N=0
 if [ "$MODE" = drift ]; then MISSING_N=$MISSING_COUNT; fi
-printf '   %d installed but not declared, %d declared but not installed\n' "$NOT_DECLARED_N" "$MISSING_N"
+printf '   %d installed but not in the manifest, %d in the manifest but not installed\n' "$NOT_DECLARED_N" "$MISSING_N"
 # Step 6 reinstalls only what upgrades dropped, not by-hand uninstalls.
 if [ "$MODE" = drift ] && [ -n "$MISSING_LIST" ]; then
   grep -vxF -f <(printf '%s\n' "$MISSING_LIST" | sed 's/^ *//') "$BREWFILE" >"$KEEP_BREWFILE" || true
@@ -303,19 +329,28 @@ if [ "$ZERO" -eq 1 ] && [ "$UPGRADE_EXIT" -eq 0 ] && [ "$BUNDLE_EXIT" -eq 0 ]; t
 else
   printf '🍺 brew-update summary\n'
   printf '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
-  printf '📋 Manifest (%s):     %d not declared, %d declared but missing (mode: %s)\n' \
+  printf '📋 Manifest (%s):     %d not in the manifest, %d not installed (mode: %s)\n' \
     "$PROFILE" "$NOT_DECLARED_N" "$MISSING_N" "$MODE"
   if [ "$NOT_DECLARED_N" -gt 0 ]; then
     printf '%s\n' "$NOT_DECLARED" | while IFS= read -r name || [ -n "$name" ]; do
-      [ -n "$name" ] && printf '   %s➕ %s%s installed by hand: add it to a module in manifest.json, or brew uninstall %s\n' \
-        "$GRN" "$name" "$NC" "$name"
+      if [ -n "$name" ]; then
+        printf '   %s➕ %s%s installed but not in the manifest: declare it in manifest.json, or brew uninstall %s\n' \
+          "$GRN" "$name" "$NC" "$name"
+      fi
     done
   fi
   if [ "$MISSING_N" -gt 0 ]; then
     printf '%s\n' "$MISSING_LIST" | sed -E 's/^ *(brew|cask) "([^"]+)"/\2/' | sed 's|.*/||' \
       | while IFS= read -r name || [ -n "$name" ]; do
-      [ -n "$name" ] && printf '   %s➖ %s%s uninstalled by hand: just manifest_set %s %s off, or reinstall it\n' \
-        "$YEL" "$name" "$NC" "$PROFILE" "$(unit_of "$name")"
+      if [ -n "$name" ]; then
+        printf '   %s➖ %s%s in the manifest but not installed: brew install %s (or ./install), or just manifest_set %s %s off\n' \
+          "$YEL" "$name" "$NC" "$name" "$PROFILE" "$(unit_of "$name")"
+      fi
+    done
+  fi
+  if [ "$OUTSIDE_N" -gt 0 ]; then
+    printf '%s\n' "$OUTSIDE_LIST" | while IFS= read -r entry || [ -n "$entry" ]; do
+      if [ -n "$entry" ]; then printf '   %s· %s provided outside Homebrew%s\n' "$DIM" "$entry" "$NC"; fi
     done
   fi
   printf '⬆️  Upgraded:          %s formulae, %s casks\n' "$FORMULAE_UP" "$CASKS_UP"

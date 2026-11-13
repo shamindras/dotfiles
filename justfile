@@ -200,6 +200,7 @@ test_sandbox:
 	@scripts/step inner 4 4 "dropbox_finish and GitHub auth against stubs"
 	@scripts/test/check-dropbox
 	@scripts/test/check-github-auth
+	@scripts/test/check-brew-update
 	@scripts/step done 📦 "Sandbox tests passed"
 
 # Render generated/<profile>/ and generated/compare.md from manifest.json.

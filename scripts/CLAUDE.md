@@ -53,6 +53,7 @@ scripts/
     ├── sandbox-install
     ├── check-doctor
     ├── check-github-auth
+    ├── check-brew-update
     └── check-dropbox
 ```
 
@@ -127,6 +128,7 @@ alarm` since macOS has no `timeout`): a hung step exits 142, prints
 | `check-dropbox`     | `test_sandbox` | `just dropbox_finish` vs a fake Dropbox: link created/repointed, collision refused, notes |
 | `check-layout`      | `test_static`  | Top-level allow-list; no token-shaped value in `config/gh/hosts.yml`                      |
 | `check-github-auth` | `test_sandbox` | `setup-github-auth` state table against a stubbed `gh` in a throwaway HOME                |
+| `check-brew-update` | `test_sandbox` | brew-update drift report against a stubbed brew (wording, outside-Homebrew, no installs)  |
 | `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`              |
 | `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME              |
 | `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                          |
