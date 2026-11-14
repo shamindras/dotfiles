@@ -26,7 +26,7 @@ The full comparison is in [`generated/compare.md`](generated/compare.md), where 
 install and configure it), **external** (already on the Mac; only its config, shortcuts and window rules are added) or
 **off** (left out entirely).
 
-## Set up a personal Mac
+## 🏠 Set up a personal Mac
 
 ```bash
 git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles
@@ -41,7 +41,7 @@ Then open a new terminal, so the new shell and Homebrew are loaded, and finish:
 2. Sign in to Dropbox (notes, books and media only). Once it has synced, which can take hours the first time, run
    `just dropbox_finish` in `~/repos/dotfiles`.
 
-## Set up a work Mac
+## 💼 Set up a work Mac
 
 ```bash
 git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles   # HTTPS, no SSH key needed
@@ -71,17 +71,19 @@ just update-all    # move pinned versions; a weekly CI job does this as a PR
 - [`docs/decisions/`](docs/decisions/README.md): why things are the way they are.
 - [`docs/plan/`](docs/plan/README.md): how the overhaul was planned and verified.
 
-## Credits
+## 🙏 Credits
 
 Thanks to everyone who openly shares their work.
 
 <details>
-<summary>Dotfiles that inspired these</summary>
+<summary>Dotfiles and configs these borrow from</summary>
 <br>
 
-- [Alicia Sykes' dotfiles](https://github.com/Lissy93/dotfiles)
-- [Mattmc3's zshrc1 config](https://github.com/mattmc3/zshrc1/tree/main)
-- [Josh Medeski's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86)
+- [Alicia Sykes' dotfiles](https://github.com/Lissy93/dotfiles): the curl and wget configs
+- [mattmc3's zshrc1](https://github.com/mattmc3/zshrc1/tree/main): the shape of the zsh config, and
+  [zsh_unplugged](https://github.com/mattmc3/zsh_unplugged): the plugin loader
+- [Josh Medeski's dotfiles](https://github.com/joshmedeski/dotfiles/tree/15576d333a884b4fb867a24f121162e4f4293a86):
+  Neovim autocommands
 - [Josean Martinez's dotfiles](https://github.com/josean-dev/dev-environment-files) and his
   [YouTube videos](https://www.youtube.com/watch?v=U-omALWIBos)
 - [Shivan's zk config](https://github.com/shivan-s/dotfiles/tree/main/zk)
@@ -92,6 +94,14 @@ Thanks to everyone who openly shares their work.
 - [Dylan McDowell's zsh config](https://github.com/dylanjm/teton/blob/2eb03539fe2c9489ed6b5ade4ee4ee44d8c6f421/config/shells/zsh/zshenv.zsh)
 - [Linkarzu's Neovim markdown setup](https://linkarzu.com/posts/neovim/markdown-setup-2025/) and his
   [dotfiles](https://github.com/linkarzu/dotfiles-latest/tree/main/neovim/neobean)
+- [dlvhdr's dotfiles](https://github.com/dlvhdr/dotfiles): the gh-dash config and a few aliases
+- [mrnugget's dotfiles](https://github.com/mrnugget/dotfiles): vi-style keybindings in zsh
+- [romkatv's zsh-no-ps2](https://github.com/romkatv/zsh-no-ps2): a newline instead of the PS2 prompt on unfinished input
+- [sdaschner's dotfiles](https://github.com/sdaschner/dotfiles): suffix aliases that open files by extension
+- [gpakosz's newsboat config](https://github.com/gpakosz/.newsboat) and the
+  [Dracula theme for newsboat](https://draculatheme.com/newsboat)
+- [pablospe's](https://github.com/pablospe) colibri theme for delta, based on [Kr1ss-XD's](https://github.com/Kr1ss-XD)
+  woolly-mammoth
 
 </details>
 
