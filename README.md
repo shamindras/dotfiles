@@ -68,6 +68,9 @@ just update-all    # move pinned versions; a weekly CI job does this as a PR
 ## Go deeper
 
 - [`CLAUDE.md`](CLAUDE.md): layout, conventions and every `just` recipe.
+- [`config/`](config/): one folder per tool, each with a `CLAUDE.md` giving its docs link, version and conventions.
+- [`manifest.json`](manifest.json) and [`generated/compare.md`](generated/compare.md): every tool, and which profile
+  gets it.
 - [`docs/decisions/`](docs/decisions/README.md): why things are the way they are.
 - [`docs/plan/`](docs/plan/README.md): how the overhaul was planned and verified.
 
