@@ -469,7 +469,14 @@ and custom pickers (todo comments, colorscheme, buffers) — no `setup_keymaps()
   `~/.local/share/nvim/site/parser/`, revision tracking in
   `~/.local/share/nvim/site/parser-info/<lang>.revision`.
   - **Default mode**: `./scripts/ops/setup-nvim-treesitter` — installs missing
-    parsers and updates outdated ones (compares installed vs wanted revision)
+    parsers and updates outdated ones (compares installed vs wanted revision),
+    each in one headless nvim using the synchronous `install(...):wait()` /
+    `update(...):wait()` API, so it ends as soon as the work is done. On a
+    fresh machine it first installs the plugins with one headless start;
+    if nvim-treesitter still cannot load it skips with the reason
+  - **First start pins lazy.nvim**: `core/lazy-bootstrap.lua` clones lazy.nvim
+    (stable tag) and then checks out the commit in `lazy-lock.json`, so the
+    first start on a new machine does not rewrite the tracked lockfile
   - **Status mode**: `./scripts/ops/setup-nvim-treesitter --status` — read-only
     table showing parser status, revisions, file sizes, modified dates
   - **Justfile**: `just treesitter_update` (install+update, then status),

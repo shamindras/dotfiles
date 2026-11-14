@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+#
+# check-treesitter — scripts/ops/setup-nvim-treesitter against a stubbed nvim
+# in a throwaway HOME. The stub prints lazy.nvim-style log lines on stdout
+# (as a first headless start does) next to the tagged values, and records
+# every call. Checks: values are read through the noise, missing parsers
+# install in ONE nvim call that waits, a fresh machine installs the plugins
+# first, an unloadable nvim-treesitter skips at once, and a second run with
+# everything present does nothing.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+t_header "setup-nvim-treesitter (stubbed nvim)"
+T="$(mktemp -d "${TMPDIR:-/tmp}/dotfiles-ts.XXXXXX")"
+trap 'rm -rf "$T"' EXIT
+mkdir -p "$T/bin" "$T/home/.local/share/nvim/site/parser"
+PARSERS="$T/home/.local/share/nvim/site/parser"
+
+# Stub nvim: noise on stdout, then answers by what the command asks for.
+# TS_LOADS=0 makes nvim-treesitter unloadable.
+cat >"$T/bin/nvim" <<'EOF'
+#!/bin/bash
+args="$*"
+echo "nvim $args" >>"$STUB_LOG"
+echo "[lazy.nvim] install | Running task install"
+case "$args" in
+    *"pcall(require"*) [ "${TS_LOADS:-1}" = 1 ] && echo "TSDATA true" || echo "TSDATA false" ;;
+    *ensure_installed*)
+        for l in bash json; do
+            if [ -f "$PARSER_DIR/$l.so" ]; then echo "TSDATA $l r1 r1"; else echo "TSDATA $l MISSING r1"; fi
+        done ;;
+    *get_install_dir*) echo "TSDATA $PARSER_DIR" ;;
+    *".install({"*)
+        for l in bash json; do case "$args" in *"'$l'"*) : >"$PARSER_DIR/$l.so" ;; esac; done ;;
+esac
+exit 0
+EOF
+printf '#!/bin/sh\nexit 0\n' >"$T/bin/tree-sitter"
+chmod +x "$T/bin/nvim" "$T/bin/tree-sitter"
+
+run() { # run [extra env...] — the script in the sandbox; output to $T/out
+    env -i HOME="$T/home" PATH="$T/bin:/usr/bin:/bin" STUB_LOG="$T/log" PARSER_DIR="$PARSERS" "$@" \
+        bash "$TEST_REPO/scripts/ops/setup-nvim-treesitter" </dev/null >"$T/out" 2>&1
+}
+
+# 1. Fresh machine: no plugins, no parsers.
+: >"$T/log"
+start=$SECONDS
+run
+took=$((SECONDS - start))
+if grep -q 'nvim plugins: installing' "$T/out" && grep -qx 'nvim --headless +qa' "$T/log"; then
+    t_pass "a fresh machine installs the nvim plugins first"
+else
+    t_fail "plugins were not installed first" && cat "$T/out"
+fi
+installs="$(grep -c "\.install({" "$T/log" || true)"
+if [[ "$installs" == 1 ]] && grep -q "install({'bash','json'}):wait(" "$T/log"; then
+    t_pass "both missing parsers install in one nvim call that waits"
+else
+    t_fail "expected one install call for 'bash','json', got $installs" && cat "$T/log"
+fi
+if [[ -f "$PARSERS/bash.so" && -f "$PARSERS/json.so" ]] && grep -q '2 installed, 0 updated, 0 up to date, 0 failed' "$T/out"; then
+    t_pass "the parser dir is read through lazy.nvim's log lines"
+else
+    t_fail "parsers not reported as installed" && cat "$T/out"
+fi
+if [[ $took -lt 10 ]]; then t_pass "no fixed waits (${took}s)"; else t_fail "took ${took}s: something waits"; fi
+
+# 2. Everything present: nothing to do, no install call.
+mkdir -p "$T/home/.local/share/nvim/lazy/nvim-treesitter"
+: >"$T/log"
+run
+if grep -q '0 installed, 0 updated, 2 up to date' "$T/out" && ! grep -q '\.install({' "$T/log" && ! grep -qx 'nvim --headless +qa' "$T/log"; then
+    t_pass "a second run with everything present does nothing"
+else
+    t_fail "second run did work" && cat "$T/out" "$T/log"
+fi
+
+# 3. nvim-treesitter cannot load: skip at once with the reason.
+rm -f "$PARSERS"/*.so
+: >"$T/log"
+run TS_LOADS=0
+if grep -q 'SKIP.*nvim-treesitter cannot be loaded' "$T/out" && ! grep -q 'install(' "$T/log"; then
+    t_pass "an unloadable nvim-treesitter skips with the reason"
+else
+    t_fail "no skip when nvim-treesitter cannot load" && cat "$T/out"
+fi
+
+t_summary "check-treesitter"

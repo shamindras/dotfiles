@@ -12,5 +12,14 @@ if not vim.uv.fs_stat(lazypath) then
     vim.fn.getchar()
     os.exit(1)
   end
+  -- The clone is lazy.nvim's stable tag. Move it to the commit pinned in
+  -- lazy-lock.json, or the first start rewrites the tracked lockfile.
+  local ok, lock = pcall(function()
+    return vim.json.decode(table.concat(vim.fn.readfile(vim.fn.stdpath('config') .. '/lazy-lock.json'), '\n'))
+  end)
+  local pin = ok and lock['lazy.nvim'] and lock['lazy.nvim'].commit
+  if pin then
+    vim.fn.system({ 'git', '-C', lazypath, 'checkout', '--quiet', pin })
+  end
 end
 vim.opt.rtp:prepend(lazypath)

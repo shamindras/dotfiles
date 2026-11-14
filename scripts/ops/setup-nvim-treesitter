@@ -3,9 +3,18 @@ set -Eeuo pipefail
 
 # Install missing + update outdated treesitter parsers (default), or show
 # parser status (--status).  Reads the parser list from treesitter.lua
-# (single source of truth).  Runs each install/update serially in headless
-# nvim to prevent races when multiple nvim instances start simultaneously
+# (single source of truth).  Installs and updates run in one headless nvim
+# each, with nvim-treesitter's synchronous API (`:wait()`), so nvim exits as
+# soon as the work is done; no concurrent nvim starts race on the parser dir
 # (e.g., sesh-reset --common).
+#
+# On a fresh machine nvim-treesitter is not there yet: one headless start
+# first installs the plugins at their config/nvim/lazy-lock.json commits,
+# leaving the lockfile unchanged. If the plugin still cannot load, the
+# script skips once with the reason instead of waiting.
+#
+# Values are read from nvim's stdout only on lines tagged `TSDATA`, because
+# a first headless start also prints lazy.nvim's install log there.
 #
 # Usage:
 #   ./scripts/ops/setup-nvim-treesitter           # install missing + update outdated
@@ -21,17 +30,35 @@ fi
 
 command -v nvim &>/dev/null || { echo "[SKIP] nvim not found"; exit 0; }
 
-# ── Parser directory ────────────────────────────────────────────────────
-PARSER_DIR="$(nvim --headless \
-  +'lua io.write(require("nvim-treesitter.config").get_install_dir("parser"))' \
-  +'qa' 2>/dev/null)"
+# ── Plugins ─────────────────────────────────────────────────────────────
+# nvim_data <lua expression>: print the value, tagged, and keep only that line.
+nvim_data() {
+  nvim --headless +"lua io.write('TSDATA ' .. tostring($1) .. '\\n')" +'qa' 2>/dev/null |
+    tr -d '\r' | sed -n 's/^TSDATA //p'
+}
 
-if [[ -z "$PARSER_DIR" ]]; then
+has_ts() { [[ "$(nvim_data "pcall(require, 'nvim-treesitter.config')")" == "true" ]]; }
+
+# First run on this machine (no plugins yet): one headless start installs
+# them at their lazy-lock.json commits (lazy-bootstrap.lua pins lazy.nvim
+# itself), under its own time limit.
+LAZY_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/lazy"
+if [[ "$MODE" == "install" && ! -d "$LAZY_DIR/nvim-treesitter" ]]; then
+  echo "  ⬇️  nvim plugins: installing from lazy-lock.json..."
+  perl -e 'alarm shift @ARGV; exec @ARGV' 600 nvim --headless +qa >/dev/null 2>&1 || true
+fi
+if ! has_ts; then
+  echo "[SKIP] nvim-treesitter cannot be loaded (plugins not installed): parsers install on the next nvim start"
+  exit 0
+fi
+
+# ── Parser directory ────────────────────────────────────────────────────
+PARSER_DIR="$(nvim_data 'require("nvim-treesitter.config").get_install_dir("parser")')"
+
+if [[ -z "$PARSER_DIR" || ! "$PARSER_DIR" == /* ]]; then
   echo "[ERROR] Could not determine parser install dir"
   exit 1
 fi
-
-PARSER_INFO_DIR="${HOME}/.local/share/nvim/site/parser-info"
 
 # ── Gather revision data via a single headless nvim call ────────────────
 # Output: one line per parser: <lang> <installed_rev|MISSING> <wanted_rev>
@@ -68,9 +95,9 @@ REVISION_DATA="$(nvim --headless +'lua
         installed = "NO_REV"
       end
     end
-    io.write(lang .. " " .. installed .. " " .. wanted .. "\n")
+    io.write("TSDATA " .. lang .. " " .. installed .. " " .. wanted .. "\n")
   end
-' +'qa' 2>/dev/null)"
+' +'qa' 2>/dev/null | tr -d '\r' | sed -n 's/^TSDATA //p')"
 
 if [[ -z "$REVISION_DATA" ]]; then
   echo "No parsers in ensure_installed — nothing to do"
@@ -159,70 +186,57 @@ fi
 # ── INSTALL + UPDATE mode (default) ────────────────────────────────────
 command -v tree-sitter &>/dev/null || { echo "[SKIP] tree-sitter CLI not found (brew install tree-sitter-cli)"; exit 0; }
 
-count_installed=0 count_updated=0 count_skipped=0
-
-printf "\n🌳 Treesitter parser install + update (%d parsers)\n" "$TOTAL"
-printf "═══════════════════════════════════════════════════\n"
-
+declare -a MISSING=() OUTDATED=()
+count_skipped=0
 for i in "${!LANGS[@]}"; do
-  lang="${LANGS[$i]}"
-  inst="${INSTALLED_REVS[$i]}"
-  want="${WANTED_REVS[$i]}"
-  parser_so="${PARSER_DIR}/${lang}.so"
-
-  if [[ "$inst" == "MISSING" ]]; then
-    printf "  ⬇️  %s: installing...\n" "$lang"
-    # nvim-treesitter main branch removed :TSInstall — use the Lua API.
-    nvim --headless +"lua require('nvim-treesitter').install({'${lang}'}, {force=true}):wait(120000)" \
-      +'lua vim.defer_fn(function() vim.cmd("qa") end, 60000)' \
-      2>/dev/null &
-    nvim_pid=$!
-
-    waited=0
-    while [[ ! -f "$parser_so" ]] && (( waited < 60 )); do
-      sleep 1
-      waited=$((waited + 1))
-    done
-    kill "$nvim_pid" 2>/dev/null || true
-    wait "$nvim_pid" 2>/dev/null || true
-
-    if [[ -f "$parser_so" ]]; then
-      printf "  ✅ %s: installed (%ds)\n" "$lang" "$waited"
-      count_installed=$((count_installed + 1))
-    else
-      printf "  ⚠️  %s: WARNING — may not have compiled (non-fatal)\n" "$lang"
-    fi
-  elif [[ "$inst" != "$want" ]]; then
-    printf "  🔄 %s: updating...\n" "$lang"
-    # nvim-treesitter main branch removed :TSUpdate — use the Lua API.
-    nvim --headless +"lua require('nvim-treesitter').update({'${lang}'}):wait(120000)" \
-      +'lua vim.defer_fn(function() vim.cmd("qa") end, 60000)' \
-      2>/dev/null &
-    nvim_pid=$!
-
-    # Wait for the revision file to update (max 60s)
-    waited=0
-    while (( waited < 60 )); do
-      sleep 1
-      waited=$((waited + 1))
-      rev_file="${PARSER_INFO_DIR}/${lang}.revision"
-      if [[ -f "$rev_file" ]]; then
-        current_rev=$(cat "$rev_file" 2>/dev/null | tr -d '[:space:]')
-        if [[ "$current_rev" == "$want" ]]; then
-          break
-        fi
-      fi
-    done
-    kill "$nvim_pid" 2>/dev/null || true
-    wait "$nvim_pid" 2>/dev/null || true
-
-    printf "  ✅ %s: updated (%ds)\n" "$lang" "$waited"
-    count_updated=$((count_updated + 1))
+  if [[ "${INSTALLED_REVS[$i]}" == "MISSING" ]]; then
+    MISSING+=("${LANGS[$i]}")
+  elif [[ "${INSTALLED_REVS[$i]}" != "${WANTED_REVS[$i]}" ]]; then
+    OUTDATED+=("${LANGS[$i]}")
   else
-    printf "  ✅ %s: up to date\n" "$lang"
     count_skipped=$((count_skipped + 1))
   fi
 done
+
+printf "\n🌳 Treesitter parsers: %d missing, %d outdated, %d up to date\n" \
+  "${#MISSING[@]}" "${#OUTDATED[@]}" "$count_skipped"
+printf "═══════════════════════════════════════════════════\n"
+
+# lua_list a b c -> 'a','b','c'
+lua_list() { printf "'%s'," "$@" | sed 's/,$//'; }
+
+# run_ts <install|update> <langs...>: one headless nvim, exits when done.
+run_ts() {
+  local action="$1"; shift
+  local start=$SECONDS
+  nvim --headless \
+    +"lua require('nvim-treesitter').${action}({$(lua_list "$@")}):wait(900000)" \
+    +'qa' >/dev/null 2>&1 || true
+  printf "  ⏱  %s of %d parser(s) took %ds\n" "$action" "$#" "$((SECONDS - start))"
+}
+
+count_installed=0 count_updated=0 count_failed=0
+if [[ ${#MISSING[@]} -gt 0 ]]; then
+  printf "  ⬇️  installing: %s\n" "${MISSING[*]}"
+  run_ts install "${MISSING[@]}"
+  for lang in "${MISSING[@]}"; do
+    if [[ -f "${PARSER_DIR}/${lang}.so" ]]; then
+      printf "  ✅ %s: installed\n" "$lang"
+      count_installed=$((count_installed + 1))
+    else
+      printf "  ❌ %s: not installed\n" "$lang"
+      count_failed=$((count_failed + 1))
+    fi
+  done
+fi
+if [[ ${#OUTDATED[@]} -gt 0 ]]; then
+  printf "  🔄 updating: %s\n" "${OUTDATED[*]}"
+  run_ts update "${OUTDATED[@]}"
+  for lang in "${OUTDATED[@]}"; do
+    printf "  ✅ %s: updated\n" "$lang"
+    count_updated=$((count_updated + 1))
+  done
+fi
 
 # ── Cache cleanup ───────────────────────────────────────────────────────
 CACHE_DIR="${HOME}/.cache/nvim"
@@ -233,5 +247,6 @@ find "$CACHE_DIR" -maxdepth 1 -name 'tree-sitter-*' -type d \
 find "$CACHE_DIR" -maxdepth 1 -name 'tree-sitter-*.tar.gz' -type f \
   -exec rm -f {} + 2>/dev/null || true
 
-printf "\n✅ Summary: %d installed, %d updated, %d up to date\n\n" \
-  "$count_installed" "$count_updated" "$count_skipped"
+printf "\n✅ Summary: %d installed, %d updated, %d up to date, %d failed\n\n" \
+  "$count_installed" "$count_updated" "$count_skipped" "$count_failed"
+# A parser that did not build is reported, not fatal: nvim works without it.

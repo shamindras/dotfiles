@@ -55,6 +55,7 @@ scripts/
     ├── check-doctor
     ├── check-github-auth
     ├── check-brew-update
+    ├── check-treesitter
     └── check-dropbox
 ```
 
@@ -94,7 +95,7 @@ the subdir already provides that context.
 | `audit-firefox`              | Check tracked Firefox prefs against live profile state           |
 | `ensure-dropbox-link`        | Ensure `~/Dropbox` symlink points at the canonical CloudStorage path; called by bootstrap (Phase 6) and re-runnable for manual repair |
 | `setup-firefox`              | Sync user.js, chrome/, policies.json into active Firefox profile |
-| `setup-nvim-treesitter`      | Install/update treesitter parsers (`--status` for read-only table) |
+| `setup-nvim-treesitter`      | Install/update treesitter parsers in one headless nvim each (`--status` for a read-only table); installs the nvim plugins first on a fresh machine |
 | `doctor`                     | Read-only report (system, clone, Homebrew, apps, links, auth, Dropbox) with a paste block; macOS built-ins only |
 | `manifest`                   | Resolver for `manifest.json` (Python 3.9+ stdlib): `render`, `check`, `set`, `why`, `diff` |
 
@@ -131,6 +132,7 @@ alarm` since macOS has no `timeout`): a hung step exits 142, prints
 | `check-workflows`   | `test_static`  | zizmor (auditor persona) over `.github`; SKIP without uvx or pipx                        |
 | `check-github-auth` | `test_sandbox` | `setup-github-auth` state table against a stubbed `gh` in a throwaway HOME                |
 | `check-brew-update` | `test_sandbox` | brew-update drift report against a stubbed brew (wording, outside-Homebrew, no installs)  |
+| `check-treesitter`  | `test_sandbox` | setup-nvim-treesitter vs a noisy stub nvim: one waiting install call, plugins first, skip |
 | `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`              |
 | `check-config-load` | `test_sandbox` | zsh syntax, interactive start-up and non-interactive env in a throwaway HOME              |
 | `sandbox-install`   | `test_sandbox` | `./install --dry-run --profile <p>` into a throwaway HOME, twice                          |
