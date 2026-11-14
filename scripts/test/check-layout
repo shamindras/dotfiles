@@ -3,7 +3,8 @@
 # check-layout — the repo's top level matches the allow-list (plan: lean top
 # level), no secret-shaped value is tracked in config/gh/hosts.yml (gh
 # rewrites that file; tokens must stay in the macOS keychain), and no
-# per-machine *.local file sits inside the repo tree.
+# per-machine *.local file sits inside the repo tree. Also: no tracked file is
+# ignored, and local Claude Code state and login files are ignored.
 
 set -Eeuo pipefail
 
@@ -47,5 +48,27 @@ fi
 # untracked and ignored). After the move (N16) it lives only in ~/.config/gh.
 no_gh_login_in_repo() { [[ ! -e config/gh/hosts.yml ]]; }
 t_expect N16 "no gh login state (config/gh/hosts.yml) inside the repo" no_gh_login_in_repo
+
+# Ignore rules: checked with the repo's .gitignore alone (a fresh clone,
+# before install links a global ignore) and with config/git/ignore as the
+# global ignore (what install sets up).
+t_header "gitignore"
+for global in /dev/null "$TEST_REPO/config/git/ignore"; do
+    label="repo .gitignore"
+    [[ "$global" == /dev/null ]] || label="repo .gitignore plus config/git/ignore"
+    bad="$(git -c core.excludesFile="$global" ls-files -ci --exclude-standard)"
+    if [[ -z "$bad" ]]; then
+        t_pass "no tracked file is ignored ($label)"
+    else
+        t_fail "tracked but ignored ($label): $(printf '%s' "$bad" | tr '\n' ' ')"
+    fi
+done
+for f in .claude/settings.local.json .claude/x.local.md .claude/scheduled_tasks.lock config/gh/hosts.yml .env; do
+    if git -c core.excludesFile=/dev/null check-ignore -q --no-index "$f"; then
+        t_pass "ignored by the repo alone: $f"
+    else
+        t_fail "not ignored by the repo's .gitignore: $f"
+    fi
+done
 
 t_summary "check-layout"
