@@ -29,10 +29,13 @@ The full comparison is in [`generated/compare.md`](generated/compare.md).
 ```bash
 git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles
 ~/repos/dotfiles/bootstrap --profile home
-gh auth login --web && ~/repos/dotfiles/scripts/setup/setup-github-auth
 ```
 
-Then sign in to Dropbox. Once it has synced (a first sync can take hours), run `just dropbox_finish`.
+Then open a new terminal, so the new shell and Homebrew are loaded, and finish:
+
+1. `gh auth login --web`, then `~/repos/dotfiles/scripts/setup/setup-github-auth` (one SSH key for pushing and signing).
+2. Sign in to Dropbox (notes, books and media only). Once it has synced, which can take hours the first time, run
+   `just dropbox_finish` in `~/repos/dotfiles`.
 
 ## Set up a work Mac
 
@@ -43,7 +46,8 @@ git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles   # HTTPS,
 ~/repos/dotfiles/bootstrap --profile work
 ```
 
-Optionally, to push from this Mac: `gh auth login --web`, then `scripts/setup/setup-github-auth --email <work email>`.
+Optionally, to push from this Mac, open a new terminal and run `gh auth login --web`, then
+`~/repos/dotfiles/scripts/setup/setup-github-auth --email <work email>`.
 
 ## Day to day
 
