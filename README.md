@@ -13,27 +13,31 @@ My macOS dotfiles, for a personal Mac and a work Mac. They follow a
   failures are listed at the end.
 - `just doctor` is a read-only health report. Run it first on a new Mac.
 
-| Profile difference      | home                   | work                     |
-| ----------------------- | ---------------------- | ------------------------ |
-| Personal apps and fonts | installed              | off                      |
-| Office and Teams apps   | managed here           | external (already there) |
-| Git commit signing      | on                     | off                      |
-| gh as git credential    | on                     | off                      |
-| Notes folder            | `~/Dropbox/notes`      | `~/notes`                |
-| Dropbox                 | data only, set up last | not installed            |
+| Profile difference      | home                     | work                                       |
+| ----------------------- | ------------------------ | ------------------------------------------ |
+| Personal apps and fonts | installed                | not installed                              |
+| Office and Teams apps   | installed by these files | installed by IT; only config and shortcuts |
+| Git commit signing      | on                       | off                                        |
+| gh as git credential    | on                       | off                                        |
+| Notes folder            | `~/Dropbox/notes`        | `~/notes`                                  |
+| Dropbox                 | data only, set up last   | not installed                              |
 
-The full comparison is in [`generated/compare.md`](generated/compare.md).
+The full comparison is in [`generated/compare.md`](generated/compare.md), where each tool is **managed** (these dotfiles
+install and configure it), **external** (already on the Mac; only its config, shortcuts and window rules are added) or
+**off** (left out entirely).
 
 ## Set up a personal Mac
 
 ```bash
 git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles
-~/repos/dotfiles/bootstrap --profile home
+cd ~/repos/dotfiles
+./bootstrap --profile home
 ```
 
 Then open a new terminal, so the new shell and Homebrew are loaded, and finish:
 
-1. `gh auth login --web`, then `~/repos/dotfiles/scripts/setup/setup-github-auth` (one SSH key for pushing and signing).
+1. `gh auth login --web`, then `scripts/setup/setup-github-auth` in `~/repos/dotfiles` (one SSH key for pushing and
+   signing).
 2. Sign in to Dropbox (notes, books and media only). Once it has synced, which can take hours the first time, run
    `just dropbox_finish` in `~/repos/dotfiles`.
 
@@ -41,13 +45,14 @@ Then open a new terminal, so the new shell and Homebrew are loaded, and finish:
 
 ```bash
 git clone https://github.com/shamindras/dotfiles.git ~/repos/dotfiles   # HTTPS, no SSH key needed
-~/repos/dotfiles/scripts/ops/doctor                    # what the Mac already has
-~/repos/dotfiles/bootstrap --profile work --dry-run    # print the plan, change nothing
-~/repos/dotfiles/bootstrap --profile work
+cd ~/repos/dotfiles
+./scripts/ops/doctor                     # read-only health report (just is not installed yet)
+./bootstrap --profile work --dry-run     # print the plan, change nothing
+./bootstrap --profile work
 ```
 
-Optionally, to push from this Mac, open a new terminal and run `gh auth login --web`, then
-`~/repos/dotfiles/scripts/setup/setup-github-auth --email <work email>`.
+Optionally, to push from this Mac, open a new terminal in `~/repos/dotfiles` and run `gh auth login --web`, then
+`scripts/setup/setup-github-auth --email <work email>`.
 
 ## Day to day
 
