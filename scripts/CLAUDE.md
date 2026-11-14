@@ -120,7 +120,7 @@ alarm` since macOS has no `timeout`): a hung step exits 142, prints
 | ------------------- | -------------- | ----------------------------------------------------------------------------------------- |
 | `self-test`         | `test_static`  | The harness itself, against throwaway fixtures                                            |
 | `manifest_test.py`  | `test_static`  | Resolver unit tests: closure, off-but-required, pairs, leaders, render                    |
-| `check-docs`        | `test_static`  | Decision-note front matter, relative links under `docs/`, `docs/plan/graph.yaml`          |
+| `check-docs`        | `test_static`  | Decision notes, links under `docs/`, `graph.yaml`; README recipes, flags and paths exist  |
 | `check-invariants`  | `test_static`  | Runs each `docs/decisions/inv-*.md` `verify` command                                      |
 | `check-paths`       | `test_static`  | Grep gates: repo and notes paths via `REPOS_DIR`/`NOTES_DIR`, no `/Users/<name>`          |
 | `check-doctor`      | `test_sandbox` | doctor with `PATH=/usr/bin:/bin` changes nothing; paste block parses                      |
@@ -223,12 +223,9 @@ per-session and every launch starts from the configured defaults. Trade-offs
 (same flag in `updateSaved()`): window size is not remembered, and reopened
 files still restore their own last page/zoom from the recent-files list
 (`restoreRecentDocument()` is unconditional) — only first-time files get the
-defaults. `NSUserKeyEquivalents` is independent and persists across launches. The `djview` Homebrew cask is deprecated upstream
-(auto-disabled 2026-09-01 — Gatekeeper signature failure); the installed binary
-at `/Applications/DjView.app` keeps working past that date, and the existence
-guard makes the block a silent no-op if the cask eventually vanishes.
-Alternatives surveyed (none drop-in): `ddjvu -format=pdf` → Skim; MacPorts
-`okular`; Calibre's transcoding viewer; `mupdf-tools`.
+defaults. `NSUserKeyEquivalents` is independent and persists across launches. DjView comes from the `djview4` formula (`/opt/homebrew/opt/djview4/DjView.app`;
+the deprecated `djview` cask was dropped); the block also accepts
+`/Applications/DjView.app` and is a silent no-op when neither exists.
 
 ### Login Items
 

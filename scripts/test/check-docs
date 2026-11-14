@@ -119,4 +119,25 @@ else
     if [[ $graph_ok -eq 1 ]]; then t_pass "$(printf '%s\n' "$ids" | wc -l | tr -d ' ') nodes in ${GRAPH#"$TEST_REPO"/} are well formed"; fi
 fi
 
+# The README's commands, run only against the real repo (not the self-test fixture).
+if [[ -z "${1:-}" ]]; then
+    t_header "README commands"
+    readme="$TEST_REPO/README.md"
+    readme_ok=1
+    recipes=" $(cd "$TEST_REPO" && just --summary 2>/dev/null) "
+    while read -r r; do
+        case "$recipes" in *" $r "*) ;; *) t_fail "README names unknown recipe: just $r" && readme_ok=0 ;; esac
+    done < <(grep -oE '`just [a-z_-]+|^just [a-z_-]+' "$readme" | awk '{ print $2 }' | sort -u)
+    while read -r flag; do
+        case "$flag" in --web | --email) continue ;; esac
+        grep -q -- "$flag)" "$TEST_REPO/install" || { t_fail "README names a flag install does not take: $flag" && readme_ok=0; }
+    done < <(grep -oE -- '--[a-z][a-z-]*' "$readme" | sort -u)
+    while read -r p; do
+        [[ -e "$TEST_REPO/$p" ]] || { t_fail "README names a missing path: $p" && readme_ok=0; }
+    done < <(grep -oE '(scripts/[a-z_/-]+|generated/compare\.md|manifest\.json)' "$readme" | sort -u)
+    grep -q -- '--email)' "$TEST_REPO/scripts/setup/setup-github-auth" ||
+        { t_fail "setup-github-auth no longer takes --email" && readme_ok=0; }
+    if [[ $readme_ok -eq 1 ]]; then t_pass "every recipe, flag and path the README names exists"; fi
+fi
+
 t_summary "check-docs"
