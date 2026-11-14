@@ -53,6 +53,8 @@ check() { # check <name> <pattern>
 check "names packages installed but not in the manifest" 'extra-tool installed but not in the manifest'
 check "names packages in the manifest but not installed, with both fixes" 'djview4 in the manifest but not installed: brew install djview4 \(or \./install\), or just manifest_set home djview off'
 check "a command provided outside Homebrew is not drift" "rustup \\($T/cargo/bin/rustup\\) provided outside Homebrew"
+check "the first line names the start time" '^.{0,12}brew-update started [A-Z][a-z]{2} [0-9]{2} [A-Z][a-z]{2} [0-9]{2}:[0-9]{2}'
+check "the last line repeats it" '(Done in |Nothing to do \()[0-9]+s.*started [A-Z][a-z]{2} [0-9]{2} [A-Z][a-z]{2} [0-9]{2}:[0-9]{2}'
 check "the summary counts" '1 not in the manifest, 1 not installed \(mode: drift\)'
 if [[ -f "$T/log.bundle" ]] && ! grep -q djview4 "$T/log.bundle" && grep -q '"fd"' "$T/log.bundle"; then
     t_pass "drift mode does not install what is missing; it keeps what is declared and present"

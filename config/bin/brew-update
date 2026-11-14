@@ -77,6 +77,10 @@ fi
 SECONDS=0
 RED=$'\033[0;31m'; YEL=$'\033[0;33m'; GRN=$'\033[0;32m'
 DIM=$'\033[2m';    NC=$'\033[0m'
+# Start time on the first and last line, so a pop-up window left open from
+# an earlier run is recognisable at a glance.
+STARTED="$(date '+%a %d %b %H:%M')"
+printf '%s🍺 brew-update started %s%s\n' "$DIM" "$STARTED" "$NC"
 
 PRE_F=$(mktemp -t brew-update); PRE_C=$(mktemp -t brew-update)
 MID_F=$(mktemp -t brew-update); MID_C=$(mktemp -t brew-update)
@@ -325,7 +329,7 @@ fi
 
 printf '\n'
 if [ "$ZERO" -eq 1 ] && [ "$UPGRADE_EXIT" -eq 0 ] && [ "$BUNDLE_EXIT" -eq 0 ]; then
-  printf '%s✅ Nothing to do (%ds)%s\n' "$GRN" "$SECONDS" "$NC"
+  printf '%s✅ Nothing to do (%ds, started %s)%s\n' "$GRN" "$SECONDS" "$STARTED" "$NC"
 else
   printf '🍺 brew-update summary\n'
   printf '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
@@ -382,5 +386,5 @@ else
       "$RED" "$BUNDLE_EXIT" "$NC"
   fi
 
-  printf '%s✅ Done in %ds%s\n' "$GRN" "$SECONDS" "$NC"
+  printf '%s✅ Done in %ds (started %s)%s\n' "$GRN" "$SECONDS" "$STARTED" "$NC"
 fi
