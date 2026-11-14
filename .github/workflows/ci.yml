@@ -1,10 +1,12 @@
 # CI for the profile-driven bootstrap (node N1 skeleton).
 #
-# static:  Linux, layer 1 (just test_static).
+# static:  Linux, layer 1 (just test_static, which includes zizmor).
 # macos:   one job per profile, layers 1 and 2 (just test).
 # bootstrap: layer 3, a real ./bootstrap per profile on a clean runner, then a
 #          second links-only run.
 # Every PASS, FAIL, XFAIL, XPASS and SKIP line goes to the run summary.
+# Actions are pinned to commit SHAs (version in the trailing comment);
+# .github/dependabot.yml moves them. No checkout keeps its token.
 name: ci
 
 on:
@@ -24,14 +26,17 @@ jobs:
     name: static (linux)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0  # check-invariants reads Node: trailers from history
-      - uses: extractions/setup-just@v4
+          fetch-depth: 0 # check-invariants reads Node: trailers from history
+          persist-credentials: false
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1.59.0"
       - name: Static checks
         run: just test_static
       - name: actionlint
-        run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:latest -color
+        run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.12 -color
 
   macos:
     name: macos (${{ matrix.profile }})
@@ -43,10 +48,13 @@ jobs:
     env:
       DOTFILES_TEST_PROFILES: ${{ matrix.profile }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: extractions/setup-just@v4
+          persist-credentials: false
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1.59.0"
       - name: Install shellcheck
         run: command -v shellcheck || brew install shellcheck
       - name: Static and sandbox tests
@@ -61,10 +69,13 @@ jobs:
       matrix:
         profile: [home, work]
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Real bootstrap on a clean runner
-        run: ./bootstrap --profile ${{ matrix.profile }} --no-hints </dev/null
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: ./bootstrap --profile "$PROFILE" --no-hints </dev/null
       - name: Second run changes nothing it should not
         run: ./install --links-only

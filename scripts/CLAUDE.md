@@ -49,6 +49,7 @@ scripts/
     ├── check-parity
     ├── check-hammerspoon
     ├── check-layout
+    ├── check-workflows
     ├── check-config-load
     ├── sandbox-install
     ├── check-doctor
@@ -127,6 +128,7 @@ alarm` since macOS has no `timeout`): a hung step exits 142, prints
 | `check-hammerspoon` | `test_static`  | `apps.lua` builder headless with lua: both profiles, off units, baseline tables           |
 | `check-dropbox`     | `test_sandbox` | `just dropbox_finish` vs a fake Dropbox: link created/repointed, collision refused, notes |
 | `check-layout`      | `test_static`  | Allow-list; no token in `hosts.yml`; nothing tracked is ignored; Claude state ignored    |
+| `check-workflows`   | `test_static`  | zizmor (auditor persona) over `.github`; SKIP without uvx or pipx                        |
 | `check-github-auth` | `test_sandbox` | `setup-github-auth` state table against a stubbed `gh` in a throwaway HOME                |
 | `check-brew-update` | `test_sandbox` | brew-update drift report against a stubbed brew (wording, outside-Homebrew, no installs)  |
 | `check-parity`      | `test_static`  | `generated/home` vs the baseline install, minus `docs/plan/home-parity.json`              |

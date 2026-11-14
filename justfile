@@ -167,7 +167,7 @@ test:
 	@scripts/step outer 2 2 📦 "Running sandbox tests"
 	@just test_sandbox
 
-# Static checks: shellcheck, harness self-test, resolver tests, docs lint, invariants, manifest, home parity.
+# Static checks: shellcheck, harness self-test, resolver tests, docs lint, invariants, manifest, home parity, zizmor.
 [group('test')]
 test_static:
 	@scripts/step inner 1 6 "shellcheck scripts/test"
@@ -186,6 +186,7 @@ test_static:
 	@scripts/test/check-paths
 	@scripts/test/check-hammerspoon
 	@scripts/test/check-layout
+	@scripts/test/check-workflows
 	@scripts/step done 🧪 "Static checks passed"
 
 # Sandbox tests in a throwaway HOME: config load, link-only install, doctor, dropbox_finish.

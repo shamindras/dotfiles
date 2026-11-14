@@ -1,0 +1,14 @@
+# Moves the commit-SHA pins of the actions in .github/workflows (the version
+# stays in the trailing comment). The weekly workflow moves every other pin.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait a week after a release before proposing it.
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# check-workflows — zizmor, a security linter for GitHub Actions, over
+# .github (workflows and dependabot.yml) at the auditor persona, its
+# strictest. Each finding accepted on purpose carries an inline
+# `# zizmor: ignore[...]` with the reason next to it. zizmor runs from PyPI
+# through uvx or pipx at a pinned version; with neither available the check
+# is skipped, never installed.
+
+set -Eeuo pipefail
+
+# shellcheck source=scripts/test/lib.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+
+ZIZMOR_VERSION=1.32.0
+
+t_header "workflows (zizmor $ZIZMOR_VERSION)"
+if command -v uvx >/dev/null 2>&1; then
+    run=(uvx "zizmor==$ZIZMOR_VERSION")
+elif command -v pipx >/dev/null 2>&1; then
+    run=(pipx run "zizmor==$ZIZMOR_VERSION")
+else
+    t_skip "zizmor: neither uvx nor pipx is available"
+    t_summary "check-workflows"
+    exit 0
+fi
+
+if out="$("${run[@]}" --persona auditor --no-progress "$TEST_REPO/.github/" 2>&1)"; then
+    t_pass "no zizmor findings at the auditor persona"
+else
+    t_fail "zizmor findings in .github"
+    printf '%s\n' "$out" | tail -40
+fi
+
+t_summary "check-workflows"
