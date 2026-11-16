@@ -6,3 +6,4 @@ four consecutive weeks.
 
 | Date | mise | Modules (✓ installed, ✗ failed) |
 | ---- | ---- | ------------------------------- |
+| 2026-11-16 | 2026.11.8 macos-arm64 (2026-11-13) | ✓ core ✓ data-science ✓ desktop ✓ docs ✓ editor ✓ fonts-extra ✓ git ✓ lint ✓ notes ✓ personal ✓ terminal (11/11) |

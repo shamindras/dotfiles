@@ -127,7 +127,7 @@ function z1_plugins {
   # local clones) to the latest upstream commit.
   local -a plugins=(
     zsh-users/zsh-autosuggestions@85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5
-    zsh-users/zsh-syntax-highlighting@1d85c692615a25fe2293bdd44b34c217d5d2bf04
+    zsh-users/zsh-syntax-highlighting@e6683f20e5c38d3e5447f45845d04ddda75d0f23
   )
 
   plugin-load $plugins
